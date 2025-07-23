@@ -22,10 +22,8 @@
     </span>
   {% endunless %}
 
-  <div
-    class='twcss-relative twcss-w-full twcss-h-full twcss-flex twcss-flex-1 twcss-justify-{{ section.settings.image_position }}'
-  >
-    <div class='twcss-relative twcss-flex twcss-flex-col twcss-items-center'>
+  <div class='twcss-relative twcss-w-full twcss-h-full twcss-flex twcss-flex-1 twcss-justify-{{ section.settings.image_position }}'>
+    <div class='twcss-relative'>
       <a href='{{ section.settings.cta_link }}' class='twcss-block'>
         <img
           src='{{ section.settings.image | image_url }}'
@@ -35,13 +33,15 @@
           class='twcss-w-4/5 md:twcss-w-[{{ section.settings.image_width }}px] md:twcss-h-[500px] twcss-object-contain twcss-aspect-square parallax-img'
         >
       </a>
-      <a
-        href='{{ section.settings.cta_link }}'
-        class='btn btn-{{ section.settings.cta_style }} twcss-block twcss-text-center'
-      >
-        {{- section.settings.cta -}}
-      </a>
     </div>
+    
+    <!-- Button positioned absolutely in center of container -->
+    <a
+      href='{{ section.settings.cta_link }}'
+      class='btn btn-{{ section.settings.cta_style }} twcss-absolute twcss-left-1/2 twcss-transform twcss--translate-x-1/2 twcss-bottom-0 twcss-z-10'
+    >
+      {{- section.settings.cta -}}
+    </a>
   </div>
 
   {% if section.settings.inverse_order %}
@@ -55,13 +55,13 @@
   @media screen and (max-width: 767px) {
     .parallax-img {
       margin-top: -130px;
-      margin-bottom: 20px !important;
+      margin-bottom: 50px !important;
     }
   }
 
   .parallax-img {
     margin-top: -150px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
   }
 </style>
 
