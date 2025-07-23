@@ -33,14 +33,13 @@
           class='twcss-w-full md:twcss-h-[500px] twcss-object-contain twcss-aspect-square parallax-img'
         >
       </a>
-
-      <a
-        href='{{ section.settings.cta_link }}'
-        class='btn btn-{{ section.settings.cta_style }} twcss-mx-auto'
-      >
-        {{- section.settings.cta -}}
-      </a>
     </div>
+    <a
+      href='{{ section.settings.cta_link }}'
+      class='btn btn-{{ section.settings.cta_style }} twcss-mx-auto'
+    >
+      {{- section.settings.cta -}}
+    </a>
   </div>
 
   {% if section.settings.inverse_order %}
