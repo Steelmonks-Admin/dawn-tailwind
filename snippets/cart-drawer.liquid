@@ -503,7 +503,8 @@
                   </tbody>
 
                   <tfoot>
-                    {% render 'cart-rewards' %}
+                    {% comment %} A/B Test: Disable gamification cart rewards {% endcomment %}
+                    {% comment %} {% render 'cart-rewards' %} {% endcomment %}
                   </tfoot>
                 </table>
               </div>

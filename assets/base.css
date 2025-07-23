@@ -3706,3 +3706,21 @@ cart-drawer.active ~ #trustbadge-container-98e3dadd90eb493088abdc5597a70810 {
   background-repeat: no-repeat;
   background-size: 500px;
 }
+
+/* A/B Test: Hide Gamification Features */
+.ab-test-no-gamification .milestones__container,
+.ab-test-no-gamification .cart-rewards__container,
+.ab-test-no-gamification .cart-item__reward-images {
+  display: none !important;
+}
+
+/* Hide the entire milestones bar */
+.milestones__container {
+  display: none !important;
+}
+
+/* Hide cart rewards */
+.cart-rewards__container,
+.cart-item__reward-images {
+  display: none !important;
+}

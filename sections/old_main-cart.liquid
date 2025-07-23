@@ -284,7 +284,8 @@
 
               {% comment %} ! Add reward items in a single row after all of the other items {% endcomment %}
               {% if section.settings.cart_show_reward_items %}
-                {% render 'cart-rewards' %}
+                {% comment %} A/B Test: Disable gamification cart rewards {% endcomment %}
+                {% comment %} {% render 'cart-rewards' %} {% endcomment %}
               {% endif %}
             </tbody>
           </table>
