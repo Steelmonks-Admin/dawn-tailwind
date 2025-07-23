@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<div class="twcss-max-w-[1600px] twcss-mx-auto twcss-px-6 twcss-mb-12">
+<div class="twcss-max-w-[1600px] twcss-mx-auto twcss-px-6 twcss-mb-6">
   <div class="main-content-grid">
     {%- liquid
       assign title_block = "
@@ -35,9 +35,6 @@
                 alt='" | append: section.settings.image.alt | default: 'Parallax image' | escape | append: "'
               >
             </a>
-            <a href='" | append: section.settings.cta_link | append: "' class='btn btn-" | append: section.settings.cta_style | append: " twcss-block twcss-w-fit twcss-mx-auto'>
-              " | append: section.settings.cta | append: "
-            </a>
           </div>
         </div>
       "
@@ -51,6 +48,13 @@
       {{ image_block }}
     {% endif %}
   </div>
+</div>
+
+<!-- CTA Button centered at section level -->
+<div class="twcss-text-center twcss-mb-12">
+  <a href='{{ section.settings.cta_link }}' class='btn btn-{{ section.settings.cta_style }}'>
+    {{ section.settings.cta }}
+  </a>
 </div>
 
 <style>
