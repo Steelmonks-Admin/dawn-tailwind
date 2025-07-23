@@ -22,22 +22,26 @@
     </span>
   {% endunless %}
 
-  <a
+  <div
     style='justify-content: {{ section.settings.image_position }};'
-    href='{{ section.settings.cta_link }}'
-    class='twcss-relative twcss-w-full twcss-h-full twcss-flex twcss-flex-1'
+    class='twcss-relative twcss-w-full twcss-h-full twcss-flex twcss-flex-1 twcss-items-center twcss-justify-center'
   >
-    <img
-      src='{{ section.settings.image | image_url }}'
-      style='object-position: {{ section.settings.image_position }};'
-      width='500'
-      height='500'
-      class='twcss-w-4/5 md:twcss-w-[{{ section.settings.image_width }}px] md:twcss-h-[500px] twcss-object-contain twcss-aspect-square parallax-img'
+    <a
+      href='{{ section.settings.cta_link }}'
+      class='twcss-relative twcss-flex twcss-flex-col twcss-items-center twcss-justify-center'
     >
-    <span class='btn btn-{{ section.settings.cta_style }} twcss-absolute twcss-left-1/2 twcss-top-1/3 twcss-translate-x-[-50%] md:twcss-top-2/3'>
-      {{- section.settings.cta -}}
-    </span>
-  </a>
+      <img
+        src='{{ section.settings.image | image_url }}'
+        style='object-position: {{ section.settings.image_position }};'
+        width='500'
+        height='500'
+        class='twcss-w-4/5 md:twcss-w-[{{ section.settings.image_width }}px] md:twcss-h-[500px] twcss-object-contain twcss-aspect-square parallax-img twcss-mb-4'
+      >
+      <span class='btn btn-{{ section.settings.cta_style }}'>
+        {{- section.settings.cta -}}
+      </span>
+    </a>
+  </div>
 
   {% if section.settings.inverse_order %}
     <span class='twcss-font-semibold twcss-text-black twcss-text-2xl md:twcss-text-3xl twcss-px-6 twcss-py-4'>
@@ -48,17 +52,15 @@
 
 <style>
   @media screen and (max-width: 767px) {
-    .btn {
-      margin-top: 30px;
-    }
-
     .parallax-img {
       margin-top: -130px;
+      margin-bottom: 20px !important;
     }
   }
 
   .parallax-img {
     margin-top: -150px;
+    margin-bottom: 30px;
   }
 </style>
 
