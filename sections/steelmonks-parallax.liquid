@@ -11,92 +11,58 @@
   </div>
 </div>
 
-<div class="twcss-max-w-[1600px] twcss-mx-auto twcss-px-6 twcss-mb-6">
-  <div class="main-content-grid">
-    {%- liquid
-      assign title_block = "
-        <div class='title-container'>
-          <span class='twcss-font-semibold twcss-text-black twcss-text-2xl md:twcss-text-3xl'>
-            " | append: section.settings.liquid_desktop_title | append: "
-          </span>
-        </div>
-      "
-    
-      assign image_block = "
-        <div class='image-container' style='text-align: " | append: section.settings.image_position | append: ";'>
-          <div class='image-wrapper' style='max-width: " | append: section.settings.image_width | append: "px;'>
-            <a href='" | append: section.settings.cta_link | append: "' class='twcss-block'>
-              <img
-                src='" | append: section.settings.image | image_url | append: "'
-                width='" | append: section.settings.image_width | append: "'
-                height='auto'
-                loading='lazy'
-                class='parallax-img'
-                alt='" | append: section.settings.image.alt | default: 'Parallax image' | escape | append: "'
-              >
-            </a>
-          </div>
-        </div>
-      "
-    -%}
+{% comment %} clickable image and button {% endcomment %}
+<div
+  style='{% if section.settings.image_position != "left" %}margin-left: auto; margin-right: auto;{% endif %}'
+  class='twcss-relative twcss-w-full twcss-flex twcss-justify-between twcss-max-w-[1600px] twcss-mb-12'
+>
+  {% unless section.settings.inverse_order %}
+    <span class='twcss-font-semibold twcss-text-black twcss-text-2xl md:twcss-text-3xl twcss-px-6 twcss-py-4'>
+      {{ section.settings.liquid_desktop_title }}
+    </span>
+  {% endunless %}
 
-    {% if section.settings.inverse_order %}
-      {{ image_block }}
-      {{ title_block }}
-    {% else %}
-      {{ title_block }}
-      {{ image_block }}
-    {% endif %}
+  <div class='twcss-w-full twcss-flex-1 twcss-flex twcss-justify-{{ section.settings.image_position }}'>
+    <div class='twcss-flex twcss-flex-col twcss-w-4/5 md:twcss-w-[{{ section.settings.image_width }}px]'>
+      <a href='{{ section.settings.cta_link }}' class='twcss-block'>
+        <img
+          src='{{ section.settings.image | image_url }}'
+          style='object-position: {{ section.settings.image_position }};'
+          width='500'
+          height='500'
+          class='twcss-w-full md:twcss-h-[500px] twcss-object-contain twcss-aspect-square parallax-img'
+        >
+      </a>
+    </div>
   </div>
+
+  {% if section.settings.inverse_order %}
+    <span class='twcss-font-semibold twcss-text-black twcss-text-2xl md:twcss-text-3xl twcss-px-6 twcss-py-4'>
+      {{ section.settings.liquid_desktop_title }}
+    </span>
+  {% endif %}
 </div>
 
 <!-- CTA Button centered at section level -->
-<div class="twcss-text-center twcss-mb-12">
-  <a href='{{ section.settings.cta_link }}' class='btn btn-{{ section.settings.cta_style }}'>
-    {{ section.settings.cta }}
-  </a>
-</div>
+{% if section.settings.cta_link and section.settings.cta %}
+  <div class="twcss-text-center twcss-mb-12">
+    <a href='{{ section.settings.cta_link }}' class='btn btn-{{ section.settings.cta_style }}'>
+      {{ section.settings.cta }}
+    </a>
+  </div>
+{% endif %}
 
 <style>
-  .main-content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    align-items: center;
-  }
-
-  .image-wrapper {
-    display: inline-block;
-    width: 100%;
+  @media screen and (max-width: 767px) {
+    .parallax-img {
+      margin-top: -130px;
+      margin-bottom: 20px !important;
+    }
   }
 
   .parallax-img {
     margin-top: -150px;
     margin-bottom: 30px;
-    width: 100%;
-    height: auto;
-  }
-
-  /* Mobile Overrides */
-  @media screen and (max-width: 767px) {
-    .main-content-grid {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-
-    .title-container {
-      order: 1;
-    }
-
-    .image-container {
-      order: 2;
-      text-align: center !important;
-    }
-
-    .parallax-img {
-      margin-top: -130px;
-      margin-bottom: 20px;
-    }
   }
 </style>
 
