@@ -12,12 +12,12 @@
     "main": {
       "type": "sm-new-main-article",
       "blocks": {
-        "custom_breadcrumbs_qrbiiw": {
-          "type": "custom_breadcrumbs",
-          "settings": {}
-        },
         "hero_side_by_side_XqV8Ah": {
           "type": "hero_side_by_side",
+          "settings": {}
+        },
+        "custom_breadcrumbs_qrbiiw": {
+          "type": "custom_breadcrumbs",
           "settings": {}
         },
         "content_ywFChb": {
@@ -36,8 +36,8 @@
         }
       },
       "block_order": [
-        "custom_breadcrumbs_qrbiiw",
         "hero_side_by_side_XqV8Ah",
+        "custom_breadcrumbs_qrbiiw",
         "content_ywFChb",
         "back_to_blog_F7yNPq",
         "share_ETPnXc"
