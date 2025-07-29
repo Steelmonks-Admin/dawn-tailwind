@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install",
     "tw": "npx tailwindcss -i ./assets/app-tailwind.css -o ./assets/app.css --watch"
   },
   "repository": {
@@ -21,8 +20,6 @@
   "devDependencies": {
     "@shopify/prettier-plugin-liquid": "^1.9.0",
     "autoprefixer": "^10.4.21",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.3",
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.1",
     "prettier": "^2.5.1",
@@ -31,8 +28,5 @@
   "dependencies": {
     "@trelliscommerce/prettier-config": "^1.0.0"
   },
-  "prettier": "@trelliscommerce/prettier-config",
-  "lint-staged": {
-    "*.{js,css}": "prettier --write"
-  }
+  "prettier": "@trelliscommerce/prettier-config"
 }
