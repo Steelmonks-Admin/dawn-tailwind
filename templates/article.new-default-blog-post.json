@@ -1,0 +1,114 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "custom_breadcrumbs_NE6dqX": {
+          "type": "custom_breadcrumbs",
+          "settings": {}
+        },
+        "hero_side_by_side_rjhEgM": {
+          "type": "hero_side_by_side",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "disabled": true,
+          "settings": {
+            "blog_show_date": false,
+            "blog_show_author": false
+          }
+        },
+        "featured_image": {
+          "type": "featured_image",
+          "disabled": true,
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "excerpt_WrWAn9": {
+          "type": "excerpt",
+          "disabled": true,
+          "settings": {}
+        },
+        "content": {
+          "type": "content",
+          "settings": {}
+        },
+        "back_to_blog_HGtVpt": {
+          "type": "back-to-blog",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Teilen"
+          }
+        }
+      },
+      "block_order": [
+        "custom_breadcrumbs_NE6dqX",
+        "hero_side_by_side_rjhEgM",
+        "title",
+        "featured_image",
+        "excerpt_WrWAn9",
+        "content",
+        "back_to_blog_HGtVpt",
+        "share"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "sm_new_main_article_BVjCAH": {
+      "type": "sm-new-main-article",
+      "blocks": {
+        "custom_breadcrumbs_qrbiiw": {
+          "type": "custom_breadcrumbs",
+          "settings": {}
+        },
+        "hero_side_by_side_XqV8Ah": {
+          "type": "hero_side_by_side",
+          "settings": {}
+        },
+        "content_ywFChb": {
+          "type": "content",
+          "settings": {}
+        },
+        "back_to_blog_F7yNPq": {
+          "type": "back-to-blog",
+          "settings": {}
+        },
+        "share_ETPnXc": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share this article"
+          }
+        }
+      },
+      "block_order": [
+        "custom_breadcrumbs_qrbiiw",
+        "hero_side_by_side_XqV8Ah",
+        "content_ywFChb",
+        "back_to_blog_F7yNPq",
+        "share_ETPnXc"
+      ],
+      "name": "SM New Main Article",
+      "settings": {
+        "top_spacing": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sm_new_main_article_BVjCAH"
+  ]
+}
