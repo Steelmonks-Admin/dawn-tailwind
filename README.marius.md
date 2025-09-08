@@ -6,9 +6,9 @@
 - See live preview of theme with `shopify theme dev` (make sure Shopify CLI is installed)
 - Tailwind is used for development. All liquid files are included as per the `tailwind-config.js` and are Tailwind classes are _prefixed_ with **twcss-**, for example the `flex` class becomes `twcss-flex` to avoid overwriting Dawn's default styles. For responsive design, prefix as follows: `md:twcss-flex`
 
-# Git issues
+# Git issues - "Please clean your repository tree before pulling"
 
-- There's an unfixed issue with Git for this project. There's a Git Actions workflow set up to generate the app.css file after a commit has been pushed. This usually causes conflicts with the `app.css` file. To resolve this conflict and be able to fetch/pull the newer versions you must simply delete the `app.css` file from local and pull it from the remote branch. The `app.css` file is auto-generated from other files so it will not be a breaking change
+- There's an unfixed issue with Git for this project. There's a Git Actions workflow set up to generate the app.css file after a commit has been pushed. This usually causes conflicts with the `app.css` file. To resolve this conflict and be able to **fetch/pull** the newer versions you must simply delete the `app.css` file from local and pull it from the remote branch. The `app.css` file is auto-generated from other files so it will not be a breaking change
 
 # Old files
 
