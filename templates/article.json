@@ -102,10 +102,7 @@
         "share_ETPnXc"
       ],
       "name": "SM New Main Article",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+      "settings": {}
     }
   },
   "order": [

@@ -1,1 +1,311 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"steelmonks_parallax_richtext_4pXMQx":{"type":"steelmonks-parallax-richtext","name":"Parallax Rich Text","settings":{"image":"shopify:\/\/shop_images\/sm-party.webp","title":"Jubiläumsgeschenke, Firmenschilder und Objektbeschilderung","link_text":"","link":""}},"custom_header_W4hxnw":{"type":"custom-header","name":"Custom Header","settings":{"richtext":"<p>Von Deinem Logo, zu<br\/>einem Kunstwerk<br\/>aus Stahl<\/p>","button_text":"","button_link":"","image":"shopify:\/\/shop_images\/sm-train.webp"}},"custom_image_slider_AVW7CX":{"type":"custom-image-slider","blocks":{"slider_block_WYGU7k":{"type":"slider_block","settings":{"richtext":"","slide_count":3,"image_1":"shopify:\/\/shop_images\/Firmenlogo.png","image_2":"shopify:\/\/shop_images\/web-custom-signs.webp","image_3":"shopify:\/\/shop_images\/web-Signet.svg"}},"slider_block_EiMYCT":{"type":"slider_block","settings":{"richtext":"","slide_count":3,"image_1":"shopify:\/\/shop_images\/Gallery_Image_Custom_Metall_FirmenSchild.jpg","image_2":"shopify:\/\/shop_images\/KU-1041-03-2.jpg","image_3":"shopify:\/\/shop_images\/KU-1044-03.jpg"}},"slider_block_ftDgdk":{"type":"slider_block","settings":{"richtext":"","slide_count":3,"image_1":"shopify:\/\/shop_images\/Firmenschild.png","image_2":"shopify:\/\/shop_images\/MS-2012-Thumbnail-Master_6b9dd9b1-93ac-4c06-afa0-213d90c5ab8e.jpg","image_3":"shopify:\/\/shop_images\/MS-7000-amazon-thumbnail_ebf0f506-8d7c-4157-84fc-1f3c57d528d6.jpg"}}},"block_order":["slider_block_WYGU7k","slider_block_EiMYCT","slider_block_ftDgdk"],"name":"Custom Image Sliders","settings":{}},"accordions_xqfj73":{"type":"accordions","blocks":{"accordion_MtgiMJ":{"type":"accordion","settings":{"parent":"","heading":"1. Erste Anfrage","content":"<p>Der Prozess beginnt mit <strong>Deiner Anfrage<\/strong> und den Informationen, die Du uns zur Verfügung stellst.<\/p><p> <\/p><p>Unser Anfrageformular findest Du <span style=\"text-decoration:underline\">unter diesen 3 Schritten.<\/span> Dort kannst Du ein Foto von Deiner Idee, eine fertige Datei und ein Kommentar zu einem eigenen, neuen Design abgeben.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_KrDGdr":{"type":"accordion","settings":{"parent":"","heading":"2. Unser Angebot","content":"<p>Wenn uns Deine Wünsche klar sind, erstellen wir Dir ein unverbindliches Angebot.<\/p><p> <\/p><p>Die Versandkosten sind größenabhängig und werden individuell berechnet.<\/p><p> <\/p><p><span style=\"text-decoration:underline\">Firmenschilder sind von Angeboten und Rabatten ausgeschlossen.<\/span><\/p><p> <\/p><p>Der <strong>Preis<\/strong> berechnet sich <strong>abhängig der Komplexität<\/strong> des Designs, <strong>der Qualität,<\/strong> <strong>der Vorlage<\/strong> und <strong>der Größe<\/strong> des Schildes.<\/p><p> <\/p><p><strong>Firmenschilder beginnen ab einem Projektpreis von €499,00.<\/strong><\/p><p> <\/p><p>Nachdem Du das Angebot mit Deiner Zahlung bestätigt hast, beginnt der nächste Schritt.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_4nPrz3":{"type":"accordion","settings":{"parent":"","heading":"3. Dein Firmenschild","content":"<p>Zusammen erstellen wir dann ein Design, das genau Deinen Vorstellungen entspricht.<\/p><p> <\/p><p>Bis zu<strong> 3 Revisionen<\/strong> sind im Preis inbegriffen.<\/p><p> <\/p><p><span style=\"text-decoration:underline\">Erst mit Deiner Bestätigung beginnen wir mit der Produktion.<\/span><\/p><p> <\/p><p>Das Schild wird innerhalb unserer kurzen Bearbeitungszeit von 7-10 Werktagen hergestellt und an Dich versandt.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_MtgiMJ","accordion_KrDGdr","accordion_4nPrz3"],"name":"Accordions","settings":{"heading":"In 3 Schrittenzu Deinem Firmenschild","subheading":"","padding_top":24,"padding_bottom":24,"padding_left":24,"padding_right":24}},"1748614557bd1b673a":{"type":"apps","blocks":{"powr_form_builder_app_block_RQieJP":{"type":"shopify:\/\/apps\/powr-form-builder\/blocks\/app-block\/1412fe37-d89c-4706-a797-6e2b53cb4a69","settings":{"app_id":"6ead4166_1659000100"}}},"block_order":["powr_form_builder_app_block_RQieJP"],"settings":{"include_margins":true}},"sm_scrolling_gallery_rCpCah":{"type":"sm-scrolling-gallery","blocks":{"row_of_images_4tKMKr":{"type":"row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"16 \/ 9"}},"inversed_row_of_images_47gPRR":{"type":"inversed_row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"5 \/ 4"}},"row_of_images_qChH6z":{"type":"row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"16 \/ 9"}}},"block_order":["row_of_images_4tKMKr","inversed_row_of_images_47gPRR","row_of_images_qChH6z"],"name":"Scrolling Gallery","settings":{"overlay_text":"<p><strong>Design Highlights<\/strong><\/p>","overlay_text_color":"#fafaff","overlay_background_color":"linear-gradient(45deg, rgba(9, 10, 12, 1) 25%, rgba(0, 68, 204, 1) 100%)","overlay_padding":"20px 20px 20px 20px","overlay_gradient_background_color":"radial-gradient(rgba(250, 250, 255, 1) 20%, rgba(250, 250, 255, 0) 80%)","overlay_style":"1","overlay_width":40,"show_box_shadow":true,"box_shadow_properties":"4px 4px 6px #090a0c40","show_overlay_text":true,"show_button":false,"overlay_border_radius":10,"img_width":250}},"steelmonks_parallax_richtext_4UFHhE":{"type":"steelmonks-parallax-richtext","name":"Parallax Rich Text","settings":{"image":"shopify:\/\/shop_images\/sm-matecup2022.webp","title":"","link_text":"","link":""}},"custom_gallery_nPaKq6":{"type":"custom-gallery","blocks":{"image_row_hNxq87":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/Firmenschild.png","image_2":"shopify:\/\/shop_images\/Firmenlogo.png","image_3":"shopify:\/\/shop_images\/Gallery_Image_Custom_Metall_FirmenSchild.jpg","image_4":"shopify:\/\/shop_images\/Erstelle_jetzt_Dein_Wappen.png"}},"image_row_wjRBU8":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/Wappen1_copy.jpg","image_2":"shopify:\/\/shop_images\/Was_ist_ein_Wappen.png","image_3":"shopify:\/\/shop_images\/Darf_man_ein_Wappen_verwenden.png","image_4":"shopify:\/\/shop_images\/Wappen_1_Moeller.jpg"}},"image_row_mWDxzP":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/Wappen1.jpg","image_2":"shopify:\/\/shop_images\/Wappen3.jpg","image_3":"shopify:\/\/shop_images\/Wappen2.jpg","image_4":"shopify:\/\/shop_images\/steelmonks-metallschild-wappen-familienwappen-edelstahl-auf-schwarz-55cm-7.jpg"}},"image_row_H66xTF":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/pinu-1002-Photoroom.jpg","image_2":"shopify:\/\/shop_images\/PIN-FREIZEIT-1000Single-min_clipped_rev_1-Photoroom.jpg","image_3":"shopify:\/\/shop_images\/PIN-FREIZEIT-1000Thumbnail-min_f66a2721-b53e-4553-968c-1e1ec4b1e1ae.jpg","image_4":"shopify:\/\/shop_images\/PIN-FEUER-1000-SET-2.jpg"}}},"block_order":["image_row_hNxq87","image_row_wjRBU8","image_row_mWDxzP","image_row_H66xTF"],"name":"Custom Gallery","settings":{"richtext":"<h1><strong>Galerie<\/strong><\/h1>"}},"accordions_higAa3":{"type":"accordions","blocks":{"accordion_AF9AxH":{"type":"accordion","settings":{"parent":"","heading":"Firmenschilder von Steelmonks","content":"<h1>Individuelle Firmenschilder für Dein Unternehmen<\/h1><p> <\/p><p>Willkommen bei Steelmonks, Deinem Partner für individuelle Metallarbeiten für den professionellen Bedarf. Wir verwirklichen jede Geschäftsidee mit Präzision und Kreativität.<\/p><p>Von repräsentativen Firmenschildern bis hin zu einzigartigen Designelementen für Deine Geschäftsräume – unser Angebot kennt keine Grenzen. Unsere Produkte entstehen aus hochwertigem Edelstahl und robustem Cortenstahl. Sie begeistern nicht nur durch ihre Ästhetik, sondern überzeugen auch durch langanhaltende Haltbarkeit.<\/p><p> <\/p><h2>Farbvielfalt für Deine Markenidentität<\/h2><p> <\/p><p>Farben spielen eine entscheidende Rolle in der visuellen Kommunikation. Deshalb bieten wir eine umfangreiche Farbpalette an, um Deine Firmenfarben präzise zu treffen.<\/p><p> <\/p><p>Wir bieten eine umfangreiche Farbpalette an, um Deine Firmenfarben präzise zu treffen. Schwarz, Weiß, Gold und Anthrazit gehören zu unseren Standardfarben. Egal, ob Du diskrete Eleganz bevorzugst oder eine lebendige Ausstrahlung suchst. Wir verwirklichen Deine Ideen in jedem gewünschten RAL-Farbton.<\/p><p> <\/p><h2>Der Weg zu Deinem Firmenschild<\/h2><p> <\/p><p>Alles beginnt mit Deiner Idee. Mit unserem Anfragenformular für Geschäftskunden sammeln wir alle nötigen Informationen, um Dein Projekt anzugehen. So können wir Durch Dein ausgefülltes Formular und beigefügten Dateien Dein Projekt präzise planen und umsetzen.<\/p><p> <\/p><p>Nachdem wir Deine Anfrage erhalten haben, erstellen wir einen unverbindlichen Kostenvoranschlag. Mit Deiner Zustimmung beginnt unser Designteam mit der Ausarbeitung Deines individuellen Entwurfs. Dabei stehen wir in ständigem Austausch mit Dir, um sicherzustellen, dass das Ergebnis Deinen Vorstellungen entspricht.<\/p><p> <\/p><h2>Einblicke in den Herstellungsprozess<\/h2><p> <\/p><p>Sobald Du mit unserem Designvorschlag einverstanden bist, leiten wir die Fertigung Deiner Firmenkreation ein. Unsere Lasermaschine schneidet Dein digitales Design präzise aus Stahl aus, um Deine Unternehmensvision detailgetreu in Metall zu verewigen.<\/p><p> <\/p><p>Für mehrschichtige Firmenschilder führen wir diesen Ausschneideprozess so oft wie nötig durch. Bei Farbwünschen versehen wir Dein Schild mit einer Pulverbeschichtung und Wettergrundierung, um seine Langlebigkeit und Wetterfestigkeit sicherzustellen.<\/p><p> <\/p><p>Unser <a href=\"https:\/\/steelmonks.com\/products\/unsichtbares-befestigungsset-bolzen-und-gewindestifte?_pos=1&_psq=uns&_ss=e&_v=1.0\" target=\"_blank\">unsichtbares Befestigungssystem<\/a> ermöglicht eine einfache Montage an die Wand. Die Bolzen an der Rückseite des Schildes und die mitgelieferten Gewindestifte machen die Montage Deines Schildes sehr leicht. Sie ist unkompliziert, und Euer Firmenschild erhält durch den 8 mm Wandabstand einen beeindruckenden Schwebeeffekt.<\/p><p> <\/p><h2>Vom Konzept zur Realität<\/h2><p> <\/p><p>Sobald wir Deine Freigabe erhalten haben, starten wir mit der Produktion Deiner individuellen Stahlkreation. Unsere Technik verwandelt Dein Design mit maximaler Genauigkeit in ein Metallprodukt. Dieses Produkt besticht nicht nur visuell, sondern spiegelt auch die Werte und Professionalität Deines Unternehmens wider.<\/p><p> <\/p><p>Unser innovatives Befestigungssystem ermöglicht eine einfache Montage Deiner Sonderanfertigung. Es erzeugt einen schwebenden Effekt, der das Werk effektvoll präsentiert.<\/p><p> <\/p><h2>Einzigartigkeit und Qualität für Dein Unternehmen<\/h2><p> <\/p><p>Bei Steelmonks verstehen wir die Bedeutung von Einzigartigkeit und hochwertiger Verarbeitung – besonders im Geschäftsumfeld. Gemeinsam mit Dir möchten wir beeindruckende Metallarbeiten schaffen, die Deine Marke repräsentieren und langfristig begeistern.<\/p><p> <\/p><p>Bist Du bereit, Deine Geschäftsräume mit individuellen Metallschildern aufzuwerten?<\/p><p> <\/p><p>Kontaktiere uns heute und entdecke, wie wir Deine geschäftliche Vision in Metall verwirklichen können. Unsere <a href=\"https:\/\/steelmonks.com\/pages\/fotogalerie\" target=\"_blank\">Fotogalerie<\/a> gibt Dir einen ersten Einblick in die Möglichkeiten und die Qualität unserer Arbeiten. Deine Ideen sind bei uns in den besten Händen.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_AF9AxH"],"name":"Accordions","settings":{"heading":"","subheading":"","padding_top":0,"padding_bottom":40,"padding_left":24,"padding_right":24}}},"order":["main","steelmonks_parallax_richtext_4pXMQx","custom_header_W4hxnw","custom_image_slider_AVW7CX","accordions_xqfj73","1748614557bd1b673a","sm_scrolling_gallery_rCpCah","steelmonks_parallax_richtext_4UFHhE","custom_gallery_nPaKq6","accordions_higAa3"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "enable_gutter": false,
+        "show_title": false
+      }
+    },
+    "steelmonks_parallax_richtext_4pXMQx": {
+      "type": "steelmonks-parallax-richtext",
+      "name": "Parallax Rich Text",
+      "settings": {
+        "image": "shopify://shop_images/sm-party.webp",
+        "title": "<p>Jubiläumsgeschenke, Firmenschilder und Objektbeschilderung</p>",
+        "link_text": "",
+        "link": ""
+      }
+    },
+    "custom_header_W4hxnw": {
+      "type": "custom-header",
+      "name": "Custom Header",
+      "settings": {
+        "richtext": "<p>Von Deinem Logo, zu<br/>einem Kunstwerk<br/>aus Stahl</p>",
+        "button_text": "",
+        "button_link": "",
+        "image": "shopify://shop_images/sm-train.webp"
+      }
+    },
+    "custom_image_slider_AVW7CX": {
+      "type": "custom-image-slider",
+      "blocks": {
+        "slider_block_WYGU7k": {
+          "type": "slider_block",
+          "settings": {
+            "richtext": "",
+            "slide_count": 3,
+            "image_1": "shopify://shop_images/Firmenlogo.png",
+            "image_2": "shopify://shop_images/web-custom-signs.webp",
+            "image_3": "shopify://shop_images/web-Signet.svg"
+          }
+        },
+        "slider_block_EiMYCT": {
+          "type": "slider_block",
+          "settings": {
+            "richtext": "",
+            "slide_count": 3,
+            "image_1": "shopify://shop_images/Gallery_Image_Custom_Metall_FirmenSchild.jpg",
+            "image_2": "shopify://shop_images/KU-1041-03-2.jpg",
+            "image_3": "shopify://shop_images/KU-1044-03.jpg"
+          }
+        },
+        "slider_block_ftDgdk": {
+          "type": "slider_block",
+          "settings": {
+            "richtext": "",
+            "slide_count": 3,
+            "image_1": "shopify://shop_images/Firmenschild.png",
+            "image_2": "shopify://shop_images/MS-2012-Thumbnail-Master_6b9dd9b1-93ac-4c06-afa0-213d90c5ab8e.jpg",
+            "image_3": "shopify://shop_images/MS-7000-amazon-thumbnail_ebf0f506-8d7c-4157-84fc-1f3c57d528d6.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "slider_block_WYGU7k",
+        "slider_block_EiMYCT",
+        "slider_block_ftDgdk"
+      ],
+      "name": "Custom Image Sliders",
+      "settings": {}
+    },
+    "accordions_xqfj73": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_MtgiMJ": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "1. Erste Anfrage",
+            "content": "<p>Der Prozess beginnt mit <strong>Deiner Anfrage</strong> und den Informationen, die Du uns zur Verfügung stellst.</p><p> </p><p>Unser Anfrageformular findest Du <span style=\"text-decoration:underline\">unter diesen 3 Schritten.</span> Dort kannst Du ein Foto von Deiner Idee, eine fertige Datei und ein Kommentar zu einem eigenen, neuen Design abgeben.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_KrDGdr": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "2. Unser Angebot",
+            "content": "<p>Wenn uns Deine Wünsche klar sind, erstellen wir Dir ein unverbindliches Angebot.</p><p> </p><p>Die Versandkosten sind größenabhängig und werden individuell berechnet.</p><p> </p><p><span style=\"text-decoration:underline\">Firmenschilder sind von Angeboten und Rabatten ausgeschlossen.</span></p><p> </p><p>Der <strong>Preis</strong> berechnet sich <strong>abhängig der Komplexität</strong> des Designs, <strong>der Qualität,</strong> <strong>der Vorlage</strong> und <strong>der Größe</strong> des Schildes.</p><p> </p><p><strong>Firmenschilder beginnen ab einem Projektpreis von €499,00.</strong></p><p> </p><p>Nachdem Du das Angebot mit Deiner Zahlung bestätigt hast, beginnt der nächste Schritt.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_4nPrz3": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "3. Dein Firmenschild",
+            "content": "<p>Zusammen erstellen wir dann ein Design, das genau Deinen Vorstellungen entspricht.</p><p> </p><p>Bis zu<strong> 3 Revisionen</strong> sind im Preis inbegriffen.</p><p> </p><p><span style=\"text-decoration:underline\">Erst mit Deiner Bestätigung beginnen wir mit der Produktion.</span></p><p> </p><p>Das Schild wird innerhalb unserer kurzen Bearbeitungszeit von 7-10 Werktagen hergestellt und an Dich versandt.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_MtgiMJ",
+        "accordion_KrDGdr",
+        "accordion_4nPrz3"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "In 3 Schrittenzu Deinem Firmenschild",
+        "subheading": "",
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    },
+    "1748614557bd1b673a": {
+      "type": "apps",
+      "blocks": {
+        "powr_form_builder_app_block_RQieJP": {
+          "type": "shopify://apps/powr-form-builder/blocks/app-block/1412fe37-d89c-4706-a797-6e2b53cb4a69",
+          "settings": {
+            "app_id": "6ead4166_1659000100"
+          }
+        }
+      },
+      "block_order": [
+        "powr_form_builder_app_block_RQieJP"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "sm_scrolling_gallery_rCpCah": {
+      "type": "sm-scrolling-gallery",
+      "blocks": {
+        "row_of_images_4tKMKr": {
+          "type": "row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "16 / 9"
+          }
+        },
+        "inversed_row_of_images_47gPRR": {
+          "type": "inversed_row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "5 / 4"
+          }
+        },
+        "row_of_images_qChH6z": {
+          "type": "row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "16 / 9"
+          }
+        }
+      },
+      "block_order": [
+        "row_of_images_4tKMKr",
+        "inversed_row_of_images_47gPRR",
+        "row_of_images_qChH6z"
+      ],
+      "name": "Scrolling Gallery",
+      "settings": {
+        "overlay_text": "<p><strong>Design Highlights</strong></p>",
+        "overlay_text_color": "#fafaff",
+        "overlay_background_color": "linear-gradient(45deg, rgba(9, 10, 12, 1) 25%, rgba(0, 68, 204, 1) 100%)",
+        "overlay_padding": "20px 20px 20px 20px",
+        "overlay_gradient_background_color": "radial-gradient(rgba(250, 250, 255, 1) 20%, rgba(250, 250, 255, 0) 80%)",
+        "overlay_style": "1",
+        "overlay_width": 40,
+        "show_box_shadow": true,
+        "box_shadow_properties": "4px 4px 6px #090a0c40",
+        "show_overlay_text": true,
+        "show_button": false,
+        "overlay_border_radius": 10,
+        "img_width": 250
+      }
+    },
+    "steelmonks_parallax_richtext_4UFHhE": {
+      "type": "steelmonks-parallax-richtext",
+      "name": "Parallax Rich Text",
+      "settings": {
+        "image": "shopify://shop_images/sm-matecup2022.webp",
+        "title": "",
+        "link_text": "",
+        "link": ""
+      }
+    },
+    "custom_gallery_nPaKq6": {
+      "type": "custom-gallery",
+      "blocks": {
+        "image_row_hNxq87": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/Firmenschild.png",
+            "image_2": "shopify://shop_images/Firmenlogo.png",
+            "image_3": "shopify://shop_images/Gallery_Image_Custom_Metall_FirmenSchild.jpg",
+            "image_4": "shopify://shop_images/Erstelle_jetzt_Dein_Wappen.png"
+          }
+        },
+        "image_row_wjRBU8": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/Wappen1_copy.jpg",
+            "image_2": "shopify://shop_images/Was_ist_ein_Wappen.png",
+            "image_3": "shopify://shop_images/Darf_man_ein_Wappen_verwenden.png",
+            "image_4": "shopify://shop_images/Wappen_1_Moeller.jpg"
+          }
+        },
+        "image_row_mWDxzP": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/Wappen1.jpg",
+            "image_2": "shopify://shop_images/Wappen3.jpg",
+            "image_3": "shopify://shop_images/Wappen2.jpg",
+            "image_4": "shopify://shop_images/steelmonks-metallschild-wappen-familienwappen-edelstahl-auf-schwarz-55cm-7.jpg"
+          }
+        },
+        "image_row_H66xTF": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/pinu-1002-Photoroom.jpg",
+            "image_2": "shopify://shop_images/PIN-FREIZEIT-1000Single-min_clipped_rev_1-Photoroom.jpg",
+            "image_3": "shopify://shop_images/PIN-FREIZEIT-1000Thumbnail-min_f66a2721-b53e-4553-968c-1e1ec4b1e1ae.jpg",
+            "image_4": "shopify://shop_images/PIN-FEUER-1000-SET-2.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_row_hNxq87",
+        "image_row_wjRBU8",
+        "image_row_mWDxzP",
+        "image_row_H66xTF"
+      ],
+      "name": "Custom Gallery",
+      "settings": {
+        "richtext": "<h1><strong>Galerie</strong></h1>"
+      }
+    },
+    "accordions_higAa3": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_AF9AxH": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Firmenschilder von Steelmonks",
+            "content": "<h1>Individuelle Firmenschilder für Dein Unternehmen</h1><p> </p><p>Willkommen bei Steelmonks, Deinem Partner für individuelle Metallarbeiten für den professionellen Bedarf. Wir verwirklichen jede Geschäftsidee mit Präzision und Kreativität.</p><p>Von repräsentativen Firmenschildern bis hin zu einzigartigen Designelementen für Deine Geschäftsräume – unser Angebot kennt keine Grenzen. Unsere Produkte entstehen aus hochwertigem Edelstahl und robustem Cortenstahl. Sie begeistern nicht nur durch ihre Ästhetik, sondern überzeugen auch durch langanhaltende Haltbarkeit.</p><p> </p><h2>Farbvielfalt für Deine Markenidentität</h2><p> </p><p>Farben spielen eine entscheidende Rolle in der visuellen Kommunikation. Deshalb bieten wir eine umfangreiche Farbpalette an, um Deine Firmenfarben präzise zu treffen.</p><p> </p><p>Wir bieten eine umfangreiche Farbpalette an, um Deine Firmenfarben präzise zu treffen. Schwarz, Weiß, Gold und Anthrazit gehören zu unseren Standardfarben. Egal, ob Du diskrete Eleganz bevorzugst oder eine lebendige Ausstrahlung suchst. Wir verwirklichen Deine Ideen in jedem gewünschten RAL-Farbton.</p><p> </p><h2>Der Weg zu Deinem Firmenschild</h2><p> </p><p>Alles beginnt mit Deiner Idee. Mit unserem Anfragenformular für Geschäftskunden sammeln wir alle nötigen Informationen, um Dein Projekt anzugehen. So können wir Durch Dein ausgefülltes Formular und beigefügten Dateien Dein Projekt präzise planen und umsetzen.</p><p> </p><p>Nachdem wir Deine Anfrage erhalten haben, erstellen wir einen unverbindlichen Kostenvoranschlag. Mit Deiner Zustimmung beginnt unser Designteam mit der Ausarbeitung Deines individuellen Entwurfs. Dabei stehen wir in ständigem Austausch mit Dir, um sicherzustellen, dass das Ergebnis Deinen Vorstellungen entspricht.</p><p> </p><h2>Einblicke in den Herstellungsprozess</h2><p> </p><p>Sobald Du mit unserem Designvorschlag einverstanden bist, leiten wir die Fertigung Deiner Firmenkreation ein. Unsere Lasermaschine schneidet Dein digitales Design präzise aus Stahl aus, um Deine Unternehmensvision detailgetreu in Metall zu verewigen.</p><p> </p><p>Für mehrschichtige Firmenschilder führen wir diesen Ausschneideprozess so oft wie nötig durch. Bei Farbwünschen versehen wir Dein Schild mit einer Pulverbeschichtung und Wettergrundierung, um seine Langlebigkeit und Wetterfestigkeit sicherzustellen.</p><p> </p><p>Unser <a href=\"https://steelmonks.com/products/unsichtbares-befestigungsset-bolzen-und-gewindestifte?_pos=1&_psq=uns&_ss=e&_v=1.0\" target=\"_blank\">unsichtbares Befestigungssystem</a> ermöglicht eine einfache Montage an die Wand. Die Bolzen an der Rückseite des Schildes und die mitgelieferten Gewindestifte machen die Montage Deines Schildes sehr leicht. Sie ist unkompliziert, und Euer Firmenschild erhält durch den 8 mm Wandabstand einen beeindruckenden Schwebeeffekt.</p><p> </p><h2>Vom Konzept zur Realität</h2><p> </p><p>Sobald wir Deine Freigabe erhalten haben, starten wir mit der Produktion Deiner individuellen Stahlkreation. Unsere Technik verwandelt Dein Design mit maximaler Genauigkeit in ein Metallprodukt. Dieses Produkt besticht nicht nur visuell, sondern spiegelt auch die Werte und Professionalität Deines Unternehmens wider.</p><p> </p><p>Unser innovatives Befestigungssystem ermöglicht eine einfache Montage Deiner Sonderanfertigung. Es erzeugt einen schwebenden Effekt, der das Werk effektvoll präsentiert.</p><p> </p><h2>Einzigartigkeit und Qualität für Dein Unternehmen</h2><p> </p><p>Bei Steelmonks verstehen wir die Bedeutung von Einzigartigkeit und hochwertiger Verarbeitung – besonders im Geschäftsumfeld. Gemeinsam mit Dir möchten wir beeindruckende Metallarbeiten schaffen, die Deine Marke repräsentieren und langfristig begeistern.</p><p> </p><p>Bist Du bereit, Deine Geschäftsräume mit individuellen Metallschildern aufzuwerten?</p><p> </p><p>Kontaktiere uns heute und entdecke, wie wir Deine geschäftliche Vision in Metall verwirklichen können. Unsere <a href=\"https://steelmonks.com/pages/fotogalerie\" target=\"_blank\">Fotogalerie</a> gibt Dir einen ersten Einblick in die Möglichkeiten und die Qualität unserer Arbeiten. Deine Ideen sind bei uns in den besten Händen.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_AF9AxH"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "padding_top": 0,
+        "padding_bottom": 40,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    }
+  },
+  "order": [
+    "main",
+    "steelmonks_parallax_richtext_4pXMQx",
+    "custom_header_W4hxnw",
+    "custom_image_slider_AVW7CX",
+    "accordions_xqfj73",
+    "1748614557bd1b673a",
+    "sm_scrolling_gallery_rCpCah",
+    "steelmonks_parallax_richtext_4UFHhE",
+    "custom_gallery_nPaKq6",
+    "accordions_higAa3"
+  ]
+}

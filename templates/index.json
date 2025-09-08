@@ -1,1 +1,545 @@
-{"sections":{"steelmonks_hero_BFdthq":{"type":"steelmonks-hero","settings":{}},"custom_icon_grid_Ahzicm":{"type":"custom_icon_grid","settings":{"show_two_items":false}},"steelmonks_collection_grid_k79tHx":{"type":"steelmonks-collection-grid","blocks":{"collection_YWCjD3":{"type":"collection","settings":{"collection":"monogramme","product":"","show_collection":true,"use_collection_title":false,"title":"Für Dich","url":"shopify:\/\/collections\/beliebt","image":"shopify:\/\/shop_images\/web-fur-dich-monogram.webp","text_color":"#000000"}},"collection_w9yRdb":{"type":"collection","settings":{"collection":"geschenke-fur-familien","product":"","show_collection":true,"use_collection_title":false,"title":"Für Familien","url":"shopify:\/\/collections\/geschenke-fur-familien","image":"shopify:\/\/shop_images\/web-monogram-family.webp","text_color":"#000000"}},"collection_tUdLDA":{"type":"collection","settings":{"collection":"geschenke-fur-paare","product":"","show_collection":true,"use_collection_title":false,"title":"Für Paare","url":"shopify:\/\/collections\/geschenke-fur-paare","image":"shopify:\/\/shop_images\/web-couples-hearts.webp","text_color":"#000000"}},"collection_d6jjDY":{"type":"collection","settings":{"collection":"geschenke-fur-handwerker","product":"","show_collection":true,"use_collection_title":false,"title":"Für Handwerker","url":"shopify:\/\/collections\/geschenke-fur-handwerker","image":"shopify:\/\/shop_images\/web-handworkers-png.png","text_color":"#000000"}},"collection_zBPaTF":{"type":"collection","settings":{"collection":"baum-familienschilder","product":"","show_collection":true,"use_collection_title":false,"title":"Bäume","url":"shopify:\/\/collections\/baum-familienschilder","image":"shopify:\/\/shop_images\/web-family-tree-baum.webp","text_color":"#000000"}},"collection_iTWK9F":{"type":"collection","settings":{"collection":"hausschilder","product":"","show_collection":true,"use_collection_title":false,"title":"Hausschilder","url":"shopify:\/\/collections\/hausschilder","image":"shopify:\/\/shop_images\/web-house-signs-numbers.webp","text_color":"#000000"}},"collection_w9p969":{"type":"collection","settings":{"collection":"","product":"","show_collection":true,"use_collection_title":false,"title":"Wappen","url":"\/pages\/heraldisches-wappen-aus-metall","image":"shopify:\/\/shop_images\/web-wappen-coat-of-arms.webp","text_color":"#000000"}},"collection_kYMjiB":{"type":"collection","settings":{"collection":"","product":"","show_collection":true,"use_collection_title":false,"title":"Sonderanfertigungen","url":"shopify:\/\/pages\/merchandise-und-produktanfrage","image":"shopify:\/\/shop_images\/web-custom-signs.webp","text_color":"#000000"}}},"block_order":["collection_YWCjD3","collection_w9yRdb","collection_tUdLDA","collection_d6jjDY","collection_zBPaTF","collection_iTWK9F","collection_w9p969","collection_kYMjiB"],"settings":{"title":"Beliebte Kollektionen","text_color":"#000000"}},"steelmonks_parallax_mFM7tW":{"type":"steelmonks-parallax","settings":{"cta":"Geschenke für Paare","cta_link":"\/collections\/geschenke-fur-paare","cta_style":"primary","liquid_mobile_title":"","liquid_desktop_title":"","inverse_order":false,"image":"shopify:\/\/shop_images\/web-monogram-family.webp","image_position":"center","image_width":500,"text_on_banner":"","banner":"shopify:\/\/shop_images\/web-gift-banner.webp"}},"steelmonks_parallax_BK9w8T":{"type":"steelmonks-parallax","settings":{"cta":"Hausschilder","cta_link":"\/collections\/hausschilder","cta_style":"primary","liquid_mobile_title":"","liquid_desktop_title":"","inverse_order":true,"image":"shopify:\/\/shop_images\/web-housenumbers-collection.webp","image_position":"center","image_width":700,"text_on_banner":"","banner":"shopify:\/\/shop_images\/web-streetsigns-banner.webp"}},"steelmonks_parallax_LLNJnL":{"type":"steelmonks-parallax","settings":{"cta":"Für die Feuerwehr","cta_link":"shopify:\/\/collections\/feuerwehr-geschenke","cta_style":"red","liquid_mobile_title":"","liquid_desktop_title":"","inverse_order":true,"image":"shopify:\/\/shop_images\/web-firefighter-hand-png.webp","image_position":"left","image_width":500,"text_on_banner":"","banner":"shopify:\/\/shop_images\/web-firefighter-banner.webp"}},"steelmonks_announcement_VHr6np":{"type":"steelmonks-announcement","blocks":{"announcement_tBid6k":{"type":"announcement","settings":{"text":"<p>📯 100% Glücksgarantie<\/p>","font_weight":600}}},"block_order":["announcement_tBid6k"],"settings":{"background_color":"#0044cc","text_color":"#fafaff"}},"steelmonks_horizontal_dropdowns_XDyUkz":{"type":"steelmonks-horizontal-dropdowns","settings":{}},"custom_icon_grid_ypXVPY":{"type":"custom_icon_grid","settings":{"show_two_items":true}},"1744354885bc91bacc":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_review_carousel_R8Gq7i":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/review-carousel\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_review_carousel_R8Gq7i"],"settings":{"include_margins":true}},"steelmonks_parallax_3W4JmT":{"type":"steelmonks-parallax","settings":{"cta":"Zur Anfrage","cta_link":"shopify:\/\/pages\/merchandise-und-produktanfrage","cta_style":"secondary","liquid_mobile_title":"","liquid_desktop_title":"","inverse_order":false,"image":"shopify:\/\/shop_images\/web-wasel_truck.webp","image_position":"center","image_width":500,"text_on_banner":"<p><strong>Merchandising & produktanfragen<\/strong><\/p>","banner":"shopify:\/\/shop_images\/web-wasel_banner.webp"}},"steelmonks_items_grid_EedtxA":{"type":"steelmonks-items-grid","blocks":{"items_row_cPL963":{"type":"items_row","settings":{"title":"Hausschilder","item1":"shopify:\/\/shop_images\/ST-2013-Shopify-Thumbnail_b86f3ef8-00ee-4dad-9582-3fdf9c1f2861.jpg","item1_link":"shopify:\/\/products\/modernes-strassenschild-einweihungsgeschenk","item2":"shopify:\/\/shop_images\/ST-1100-Shopify-Thumbnail_269b6069-aa0d-48dc-b70f-12163bfd7ea6.jpg","item2_link":"shopify:\/\/products\/hausnummer-mit-namen-einweihungsgeschenk","item3":"shopify:\/\/shop_images\/H-2610-Shopify-Thumbnail.jpg","item3_link":"shopify:\/\/products\/geschwungene-hausnummer-einweihungsgeschenk","item4":"shopify:\/\/shop_images\/H-2710-FR-Shopify-Thumbnail.webp","item4_link":"shopify:\/\/products\/moderne-zahl-hausnummer-einweihungsgeschenk","cta_text":"Mehr entdecken","cta_link":"shopify:\/\/collections\/hausschilder"}},"items_row_iQFXyQ":{"type":"items_row","settings":{"title":"","item1":"shopify:\/\/shop_images\/B-1018-Thumbnail-Master.jpg","item1_link":"shopify:\/\/products\/baum-des-lebens-familienschild-personalisiert","item2":"shopify:\/\/shop_images\/B-1006-Thumbnail-Master.jpg","item2_link":"shopify:\/\/products\/schild-alter-baum-des-lebens-einweihungsgeschenk","item3":"shopify:\/\/shop_images\/B-1005-Thumbnail-Master.jpg","item3_link":"shopify:\/\/products\/schild-parchen-vorm-baum-hochzeitsgeschenk","item4":"shopify:\/\/shop_images\/B-1015-Thumbnail-Master.jpg","item4_link":"shopify:\/\/products\/baum-des-lebens-einweihungsgeschenk","cta_text":"Mehr entdecken","cta_link":"shopify:\/\/collections\/baum-familienschilder"}},"items_row_GRndi4":{"type":"items_row","settings":{"title":"","item1":"shopify:\/\/shop_images\/Ivy_Monogramm.jpg","item1_link":"shopify:\/\/products\/monogramm-personalisierte-wanddekoration-hochzeitsgeschenk","item2":"shopify:\/\/shop_images\/M-1009-Thumbnail-Master.jpg","item2_link":"shopify:\/\/products\/modernes-monogramm-einweihungsgeschenk","item3":"shopify:\/\/shop_images\/M-1004-Thumbnail-Master_2a8f3d46-abe6-4b9b-a96c-60730e2ff015.jpg","item3_link":"shopify:\/\/products\/geschwungenes-monogramm-einweihungsgeschenk","item4":"shopify:\/\/shop_images\/M-1012-Thumbnail-Master.jpg","item4_link":"shopify:\/\/products\/monogramm-volle-blume","cta_text":"Mehr entdecken","cta_link":"shopify:\/\/collections\/monogramme"}},"items_row_qnFrbX":{"type":"items_row","settings":{"title":"","item1":"shopify:\/\/shop_images\/MS-4002-Shopify-Thumbnail.jpg","item1_link":"shopify:\/\/products\/metallschild-koordinaten-wanddekoration","item2":"shopify:\/\/shop_images\/MS-1074-Shopify-Thumbnail.jpg","item2_link":"shopify:\/\/products\/schild-karpfen-am-haken","item3":"shopify:\/\/shop_images\/MS-1052-Shopify-Thumbnail.jpg","item3_link":"shopify:\/\/products\/pferdekopf","item4":"shopify:\/\/shop_images\/MS-5003-Shopify-Thumbnail.jpg","item4_link":"shopify:\/\/products\/rundes-grillschild","cta_text":"Mehr entdecken","cta_link":"shopify:\/\/collections\/beliebt"}}},"block_order":["items_row_cPL963","items_row_iQFXyQ","items_row_GRndi4","items_row_qnFrbX"],"settings":{"padding_top":0,"padding_bottom":0,"padding_left":0,"padding_right":0}},"steelmonks_parallax_JgTRRj":{"type":"steelmonks-parallax","settings":{"cta":"Geschenke für Handwerker","cta_link":"shopify:\/\/collections\/geschenke-fur-handwerker","cta_style":"primary","liquid_mobile_title":"","liquid_desktop_title":"","inverse_order":true,"image":"shopify:\/\/shop_images\/web-handwerker_hand.webp","image_position":"left","image_width":500,"text_on_banner":"","banner":"shopify:\/\/shop_images\/web-banner_handworkers.webp"}},"steelmonks_info_grid_DWLQBG":{"type":"steelmonks-info-grid","blocks":{"info_grid_item_dBTgnT":{"type":"info_grid_item","settings":{"icon":"shopify:\/\/shop_images\/web-icon-free-shipping.svg","title":"Kostenfreier Versand","description":"Wir verschicken alle in unserem Shop verkauften Artikel, versandkostenfrei ab € 99,-."}},"info_grid_item_tgPqJz":{"type":"info_grid_item","settings":{"icon":"shopify:\/\/shop_images\/web-icon-easy-returns.svg","title":"Schnelle Bearbeitung","description":"Deine Bestellung wird innerhalb unserer kurzen Bearbeitungszeit von 7-10 Werktagen versandt."}},"info_grid_item_rrKbpr":{"type":"info_grid_item","settings":{"icon":"shopify:\/\/shop_images\/web-icon-great-support.svg","title":"Freundlicher Kundenservice","description":"Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns zu jeder Zeit erreichbar zu sein."}}},"block_order":["info_grid_item_dBTgnT","info_grid_item_tgPqJz","info_grid_item_rrKbpr"],"settings":{}},"steelmonks_parallax_richtext_hDBc3Q":{"type":"steelmonks-parallax-richtext","name":"Parallax Rich Text","settings":{"image":"shopify:\/\/shop_images\/web-galerie-banner.webp","title":"Galerie","link_text":"Jetzt ansehen","link":"shopify:\/\/pages\/fotogalerie"}},"steelmonks_deine_sm_GPbdxk":{"type":"steelmonks-deine-sm","blocks":{"text_bfMTgf":{"type":"text","name":"Item","settings":{"title":"Einzigartige Geschenke","text":"Geschenke die wirklich bewegen. Schilder und Anhänger mit Deinem persönlichen Wunschtext."}},"text_LjK3PG":{"type":"text","name":"Item","settings":{"title":"Sorgenfreies Kaufen","text":"Deine bevorzugte Zahlungsmethode oder mit Klarna zahlen erst nachdem Du Dein Schild bekommen hast."}},"text_hNFhCd":{"type":"text","name":"Item","settings":{"title":"100% Gücksgarantie","text":"100% des Geldes zurück, sogar wenn es dem Beschenkten nicht gefällt."}}},"block_order":["text_bfMTgf","text_LjK3PG","text_hNFhCd"],"name":"Deine Steelmonks","settings":{"title":"Deine","blue_text":"Steelmonks"}},"custom_icon_grid_h6mTRm":{"type":"custom_icon_grid","settings":{"show_two_items":true}},"174478799976fe2d49":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_trusted_stars_CUxPRy":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_trusted_stars_CUxPRy"],"settings":{"include_margins":true}},"collapsible_content_KktWWU":{"type":"collapsible-content","blocks":{"collapsible_row_RJJUTj":{"type":"collapsible_row","settings":{"heading":"Personalisierte Schlüsselanhänger und Metallschilder von Steelmonks.","icon":"clipboard","row_content":"<h2>Hausnummer<\/h2><p>Unsere <a href=\"https:\/\/steelmonks.com\/products\/hausnummer\" title=\"Hausnummer\"><strong>Hausnummer<\/strong><\/a> aus Edelstahl ist nicht nur praktisch, sondern auch ein echter Hingucker an deinem Zuhause. Jede Hausnummer wird individuell gefertigt und kann nach deinen Wünschen angepasst werden. Egal ob modern oder klassisch – unsere Hausnummer setzt ein stilvolles Statement und hält dank der hochwertigen Materialien jedem Wetter stand. Ideal kombiniert mit einem <a href=\"https:\/\/steelmonks.com\/products\/strassenschild-mit-hausnummer-1\" title=\"Straßenschild\"><strong>Straßenschild<\/strong><\/a> oder <a href=\"https:\/\/steelmonks.com\/collections\/hausschilder\" title=\"Hausschild\"><strong>Hausschild<\/strong><\/a>.<\/p><p>Erfahre mehr darüber, wie du deine Hausnummer optimal befestigst in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/de-cz\/blogs\/steelmonks-de\/wie-befestige-ich-eine-hausnummer\">Wie befestige ich eine Hausnummer?<\/a><\/p><h2>Monogramm<\/h2><p>Ein <a href=\"https:\/\/steelmonks.com\/products\/ivy-monogramm\" title=\"Monogramm\"><strong>Monogramm<\/strong><\/a> ist eine elegante Möglichkeit, deinem Zuhause eine persönliche Note zu verleihen. Bei uns kannst du dein eigenes Monogramm erstellen und nach deinen Vorstellungen gestalten. Es eignet sich auch hervorragend als Geschenk für besondere Anlässe.<\/p><p>Entdecke die Vielfalt und Möglichkeiten unserer Monogramme und erfahre mehr darüber in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/was-ist-ein-monogramm\">Was ist ein Monogramm?<\/a><\/p><h2>Geschenkideen für Handwerker<\/h2><p>Suchst du nach dem perfekten Geschenk für einen Handwerker? Bei uns findest du eine große Auswahl an individuellen Produkten wie <a href=\"https:\/\/steelmonks.com\/products\/zunftschild-geschenk-fuer-handwerker\" title=\"Zunftschild\"><strong>Zunftschild<\/strong><\/a>, <a href=\"https:\/\/steelmonks.com\/products\/zunftanhanger-geschenk-fuer-handwerker\" title=\"Zunft-Schlüsselanhänger\"><strong>Zunft-Schlüsselanhänger<\/strong><\/a>, <a href=\"https:\/\/steelmonks.com\/products\/zunft-feuerzeug-zippo%C2%AE-geschenk-fuer-handwerker\" title=\"Zunft Zippo Feuerzeug\"><strong>Zippo<\/strong><\/a>, <a href=\"https:\/\/steelmonks.com\/products\/zunft-kartenhalter-geschenk-fuer-handwerker\" title=\"Zunft Handwerker Kartenhalter\"><strong>Kartenhalter<\/strong><\/a> und unsere neuen <a href=\"https:\/\/steelmonks.com\/products\/zunft-anstecker\" title=\"Zunft Anstecker\"><strong>Zunft-Anstecker<\/strong><\/a>. Jedes Stück ist ein Zeichen der Wertschätzung für die Handwerkskunst.<\/p><p>Mehr Inspiration findest du in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/ideales-meister-geschenk-einzigartige-ideen-fur-handwerker\">Ideales Meister Geschenk – Einzigartige Ideen für Handwerker<\/a><\/p><h2>Feuerwehr Geschenke<\/h2><p>Entdecke die einzigartigen <a href=\"https:\/\/steelmonks.com\/collections\/feuerwehr-geschenke\" title=\"Feuerwehr Geschenke\"><strong>Feuerwehr Geschenke<\/strong><\/a> von Steelmonks. Ob du ein Geschenk für einen Feuerwehrmann oder eine Feuerwehrfrau suchst – wir haben die passenden Ideen. Unsere <a href=\"https:\/\/steelmonks.com\/products\/signet-feuerwehr-schluesselanhaenger\" title=\"Personalisierter Feuerwehr Schlüsselanhänger\"><strong>personalisierbaren Schlüsselanhänger<\/strong><\/a> und <a href=\"https:\/\/steelmonks.com\/products\/signet-feuerwehr-schild\" title=\"Feuerwehr Signet Metallschild\"><strong>Feuerwehr Signet Schilder<\/strong><\/a> sind besonders gefragt.<\/p><p>Erfahre mehr über unsere exklusiven Angebote in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/feuerwehr-logo-symbolik-bedeutung-und-geschenkideen\">Feuerwehr Logo – Symbolik, Bedeutung und Geschenkideen<\/a><\/p><h2>Pferde Geschenke<\/h2><p>Für alle Pferdeliebhaber haben wir wunderschöne <a href=\"https:\/\/steelmonks.com\/collections\/pferde-geschenke\" title=\"Pferde Geschenke\"><strong>Pferde Geschenke<\/strong><\/a>. Unsere Kollektion bietet eine Vielzahl an Geschenkideen fürs Reiten und Geschenke für Pferdeliebhaber, die jedes Reiterherz höher schlagen lassen.<\/p><p>Mehr dazu findest du in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/geschenkideen-fuer-reiter\">Geschenkideen für Reiter<\/a><\/p><h2>Gartendeko und Dekoideen für den Garten<br\/><\/h2><p>Unsere <a href=\"https:\/\/steelmonks.com\/collections\/rost-gartendeko\" title=\"Rost Gartendeko\"><strong>Gartendeko<\/strong><\/a> umfasst eine breite Palette von Produkten, darunter <strong>Gartenstelen<\/strong>, <strong>Baumstecker<\/strong>, <strong>Blumenstecker<\/strong> und vieles mehr. Diese Deko verleiht deinem Garten einen zeitlosen Charakter und macht ihn zu einem echten Hingucker.<\/p><p>Lies mehr über unsere kreativen Ideen in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/was-ist-cortenstahl-und-wofur-wird-es-verwendet\">Was ist Cortenstahl und wofür wird es verwendet?<\/a><\/p><h2>Firmenschild, Logo und Sonderanfertigungen<\/h2><p>Ein <strong>Firmenschild<\/strong> ist Dein Aushängeschild nach außen. Bei Steelmonks bieten wir maßgeschneiderte <strong>Sonderanfertigungen<\/strong> wie <strong>Stahlschilder<\/strong> und <strong>Logos<\/strong> für <strong>Geschäftskunden<\/strong>. Unsere hochwertigen Firmenschilder vermitteln Professionalität und schaffen Vertrauen bei Deinen Kunden.<\/p><p>Erfahre mehr darüber, was ein gutes Firmenschild ausmacht in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/was-schenkt-man-zur-einer-geschaftseroffnung\">Was schenkt man zur Geschäftseröffnung?<\/a><\/p>","page":""}}},"block_order":["collapsible_row_RJJUTj"],"disabled":true,"custom_css":["h2 {margin-top: 12px; margin-bottom: 12px;}","a {color: #04c;}"],"name":"t:sections.collapsible_content.presets.name","settings":{"caption":"","heading":"","heading_size":"h1","heading_alignment":"center","layout":"none","color_scheme":"","container_color_scheme":"","open_first_collapsible_row":false,"image_ratio":"adapt","desktop_layout":"image_second","padding_top":36,"padding_bottom":36}},"accordions_U48wFK":{"type":"accordions","blocks":{"accordion_RFhpjn":{"type":"accordion","settings":{"parent":"","heading":"Personalisierte Schlüsselanhänger und Metallschilder von Steelmonks.","content":"<h2>Hausnummer<\/h2><p>Unsere <a href=\"https:\/\/steelmonks.com\/products\/hausnummer\" title=\"Hausnummer\"><strong>Hausnummer<\/strong><\/a> aus Edelstahl ist nicht nur praktisch, sondern auch ein echter Hingucker an deinem Zuhause. Jede Hausnummer wird individuell gefertigt und kann nach deinen Wünschen angepasst werden. Egal ob modern oder klassisch – unsere Hausnummer setzt ein stilvolles Statement und hält dank der hochwertigen Materialien jedem Wetter stand. Ideal kombiniert mit einem <a href=\"https:\/\/steelmonks.com\/products\/strassenschild-mit-hausnummer-1\" title=\"Straßenschild\"><strong>Straßenschild<\/strong><\/a> oder <a href=\"https:\/\/steelmonks.com\/collections\/hausschilder\" title=\"Hausschild\"><strong>Hausschild<\/strong><\/a>.<\/p><p>Erfahre mehr darüber, wie du deine Hausnummer optimal befestigst in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/de-cz\/blogs\/steelmonks-de\/wie-befestige-ich-eine-hausnummer\">Wie befestige ich eine Hausnummer?<\/a><\/p><h2>Monogramm<\/h2><p>Ein <a href=\"https:\/\/steelmonks.com\/products\/ivy-monogramm\" title=\"Monogramm\"><strong>Monogramm<\/strong><\/a> ist eine elegante Möglichkeit, deinem Zuhause eine persönliche Note zu verleihen. Bei uns kannst du dein eigenes Monogramm erstellen und nach deinen Vorstellungen gestalten. Es eignet sich auch hervorragend als Geschenk für besondere Anlässe.<\/p><p>Entdecke die Vielfalt und Möglichkeiten unserer Monogramme und erfahre mehr darüber in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/was-ist-ein-monogramm\">Was ist ein Monogramm?<\/a><\/p><h2>Geschenkideen für Handwerker<\/h2><p>Suchst du nach dem perfekten Geschenk für einen Handwerker? Bei uns findest du eine große Auswahl an individuellen Produkten wie <a href=\"https:\/\/steelmonks.com\/products\/zunftschild-geschenk-fuer-handwerker\" title=\"Zunftschild\"><strong>Zunftschild<\/strong><\/a>, <a href=\"https:\/\/steelmonks.com\/products\/zunftanhanger-geschenk-fuer-handwerker\" title=\"Zunft-Schlüsselanhänger\"><strong>Zunft-Schlüsselanhänger<\/strong><\/a>, <a href=\"https:\/\/steelmonks.com\/products\/zunft-feuerzeug-zippo%C2%AE-geschenk-fuer-handwerker\" title=\"Zunft Zippo Feuerzeug\"><strong>Zippo<\/strong><\/a>, <a href=\"https:\/\/steelmonks.com\/products\/zunft-kartenhalter-geschenk-fuer-handwerker\" title=\"Zunft Handwerker Kartenhalter\"><strong>Kartenhalter<\/strong><\/a> und unsere neuen <a href=\"https:\/\/steelmonks.com\/products\/zunft-anstecker\" title=\"Zunft Anstecker\"><strong>Zunft-Anstecker<\/strong><\/a>. Jedes Stück ist ein Zeichen der Wertschätzung für die Handwerkskunst.<\/p><p>Mehr Inspiration findest du in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/ideales-meister-geschenk-einzigartige-ideen-fur-handwerker\">Ideales Meister Geschenk – Einzigartige Ideen für Handwerker<\/a><\/p><h2>Feuerwehr Geschenke<\/h2><p>Entdecke die einzigartigen <a href=\"https:\/\/steelmonks.com\/collections\/feuerwehr-geschenke\" title=\"Feuerwehr Geschenke\"><strong>Feuerwehr Geschenke<\/strong><\/a> von Steelmonks. Ob du ein Geschenk für einen Feuerwehrmann oder eine Feuerwehrfrau suchst – wir haben die passenden Ideen. Unsere <a href=\"https:\/\/steelmonks.com\/products\/signet-feuerwehr-schluesselanhaenger\" title=\"Personalisierter Feuerwehr Schlüsselanhänger\"><strong>personalisierbaren Schlüsselanhänger<\/strong><\/a> und <a href=\"https:\/\/steelmonks.com\/products\/signet-feuerwehr-schild\" title=\"Feuerwehr Signet Metallschild\"><strong>Feuerwehr Signet Schilder<\/strong><\/a> sind besonders gefragt.<\/p><p>Erfahre mehr über unsere exklusiven Angebote in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/feuerwehr-logo-symbolik-bedeutung-und-geschenkideen\">Feuerwehr Logo – Symbolik, Bedeutung und Geschenkideen<\/a><\/p><h2>Pferde Geschenke<\/h2><p>Für alle Pferdeliebhaber haben wir wunderschöne <a href=\"https:\/\/steelmonks.com\/collections\/pferde-geschenke\" title=\"Pferde Geschenke\"><strong>Pferde Geschenke<\/strong><\/a>. Unsere Kollektion bietet eine Vielzahl an Geschenkideen fürs Reiten und Geschenke für Pferdeliebhaber, die jedes Reiterherz höher schlagen lassen.<\/p><p>Mehr dazu findest du in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/geschenkideen-fuer-reiter\">Geschenkideen für Reiter<\/a><\/p><h2>Gartendeko und Dekoideen für den Garten<br\/><\/h2><p>Unsere <a href=\"https:\/\/steelmonks.com\/collections\/rost-gartendeko\" title=\"Rost Gartendeko\"><strong>Gartendeko<\/strong><\/a> umfasst eine breite Palette von Produkten, darunter <strong>Gartenstelen<\/strong>, <strong>Baumstecker<\/strong>, <strong>Blumenstecker<\/strong> und vieles mehr. Diese Deko verleiht deinem Garten einen zeitlosen Charakter und macht ihn zu einem echten Hingucker.<\/p><p>Lies mehr über unsere kreativen Ideen in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/was-ist-cortenstahl-und-wofur-wird-es-verwendet\">Was ist Cortenstahl und wofür wird es verwendet?<\/a><\/p><h2>Firmenschild, Logo und Sonderanfertigungen<\/h2><p>Ein <strong>Firmenschild<\/strong> ist Dein Aushängeschild nach außen. Bei Steelmonks bieten wir maßgeschneiderte <strong>Sonderanfertigungen<\/strong> wie <strong>Stahlschilder<\/strong> und <strong>Logos<\/strong> für <strong>Geschäftskunden<\/strong>. Unsere hochwertigen Firmenschilder vermitteln Professionalität und schaffen Vertrauen bei Deinen Kunden.<\/p><p>Erfahre mehr darüber, was ein gutes Firmenschild ausmacht in unserem Blogpost <a href=\"https:\/\/steelmonks.com\/blogs\/steelmonks-de\/was-schenkt-man-zur-einer-geschaftseroffnung\">Was schenkt man zur Geschäftseröffnung?<\/a><\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_RFhpjn"],"name":"Accordions","settings":{"heading":"","subheading":"","padding_top":24,"padding_bottom":24,"padding_left":24,"padding_right":24}}},"order":["steelmonks_hero_BFdthq","custom_icon_grid_Ahzicm","steelmonks_collection_grid_k79tHx","steelmonks_parallax_mFM7tW","steelmonks_parallax_BK9w8T","steelmonks_parallax_LLNJnL","steelmonks_announcement_VHr6np","steelmonks_horizontal_dropdowns_XDyUkz","custom_icon_grid_ypXVPY","1744354885bc91bacc","steelmonks_parallax_3W4JmT","steelmonks_items_grid_EedtxA","steelmonks_parallax_JgTRRj","steelmonks_info_grid_DWLQBG","steelmonks_parallax_richtext_hDBc3Q","steelmonks_deine_sm_GPbdxk","custom_icon_grid_h6mTRm","174478799976fe2d49","collapsible_content_KktWWU","accordions_U48wFK"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "steelmonks_hero_BFdthq": {
+      "type": "steelmonks-hero",
+      "settings": {}
+    },
+    "custom_icon_grid_Ahzicm": {
+      "type": "custom_icon_grid",
+      "settings": {
+        "show_two_items": false
+      }
+    },
+    "steelmonks_collection_grid_k79tHx": {
+      "type": "steelmonks-collection-grid",
+      "blocks": {
+        "collection_YWCjD3": {
+          "type": "collection",
+          "settings": {
+            "collection": "monogramme",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Für Dich",
+            "url": "shopify://collections/beliebt",
+            "image": "shopify://shop_images/web-fur-dich-monogram.webp",
+            "text_color": "#000000"
+          }
+        },
+        "collection_w9yRdb": {
+          "type": "collection",
+          "settings": {
+            "collection": "geschenke-fur-familien",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Für Familien",
+            "url": "shopify://collections/geschenke-fur-familien",
+            "image": "shopify://shop_images/web-monogram-family.webp",
+            "text_color": "#000000"
+          }
+        },
+        "collection_tUdLDA": {
+          "type": "collection",
+          "settings": {
+            "collection": "geschenke-fur-paare",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Für Paare",
+            "url": "shopify://collections/geschenke-fur-paare",
+            "image": "shopify://shop_images/web-couples-hearts.webp",
+            "text_color": "#000000"
+          }
+        },
+        "collection_d6jjDY": {
+          "type": "collection",
+          "settings": {
+            "collection": "geschenke-fur-handwerker",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Für Handwerker",
+            "url": "shopify://collections/geschenke-fur-handwerker",
+            "image": "shopify://shop_images/web-handworkers-png.png",
+            "text_color": "#000000"
+          }
+        },
+        "collection_zBPaTF": {
+          "type": "collection",
+          "settings": {
+            "collection": "baum-familienschilder",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Bäume",
+            "url": "shopify://collections/baum-familienschilder",
+            "image": "shopify://shop_images/web-family-tree-baum.webp",
+            "text_color": "#000000"
+          }
+        },
+        "collection_iTWK9F": {
+          "type": "collection",
+          "settings": {
+            "collection": "hausschilder",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Hausschilder",
+            "url": "shopify://collections/hausschilder",
+            "image": "shopify://shop_images/web-house-signs-numbers.webp",
+            "text_color": "#000000"
+          }
+        },
+        "collection_w9p969": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Wappen",
+            "url": "/pages/heraldisches-wappen-aus-metall",
+            "image": "shopify://shop_images/web-wappen-coat-of-arms.webp",
+            "text_color": "#000000"
+          }
+        },
+        "collection_kYMjiB": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "product": "",
+            "show_collection": true,
+            "use_collection_title": false,
+            "title": "Sonderanfertigungen",
+            "url": "shopify://pages/merchandise-und-produktanfrage",
+            "image": "shopify://shop_images/web-custom-signs.webp",
+            "text_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "collection_YWCjD3",
+        "collection_w9yRdb",
+        "collection_tUdLDA",
+        "collection_d6jjDY",
+        "collection_zBPaTF",
+        "collection_iTWK9F",
+        "collection_w9p969",
+        "collection_kYMjiB"
+      ],
+      "settings": {
+        "title": "Beliebte Kollektionen",
+        "text_color": "#000000"
+      }
+    },
+    "steelmonks_parallax_mFM7tW": {
+      "type": "steelmonks-parallax",
+      "settings": {
+        "cta": "Geschenke für Paare",
+        "cta_link": "/collections/geschenke-fur-paare",
+        "cta_style": "primary",
+        "liquid_mobile_title": "",
+        "liquid_desktop_title": "",
+        "inverse_order": false,
+        "image": "shopify://shop_images/web-monogram-family.webp",
+        "image_position": "center",
+        "image_width": 500,
+        "text_on_banner": "",
+        "banner": "shopify://shop_images/web-gift-banner.webp"
+      }
+    },
+    "steelmonks_parallax_BK9w8T": {
+      "type": "steelmonks-parallax",
+      "settings": {
+        "cta": "Hausschilder",
+        "cta_link": "/collections/hausschilder",
+        "cta_style": "primary",
+        "liquid_mobile_title": "",
+        "liquid_desktop_title": "",
+        "inverse_order": true,
+        "image": "shopify://shop_images/web-housenumbers-collection.webp",
+        "image_position": "center",
+        "image_width": 700,
+        "text_on_banner": "",
+        "banner": "shopify://shop_images/web-streetsigns-banner.webp"
+      }
+    },
+    "steelmonks_parallax_LLNJnL": {
+      "type": "steelmonks-parallax",
+      "settings": {
+        "cta": "Für die Feuerwehr",
+        "cta_link": "shopify://collections/feuerwehr-geschenke",
+        "cta_style": "red",
+        "liquid_mobile_title": "",
+        "liquid_desktop_title": "",
+        "inverse_order": true,
+        "image": "shopify://shop_images/web-firefighter-hand-png.webp",
+        "image_position": "left",
+        "image_width": 500,
+        "text_on_banner": "",
+        "banner": "shopify://shop_images/web-firefighter-banner.webp"
+      }
+    },
+    "steelmonks_announcement_VHr6np": {
+      "type": "steelmonks-announcement",
+      "blocks": {
+        "announcement_tBid6k": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>📯 100% Glücksgarantie</p>",
+            "font_weight": 600
+          }
+        }
+      },
+      "block_order": [
+        "announcement_tBid6k"
+      ],
+      "settings": {
+        "background_color": "#0044cc",
+        "text_color": "#fafaff"
+      }
+    },
+    "steelmonks_horizontal_dropdowns_XDyUkz": {
+      "type": "steelmonks-horizontal-dropdowns",
+      "settings": {}
+    },
+    "custom_icon_grid_ypXVPY": {
+      "type": "custom_icon_grid",
+      "settings": {
+        "show_two_items": true
+      }
+    },
+    "1744354885bc91bacc": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_review_carousel_R8Gq7i": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/review-carousel/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_review_carousel_R8Gq7i"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "steelmonks_parallax_3W4JmT": {
+      "type": "steelmonks-parallax",
+      "settings": {
+        "cta": "Zur Anfrage",
+        "cta_link": "shopify://pages/merchandise-und-produktanfrage",
+        "cta_style": "secondary",
+        "liquid_mobile_title": "",
+        "liquid_desktop_title": "",
+        "inverse_order": false,
+        "image": "shopify://shop_images/web-wasel_truck.webp",
+        "image_position": "center",
+        "image_width": 500,
+        "text_on_banner": "<p><strong>Merchandising & produktanfragen</strong></p>",
+        "banner": "shopify://shop_images/web-wasel_banner.webp"
+      }
+    },
+    "steelmonks_items_grid_EedtxA": {
+      "type": "steelmonks-items-grid",
+      "blocks": {
+        "items_row_cPL963": {
+          "type": "items_row",
+          "settings": {
+            "title": "Hausschilder",
+            "item1": "shopify://shop_images/ST-2013-Shopify-Thumbnail_b86f3ef8-00ee-4dad-9582-3fdf9c1f2861.jpg",
+            "item1_link": "shopify://products/modernes-strassenschild-einweihungsgeschenk",
+            "item2": "shopify://shop_images/ST-1100-Shopify-Thumbnail_269b6069-aa0d-48dc-b70f-12163bfd7ea6.jpg",
+            "item2_link": "shopify://products/hausnummer-mit-namen-einweihungsgeschenk",
+            "item3": "shopify://shop_images/H-2610-Shopify-Thumbnail.jpg",
+            "item3_link": "shopify://products/geschwungene-hausnummer-einweihungsgeschenk",
+            "item4": "shopify://shop_images/H-2710-FR-Shopify-Thumbnail.webp",
+            "item4_link": "shopify://products/moderne-zahl-hausnummer-einweihungsgeschenk",
+            "cta_text": "Mehr entdecken",
+            "cta_link": "shopify://collections/hausschilder"
+          }
+        },
+        "items_row_iQFXyQ": {
+          "type": "items_row",
+          "settings": {
+            "title": "",
+            "item1": "shopify://shop_images/B-1018-Thumbnail-Master.jpg",
+            "item1_link": "shopify://products/baum-des-lebens-familienschild-personalisiert",
+            "item2": "shopify://shop_images/B-1006-Thumbnail-Master.jpg",
+            "item2_link": "shopify://products/schild-alter-baum-des-lebens-einweihungsgeschenk",
+            "item3": "shopify://shop_images/B-1005-Thumbnail-Master.jpg",
+            "item3_link": "shopify://products/schild-parchen-vorm-baum-hochzeitsgeschenk",
+            "item4": "shopify://shop_images/B-1015-Thumbnail-Master.jpg",
+            "item4_link": "shopify://products/baum-des-lebens-einweihungsgeschenk",
+            "cta_text": "Mehr entdecken",
+            "cta_link": "shopify://collections/baum-familienschilder"
+          }
+        },
+        "items_row_GRndi4": {
+          "type": "items_row",
+          "settings": {
+            "title": "",
+            "item1": "shopify://shop_images/Ivy_Monogramm.jpg",
+            "item1_link": "shopify://products/monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
+            "item2": "shopify://shop_images/M-1009-Thumbnail-Master.jpg",
+            "item2_link": "shopify://products/modernes-monogramm-einweihungsgeschenk",
+            "item3": "shopify://shop_images/M-1004-Thumbnail-Master_2a8f3d46-abe6-4b9b-a96c-60730e2ff015.jpg",
+            "item3_link": "shopify://products/geschwungenes-monogramm-einweihungsgeschenk",
+            "item4": "shopify://shop_images/M-1012-Thumbnail-Master.jpg",
+            "item4_link": "shopify://products/monogramm-volle-blume",
+            "cta_text": "Mehr entdecken",
+            "cta_link": "shopify://collections/monogramme"
+          }
+        },
+        "items_row_qnFrbX": {
+          "type": "items_row",
+          "settings": {
+            "title": "",
+            "item1": "shopify://shop_images/MS-4002-Shopify-Thumbnail.jpg",
+            "item1_link": "shopify://products/metallschild-koordinaten-wanddekoration",
+            "item2": "shopify://shop_images/MS-1074-Shopify-Thumbnail.jpg",
+            "item2_link": "shopify://products/schild-karpfen-am-haken",
+            "item3": "shopify://shop_images/MS-1052-Shopify-Thumbnail.jpg",
+            "item3_link": "shopify://products/pferdekopf",
+            "item4": "shopify://shop_images/MS-5003-Shopify-Thumbnail.jpg",
+            "item4_link": "shopify://products/rundes-grillschild",
+            "cta_text": "Mehr entdecken",
+            "cta_link": "shopify://collections/beliebt"
+          }
+        }
+      },
+      "block_order": [
+        "items_row_cPL963",
+        "items_row_iQFXyQ",
+        "items_row_GRndi4",
+        "items_row_qnFrbX"
+      ],
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "padding_left": 0,
+        "padding_right": 0
+      }
+    },
+    "steelmonks_parallax_JgTRRj": {
+      "type": "steelmonks-parallax",
+      "settings": {
+        "cta": "Geschenke für Handwerker",
+        "cta_link": "shopify://collections/geschenke-fur-handwerker",
+        "cta_style": "primary",
+        "liquid_mobile_title": "",
+        "liquid_desktop_title": "",
+        "inverse_order": true,
+        "image": "shopify://shop_images/web-handwerker_hand.webp",
+        "image_position": "left",
+        "image_width": 500,
+        "text_on_banner": "",
+        "banner": "shopify://shop_images/web-banner_handworkers.webp"
+      }
+    },
+    "steelmonks_info_grid_DWLQBG": {
+      "type": "steelmonks-info-grid",
+      "blocks": {
+        "info_grid_item_dBTgnT": {
+          "type": "info_grid_item",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-free-shipping.svg",
+            "title": "Kostenfreier Versand",
+            "description": "Wir verschicken alle in unserem Shop verkauften Artikel, versandkostenfrei ab € 99,-."
+          }
+        },
+        "info_grid_item_tgPqJz": {
+          "type": "info_grid_item",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-easy-returns.svg",
+            "title": "Schnelle Bearbeitung",
+            "description": "Deine Bestellung wird innerhalb unserer kurzen Bearbeitungszeit von 7-10 Werktagen versandt."
+          }
+        },
+        "info_grid_item_rrKbpr": {
+          "type": "info_grid_item",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-great-support.svg",
+            "title": "Freundlicher Kundenservice",
+            "description": "Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns zu jeder Zeit erreichbar zu sein."
+          }
+        }
+      },
+      "block_order": [
+        "info_grid_item_dBTgnT",
+        "info_grid_item_tgPqJz",
+        "info_grid_item_rrKbpr"
+      ],
+      "settings": {}
+    },
+    "steelmonks_parallax_richtext_hDBc3Q": {
+      "type": "steelmonks-parallax-richtext",
+      "name": "Parallax Rich Text",
+      "settings": {
+        "image": "shopify://shop_images/web-galerie-banner.webp",
+        "title": "<p>Galerie</p>",
+        "link_text": "<p>Jetzt ansehen</p>",
+        "link": "shopify://pages/fotogalerie"
+      }
+    },
+    "steelmonks_deine_sm_GPbdxk": {
+      "type": "steelmonks-deine-sm",
+      "blocks": {
+        "text_bfMTgf": {
+          "type": "text",
+          "name": "Item",
+          "settings": {
+            "title": "Einzigartige Geschenke",
+            "text": "Geschenke die wirklich bewegen. Schilder und Anhänger mit Deinem persönlichen Wunschtext."
+          }
+        },
+        "text_LjK3PG": {
+          "type": "text",
+          "name": "Item",
+          "settings": {
+            "title": "Sorgenfreies Kaufen",
+            "text": "Deine bevorzugte Zahlungsmethode oder mit Klarna zahlen erst nachdem Du Dein Schild bekommen hast."
+          }
+        },
+        "text_hNFhCd": {
+          "type": "text",
+          "name": "Item",
+          "settings": {
+            "title": "100% Gücksgarantie",
+            "text": "100% des Geldes zurück, sogar wenn es dem Beschenkten nicht gefällt."
+          }
+        }
+      },
+      "block_order": [
+        "text_bfMTgf",
+        "text_LjK3PG",
+        "text_hNFhCd"
+      ],
+      "name": "Deine Steelmonks",
+      "settings": {
+        "title": "Deine",
+        "blue_text": "Steelmonks"
+      }
+    },
+    "custom_icon_grid_h6mTRm": {
+      "type": "custom_icon_grid",
+      "settings": {
+        "show_two_items": true
+      }
+    },
+    "174478799976fe2d49": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_CUxPRy": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_CUxPRy"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "collapsible_content_KktWWU": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_RJJUTj": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Personalisierte Schlüsselanhänger und Metallschilder von Steelmonks.",
+            "icon": "clipboard",
+            "row_content": "<h2>Hausnummer</h2><p>Unsere <a href=\"https://steelmonks.com/products/hausnummer\" title=\"Hausnummer\"><strong>Hausnummer</strong></a> aus Edelstahl ist nicht nur praktisch, sondern auch ein echter Hingucker an deinem Zuhause. Jede Hausnummer wird individuell gefertigt und kann nach deinen Wünschen angepasst werden. Egal ob modern oder klassisch – unsere Hausnummer setzt ein stilvolles Statement und hält dank der hochwertigen Materialien jedem Wetter stand. Ideal kombiniert mit einem <a href=\"https://steelmonks.com/products/strassenschild-mit-hausnummer-1\" title=\"Straßenschild\"><strong>Straßenschild</strong></a> oder <a href=\"https://steelmonks.com/collections/hausschilder\" title=\"Hausschild\"><strong>Hausschild</strong></a>.</p><p>Erfahre mehr darüber, wie du deine Hausnummer optimal befestigst in unserem Blogpost <a href=\"https://steelmonks.com/de-cz/blogs/steelmonks-de/wie-befestige-ich-eine-hausnummer\">Wie befestige ich eine Hausnummer?</a></p><h2>Monogramm</h2><p>Ein <a href=\"https://steelmonks.com/products/ivy-monogramm\" title=\"Monogramm\"><strong>Monogramm</strong></a> ist eine elegante Möglichkeit, deinem Zuhause eine persönliche Note zu verleihen. Bei uns kannst du dein eigenes Monogramm erstellen und nach deinen Vorstellungen gestalten. Es eignet sich auch hervorragend als Geschenk für besondere Anlässe.</p><p>Entdecke die Vielfalt und Möglichkeiten unserer Monogramme und erfahre mehr darüber in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-ein-monogramm\">Was ist ein Monogramm?</a></p><h2>Geschenkideen für Handwerker</h2><p>Suchst du nach dem perfekten Geschenk für einen Handwerker? Bei uns findest du eine große Auswahl an individuellen Produkten wie <a href=\"https://steelmonks.com/products/zunftschild-geschenk-fuer-handwerker\" title=\"Zunftschild\"><strong>Zunftschild</strong></a>, <a href=\"https://steelmonks.com/products/zunftanhanger-geschenk-fuer-handwerker\" title=\"Zunft-Schlüsselanhänger\"><strong>Zunft-Schlüsselanhänger</strong></a>, <a href=\"https://steelmonks.com/products/zunft-feuerzeug-zippo%C2%AE-geschenk-fuer-handwerker\" title=\"Zunft Zippo Feuerzeug\"><strong>Zippo</strong></a>, <a href=\"https://steelmonks.com/products/zunft-kartenhalter-geschenk-fuer-handwerker\" title=\"Zunft Handwerker Kartenhalter\"><strong>Kartenhalter</strong></a> und unsere neuen <a href=\"https://steelmonks.com/products/zunft-anstecker\" title=\"Zunft Anstecker\"><strong>Zunft-Anstecker</strong></a>. Jedes Stück ist ein Zeichen der Wertschätzung für die Handwerkskunst.</p><p>Mehr Inspiration findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/ideales-meister-geschenk-einzigartige-ideen-fur-handwerker\">Ideales Meister Geschenk – Einzigartige Ideen für Handwerker</a></p><h2>Feuerwehr Geschenke</h2><p>Entdecke die einzigartigen <a href=\"https://steelmonks.com/collections/feuerwehr-geschenke\" title=\"Feuerwehr Geschenke\"><strong>Feuerwehr Geschenke</strong></a> von Steelmonks. Ob du ein Geschenk für einen Feuerwehrmann oder eine Feuerwehrfrau suchst – wir haben die passenden Ideen. Unsere <a href=\"https://steelmonks.com/products/signet-feuerwehr-schluesselanhaenger\" title=\"Personalisierter Feuerwehr Schlüsselanhänger\"><strong>personalisierbaren Schlüsselanhänger</strong></a> und <a href=\"https://steelmonks.com/products/signet-feuerwehr-schild\" title=\"Feuerwehr Signet Metallschild\"><strong>Feuerwehr Signet Schilder</strong></a> sind besonders gefragt.</p><p>Erfahre mehr über unsere exklusiven Angebote in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/feuerwehr-logo-symbolik-bedeutung-und-geschenkideen\">Feuerwehr Logo – Symbolik, Bedeutung und Geschenkideen</a></p><h2>Pferde Geschenke</h2><p>Für alle Pferdeliebhaber haben wir wunderschöne <a href=\"https://steelmonks.com/collections/pferde-geschenke\" title=\"Pferde Geschenke\"><strong>Pferde Geschenke</strong></a>. Unsere Kollektion bietet eine Vielzahl an Geschenkideen fürs Reiten und Geschenke für Pferdeliebhaber, die jedes Reiterherz höher schlagen lassen.</p><p>Mehr dazu findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/geschenkideen-fuer-reiter\">Geschenkideen für Reiter</a></p><h2>Gartendeko und Dekoideen für den Garten<br/></h2><p>Unsere <a href=\"https://steelmonks.com/collections/rost-gartendeko\" title=\"Rost Gartendeko\"><strong>Gartendeko</strong></a> umfasst eine breite Palette von Produkten, darunter <strong>Gartenstelen</strong>, <strong>Baumstecker</strong>, <strong>Blumenstecker</strong> und vieles mehr. Diese Deko verleiht deinem Garten einen zeitlosen Charakter und macht ihn zu einem echten Hingucker.</p><p>Lies mehr über unsere kreativen Ideen in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-cortenstahl-und-wofur-wird-es-verwendet\">Was ist Cortenstahl und wofür wird es verwendet?</a></p><h2>Firmenschild, Logo und Sonderanfertigungen</h2><p>Ein <strong>Firmenschild</strong> ist Dein Aushängeschild nach außen. Bei Steelmonks bieten wir maßgeschneiderte <strong>Sonderanfertigungen</strong> wie <strong>Stahlschilder</strong> und <strong>Logos</strong> für <strong>Geschäftskunden</strong>. Unsere hochwertigen Firmenschilder vermitteln Professionalität und schaffen Vertrauen bei Deinen Kunden.</p><p>Erfahre mehr darüber, was ein gutes Firmenschild ausmacht in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-schenkt-man-zur-einer-geschaftseroffnung\">Was schenkt man zur Geschäftseröffnung?</a></p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_RJJUTj"
+      ],
+      "disabled": true,
+      "custom_css": [
+        "h2 {margin-top: 12px; margin-bottom: 12px;}",
+        "a {color: #04c;}"
+      ],
+      "name": "t:sections.collapsible_content.presets.name",
+      "settings": {
+        "caption": "",
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "color_scheme": "",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "accordions_U48wFK": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_RFhpjn": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Personalisierte Schlüsselanhänger und Metallschilder von Steelmonks.",
+            "content": "<h2>Hausnummer</h2><p>Unsere <a href=\"https://steelmonks.com/products/hausnummer\" title=\"Hausnummer\"><strong>Hausnummer</strong></a> aus Edelstahl ist nicht nur praktisch, sondern auch ein echter Hingucker an deinem Zuhause. Jede Hausnummer wird individuell gefertigt und kann nach deinen Wünschen angepasst werden. Egal ob modern oder klassisch – unsere Hausnummer setzt ein stilvolles Statement und hält dank der hochwertigen Materialien jedem Wetter stand. Ideal kombiniert mit einem <a href=\"https://steelmonks.com/products/strassenschild-mit-hausnummer-1\" title=\"Straßenschild\"><strong>Straßenschild</strong></a> oder <a href=\"https://steelmonks.com/collections/hausschilder\" title=\"Hausschild\"><strong>Hausschild</strong></a>.</p><p>Erfahre mehr darüber, wie du deine Hausnummer optimal befestigst in unserem Blogpost <a href=\"https://steelmonks.com/de-cz/blogs/steelmonks-de/wie-befestige-ich-eine-hausnummer\">Wie befestige ich eine Hausnummer?</a></p><h2>Monogramm</h2><p>Ein <a href=\"https://steelmonks.com/products/ivy-monogramm\" title=\"Monogramm\"><strong>Monogramm</strong></a> ist eine elegante Möglichkeit, deinem Zuhause eine persönliche Note zu verleihen. Bei uns kannst du dein eigenes Monogramm erstellen und nach deinen Vorstellungen gestalten. Es eignet sich auch hervorragend als Geschenk für besondere Anlässe.</p><p>Entdecke die Vielfalt und Möglichkeiten unserer Monogramme und erfahre mehr darüber in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-ein-monogramm\">Was ist ein Monogramm?</a></p><h2>Geschenkideen für Handwerker</h2><p>Suchst du nach dem perfekten Geschenk für einen Handwerker? Bei uns findest du eine große Auswahl an individuellen Produkten wie <a href=\"https://steelmonks.com/products/zunftschild-geschenk-fuer-handwerker\" title=\"Zunftschild\"><strong>Zunftschild</strong></a>, <a href=\"https://steelmonks.com/products/zunftanhanger-geschenk-fuer-handwerker\" title=\"Zunft-Schlüsselanhänger\"><strong>Zunft-Schlüsselanhänger</strong></a>, <a href=\"https://steelmonks.com/products/zunft-feuerzeug-zippo%C2%AE-geschenk-fuer-handwerker\" title=\"Zunft Zippo Feuerzeug\"><strong>Zippo</strong></a>, <a href=\"https://steelmonks.com/products/zunft-kartenhalter-geschenk-fuer-handwerker\" title=\"Zunft Handwerker Kartenhalter\"><strong>Kartenhalter</strong></a> und unsere neuen <a href=\"https://steelmonks.com/products/zunft-anstecker\" title=\"Zunft Anstecker\"><strong>Zunft-Anstecker</strong></a>. Jedes Stück ist ein Zeichen der Wertschätzung für die Handwerkskunst.</p><p>Mehr Inspiration findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/ideales-meister-geschenk-einzigartige-ideen-fur-handwerker\">Ideales Meister Geschenk – Einzigartige Ideen für Handwerker</a></p><h2>Feuerwehr Geschenke</h2><p>Entdecke die einzigartigen <a href=\"https://steelmonks.com/collections/feuerwehr-geschenke\" title=\"Feuerwehr Geschenke\"><strong>Feuerwehr Geschenke</strong></a> von Steelmonks. Ob du ein Geschenk für einen Feuerwehrmann oder eine Feuerwehrfrau suchst – wir haben die passenden Ideen. Unsere <a href=\"https://steelmonks.com/products/signet-feuerwehr-schluesselanhaenger\" title=\"Personalisierter Feuerwehr Schlüsselanhänger\"><strong>personalisierbaren Schlüsselanhänger</strong></a> und <a href=\"https://steelmonks.com/products/signet-feuerwehr-schild\" title=\"Feuerwehr Signet Metallschild\"><strong>Feuerwehr Signet Schilder</strong></a> sind besonders gefragt.</p><p>Erfahre mehr über unsere exklusiven Angebote in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/feuerwehr-logo-symbolik-bedeutung-und-geschenkideen\">Feuerwehr Logo – Symbolik, Bedeutung und Geschenkideen</a></p><h2>Pferde Geschenke</h2><p>Für alle Pferdeliebhaber haben wir wunderschöne <a href=\"https://steelmonks.com/collections/pferde-geschenke\" title=\"Pferde Geschenke\"><strong>Pferde Geschenke</strong></a>. Unsere Kollektion bietet eine Vielzahl an Geschenkideen fürs Reiten und Geschenke für Pferdeliebhaber, die jedes Reiterherz höher schlagen lassen.</p><p>Mehr dazu findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/geschenkideen-fuer-reiter\">Geschenkideen für Reiter</a></p><h2>Gartendeko und Dekoideen für den Garten<br/></h2><p>Unsere <a href=\"https://steelmonks.com/collections/rost-gartendeko\" title=\"Rost Gartendeko\"><strong>Gartendeko</strong></a> umfasst eine breite Palette von Produkten, darunter <strong>Gartenstelen</strong>, <strong>Baumstecker</strong>, <strong>Blumenstecker</strong> und vieles mehr. Diese Deko verleiht deinem Garten einen zeitlosen Charakter und macht ihn zu einem echten Hingucker.</p><p>Lies mehr über unsere kreativen Ideen in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-cortenstahl-und-wofur-wird-es-verwendet\">Was ist Cortenstahl und wofür wird es verwendet?</a></p><h2>Firmenschild, Logo und Sonderanfertigungen</h2><p>Ein <strong>Firmenschild</strong> ist Dein Aushängeschild nach außen. Bei Steelmonks bieten wir maßgeschneiderte <strong>Sonderanfertigungen</strong> wie <strong>Stahlschilder</strong> und <strong>Logos</strong> für <strong>Geschäftskunden</strong>. Unsere hochwertigen Firmenschilder vermitteln Professionalität und schaffen Vertrauen bei Deinen Kunden.</p><p>Erfahre mehr darüber, was ein gutes Firmenschild ausmacht in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-schenkt-man-zur-einer-geschaftseroffnung\">Was schenkt man zur Geschäftseröffnung?</a></p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_RFhpjn"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    }
+  },
+  "order": [
+    "steelmonks_hero_BFdthq",
+    "custom_icon_grid_Ahzicm",
+    "steelmonks_collection_grid_k79tHx",
+    "steelmonks_parallax_mFM7tW",
+    "steelmonks_parallax_BK9w8T",
+    "steelmonks_parallax_LLNJnL",
+    "steelmonks_announcement_VHr6np",
+    "steelmonks_horizontal_dropdowns_XDyUkz",
+    "custom_icon_grid_ypXVPY",
+    "1744354885bc91bacc",
+    "steelmonks_parallax_3W4JmT",
+    "steelmonks_items_grid_EedtxA",
+    "steelmonks_parallax_JgTRRj",
+    "steelmonks_info_grid_DWLQBG",
+    "steelmonks_parallax_richtext_hDBc3Q",
+    "steelmonks_deine_sm_GPbdxk",
+    "custom_icon_grid_h6mTRm",
+    "174478799976fe2d49",
+    "collapsible_content_KktWWU",
+    "accordions_U48wFK"
+  ]
+}

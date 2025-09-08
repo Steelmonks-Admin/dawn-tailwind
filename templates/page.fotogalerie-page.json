@@ -1,1 +1,312 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"steelmonks_parallax_richtext_jtfCdy":{"type":"steelmonks-parallax-richtext","name":"Parallax Rich Text","settings":{"image":"shopify:\/\/shop_images\/web-wasel_banner.webp","title":"Zeit zu zeigen was wir können...","link_text":"","link":""}},"custom_header_6z9xdt":{"type":"custom-header","name":"Custom Header","settings":{"richtext":"<p><strong>Von Deiner Idee, zu einem<\/strong><\/p><h1><strong>Kunstwerk aus Stahl<\/strong><\/h1>","button_text":"","button_link":"","image":"shopify:\/\/shop_images\/sm-train.webp"}},"custom_image_slider_cdg8ep":{"type":"custom-image-slider","blocks":{"slider_block_y7KFx7":{"type":"slider_block","settings":{"richtext":"","slide_count":3,"image_1":"shopify:\/\/shop_images\/Firmenlogo.png","image_2":"shopify:\/\/shop_images\/web-custom-signs.webp","image_3":"shopify:\/\/shop_images\/web-Signet.svg"}},"slider_block_x9n4b9":{"type":"slider_block","settings":{"richtext":"","slide_count":3,"image_1":"shopify:\/\/shop_images\/steelmonks-metallschild-motivschild-untrennbares-parchen-schwarz-ral-9005-22_5cm_ed2ca5f9-af5c-4e17-a020-e7927b4801d9.jpg","image_2":"shopify:\/\/shop_images\/steelmonks-metallschild-sternzeichen-schild-tarot-karte-schild-schwarz-ral-9005-22_5cm-7.jpg","image_3":"shopify:\/\/shop_images\/steelmonks-metallschild-sternzeichen-schild-tarot-karte-schild-schwarz-ral-9005-22_5cm-4.jpg"}},"slider_block_q7JdAT":{"type":"slider_block","settings":{"richtext":"","slide_count":3,"image_1":"shopify:\/\/shop_images\/Firmenschild.png","image_2":"shopify:\/\/shop_images\/steelmonks-metallschild-motivschild-zwei-herzen-schwarz-ral-9005-22_5cm-2.webp","image_3":"shopify:\/\/shop_images\/steelmonks-metallschild-motivschild-unendliche-namen-schwarz-ral-9005-22_5cm_3aa3a94b-1a1c-442c-b0e8-0e8da320e569.jpg"}}},"block_order":["slider_block_y7KFx7","slider_block_x9n4b9","slider_block_q7JdAT"],"name":"Custom Image Sliders","settings":{}},"multirow_cp9WDr":{"type":"multirow","blocks":{"row_wHmt8D":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/web-custom-signs.webp","caption":"","heading":"<strong>Privatkunden<\/strong>","text":"","button_label":"Mehr entdecken","button_link":"shopify:\/\/pages\/anfragen"}},"row_fzj9L6":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/Firmenschild-removebg.png","caption":"","heading":"Firmenkunden","text":"","button_label":"Mehr entdecken","button_link":"shopify:\/\/pages\/dein-firmenschild"}},"row_9aXC7f":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/web-wappen-coat-of-arms.webp","caption":"","heading":"Wappen","text":"","button_label":"Mehr entdecken","button_link":"shopify:\/\/pages\/heraldisches-wappen-aus-metall"}}},"block_order":["row_wHmt8D","row_fzj9L6","row_9aXC7f"],"name":"t:sections.multirow.presets.name","settings":{"image_height":"medium","desktop_image_width":"medium","heading_size":"h1","text_style":"body","button_style":"secondary","desktop_content_position":"middle","desktop_content_alignment":"left","image_layout":"alternate-left","section_color_scheme":"","row_color_scheme":"","mobile_content_alignment":"left","padding_top":36,"padding_bottom":36}},"sm_scrolling_gallery_rCpCah":{"type":"sm-scrolling-gallery","blocks":{"row_of_images_4tKMKr":{"type":"row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"16 \/ 9"}},"inversed_row_of_images_47gPRR":{"type":"inversed_row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"5 \/ 4"}},"row_of_images_qChH6z":{"type":"row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"16 \/ 9"}}},"block_order":["row_of_images_4tKMKr","inversed_row_of_images_47gPRR","row_of_images_qChH6z"],"name":"Scrolling Gallery","settings":{"overlay_text":"<p><strong>Design Highlights<\/strong><\/p>","overlay_text_color":"#fafaff","overlay_background_color":"linear-gradient(45deg, rgba(9, 10, 12, 1) 25%, rgba(0, 68, 204, 1) 100%)","overlay_padding":"20px 20px 20px 20px","overlay_gradient_background_color":"radial-gradient(rgba(250, 250, 255, 1) 20%, rgba(250, 250, 255, 0) 80%)","overlay_style":"1","overlay_width":40,"show_box_shadow":true,"box_shadow_properties":"4px 4px 6px #090a0c40","show_overlay_text":true,"show_button":false,"overlay_border_radius":10,"img_width":250}},"custom_gallery_M9GEwk":{"type":"custom-gallery","blocks":{"image_row_Xkdiab":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/Firmenschild.png","image_2":"shopify:\/\/shop_images\/Firmenlogo.png","image_3":"shopify:\/\/shop_images\/Gallery_Image_Custom_Metall_FirmenSchild.jpg","image_4":"shopify:\/\/shop_images\/Erstelle_jetzt_Dein_Wappen.png"}},"image_row_zn6Dym":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/Wappen1_copy.jpg","image_2":"shopify:\/\/shop_images\/Was_ist_ein_Wappen.png","image_3":"shopify:\/\/shop_images\/Darf_man_ein_Wappen_verwenden.png","image_4":"shopify:\/\/shop_images\/Wappen_1_Moeller.jpg"}},"image_row_LFgEBY":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/Wappen1.jpg","image_2":"shopify:\/\/shop_images\/Wappen3.jpg","image_3":"shopify:\/\/shop_images\/Wappen2.jpg","image_4":"shopify:\/\/shop_images\/steelmonks-metallschild-wappen-familienwappen-edelstahl-auf-schwarz-55cm-7.jpg"}},"image_row_bKMmCM":{"type":"image_row","settings":{"image_1":"shopify:\/\/shop_images\/pinu-1002-Photoroom.jpg","image_2":"shopify:\/\/shop_images\/PIN-FREIZEIT-1000Single-min_clipped_rev_1-Photoroom.jpg","image_3":"shopify:\/\/shop_images\/PIN-FREIZEIT-1000Thumbnail-min_f66a2721-b53e-4553-968c-1e1ec4b1e1ae.jpg","image_4":"shopify:\/\/shop_images\/PIN-FEUER-1000-SET-2.jpg"}}},"block_order":["image_row_Xkdiab","image_row_zn6Dym","image_row_LFgEBY","image_row_bKMmCM"],"name":"Custom Gallery","settings":{"richtext":"<h1><strong>Galerie<\/strong><\/h1>"}},"multirow_NcEGpL":{"type":"multirow","blocks":{"row_dhAJrE":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-palma1.webp","caption":"","heading":"<strong>JML 4-Schichtiges Wappen<\/strong>","text":"<p><br\/>Gold, Corten, Edelstahl und nochmal Corten.<br\/>80cm x 75cm<br\/><br\/><\/p>","button_label":"","button_link":""}},"row_WDUmX9":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-palma2.webp","caption":"","heading":"<strong>Brothers in Arms<\/strong>","text":"<p><br\/>Schwarz Pulverbeschichtet.<br\/>120cm x 80cm<br\/><br\/><\/p>","button_label":"","button_link":""}},"row_QccDxt":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-palma3.webp","caption":"","heading":"<strong>Palma de Mallorca Wappen<\/strong>","text":"<p><br\/>Zwei Schichten, Anthrazit auf Edelstahl.<br\/>150cm x 150cm<br\/><br\/><\/p>","button_label":"","button_link":""}}},"block_order":["row_dhAJrE","row_WDUmX9","row_QccDxt"],"name":"t:sections.multirow.presets.name","settings":{"image_height":"medium","desktop_image_width":"medium","heading_size":"h1","text_style":"body","button_style":"secondary","desktop_content_position":"middle","desktop_content_alignment":"left","image_layout":"alternate-left","section_color_scheme":"","row_color_scheme":"","mobile_content_alignment":"left","padding_top":36,"padding_bottom":36}}},"order":["main","steelmonks_parallax_richtext_jtfCdy","custom_header_6z9xdt","custom_image_slider_cdg8ep","multirow_cp9WDr","sm_scrolling_gallery_rCpCah","custom_gallery_M9GEwk","multirow_NcEGpL"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "enable_gutter": false,
+        "show_title": false
+      }
+    },
+    "steelmonks_parallax_richtext_jtfCdy": {
+      "type": "steelmonks-parallax-richtext",
+      "name": "Parallax Rich Text",
+      "settings": {
+        "image": "shopify://shop_images/web-wasel_banner.webp",
+        "title": "<p>Zeit zu zeigen was wir können...</p>",
+        "link_text": "",
+        "link": ""
+      }
+    },
+    "custom_header_6z9xdt": {
+      "type": "custom-header",
+      "name": "Custom Header",
+      "settings": {
+        "richtext": "<p><strong>Von Deiner Idee, zu einem</strong></p><h1><strong>Kunstwerk aus Stahl</strong></h1>",
+        "button_text": "",
+        "button_link": "",
+        "image": "shopify://shop_images/sm-train.webp"
+      }
+    },
+    "custom_image_slider_cdg8ep": {
+      "type": "custom-image-slider",
+      "blocks": {
+        "slider_block_y7KFx7": {
+          "type": "slider_block",
+          "settings": {
+            "richtext": "",
+            "slide_count": 3,
+            "image_1": "shopify://shop_images/Firmenlogo.png",
+            "image_2": "shopify://shop_images/web-custom-signs.webp",
+            "image_3": "shopify://shop_images/web-Signet.svg"
+          }
+        },
+        "slider_block_x9n4b9": {
+          "type": "slider_block",
+          "settings": {
+            "richtext": "",
+            "slide_count": 3,
+            "image_1": "shopify://shop_images/steelmonks-metallschild-motivschild-untrennbares-parchen-schwarz-ral-9005-22_5cm_ed2ca5f9-af5c-4e17-a020-e7927b4801d9.jpg",
+            "image_2": "shopify://shop_images/steelmonks-metallschild-sternzeichen-schild-tarot-karte-schild-schwarz-ral-9005-22_5cm-7.jpg",
+            "image_3": "shopify://shop_images/steelmonks-metallschild-sternzeichen-schild-tarot-karte-schild-schwarz-ral-9005-22_5cm-4.jpg"
+          }
+        },
+        "slider_block_q7JdAT": {
+          "type": "slider_block",
+          "settings": {
+            "richtext": "",
+            "slide_count": 3,
+            "image_1": "shopify://shop_images/Firmenschild.png",
+            "image_2": "shopify://shop_images/steelmonks-metallschild-motivschild-zwei-herzen-schwarz-ral-9005-22_5cm-2.webp",
+            "image_3": "shopify://shop_images/steelmonks-metallschild-motivschild-unendliche-namen-schwarz-ral-9005-22_5cm_3aa3a94b-1a1c-442c-b0e8-0e8da320e569.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "slider_block_y7KFx7",
+        "slider_block_x9n4b9",
+        "slider_block_q7JdAT"
+      ],
+      "name": "Custom Image Sliders",
+      "settings": {}
+    },
+    "multirow_cp9WDr": {
+      "type": "multirow",
+      "blocks": {
+        "row_wHmt8D": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/web-custom-signs.webp",
+            "caption": "",
+            "heading": "<strong>Privatkunden</strong>",
+            "text": "",
+            "button_label": "Mehr entdecken",
+            "button_link": "shopify://pages/anfragen"
+          }
+        },
+        "row_fzj9L6": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/Firmenschild-removebg.png",
+            "caption": "",
+            "heading": "Firmenkunden",
+            "text": "",
+            "button_label": "Mehr entdecken",
+            "button_link": "shopify://pages/dein-firmenschild"
+          }
+        },
+        "row_9aXC7f": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/web-wappen-coat-of-arms.webp",
+            "caption": "",
+            "heading": "Wappen",
+            "text": "",
+            "button_label": "Mehr entdecken",
+            "button_link": "shopify://pages/heraldisches-wappen-aus-metall"
+          }
+        }
+      },
+      "block_order": [
+        "row_wHmt8D",
+        "row_fzj9L6",
+        "row_9aXC7f"
+      ],
+      "name": "t:sections.multirow.presets.name",
+      "settings": {
+        "image_height": "medium",
+        "desktop_image_width": "medium",
+        "heading_size": "h1",
+        "text_style": "body",
+        "button_style": "secondary",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "image_layout": "alternate-left",
+        "section_color_scheme": "",
+        "row_color_scheme": "",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "sm_scrolling_gallery_rCpCah": {
+      "type": "sm-scrolling-gallery",
+      "blocks": {
+        "row_of_images_4tKMKr": {
+          "type": "row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "16 / 9"
+          }
+        },
+        "inversed_row_of_images_47gPRR": {
+          "type": "inversed_row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "5 / 4"
+          }
+        },
+        "row_of_images_qChH6z": {
+          "type": "row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "16 / 9"
+          }
+        }
+      },
+      "block_order": [
+        "row_of_images_4tKMKr",
+        "inversed_row_of_images_47gPRR",
+        "row_of_images_qChH6z"
+      ],
+      "name": "Scrolling Gallery",
+      "settings": {
+        "overlay_text": "<p><strong>Design Highlights</strong></p>",
+        "overlay_text_color": "#fafaff",
+        "overlay_background_color": "linear-gradient(45deg, rgba(9, 10, 12, 1) 25%, rgba(0, 68, 204, 1) 100%)",
+        "overlay_padding": "20px 20px 20px 20px",
+        "overlay_gradient_background_color": "radial-gradient(rgba(250, 250, 255, 1) 20%, rgba(250, 250, 255, 0) 80%)",
+        "overlay_style": "1",
+        "overlay_width": 40,
+        "show_box_shadow": true,
+        "box_shadow_properties": "4px 4px 6px #090a0c40",
+        "show_overlay_text": true,
+        "show_button": false,
+        "overlay_border_radius": 10,
+        "img_width": 250
+      }
+    },
+    "custom_gallery_M9GEwk": {
+      "type": "custom-gallery",
+      "blocks": {
+        "image_row_Xkdiab": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/Firmenschild.png",
+            "image_2": "shopify://shop_images/Firmenlogo.png",
+            "image_3": "shopify://shop_images/Gallery_Image_Custom_Metall_FirmenSchild.jpg",
+            "image_4": "shopify://shop_images/Erstelle_jetzt_Dein_Wappen.png"
+          }
+        },
+        "image_row_zn6Dym": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/Wappen1_copy.jpg",
+            "image_2": "shopify://shop_images/Was_ist_ein_Wappen.png",
+            "image_3": "shopify://shop_images/Darf_man_ein_Wappen_verwenden.png",
+            "image_4": "shopify://shop_images/Wappen_1_Moeller.jpg"
+          }
+        },
+        "image_row_LFgEBY": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/Wappen1.jpg",
+            "image_2": "shopify://shop_images/Wappen3.jpg",
+            "image_3": "shopify://shop_images/Wappen2.jpg",
+            "image_4": "shopify://shop_images/steelmonks-metallschild-wappen-familienwappen-edelstahl-auf-schwarz-55cm-7.jpg"
+          }
+        },
+        "image_row_bKMmCM": {
+          "type": "image_row",
+          "settings": {
+            "image_1": "shopify://shop_images/pinu-1002-Photoroom.jpg",
+            "image_2": "shopify://shop_images/PIN-FREIZEIT-1000Single-min_clipped_rev_1-Photoroom.jpg",
+            "image_3": "shopify://shop_images/PIN-FREIZEIT-1000Thumbnail-min_f66a2721-b53e-4553-968c-1e1ec4b1e1ae.jpg",
+            "image_4": "shopify://shop_images/PIN-FEUER-1000-SET-2.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_row_Xkdiab",
+        "image_row_zn6Dym",
+        "image_row_LFgEBY",
+        "image_row_bKMmCM"
+      ],
+      "name": "Custom Gallery",
+      "settings": {
+        "richtext": "<h1><strong>Galerie</strong></h1>"
+      }
+    },
+    "multirow_NcEGpL": {
+      "type": "multirow",
+      "blocks": {
+        "row_dhAJrE": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-palma1.webp",
+            "caption": "",
+            "heading": "<strong>JML 4-Schichtiges Wappen</strong>",
+            "text": "<p><br/>Gold, Corten, Edelstahl und nochmal Corten.<br/>80cm x 75cm<br/><br/></p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "row_WDUmX9": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-palma2.webp",
+            "caption": "",
+            "heading": "<strong>Brothers in Arms</strong>",
+            "text": "<p><br/>Schwarz Pulverbeschichtet.<br/>120cm x 80cm<br/><br/></p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "row_QccDxt": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-palma3.webp",
+            "caption": "",
+            "heading": "<strong>Palma de Mallorca Wappen</strong>",
+            "text": "<p><br/>Zwei Schichten, Anthrazit auf Edelstahl.<br/>150cm x 150cm<br/><br/></p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "row_dhAJrE",
+        "row_WDUmX9",
+        "row_QccDxt"
+      ],
+      "name": "t:sections.multirow.presets.name",
+      "settings": {
+        "image_height": "medium",
+        "desktop_image_width": "medium",
+        "heading_size": "h1",
+        "text_style": "body",
+        "button_style": "secondary",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "image_layout": "alternate-left",
+        "section_color_scheme": "",
+        "row_color_scheme": "",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "steelmonks_parallax_richtext_jtfCdy",
+    "custom_header_6z9xdt",
+    "custom_image_slider_cdg8ep",
+    "multirow_cp9WDr",
+    "sm_scrolling_gallery_rCpCah",
+    "custom_gallery_M9GEwk",
+    "multirow_NcEGpL"
+  ]
+}
