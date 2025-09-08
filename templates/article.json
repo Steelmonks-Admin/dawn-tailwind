@@ -65,7 +65,6 @@
         "back_to_blog_HGtVpt",
         "share"
       ],
-      "disabled": true,
       "settings": {}
     },
     "sm_new_main_article_BVjCAH": {
@@ -101,8 +100,11 @@
         "back_to_blog_F7yNPq",
         "share_ETPnXc"
       ],
+      "disabled": true,
       "name": "SM New Main Article",
-      "settings": {}
+      "settings": {
+        "top_spacing": 36
+      }
     }
   },
   "order": [
