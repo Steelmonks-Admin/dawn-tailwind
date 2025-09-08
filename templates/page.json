@@ -18,19 +18,7 @@
         "enable_gutter": false,
         "show_title": false
       }
-    },
-    "shogun-helper": {
-      "type": "shogun-helper",
-      "settings": {}
-    },
-    "shogun-optimizer": {
-      "type": "shogun-optimizer",
-      "settings": {}
     }
   },
-  "order": [
-    "shogun-helper",
-    "main",
-    "shogun-optimizer"
-  ]
+  "order": ["main"]
 }

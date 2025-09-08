@@ -7,8 +7,6 @@
     <meta name='theme-color' content=''>
     <link rel='canonical' href='{{ canonical_url }}'>
 
-    {% include 'shogun-content-handler' %}
-
     {%- if settings.favicon != blank -%}
       <link rel='icon' type='image/png' href='{{ settings.favicon | image_url: width: 32, height: 32 }}'>
     {%- endif -%}
@@ -33,7 +31,7 @@
     {% endif %}
 
     {% unless template contains 'cart' or template contains 'customer' %}
-      <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/preload'></script>
+      {% comment %} <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/preload'></script> {% endcomment %}
     {% endunless %}
 
     {% render 'meta-tags' %}
@@ -44,18 +42,18 @@
     <script src='{{ 'details-disclosure.js' | asset_url }}' defer='defer'></script>
     <script src='{{ 'details-modal.js' | asset_url }}' defer='defer'></script>
     <script src='{{ 'search-form.js' | asset_url }}' defer='defer'></script>
-    <link rel='stylesheet' href='{{ 'mega-menu.css' | asset_url }}'>
+    {% comment %} <link rel='stylesheet' href='{{ 'mega-menu.css' | asset_url }}'> {% endcomment %}
 
     {%- if settings.animations_reveal_on_scroll -%}
       <script src='{{ 'animations.js' | asset_url }}' defer='defer'></script>
     {%- endif -%}
 
     {% unless template contains 'cart' or template contains 'customer' %}
-      <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/lazyload'></script>
+      {% comment %} <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/lazyload'></script> {% endcomment %}
     {% endunless %}
 
     {% comment %} ? START: Pandectes Rules {% endcomment %}
-    <script src='{{ 'pandectes-rules.js' | file_url }}'></script>
+    <script defer src='{{ 'pandectes-rules.js' | file_url }}'></script>
     {% comment %} ? END: Pandectes Rules {% endcomment %}
 
     {% comment %} * Google Tag Manager {% endcomment %}
@@ -340,11 +338,9 @@
       }
     </script>
 
-    {% render 'shogun-head' %}
-
     {% render 'abconvert-price-cart-transform-test' %}
 
-    {% render 'abconvert-theme-test' %}
+    {% comment %} {% render 'abconvert-theme-test' %} {% endcomment %}
   </head>
 
   <body class='gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}'>

@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "shogun-helper": {
-      "type": "shogun-helper",
-      "disabled": true,
-      "settings": {}
-    },
-    "shogun-above": {
-      "type": "shogun-above",
-      "disabled": true,
-      "settings": {}
-    },
     "custom_header_iW4b7X": {
       "type": "custom-header",
       "name": "Custom Header",
@@ -105,11 +95,7 @@
           }
         }
       },
-      "block_order": [
-        "column_zmqr9d",
-        "column_V9WewA",
-        "column_RAV7fR"
-      ],
+      "block_order": ["column_zmqr9d", "column_V9WewA", "column_RAV7fR"],
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
         "title": "Mit mehreren Spalten",
@@ -136,12 +122,8 @@
           "settings": {}
         }
       },
-      "block_order": [
-        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
-      ],
-      "custom_css": [
-        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
-      ],
+      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
+      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
       "settings": {
         "include_margins": true
       }
@@ -163,9 +145,7 @@
           }
         }
       },
-      "block_order": [
-        "accordion_D6qpmT"
-      ],
+      "block_order": ["accordion_D6qpmT"],
       "name": "Accordions",
       "settings": {
         "heading": "",
@@ -206,29 +186,15 @@
         "padding_bottom": 36,
         "enable_search": true
       }
-    },
-    "shogun-below": {
-      "type": "shogun-below",
-      "disabled": true,
-      "settings": {}
-    },
-    "shogun-optimizer": {
-      "type": "shogun-optimizer",
-      "disabled": true,
-      "settings": {}
     }
   },
   "order": [
-    "shogun-helper",
-    "shogun-above",
     "custom_header_iW4b7X",
     "custom_image_slider_pUyjkC",
     "multicolumn_ghD73g",
     "17458178119bf2149e",
     "accordions_dTrBJt",
     "banner",
-    "product-grid",
-    "shogun-below",
-    "shogun-optimizer"
+    "product-grid"
   ]
 }

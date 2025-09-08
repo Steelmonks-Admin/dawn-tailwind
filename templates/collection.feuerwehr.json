@@ -17,12 +17,8 @@
           "settings": {}
         }
       },
-      "block_order": [
-        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
-      ],
-      "custom_css": [
-        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
-      ],
+      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
+      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
       "settings": {
         "include_margins": true
       }
@@ -55,31 +51,7 @@
         "padding_bottom": 36,
         "enable_search": true
       }
-    },
-    "shogun-above": {
-      "type": "shogun-above",
-      "settings": {}
-    },
-    "shogun-below": {
-      "type": "shogun-below",
-      "settings": {}
-    },
-    "shogun-helper": {
-      "type": "shogun-helper",
-      "settings": {}
-    },
-    "shogun-optimizer": {
-      "type": "shogun-optimizer",
-      "settings": {}
     }
   },
-  "order": [
-    "shogun-helper",
-    "shogun-above",
-    "17458178119bf2149e",
-    "banner",
-    "product-grid",
-    "shogun-below",
-    "shogun-optimizer"
-  ]
+  "order": ["17458178119bf2149e", "banner", "product-grid"]
 }

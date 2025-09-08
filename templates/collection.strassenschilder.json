@@ -9,21 +9,9 @@
  */
 {
   "sections": {
-    "shogun-helper": {
-      "type": "shogun-helper",
-      "disabled": true,
-      "settings": {}
-    },
-    "shogun-above": {
-      "type": "shogun-above",
-      "disabled": true,
-      "settings": {}
-    },
     "sm_grill_hero_JEyxgB": {
       "type": "sm-grill-hero",
-      "custom_css": [
-        "div img {padding-top: 500px;}"
-      ],
+      "custom_css": ["div img {padding-top: 500px;}"],
       "name": "Grill Hero",
       "settings": {
         "parallax_image": "shopify://shop_images/strassenschilder.webp",
@@ -34,9 +22,7 @@
     },
     "custom_header_Mp9HKW": {
       "type": "custom-header",
-      "custom_css": [
-        "div {margin-top: -80px;}"
-      ],
+      "custom_css": ["div {margin-top: -80px;}"],
       "name": "Custom Header",
       "settings": {
         "richtext": "<p><strong>Dein Hausschild,</strong></p><p><strong>mehr als bloß</strong></p><h1><strong>eine Adresse.</strong></h1>",
@@ -53,12 +39,8 @@
           "settings": {}
         }
       },
-      "block_order": [
-        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
-      ],
-      "custom_css": [
-        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
-      ],
+      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
+      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
       "settings": {
         "include_margins": true
       }
@@ -123,16 +105,6 @@
         "enable_search": true
       }
     },
-    "shogun-below": {
-      "type": "shogun-below",
-      "disabled": true,
-      "settings": {}
-    },
-    "shogun-optimizer": {
-      "type": "shogun-optimizer",
-      "disabled": true,
-      "settings": {}
-    },
     "1748939636340fa12c": {
       "type": "apps",
       "blocks": {
@@ -141,9 +113,7 @@
           "settings": {}
         }
       },
-      "block_order": [
-        "trusted_shops_reviews_and_more_trusted_stars_qbXqpk"
-      ],
+      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_qbXqpk"],
       "settings": {
         "include_margins": true
       }
@@ -165,9 +135,7 @@
           }
         }
       },
-      "block_order": [
-        "accordion_aiPqBR"
-      ],
+      "block_order": ["accordion_aiPqBR"],
       "name": "Accordions",
       "settings": {
         "heading": "",
@@ -180,16 +148,12 @@
     }
   },
   "order": [
-    "shogun-helper",
-    "shogun-above",
     "sm_grill_hero_JEyxgB",
     "custom_header_Mp9HKW",
     "17458178119bf2149e",
     "banner",
     "featured_collection_NUC336",
     "product-grid",
-    "shogun-below",
-    "shogun-optimizer",
     "1748939636340fa12c",
     "accordions_8JABj6"
   ]
