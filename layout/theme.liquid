@@ -342,7 +342,9 @@
     {% render 'abconvert-price-cart-transform-test' %}
 
     {% comment %} {% render 'abconvert-theme-test' %} {% endcomment %}
-  </head>
+  
+  {% render 'shogun-head' %}
+</head>
 
   <body class='gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}'>
     <!-- Google Tag Manager (noscript) -->
