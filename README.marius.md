@@ -6,7 +6,7 @@
 - See live preview of theme with `npm run dev` or `shopify theme dev` (make sure Shopify CLI is installed)
 - Tailwind is used for development. All liquid files are included as per the `tailwind-config.js` and are Tailwind classes are _prefixed_ with **twcss-**, for example the `flex` class becomes `twcss-flex` to avoid overwriting Dawn's default styles. For responsive design, prefix as follows: `md:twcss-flex`
 
-# Important - Github Flows
+# Important - Github Actions
 
 Under .github/workflows/ci.yml you will find the workflows that are set up. These worfklows are:
 
