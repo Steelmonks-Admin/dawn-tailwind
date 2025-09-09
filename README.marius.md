@@ -3,8 +3,16 @@
 - Install all necessary packages with `npm install`
 - Install Tailwind from `https://tailwindcss.com/`
 - Run Tailwind builder with `npm run tw`
-- See live preview of theme with `shopify theme dev` (make sure Shopify CLI is installed)
+- See live preview of theme with `npm run dev` or `shopify theme dev` (make sure Shopify CLI is installed)
 - Tailwind is used for development. All liquid files are included as per the `tailwind-config.js` and are Tailwind classes are _prefixed_ with **twcss-**, for example the `flex` class becomes `twcss-flex` to avoid overwriting Dawn's default styles. For responsive design, prefix as follows: `md:twcss-flex`
+
+# Important - Github Flows
+
+Under .github/workflows/ci.yml you will find the workflows that are set up. These worfklows are:
+
+- Tailwind css update: generates the css file for the whole store, using the tailwind config file (MANDATORY: if this workflow fails, the frontend will break and will no longer receive updates, remaining in a "stuck" state since app.css is not generated anymore. Generating it locally will not fix the issue and instead cause the issue mentioned below under "Git issues". Using Tailwind with Shopify is tricky so we have to generate it like this and we have to do it successfully every time)
+- lighthouse: not working currently, optional to monitor performance
+- theme-check: checks the Shopify theme for errors before publishing, this usually passes all the time if you have Shopify CLI installed and are using the theme dev
 
 # Git issues - "Please clean your repository tree before checkout"
 
