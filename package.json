@@ -4,6 +4,13 @@
   "description": "[![Build status](https://github.com/shopify/dawn/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Shopify/dawn/actions/workflows/ci.yml?query=branch%3Amain) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?color=informational)](/.github/CONTRIBUTING.md)",
   "main": "index.js",
   "scripts": {
+    "dev": "shopify theme dev",
+    "push": "shopify theme push",
+    "pull": "shopify theme pull",
+    "pull:watch": "shopify theme pull --watch",
+    "deploy": "shopify theme deploy",
+    "download": "shopify theme download",
+    "delete": "shopify theme delete",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tw": "npx tailwindcss -i ./assets/app-tailwind.css -o ./assets/app.css --watch"
   },
