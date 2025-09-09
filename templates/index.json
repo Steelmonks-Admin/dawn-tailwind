@@ -108,7 +108,7 @@
             "show_collection": true,
             "use_collection_title": false,
             "title": "Wappen",
-            "url": "/pages/heraldisches-wappen-aus-metall",
+            "url": "shopify://pages/dein-wappen",
             "image": "shopify://shop_images/web-wappen-coat-of-arms.webp",
             "text_color": "#000000"
           }
