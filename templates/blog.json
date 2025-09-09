@@ -74,7 +74,7 @@
       "settings": {
         "heading": "Blog-Beiträge",
         "heading_size": "h1",
-        "blog": "",
+        "blog": "interessantes-und-wissenswertes",
         "post_limit": 3,
         "columns_desktop": 3,
         "color_scheme": "",
