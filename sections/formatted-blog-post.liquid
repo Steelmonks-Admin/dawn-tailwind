@@ -1,0 +1,18 @@
+{% comment %}
+Steelmonks / Formatted Blog Post
+Renders processed article HTML (from your n8n/JS pipeline)
+with fallback to normal article.content.
+{% endcomment %}
+
+<section class="fbp-scope rte" itemprop="articleBody">
+  {%- assign formatted = article.metafields.custom.body_html 
+      | default: article.metafields.custom.formatted_html 
+      | default: article.metafields.custom.rendered_html 
+      | default: nil -%}
+
+  {%- if formatted %}
+    {{ formatted | raw }}
+  {%- else %}
+    {{ article.content | raw }}
+  {%- endif %}
+</section>
