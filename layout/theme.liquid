@@ -346,6 +346,11 @@
   {% render 'shogun-head' %}
 
 {% render 'abconvert-price-cart-transform-test' %}
+
+{% if template contains 'article' %}
+  {{ 'steelmonks-fbp.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
 </head>
 
   <body class='gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}'>
