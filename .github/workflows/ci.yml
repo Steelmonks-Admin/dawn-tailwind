@@ -53,41 +53,24 @@ jobs:
           ls -la
           echo "Git status:"
           git status
-      - name: Generate Tailwind CSS
-        uses: ZoeyVid/tailwindcss-update@v1.4.0
-        with:
-          input: assets/app-tailwind.css
-          output: assets/app.css
-          params: ''
       - name: Debug File Permissions
         run: |
           echo "File permissions after generation:"
           ls -la assets/
           echo "Git status after generation:"
           git status
-      - name: Commit & Push
+      - name: Pull Latest Changes
         run: |
-          echo "Attempting to add file..."
+          echo "Pulling latest changes from remote..."
           # Configure Git user
           git config user.name "Steelmonks"
           git config user.email "164031344+Steelmonks-Admin@users.noreply.github.com"
 
-          # Ensure permissions are still correct before commit
+          # Ensure permissions are correct
           sudo chmod -R 777 .
           sudo chmod -R 777 .git
 
-          # Force add the generated CSS file
-          git add -f assets/app.css
-          echo "Git status after add:"
-          git status
-
-          # Create a commit with the generated file
-          git commit -m "ci: tailwindcss-update" || echo "No changes to commit"
-          echo "Git status after commit:"
-          git status
-
-          # Pull latest changes before pushing to handle remote updates
-          echo "Pulling latest changes from remote..."
+          # Pull latest changes first to avoid conflicts
           git pull origin main --rebase || {
             echo "❌ Failed to pull latest changes. This usually indicates a conflict."
             echo "Please resolve conflicts manually and re-run the workflow."
@@ -99,6 +82,29 @@ jobs:
           }
 
           echo "Git status after pull:"
+          git status
+      - name: Regenerate Tailwind CSS
+        uses: ZoeyVid/tailwindcss-update@v1.4.0
+        with:
+          input: assets/app-tailwind.css
+          output: assets/app.css
+          params: ''
+      - name: Commit & Push Generated CSS
+        run: |
+          echo "Attempting to add generated CSS file..."
+
+          # Ensure permissions are still correct before commit
+          sudo chmod -R 777 .
+          sudo chmod -R 777 .git
+
+          # Force add the generated CSS file (this will overwrite any existing version)
+          git add -f assets/app.css
+          echo "Git status after add:"
+          git status
+
+          # Create a commit with the generated file
+          git commit -m "ci: tailwindcss-update" || echo "No changes to commit"
+          echo "Git status after commit:"
           git status
 
           # Push changes
