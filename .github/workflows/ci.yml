@@ -53,12 +53,6 @@ jobs:
           ls -la
           echo "Git status:"
           git status
-      - name: Debug File Permissions
-        run: |
-          echo "File permissions after generation:"
-          ls -la assets/
-          echo "Git status after generation:"
-          git status
       - name: Pull Latest Changes
         run: |
           echo "Pulling latest changes from remote..."
@@ -69,6 +63,16 @@ jobs:
           # Ensure permissions are correct
           sudo chmod -R 777 .
           sudo chmod -R 777 .git
+
+          # Check current git status
+          echo "Git status before pull:"
+          git status
+
+          # If there are any unstaged changes, stash them temporarily
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo "Found unstaged changes, stashing them temporarily..."
+            git stash push -m "temporary stash before pull"
+          fi
 
           # Pull latest changes first to avoid conflicts
           git pull origin main --rebase || {
