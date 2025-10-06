@@ -86,9 +86,29 @@ jobs:
           echo "Git status after commit:"
           git status
 
+          # Pull latest changes before pushing to handle remote updates
+          echo "Pulling latest changes from remote..."
+          git pull origin main --rebase || {
+            echo "❌ Failed to pull latest changes. This usually indicates a conflict."
+            echo "Please resolve conflicts manually and re-run the workflow."
+            echo "Current git status:"
+            git status
+            echo "Git log (last 5 commits):"
+            git log --oneline -5
+            exit 1
+          }
+
+          echo "Git status after pull:"
+          git status
+
           # Push changes
           echo "Attempting to push..."
-          git push
+          git push origin main || {
+            echo "❌ Failed to push changes to remote."
+            echo "This may indicate additional conflicts or permission issues."
+            echo "Please check the repository and resolve any remaining issues manually."
+            exit 1
+          }
   lhci:
     name: Lighthouse
     runs-on: ubuntu-latest
