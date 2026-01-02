@@ -168,6 +168,35 @@
         "image_4": "shopify://shop_images/dragon-sign.jpg",
         "image_5": "shopify://shop_images/download_cb020dcd-7832-4fcd-b673-ac814e4a7f9b.jpg"
       }
+    },
+    "1767366660f7a56361": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_c8474d4_BTw8td": {
+          "type": "ai_gen_block_c8474d4",
+          "settings": {
+            "aspect_ratio": 75,
+            "show_labels": true,
+            "before_label": "Before",
+            "after_label": "After",
+            "label_font_size": 14,
+            "label_bg_color": "#000000",
+            "label_text_color": "#ffffff",
+            "initial_position": 50,
+            "handle_size": 50,
+            "slider_color": "#ffffff",
+            "handle_arrow_color": "#000000",
+            "border_radius": 6,
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_c8474d4_BTw8td"
+      ],
+      "disabled": true,
+      "settings": {}
     }
   },
   "order": [
@@ -175,6 +204,7 @@
     "main",
     "steelmonks_sign_creator_FKYF46",
     "accordions_EeXHEy",
-    "masonry_gallery_yMJgLM"
+    "masonry_gallery_yMJgLM",
+    "1767366660f7a56361"
   ]
 }
