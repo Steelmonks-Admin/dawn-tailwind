@@ -1,0 +1,420 @@
+{% schema %}
+{
+  "name": "Sign Creator Steps",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "So entsteht dein Schild"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Upload → Entwurf → Fertiges Schild"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "textarea",
+      "id": "caption_1",
+      "label": "Overlay text for Image 1",
+      "default": "1) Motiv hochladen"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "textarea",
+      "id": "caption_2",
+      "label": "Overlay text for Image 2",
+      "default": "2) Entwurf generieren"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "textarea",
+      "id": "caption_3",
+      "label": "Overlay text for Image 3",
+      "default": "3) Fertiges Schild"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show step numbers",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "3-Image Arrow Flow"
+    }
+  ]
+}
+{% endschema %}
+
+<section id="sm-flow-{{ section.id }}" class="smflow" aria-label="Steelmonks 3-Step Flow">
+  <style>
+    #sm-flow-{{ section.id }}{
+      --sm-ink: rgba(17,24,39,0.92);
+      --sm-muted: rgba(17,24,39,0.70);
+      --sm-stroke: rgba(17,24,39,0.12);
+      --sm-stroke-2: rgba(17,24,39,0.18);
+      --sm-white: rgba(255,255,255,0.95);
+      --sm-glass: rgba(255,255,255,0.10);
+      --sm-glass-2: rgba(255,255,255,0.14);
+      --sm-shadow: 0 18px 40px rgba(0,0,0,0.10);
+      --sm-shadow2: 0 12px 24px rgba(0,0,0,0.12);
+      --sm-radius: 16px;
+      --sm-radius-sm: 14px;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 16px 34px;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__head{
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__title{
+      margin: 0;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: var(--sm-ink);
+      font-size: clamp(20px, 2.2vw, 28px);
+    }
+
+    #sm-flow-{{ section.id }} .smflow__sub{
+      margin: 8px 0 0;
+      color: var(--sm-muted);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__row{
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px){
+      #sm-flow-{{ section.id }} .smflow__row{
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* Card */
+    #sm-flow-{{ section.id }} .smflow__card{
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--sm-radius-sm);
+      border: 1px solid var(--sm-stroke);
+      background: rgba(255,255,255,0.55);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.65) inset;
+      transform: translateZ(0);
+      isolation: isolate;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__media{
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      display: block;
+      object-fit: cover;
+      transition: transform 520ms cubic-bezier(0.2,0.8,0.2,1), opacity 320ms ease, filter 320ms ease;
+      will-change: transform, opacity, filter;
+    }
+
+    /* hover */
+    #sm-flow-{{ section.id }} .smflow__card:hover .smflow__media,
+    #sm-flow-{{ section.id }} .smflow__card:focus-within .smflow__media{
+      transform: scale(1.04);
+      opacity: 0.22;
+      filter: blur(1.5px) saturate(0.92);
+    }
+
+    #sm-flow-{{ section.id }} .smflow__overlay{
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+      opacity: 0;
+      transition: opacity 260ms ease;
+      pointer-events: none;
+      background:
+        radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 40%, rgba(0,0,0,0.62) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.70) 62%, rgba(0,0,0,0.86) 100%);
+    }
+
+    #sm-flow-{{ section.id }} .smflow__card:hover .smflow__overlay,
+    #sm-flow-{{ section.id }} .smflow__card:focus-within .smflow__overlay{
+      opacity: 1;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__overlay-inner{
+      width: 100%;
+      border-radius: var(--sm-radius);
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.18);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+      padding: 10px 12px;
+      color: rgba(255,255,255,0.94);
+      text-shadow: 0 2px 14px rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 320ms ease, transform 520ms cubic-bezier(0.2,0.8,0.2,1);
+    }
+
+    #sm-flow-{{ section.id }} .smflow__card:hover .smflow__overlay-inner,
+    #sm-flow-{{ section.id }} .smflow__card:focus-within .smflow__overlay-inner{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #sm-flow-{{ section.id }} .smflow__cap{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: 0.15px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__badge{
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--sm-glass);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: var(--sm-white);
+      font-size: 12px;
+      line-height: 1;
+      letter-spacing: 0.2px;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.78);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.10);
+      opacity: 0.85;
+    }
+
+    /* Arrow */
+    #sm-flow-{{ section.id }} .smflow__arrow{
+      display: grid;
+      place-items: center;
+      padding: 6px;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__arrowbtn{
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: 1px solid var(--sm-stroke);
+      background: rgba(255,255,255,0.60);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.65) inset, var(--sm-shadow2);
+      display: grid;
+      place-items: center;
+      transform: translateZ(0);
+    }
+
+    #sm-flow-{{ section.id }} .smflow__arrowico{
+      width: 22px;
+      height: 22px;
+      opacity: 0.9;
+      transform: translateX(0);
+      transition: transform 520ms cubic-bezier(0.2,0.8,0.2,1), opacity 260ms ease;
+    }
+
+    #sm-flow-{{ section.id }} .smflow__row:hover .smflow__arrowico{
+      transform: translateX(3px);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px){
+      #sm-flow-{{ section.id }} .smflow__arrowbtn{
+        width: 100%;
+        height: 44px;
+        border-radius: 14px;
+      }
+      #sm-flow-{{ section.id }} .smflow__arrowico{
+        transform: rotate(90deg);
+      }
+      #sm-flow-{{ section.id }} .smflow__row:hover .smflow__arrowico{
+        transform: rotate(90deg) translateX(3px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #sm-flow-{{ section.id }} .smflow__media,
+      #sm-flow-{{ section.id }} .smflow__overlay,
+      #sm-flow-{{ section.id }} .smflow__overlay-inner,
+      #sm-flow-{{ section.id }} .smflow__arrowico{
+        transition: none !important;
+      }
+    }
+  </style>
+
+  <div class="smflow__wrap">
+    <div class="smflow__head">
+      <h2 class="smflow__title">{{ section.settings.heading }}</h2>
+      <p class="smflow__sub">{{ section.settings.subheading }}</p>
+    </div>
+
+    <div class="smflow__row">
+      {% comment %} Card 1 {% endcomment %}
+      <div class="smflow__card" tabindex="0">
+        {% if section.settings.image_1 != blank %}
+          <img
+            class="smflow__media"
+            src="{{ section.settings.image_1 | image_url: width: 900 }}"
+            alt="{{ section.settings.image_1.alt | escape }}"
+            loading="lazy"
+            width="900"
+            height="675"
+          >
+        {% else %}
+          <img
+            class="smflow__media"
+            src="https://placehold.co/900x675"
+            alt="Placeholder Image"
+            loading="lazy"
+            width="900"
+            height="675"
+          >
+        {% endif %}
+
+        <div class="smflow__overlay" aria-hidden="true">
+          <div class="smflow__overlay-inner">
+            <div class="smflow__cap">
+              {% if section.settings.show_numbers %}
+                <span class="smflow__badge"><span class="smflow__dot" aria-hidden="true"></span>1</span>
+              {% else %}
+                <span class="smflow__badge"><span class="smflow__dot" aria-hidden="true"></span>Step</span>
+              {% endif %}
+              <span>{{ section.settings.caption_1 | escape }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %} Arrow 1 {% endcomment %}
+      <div class="smflow__arrow" aria-hidden="true">
+        <div class="smflow__arrowbtn">
+          <svg class="smflow__arrowico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9 6L15 12L9 18" stroke="rgba(17,24,39,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      {% comment %} Card 2 {% endcomment %}
+      <div class="smflow__card" tabindex="0">
+        {% if section.settings.image_2 != blank %}
+          <img
+            class="smflow__media"
+            src="{{ section.settings.image_2 | image_url: width: 900 }}"
+            alt="{{ section.settings.image_2.alt | escape }}"
+            loading="lazy"
+            width="900"
+            height="675"
+          >
+        {% else %}
+          <img
+            class="smflow__media"
+            src="https://placehold.co/900x675"
+            alt="Placeholder Image"
+            loading="lazy"
+            width="900"
+            height="675"
+          >
+        {% endif %}
+
+        <div class="smflow__overlay" aria-hidden="true">
+          <div class="smflow__overlay-inner">
+            <div class="smflow__cap">
+              {% if section.settings.show_numbers %}
+                <span class="smflow__badge"><span class="smflow__dot" aria-hidden="true"></span>2</span>
+              {% else %}
+                <span class="smflow__badge"><span class="smflow__dot" aria-hidden="true"></span>Step</span>
+              {% endif %}
+              <span>{{ section.settings.caption_2 | escape }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %} Arrow 2 {% endcomment %}
+      <div class="smflow__arrow" aria-hidden="true">
+        <div class="smflow__arrowbtn">
+          <svg class="smflow__arrowico" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M9 6L15 12L9 18" stroke="rgba(17,24,39,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      {% comment %} Card 3 {% endcomment %}
+      <div class="smflow__card" tabindex="0">
+        {% if section.settings.image_3 != blank %}
+          <img
+            class="smflow__media"
+            src="{{ section.settings.image_3 | image_url: width: 900 }}"
+            alt="{{ section.settings.image_3.alt | escape }}"
+            loading="lazy"
+            width="900"
+            height="675"
+          >
+        {% else %}
+          <img
+            class="smflow__media"
+            src="https://placehold.co/900x675"
+            alt="Placeholder Image"
+            loading="lazy"
+            width="900"
+            height="675"
+          >
+        {% endif %}
+
+        <div class="smflow__overlay" aria-hidden="true">
+          <div class="smflow__overlay-inner">
+            <div class="smflow__cap">
+              {% if section.settings.show_numbers %}
+                <span class="smflow__badge"><span class="smflow__dot" aria-hidden="true"></span>3</span>
+              {% else %}
+                <span class="smflow__badge"><span class="smflow__dot" aria-hidden="true"></span>Step</span>
+              {% endif %}
+              <span>{{ section.settings.caption_3 | escape }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
