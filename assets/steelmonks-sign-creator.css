@@ -488,10 +488,11 @@
 .smc__preview-area {
   border-radius: 18px;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    rgba(11, 11, 13, 0.06),
-    rgba(11, 11, 13, 0.02)
+  background: radial-gradient(
+    circle at 0 0,
+    #ff980020 0,
+    #0044cc10 48%,
+    #001f4f40 100%
   );
   border: 1px solid rgba(11, 11, 13, 0.1);
   box-shadow: 0 22px 60px rgba(0, 0, 0, 0.1);

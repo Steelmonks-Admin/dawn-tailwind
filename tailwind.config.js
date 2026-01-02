@@ -30,4 +30,9 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    {
+      pattern: /twcss-grid-cols-\[.*\]/,
+    },
+  ],
 };

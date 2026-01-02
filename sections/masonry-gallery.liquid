@@ -1,0 +1,261 @@
+{% schema %}
+{
+  "name": "Masonry Gallery",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Galerie"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3 (Biggest)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image 6"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Masonry Gallery"
+    }
+  ]
+}
+{% endschema %}
+
+<section
+  id='masonry-gallery'
+>
+  {% comment %} * Heading {% endcomment %}
+  <h2 class='twcss-text-center twcss-pt-5'>
+    {{ section.settings.heading }}
+  </h2>
+
+  {% comment %} * Gallery Grid {% endcomment %}
+  <div class='twcss-w-fit twcss-grid twcss-grid-cols-[0.5fr_0.5fr_1fr_0.5fr_0.5fr_0.5fr] twcss-gap-2 twcss-justify-center twcss-items-center twcss-mx-auto twcss-py-10'>
+    {% comment %} ? Column 1 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2'>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        <img
+          src='https://placehold.co/140'
+          alt='Ice Cream'
+          width='140'
+          height='140'
+          class='twcss-rounded-lg'
+        >
+      </picture>
+    </div>
+    {% comment %} ? Column 2 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2 twcss-pt-10'>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_1 != blank %}
+          <img
+            src='{{ section.settings.image_1 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_1.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_2 != blank %}
+          <img
+            src='{{ section.settings.image_2 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_2.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+    </div>
+    {% comment %} ? Column 3 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2'>
+      <picture class='twcss-col-span-2 hover:twcss-scale-[1.025] twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_3 != blank %}
+          <img
+            src='{{ section.settings.image_3 | image_url: width: 280, height: 280 }}'
+            alt='{{ section.settings.image_3.alt | escape }}'
+            width='280'
+            height='280'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/280'
+            alt='Placeholder Image'
+            width='280'
+            height='280'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_4 != blank %}
+          <img
+            src='{{ section.settings.image_4 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_4.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+    </div>
+    {% comment %} ? Column 4 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2 twcss-pt-14'>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_4 != blank %}
+          <img
+            src='{{ section.settings.image_4 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_4.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_5 != blank %}
+          <img
+            src='{{ section.settings.image_5 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_5.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+    </div>
+    {% comment %} ? Column 5 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2 twcss-pt-4'>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_5 != blank %}
+          <img
+            src='{{ section.settings.image_5 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_5.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_6 != blank %}
+          <img
+            src='{{ section.settings.image_6 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_6.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+    </div>
+    {% comment %} ? Column 6 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2'>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_6 != blank %}
+          <img
+            src='{{ section.settings.image_6 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_6.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
+    </div>
+  </div>
+</section>
