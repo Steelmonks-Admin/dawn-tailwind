@@ -1,6 +1,8 @@
 <section class="fxl" data-fxl>
+  <!-- Top left (only when header is hidden) -->
   <a class="fxl__shoplink" href="/collections/all" data-fxl-shoplink>Zum Shop</a>
 
+  <!-- Top center logo on blurry background (only when header is hidden) -->
   <div class="fxl__toplogo" aria-hidden="true" data-fxl-toplogo>
     <img
       class="fxl__toplogoImg"
@@ -11,97 +13,107 @@
     />
   </div>
 
-  <!-- UNDER header (position only), does NOT affect content layout -->
+  <!-- Under-header “Verstecken” (only when header is shown, and we are in expanded mode) -->
   <button class="fxl__hidebar" type="button" data-fxl-hidebar aria-label="Header verstecken">Verstecken</button>
 
+  <!-- Blurry background blobs (fade in only after Entwerfen) -->
   <div class="fxl__bg" aria-hidden="true">
     <div class="fxl__blob fxl__blob--1"></div>
     <div class="fxl__blob fxl__blob--2"></div>
     <div class="fxl__blob fxl__blob--3"></div>
   </div>
 
-  <!-- COMPACT (on load) -->
-  <div class="fxl__stage fxl__stage--compact" data-fxl-compact aria-hidden="false">
+  <!-- STAGE 0: compact (page load) -->
+  <div class="fxl__stage fxl__stage--compact" data-fxl-compact>
     <h1 class="fxl__compactTitle">Dein Schild als Metall Design</h1>
     <button class="fxl__btn-grad" type="button" data-fxl-expand>Entwerfen</button>
   </div>
 
-  <!-- FORM (after Entwerfen) -->
+  <!-- STAGE 1: form window (after Entwerfen) -->
   <div class="fxl__stage fxl__stage--form" data-fxl-form aria-hidden="true">
-    <div class="fxl__float">
-      <div class="fxl__card">
-        <h2 class="fxl__title">Dein Schild als Metall Design</h2>
-        <p class="fxl__sub">Lade ein Motiv hoch oder starte nur mit Text. Danach erstellen wir dein Design.</p>
+    <div class="fxl__card">
+      <h2 class="fxl__title">Dein Schild als Metall Design</h2>
+      <p class="fxl__sub">Lade ein Motiv hoch oder starte nur mit Text. Danach erstellen wir dein Design.</p>
 
-        <div class="fxl__upload">
-          <input class="fxl__file" type="file" accept="image/*" data-fxl-file>
-          <div class="fxl__uploadBox" role="button" tabindex="0" data-fxl-fileui>
-            <div class="fxl__uploadIcon">+</div>
-            <div class="fxl__uploadTxt">
-              <div class="fxl__uploadTitle">Motiv Upload</div>
-              <div class="fxl__uploadSub" data-fxl-filename>PNG oder JPG, optional</div>
-            </div>
+      <div class="fxl__upload">
+        <input class="fxl__file" type="file" accept="image/*" data-fxl-file />
+        <div class="fxl__uploadBox" role="button" tabindex="0" data-fxl-fileui>
+          <div class="fxl__uploadIcon">+</div>
+          <div class="fxl__uploadTxt">
+            <div class="fxl__uploadTitle">Motiv Upload</div>
+            <div class="fxl__uploadSub" data-fxl-filename>PNG oder JPG, optional</div>
           </div>
         </div>
-
-        <label class="fxl__label" for="fxlText">DEIN TEXT</label>
-        <textarea
-          id="fxlText"
-          class="fxl__textarea"
-          rows="5"
-          placeholder="z.B. Familienname Wagner, moderner Look, Labrador Silhouette, keine Schnörkel"
-          data-fxl-text
-        ></textarea>
-
-        <button class="fxl__btn-grad fxl__btn-grad--wide" type="button" data-fxl-make>Entwurf erstellen</button>
       </div>
+
+      <label class="fxl__label" for="fxlText">DEIN TEXT</label>
+      <textarea
+        id="fxlText"
+        class="fxl__textarea"
+        rows="5"
+        placeholder="z.B. Familienname Wagner, moderner Look, Labrador Silhouette, keine Schnörkel"
+        data-fxl-text
+      ></textarea>
+
+      <button class="fxl__btn-grad fxl__btn-grad--wide" type="button" data-fxl-make>Entwurf erstellen</button>
     </div>
   </div>
 
-  <!-- PREVIEW (after Entwurf erstellen) -->
+  <!-- STAGE 2: preview window (after Entwurf erstellen) -->
   <div class="fxl__stage fxl__stage--preview" data-fxl-preview aria-hidden="true">
-    <div class="fxl__float">
-      <div class="fxl__card fxl__card--preview">
-        <button class="fxl__x" type="button" data-fxl-closepreview aria-label="Schließen">✕</button>
+    <div class="fxl__card fxl__card--preview">
+      <button class="fxl__x" type="button" data-fxl-closepreview aria-label="Schließen">✕</button>
 
-        <div class="fxl__etaPill" aria-hidden="true">
-          <span class="fxl__etaLbl">Geschätzte Zeit</span>
-          <span class="fxl__etaTime" data-fxl-eta>02:30</span>
-        </div>
-
-        <div class="fxl__previewSquare">
-          <div class="fxl__previewHint">VORSCHAU</div>
-          <img class="fxl__previewImg" alt="Vorschau" loading="lazy" decoding="async" data-fxl-previewimg>
-        </div>
+      <div class="fxl__etaPill" aria-hidden="true">
+        <span class="fxl__etaLbl">Geschätzte Zeit</span>
+        <span class="fxl__etaTime" data-fxl-eta>02:30</span>
       </div>
 
-      <button class="fxl__btn-grad fxl__btn-grad--wide" type="button" data-fxl-view>
-        Schild ansehen
-      </button>
+      <div class="fxl__previewSquare">
+        <div class="fxl__previewHint">VORSCHAU</div>
+        <img class="fxl__previewImg" alt="Vorschau" loading="lazy" decoding="async" data-fxl-previewimg />
+      </div>
     </div>
+
+    <button class="fxl__btn-grad fxl__btn-grad--wide fxl__btn-grad--below" type="button" data-fxl-view>
+      Schild ansehen
+    </button>
   </div>
 </section>
 
 <style>
   .fxl{
-    --fxl-paper:#FAFAFF;
     --fxl-ink:#090A0C;
+    --fxl-paper:#FAFAFF;
+    --fxl-blue:#123C9B;
     --fxl-navy:#0A1F4D;
     --fxl-orange:#C98A2B;
 
-    /* set by JS for positioning the "Verstecken" button only */
-    --fxl-headerH: 0px;
+    --fxl-glass: rgba(255,255,255,0.66);
+    --fxl-glass-b: rgba(9,10,12,0.10);
+    --fxl-shadow: 0 24px 76px rgba(0,0,0,0.12);
 
     position:relative;
     overflow:hidden;
     background: linear-gradient(180deg, var(--fxl-paper), var(--fxl-paper));
     color: var(--fxl-ink);
     opacity:0;
-    padding: 0;
-    min-height: 100vh;
+    padding: 24px 16px 40px;
   }
   .fxl.fxl--ready{ opacity:1; transition: opacity 420ms ease; }
 
+  /* expanded state becomes full screen and shows blobs */
+  .fxl.fxl--expanded{
+    min-height:100vh;
+    padding: clamp(18px, 4vw, 54px);
+    background:
+      radial-gradient(1100px 720px at 18% 12%, rgba(0,68,204,0.16), transparent 58%),
+      radial-gradient(980px 700px at 86% 22%, rgba(0,68,204,0.12), transparent 58%),
+      radial-gradient(900px 650px at 55% 85%, rgba(0,68,204,0.10), transparent 60%),
+      linear-gradient(180deg, var(--fxl-paper), var(--fxl-paper));
+  }
+
+  /* TOP: shop link (no pill) */
   .fxl__shoplink{
     position: fixed;
     top: 16px;
@@ -111,24 +123,26 @@
     color: rgba(9,10,12,0.78);
     font-weight: 850;
     font-size: 14px;
+    letter-spacing: 0.01em;
     padding: 12px 14px;
     border-radius: 14px;
     background: transparent;
     opacity:0;
     pointer-events:none;
-    transition: opacity 380ms ease;
+    transition: opacity 320ms ease;
   }
   .fxl__shoplink:hover{ color: rgba(0,68,204,0.92); }
 
+  /* centered logo on background */
   .fxl__toplogo{
     position: fixed;
-    top: 34px;
+    top: 26px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 70;
     opacity:0;
     pointer-events:none;
-    transition: opacity 380ms ease, transform 380ms ease;
+    transition: opacity 320ms ease, transform 320ms ease;
   }
   .fxl__toplogoImg{
     height: 28px;
@@ -138,11 +152,22 @@
     filter: drop-shadow(0 10px 18px rgba(0,0,0,0.10));
   }
 
+  /* show shoplink + logo only when expanded AND header is hidden */
+  .fxl.fxl--expanded.fxl--chromeHidden .fxl__shoplink,
+  .fxl.fxl--expanded.fxl--chromeHidden .fxl__toplogo{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .fxl.fxl--expanded.fxl--chromeHidden .fxl__toplogo{
+    transform: translateX(-50%) translateY(6px);
+  }
+
+  /* under-header verstecken */
   .fxl__hidebar{
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    top: calc(var(--fxl-headerH) + 10px);
+    top: 14px;
     z-index: 70;
     border: 1px solid rgba(9,10,12,0.12);
     background: rgba(255,255,255,0.70);
@@ -158,25 +183,14 @@
     box-shadow: 0 18px 46px rgba(0,0,0,0.10);
     opacity:0;
     pointer-events:none;
-    transition: opacity 380ms ease;
+    transition: opacity 320ms ease;
   }
-
-  /* expanded + header hidden => show shop link + top logo */
-  .fxl.fxl--chromeHidden .fxl__shoplink,
-  .fxl.fxl--chromeHidden .fxl__toplogo{
-    opacity:1;
-    pointer-events:auto;
-  }
-  .fxl.fxl--chromeHidden .fxl__toplogo{
-    transform: translateX(-50%) translateY(8px);
-  }
-
-  /* expanded + header shown => show "Verstecken" under header */
-  .fxl.fxl--chromeShown .fxl__hidebar{
+  .fxl.fxl--expanded.fxl--chromeShown .fxl__hidebar{
     opacity:1;
     pointer-events:auto;
   }
 
+  /* Blobs */
   .fxl__bg{ position:absolute; inset:0; pointer-events:none; z-index:0; }
   .fxl__blob{
     position:absolute;
@@ -187,13 +201,11 @@
     filter: blur(74px);
     will-change: transform, opacity;
     mix-blend-mode: multiply;
-    transform: scale(0.98);
-    transition: opacity 900ms ease, transform 900ms ease;
+    transform: translate3d(0,0,0) scale(1);
+    transition: opacity 520ms ease;
   }
-  .fxl.fxl--expanded .fxl__blob{
-    opacity:0.85;
-    transform: scale(1);
-  }
+  .fxl.fxl--expanded .fxl__blob{ opacity:0.85; }
+  .fxl.fxl--expanded.fxl--stage-compact .fxl__blob{ opacity:0; } /* keep off until click */
 
   .fxl__blob::after{
     content:"";
@@ -204,43 +216,35 @@
     opacity: 0.68;
   }
   .fxl__blob--1{
-    left:-16vmin; top:-14vmin;
+    left:-16vmin;
+    top:-14vmin;
     background: radial-gradient(circle at 35% 35%, rgba(0,68,204,0.36), rgba(255,255,255,0.58) 52%, rgba(0,68,204,0.10) 70%, rgba(0,0,0,0) 78%);
   }
   .fxl__blob--2{
-    right:-18vmin; top:6vmin;
+    right:-18vmin;
+    top:6vmin;
     background: radial-gradient(circle at 40% 40%, rgba(0,68,204,0.28), rgba(255,255,255,0.64) 52%, rgba(0,68,204,0.12) 72%, rgba(0,0,0,0) 80%);
   }
   .fxl__blob--3{
-    left:10vmin; bottom:-18vmin;
+    left:10vmin;
+    bottom:-18vmin;
     background: radial-gradient(circle at 38% 38%, rgba(0,68,204,0.22), rgba(255,255,255,0.62) 52%, rgba(0,68,204,0.10) 72%, rgba(0,0,0,0) 80%);
   }
 
-  /* STAGES are fixed, centered, independent of header (no layout shift) */
+  /* Stages */
   .fxl__stage{
-    position: fixed;
-    inset: 0;
+    position: relative;
     z-index: 1;
     display: grid;
     place-items: center;
-    padding: clamp(18px, 4vw, 54px);
-    pointer-events: none;
+    gap: 14px;
   }
 
-  .fxl__float{
-    width: 100%;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    pointer-events: auto;
+  .fxl__stage--compact{
+    padding: 38px 12px 22px;
   }
-
-  .fxl__stage--compact{ pointer-events: auto; opacity: 1; transform: translateY(0); transition: opacity 520ms ease, transform 520ms ease; }
-
   .fxl__compactTitle{
-    margin: 0 0 10px;
+    margin: 0;
     text-align: center;
     font-size: clamp(26px, 4.2vw, 40px);
     letter-spacing: -0.02em;
@@ -249,12 +253,13 @@
 
   .fxl__stage--form,
   .fxl__stage--preview{
+    min-height: 100vh;
+    padding: clamp(32px, 4vw, 70px) 12px 70px;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(12px);
-    transition: opacity 520ms ease, transform 520ms ease;
+    transform: translateY(10px);
+    transition: opacity 420ms ease, transform 420ms ease;
   }
-
   .fxl.fxl--stage-form .fxl__stage--form,
   .fxl.fxl--stage-preview .fxl__stage--preview{
     opacity: 1;
@@ -262,30 +267,21 @@
     transform: translateY(0);
   }
 
+  .fxl__stage--compact{
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 320ms ease, transform 320ms ease;
+  }
   .fxl.fxl--stage-form .fxl__stage--compact,
   .fxl.fxl--stage-preview .fxl__stage--compact{
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
 
-  /* content "expand" feel */
-  .fxl__stage--form .fxl__card,
-  .fxl__stage--preview .fxl__card{
-    transform: scale(0.985);
-    opacity: 0;
-    filter: blur(2px);
-    transition: transform 720ms ease, opacity 720ms ease, filter 720ms ease;
-  }
-  .fxl.fxl--stage-form .fxl__stage--form .fxl__card,
-  .fxl.fxl--stage-preview .fxl__stage--preview .fxl__card{
-    transform: scale(1);
-    opacity: 1;
-    filter: blur(0px);
-  }
-
+  /* Card */
   .fxl__card{
-    width: min(900px, 92vw);
+    width: min(980px, 92vw);
     border-radius: 34px;
     background: rgba(255,255,255,0.60);
     border: 1px solid rgba(9,10,12,0.10);
@@ -312,22 +308,29 @@
     line-height: 1.45;
   }
 
+  /* Upload row */
   .fxl__upload{ margin: 10px auto 18px; width: min(760px, 100%); }
   .fxl__file{ position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; }
   .fxl__uploadBox{
-    display:flex; align-items:center; gap: 16px;
+    display:flex;
+    align-items:center;
+    gap: 16px;
     padding: 20px 20px;
     border-radius: 22px;
     background: rgba(255,255,255,0.72);
     border: 1px solid rgba(9,10,12,0.10);
     box-shadow: 0 24px 76px rgba(0,0,0,0.10);
     cursor:pointer;
+    user-select:none;
   }
   .fxl__uploadIcon{
-    width: 56px; height: 56px;
+    width: 56px;
+    height: 56px;
     border-radius: 16px;
-    display:grid; place-items:center;
-    font-weight: 950; font-size: 28px;
+    display:grid;
+    place-items:center;
+    font-weight: 950;
+    font-size: 28px;
     color: rgba(0,68,204,0.78);
     background: rgba(0,68,204,0.08);
     border: 1px solid rgba(0,68,204,0.18);
@@ -366,6 +369,7 @@
     box-shadow: 0 0 0 4px rgba(0,68,204,0.10), inset 0 1px 0 rgba(255,255,255,0.92);
   }
 
+  /* Gradient button like screenshot */
   .fxl__btn-grad{
     appearance:none;
     border: 0;
@@ -374,17 +378,28 @@
     border-radius: 999px;
     font-weight: 950;
     font-size: 20px;
+    letter-spacing: 0.01em;
     color: rgba(255,255,255,0.92);
     cursor: pointer;
     background: linear-gradient(90deg, var(--fxl-orange), var(--fxl-navy));
     box-shadow: 0 22px 64px rgba(0,0,0,0.22);
-    transition: transform 160ms ease, box-shadow 220ms ease, opacity 220ms ease;
+    transition: transform 160ms ease, box-shadow 220ms ease, filter 160ms ease, opacity 160ms ease;
+    user-select:none;
   }
   .fxl__btn-grad:hover{ transform: translateY(-1px); box-shadow: 0 26px 74px rgba(0,0,0,0.26); }
   .fxl__btn-grad:active{ transform: translateY(0px) scale(0.99); }
-  .fxl__btn-grad--wide{ width: min(640px, 86vw); display:block; }
 
-  .fxl__card--preview{ padding-top: 58px; }
+  .fxl__btn-grad--wide{
+    width: min(640px, 86vw);
+    display:block;
+    margin: 0 auto;
+  }
+
+  /* Preview stage specifics */
+  .fxl__card--preview{
+    width: min(880px, 92vw);
+    padding-top: 58px;
+  }
 
   .fxl__etaPill{
     position:absolute;
@@ -469,7 +484,11 @@
   }
   .fxl__previewImg.fxl__previewImg--on{ opacity: 1; }
 
-  /* CHROME: fixed, fade only */
+  .fxl__btn-grad--below{
+    margin-top: 22px;
+  }
+
+  /* CHROME: fixed, fade only, no layout shift */
   .fxl__chromeFixed{
     position: fixed !important;
     left: 0 !important;
@@ -479,11 +498,12 @@
     z-index: 60 !important;
   }
   .fxl__chromeFixedTop{ top: 0 !important; }
+
   .fxl__chromeFade{
     opacity: 0 !important;
     pointer-events: none !important;
     visibility: hidden !important;
-    transition: opacity 900ms ease !important;
+    transition: opacity 700ms ease !important;
     will-change: opacity !important;
   }
   .fxl__chromeFade.fxl__chromeFade--shown{
@@ -493,8 +513,17 @@
   }
 
   @media (max-width: 900px){
-    .fxl__toplogo{ top: 28px; }
-    .fxl__btn-grad{ height: 62px; font-size: 18px; }
+    .fxl__shoplink{ top: 12px; left: 12px; }
+    .fxl__toplogo{ top: 30px; }
+    .fxl__btn-grad{ height: 60px; font-size: 18px; }
+    .fxl__uploadTitle{ font-size: 22px; }
+    .fxl__uploadSub{ font-size: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .fxl__blob{ transition:none; }
+    .fxl__stage{ transition:none; }
+    .fxl__shoplink, .fxl__toplogo, .fxl__hidebar{ transition:none; }
   }
 </style>
 
@@ -533,15 +562,19 @@
 
   function setTargetsVisible(targets, visible, opts){
     const topOffset = (opts && typeof opts.top === "number") ? opts.top : 0;
+
     targets.forEach(el => {
       if(!el || el.nodeType !== 1) return;
+
       if(el.dataset.fxlChromeInit !== "1"){
         el.dataset.fxlChromeInit = "1";
         el.classList.add("fxl__chromeFixed");
         el.classList.add("fxl__chromeFixedTop");
         el.classList.add("fxl__chromeFade");
       }
+
       el.style.top = topOffset + "px";
+
       if(visible){
         el.classList.add("fxl__chromeFade--shown");
         el.setAttribute("aria-hidden","false");
@@ -566,7 +599,6 @@
     const btnExpand = root.querySelector("[data-fxl-expand]");
     const shopLink = root.querySelector("[data-fxl-shoplink]");
     const hideBar = root.querySelector("[data-fxl-hidebar]");
-    const compactEl = root.querySelector("[data-fxl-compact]");
 
     const stageForm = root.querySelector("[data-fxl-form]");
     const stagePreview = root.querySelector("[data-fxl-preview]");
@@ -582,36 +614,27 @@
     const etaEl = root.querySelector("[data-fxl-eta]");
     const prevImg = root.querySelector("[data-fxl-previewimg]");
 
-    if(!btnExpand || !shopLink || !hideBar || !stageForm || !stagePreview || !btnMake || !compactEl) return;
+    if(!btnExpand || !shopLink || !hideBar || !stageForm || !stagePreview || !btnMake) return;
 
+    // ready
     requestAnimationFrame(() => root.classList.add("fxl--ready"));
 
-    // hard reset to avoid starting expanded when old classes remain
-    root.classList.remove("fxl--expanded","fxl--chromeHidden","fxl--chromeShown","fxl--stage-form","fxl--stage-preview");
-    root.classList.add("fxl--stage-compact");
-    stageForm.setAttribute("aria-hidden","true");
-    stagePreview.setAttribute("aria-hidden","true");
-    compactEl.setAttribute("aria-hidden","false");
-
+    // state
     let expanded = false;
-    let chromeShown = true;
-
+    let chromeShown = true; // on page load: header visible
     let headerTargets = getHeaderTargets();
+
+    // split header targets: bars + main
     const bars = headerTargets.filter(el =>
       el.matches("#shopify-section-announcement-bar, .announcement-bar-section, [data-section-type='announcement-bar'], .utility-bar, .utility-bar__inner") ||
       (el.querySelector && el.querySelector(".announcement-bar, .utility-bar"))
     );
     const headerMain = headerTargets.filter(el => !bars.includes(el));
 
-    function setHeaderHeightVar(){
-      const barsH = safeMaxHeight(bars);
-      const mainH = safeMaxHeight(headerMain);
-      root.style.setProperty("--fxl-headerH", (barsH + mainH) + "px");
-    }
-
     function applyChromeState(){
       if(!expanded){
-        root.classList.remove("fxl--expanded","fxl--chromeHidden","fxl--chromeShown");
+        root.classList.remove("fxl--chromeHidden");
+        root.classList.remove("fxl--chromeShown");
         return;
       }
       if(chromeShown){
@@ -621,7 +644,6 @@
         root.classList.add("fxl--chromeHidden");
         root.classList.remove("fxl--chromeShown");
       }
-      setHeaderHeightVar();
     }
 
     function showHeader(){
@@ -643,21 +665,24 @@
     function goStage(name){
       root.classList.remove("fxl--stage-compact","fxl--stage-form","fxl--stage-preview");
       root.classList.add("fxl--stage-" + name);
-
-      const isCompact = name === "compact";
-      const isForm = name === "form";
-      const isPreview = name === "preview";
-
-      compactEl.setAttribute("aria-hidden", isCompact ? "false" : "true");
-      stageForm.setAttribute("aria-hidden", isForm ? "false" : "true");
-      stagePreview.setAttribute("aria-hidden", isPreview ? "false" : "true");
+      stageForm.setAttribute("aria-hidden", name === "form" ? "false" : "true");
+      stagePreview.setAttribute("aria-hidden", name === "preview" ? "false" : "true");
     }
 
-    function openFile(){ if(file) file.click(); }
+    // initial stage compact
+    root.classList.add("fxl--stage-compact");
+
+    // file UI
+    function openFile(){
+      if(file) file.click();
+    }
     function syncFile(){
       if(!fileName) return;
-      if(file && file.files && file.files[0]) fileName.textContent = file.files[0].name;
-      else fileName.textContent = "PNG oder JPG, optional";
+      if(file && file.files && file.files[0]){
+        fileName.textContent = file.files[0].name;
+      } else {
+        fileName.textContent = "PNG oder JPG, optional";
+      }
     }
     if(fileUi){
       fileUi.addEventListener("click", openFile);
@@ -665,8 +690,11 @@
         if(e.key === "Enter" || e.key === " ") { e.preventDefault(); openFile(); }
       });
     }
-    if(file) file.addEventListener("change", syncFile);
+    if(file){
+      file.addEventListener("change", syncFile);
+    }
 
+    // timer
     let etaTick = null;
     let etaEndsAt = 0;
     function stopEta(){
@@ -689,39 +717,45 @@
       etaTick = setInterval(tick, 1000);
     }
 
-    // ENTWERFEN: expand + hide header + show form
+    // actions
     btnExpand.addEventListener("click", () => {
       expanded = true;
       root.classList.add("fxl--expanded");
-      goStage("form");
+      // blobs should fade in only after click
+      root.classList.remove("fxl--stage-compact");
+      root.classList.add("fxl--stage-form");
 
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          hideHeader();
-          applyChromeState();
-        });
-      });
+      // fade out header, show top logo + shop link
+      hideHeader();
+
+      // give the logo a bit more top padding feel by keeping it lower after shown (CSS translateY)
+      goStage("form");
     });
 
-    // ZUM SHOP: show header (hides shop link + logo automatically)
+    // Zum Shop: show header again, hide logo/shoplink via classes, and show “Verstecken” under header
     shopLink.addEventListener("click", (e) => {
       e.preventDefault();
       if(!expanded) return;
       showHeader();
     });
 
-    // VERSTECKEN: hide header (no layout shift, content stays fixed)
+    // Verstecken: hide header again
     hideBar.addEventListener("click", () => {
       if(!expanded) return;
       hideHeader();
     });
 
-    // ENTWURF ERSTELLEN -> PREVIEW
+    // Entwurf erstellen -> preview stage
     btnMake.addEventListener("click", () => {
       if(!expanded) return;
+
+      // swap windows
       goStage("preview");
+
+      // start timer (02:30)
       startEta(150000);
 
+      // demo: if user uploaded, show it as preview image, otherwise keep empty
       try{
         if(file && file.files && file.files[0] && prevImg){
           const url = URL.createObjectURL(file.files[0]);
@@ -731,23 +765,28 @@
       }catch(_e){}
     });
 
-    // X in preview -> back to form
+    // close preview -> back to form
     if(btnClosePreview){
       btnClosePreview.addEventListener("click", () => {
         stopEta();
         goStage("form");
       });
     }
+
+    // Schild ansehen (hook for your real logic)
     if(btnView){
-      btnView.addEventListener("click", () => {});
+      btnView.addEventListener("click", () => {
+        // keep as no-op; connect to your creator flow later
+      });
     }
 
-    window.addEventListener("resize", () => setHeaderHeightVar(), { passive:true });
+    // If section reloads in theme editor
+    document.addEventListener("shopify:section:load", () => {
+      headerTargets = getHeaderTargets();
+    });
 
     syncFile();
-    setHeaderHeightVar();
     applyChromeState();
-    goStage("compact");
   }
 
   if(document.readyState === "loading"){
@@ -755,13 +794,12 @@
   } else {
     boot();
   }
-  document.addEventListener("shopify:section:load", boot);
 })();
 </script>
 
 {% schema %}
 {
-  "name": "Heavenly FX Landing",
+  "name": "Heavenly FX Landing v2",
   "settings": []
 }
 {% endschema %}
