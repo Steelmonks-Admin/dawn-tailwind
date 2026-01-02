@@ -9,6 +9,29 @@
  */
 {
   "sections": {
+    "steelmonks_hero_hub_QbmbCe": {
+      "type": "steelmonks-hero-hub",
+      "name": "Steelmonks Hero Hub",
+      "settings": {
+        "top_spacing": 40,
+        "pixel_image": "shopify://shop_images/f3550ed7-3bf9-4e01-b189-49ac4a43d6b8_4fb59445-08ea-4aab-8a21-cf54b52b916c.png",
+        "badge_text": "Die Steelmonks Werkstatt",
+        "heading": "",
+        "kpi_title": "Nur 2 Minuten",
+        "kpi_subtitle": "",
+        "primary_button_label": "In die Werkstatt",
+        "primary_button_link": "#scroller",
+        "fire_button_label": "",
+        "craft_button_label": "",
+        "collection_fire_link": "",
+        "collection_fire_label": "",
+        "collection_fire_sub": "",
+        "collection_craft_link": "",
+        "collection_craft_label": "",
+        "collection_craft_sub": "",
+        "show_collection_row": false
+      }
+    },
     "rich_text_rMFFNh": {
       "type": "rich-text",
       "blocks": {
@@ -24,23 +47,11 @@
           "settings": {
             "text": "<p>Laden Sie ein Bild mit Ihrem Wunschmotiv hoch, wählen Sie Material und Größe nach Ihren Vorstellungen und kreieren Sie das perfekte Geschenk für sich selbst oder Ihre Lieben.</p>"
           }
-        },
-        "button_4ikGHW": {
-          "type": "button",
-          "settings": {
-            "button_label": "Erstelle meine eigene",
-            "button_link": "#scroller",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
         }
       },
       "block_order": [
         "heading_p3qP8D",
-        "text_c6tJGH",
-        "button_4ikGHW"
+        "text_c6tJGH"
       ],
       "name": "t:sections.rich-text.presets.name",
       "settings": {
@@ -191,6 +202,7 @@
     }
   },
   "order": [
+    "steelmonks_hero_hub_QbmbCe",
     "rich_text_rMFFNh",
     "main",
     "steelmonks_sign_creator_steps_R8BrfQ",
