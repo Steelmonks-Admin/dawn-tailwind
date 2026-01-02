@@ -4,9 +4,9 @@
 {% comment %} * Assets {% endcomment %}
 {{ 'steelmonks-sign-creator.css' | asset_url | stylesheet_tag }}
 <script>
-  var sid = {{ sid }};
+  var sid = '{{ sid }}';
 </script>
-<script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer></script>
+<script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
 <section id='sm-sign-creator-min-{{ sid }}' class='smc' aria-label='Steelmonks Creator'>
