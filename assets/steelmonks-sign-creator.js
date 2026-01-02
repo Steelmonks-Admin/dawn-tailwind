@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Steelmonks Sign Creator loaded', sid);
+  // console.log('Steelmonks Sign Creator loaded', sid);
 
   // ? Helper function to get an element by its ID
   function el(id) {
