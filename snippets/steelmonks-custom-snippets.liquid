@@ -127,7 +127,7 @@
         }
   
         {% comment %} ! Define ABn tests using the function above {% endcomment %}
-        ABnTest({ test_type: 'ab', split: [50, 50], endDate: '2025-01-31' });
+        {% comment %} ABnTest({ test_type: 'ab', split: [50, 50], endDate: '2025-01-31' }); {% endcomment %}
   
         {% comment %} ! Add test class to body for CSS control, except in design mode {% endcomment %}
         document.addEventListener('DOMContentLoaded', function () {

@@ -12,64 +12,70 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  {% if section.settings.enable_smooth_scroll %}
+    html {
+      scroll-behavior: smooth;
+    }
+  {% endif %}
 {%- endstyle -%}
 
-<div class="isolate{% unless section.settings.full_width %} page-width{% endunless %}">
-  <div class="rich-text content-container color-{{ section.settings.color_scheme }} gradient{% if section.settings.full_width %} rich-text--full-width content-container--full-width{% endif %} section-{{ section.id }}-padding">
-    <div class="rich-text__wrapper rich-text__wrapper--{{ section.settings.desktop_content_position }}{% if section.settings.full_width %} page-width{% endif %}">
-      <div class="rich-text__blocks {{ section.settings.content_alignment }}">
+<div class='isolate{% unless section.settings.full_width %} page-width{% endunless %}'>
+  <div class='rich-text content-container color-{{ section.settings.color_scheme }} gradient{% if section.settings.full_width %} rich-text--full-width content-container--full-width{% endif %} section-{{ section.id }}-padding'>
+    <div class='rich-text__wrapper rich-text__wrapper--{{ section.settings.desktop_content_position }}{% if section.settings.full_width %} page-width{% endif %}'>
+      <div class='rich-text__blocks {{ section.settings.content_alignment }}'>
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'heading' -%}
               <h2
-                class="rich-text__heading rte inline-richtext {{ block.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                class='rich-text__heading rte inline-richtext {{ block.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}'
                 {{ block.shopify_attributes }}
                 {% if settings.animations_reveal_on_scroll %}
                   data-cascade
-                  style="--animation-order: {{ forloop.index }};"
+                  style='--animation-order: {{ forloop.index }};'
                 {% endif %}
               >
                 {{ block.settings.heading }}
               </h2>
             {%- when 'caption' -%}
               <p
-                class="rich-text__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                class='rich-text__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}'
                 {{ block.shopify_attributes }}
                 {% if settings.animations_reveal_on_scroll %}
                   data-cascade
-                  style="--animation-order: {{ forloop.index }};"
+                  style='--animation-order: {{ forloop.index }};'
                 {% endif %}
               >
                 {{ block.settings.caption | escape }}
               </p>
             {%- when 'text' -%}
               <div
-                class="rich-text__text rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                class='rich-text__text rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}'
                 {{ block.shopify_attributes }}
                 {% if settings.animations_reveal_on_scroll %}
                   data-cascade
-                  style="--animation-order: {{ forloop.index }};"
+                  style='--animation-order: {{ forloop.index }};'
                 {% endif %}
               >
                 {{ block.settings.text }}
               </div>
             {%- when 'button' -%}
               <div
-                class="rich-text__buttons{% if block.settings.button_label != blank and block.settings.button_label_2 != blank %} rich-text__buttons--multiple{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                class='rich-text__buttons{% if block.settings.button_label != blank and block.settings.button_label_2 != blank %} rich-text__buttons--multiple{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}'
                 {{ block.shopify_attributes }}
                 {% if settings.animations_reveal_on_scroll %}
                   data-cascade
-                  style="--animation-order: {{ forloop.index }};"
+                  style='--animation-order: {{ forloop.index }};'
                 {% endif %}
               >
                 {%- if block.settings.button_label != blank -%}
                   <a
                     {% if block.settings.button_link == blank %}
-                      role="link" aria-disabled="true"
+                      role='link' aria-disabled='true'
                     {% else %}
-                      href="{{ block.settings.button_link }}"
+                      href='{{ block.settings.button_link }}'
                     {% endif %}
-                    class="button{% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}"
+                    class='button{% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}'
                   >
                     {{- block.settings.button_label | escape -}}
                   </a>
@@ -77,11 +83,11 @@
                 {%- if block.settings.button_label_2 != blank -%}
                   <a
                     {% if block.settings.button_link_2 == blank %}
-                      role="link" aria-disabled="true"
+                      role='link' aria-disabled='true'
                     {% else %}
-                      href="{{ block.settings.button_link_2 }}"
+                      href='{{ block.settings.button_link_2 }}'
                     {% endif %}
-                    class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
+                    class='button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}'
                   >
                     {{- block.settings.button_label_2 | escape -}}
                   </a>
@@ -179,6 +185,12 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 52
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_smooth_scroll",
+      "default": true,
+      "label": "Enable Smooth Scroll for Internal Anchors"
     }
   ],
   "blocks": [

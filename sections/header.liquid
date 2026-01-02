@@ -413,7 +413,8 @@
     }
 
     setHeaderHeight() {
-      document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight}px`);
+      // +40px to account for the padding of the header and any announcement bars
+      document.documentElement.style.setProperty('--header-height', `${this.header.offsetHeight + 40}px`);
     }
 
     disconnectedCallback() {
