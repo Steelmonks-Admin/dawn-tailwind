@@ -599,10 +599,6 @@ video {
   z-index: 10;
 }
 
-.twcss-col-span-2 {
-  grid-column: span 2 / span 2;
-}
-
 .twcss-m-auto {
   margin: auto;
 }
@@ -1800,18 +1796,6 @@ video {
 
 .last\:twcss-border-0:last-child {
   border-width: 0px;
-}
-
-.hover\:twcss-scale-105:hover {
-  --tw-scale-x: 1.05;
-  --tw-scale-y: 1.05;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.hover\:twcss-scale-\[1\.025\]:hover {
-  --tw-scale-x: 1.025;
-  --tw-scale-y: 1.025;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .hover\:twcss-border-\[\#090a0c\]:hover {
