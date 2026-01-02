@@ -95,7 +95,11 @@
           }
         }
       },
-      "block_order": ["column_zmqr9d", "column_V9WewA", "column_RAV7fR"],
+      "block_order": [
+        "column_zmqr9d",
+        "column_V9WewA",
+        "column_RAV7fR"
+      ],
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
         "title": "Mit mehreren Spalten",
@@ -122,8 +126,12 @@
           "settings": {}
         }
       },
-      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
-      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "custom_css": [
+        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
+      ],
       "settings": {
         "include_margins": true
       }
@@ -145,7 +153,9 @@
           }
         }
       },
-      "block_order": ["accordion_D6qpmT"],
+      "block_order": [
+        "accordion_D6qpmT"
+      ],
       "name": "Accordions",
       "settings": {
         "heading": "",
