@@ -38,6 +38,26 @@
       "type": "image_picker",
       "id": "image_6",
       "label": "Image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Image 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_9",
+      "label": "Image 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_10",
+      "label": "Image 10"
     }
   ],
   "presets": [
@@ -61,18 +81,6 @@
     {% comment %} ? Column 1 {% endcomment %}
     <div class='twcss-grid twcss-gap-2'>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        <img
-          src='https://placehold.co/140'
-          alt='Ice Cream'
-          width='140'
-          height='140'
-          class='twcss-rounded-lg'
-        >
-      </picture>
-    </div>
-    {% comment %} ? Column 2 {% endcomment %}
-    <div class='twcss-grid twcss-gap-2 twcss-pt-10'>
-      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
         {% if section.settings.image_1 != blank %}
           <img
             src='{{ section.settings.image_1 | image_url: width: 140, height: 140 }}'
@@ -91,6 +99,9 @@
           >
         {% endif %}
       </picture>
+    </div>
+    {% comment %} ? Column 2 {% endcomment %}
+    <div class='twcss-grid twcss-gap-2 twcss-pt-10'>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
         {% if section.settings.image_2 != blank %}
           <img
@@ -110,14 +121,33 @@
           >
         {% endif %}
       </picture>
+      <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
+        {% if section.settings.image_3 != blank %}
+          <img
+            src='{{ section.settings.image_3 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_3.alt | escape }}'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% else %}
+          <img
+            src='https://placehold.co/140'
+            alt='Placeholder Image'
+            width='140'
+            height='140'
+            class='twcss-rounded-lg'
+          >
+        {% endif %}
+      </picture>
     </div>
     {% comment %} ? Column 3 {% endcomment %}
     <div class='twcss-grid twcss-gap-2'>
       <picture class='twcss-col-span-2 hover:twcss-scale-[1.025] twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_3 != blank %}
+        {% if section.settings.image_4 != blank %}
           <img
-            src='{{ section.settings.image_3 | image_url: width: 280, height: 280 }}'
-            alt='{{ section.settings.image_3.alt | escape }}'
+            src='{{ section.settings.image_4 | image_url: width: 280, height: 280 }}'
+            alt='{{ section.settings.image_4.alt | escape }}'
             width='280'
             height='280'
             class='twcss-rounded-lg'
@@ -133,10 +163,10 @@
         {% endif %}
       </picture>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_4 != blank %}
+        {% if section.settings.image_5 != blank %}
           <img
-            src='{{ section.settings.image_4 | image_url: width: 140, height: 140 }}'
-            alt='{{ section.settings.image_4.alt | escape }}'
+            src='{{ section.settings.image_5 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_5.alt | escape }}'
             width='140'
             height='140'
             class='twcss-rounded-lg'
@@ -155,10 +185,10 @@
     {% comment %} ? Column 4 {% endcomment %}
     <div class='twcss-grid twcss-gap-2 twcss-pt-14'>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_4 != blank %}
+        {% if section.settings.image_6 != blank %}
           <img
-            src='{{ section.settings.image_4 | image_url: width: 140, height: 140 }}'
-            alt='{{ section.settings.image_4.alt | escape }}'
+            src='{{ section.settings.image_6 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_6.alt | escape }}'
             width='140'
             height='140'
             class='twcss-rounded-lg'
@@ -174,10 +204,10 @@
         {% endif %}
       </picture>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_5 != blank %}
+        {% if section.settings.image_7 != blank %}
           <img
-            src='{{ section.settings.image_5 | image_url: width: 140, height: 140 }}'
-            alt='{{ section.settings.image_5.alt | escape }}'
+            src='{{ section.settings.image_7 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_7.alt | escape }}'
             width='140'
             height='140'
             class='twcss-rounded-lg'
@@ -196,10 +226,10 @@
     {% comment %} ? Column 5 {% endcomment %}
     <div class='twcss-grid twcss-gap-2 twcss-pt-4'>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_5 != blank %}
+        {% if section.settings.image_8 != blank %}
           <img
-            src='{{ section.settings.image_5 | image_url: width: 140, height: 140 }}'
-            alt='{{ section.settings.image_5.alt | escape }}'
+            src='{{ section.settings.image_8 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_8.alt | escape }}'
             width='140'
             height='140'
             class='twcss-rounded-lg'
@@ -215,10 +245,10 @@
         {% endif %}
       </picture>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_6 != blank %}
+        {% if section.settings.image_9 != blank %}
           <img
-            src='{{ section.settings.image_6 | image_url: width: 140, height: 140 }}'
-            alt='{{ section.settings.image_6.alt | escape }}'
+            src='{{ section.settings.image_9 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_9.alt | escape }}'
             width='140'
             height='140'
             class='twcss-rounded-lg'
@@ -237,10 +267,10 @@
     {% comment %} ? Column 6 {% endcomment %}
     <div class='twcss-grid twcss-gap-2'>
       <picture class='hover:twcss-scale-105 twcss-transition-all twcss-duration-300'>
-        {% if section.settings.image_6 != blank %}
+        {% if section.settings.image_10 != blank %}
           <img
-            src='{{ section.settings.image_6 | image_url: width: 140, height: 140 }}'
-            alt='{{ section.settings.image_6.alt | escape }}'
+            src='{{ section.settings.image_10 | image_url: width: 140, height: 140 }}'
+            alt='{{ section.settings.image_10.alt | escape }}'
             width='140'
             height='140'
             class='twcss-rounded-lg'
