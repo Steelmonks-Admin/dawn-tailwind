@@ -76,10 +76,36 @@
           "type": "accordion",
           "settings": {
             "parent": "",
-            "heading": "What is your product or service?",
+            "heading": "How do I create a custom sign?",
             "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
             "content_liquid": "",
             "featured": true,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_HxC6kM": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Do I need to pay to create a design?",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_xjxiHm": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "How are these signs created?",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
             "featured_image_alignment": "center",
             "featured_image_aspect_ratio": "233 / 349"
@@ -89,7 +115,20 @@
           "type": "accordion",
           "settings": {
             "parent": "",
-            "heading": "What is your product or service?",
+            "heading": "What pictures can I use?",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_CUVVQr": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "How is my price calculated?",
             "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
             "content_liquid": "",
             "featured": false,
@@ -101,7 +140,10 @@
       },
       "block_order": [
         "accordion_XcfyCL",
-        "accordion_eG9Wbf"
+        "accordion_HxC6kM",
+        "accordion_xjxiHm",
+        "accordion_eG9Wbf",
+        "accordion_CUVVQr"
       ],
       "disabled": true,
       "name": "Accordions",
