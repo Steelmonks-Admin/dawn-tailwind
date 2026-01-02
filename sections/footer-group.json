@@ -1,1 +1,72 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"footer":{"type":"footer","blocks":{"text_LwniXk":{"type":"text","settings":{"heading":"","image":"shopify:\/\/shop_images\/Logo_Written_White.png","subtext":"<p><br\/>Handgefertigt aus hochwertigem Stahl, sind unsere Produkte <strong>zeitlose Erinnerungsstücke<\/strong>.<br\/><br\/>Gestalte <strong>Schlüsselanhänger<\/strong>, <strong>Wandschilder <\/strong>und <strong>Zunftzeichen<\/strong>, um Deine Liebe und Wertschätzung auszudrücken.<\/p>"}},"footer-0":{"type":"link_list","settings":{"heading":"Allgemeines","menu":"allgemeines"}},"footer-1":{"type":"link_list","settings":{"heading":"Rechtliches","menu":"footer"}},"link_list_PhhAza":{"type":"link_list","settings":{"heading":"Informatives","menu":"informatives"}}},"block_order":["text_LwniXk","footer-0","footer-1","link_list_PhhAza"],"settings":{"color_scheme":"scheme-f7848412-516f-4c26-bfb7-6306e78a7845","newsletter_enable":false,"newsletter_heading":"Subscribe to our emails","enable_follow_on_shop":true,"show_social":true,"enable_country_selector":false,"enable_language_selector":true,"payment_enable":true,"show_policy":false,"margin_top":0,"padding_top":36,"padding_bottom":36}}},"order":["footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text_LwniXk": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "image": "shopify://shop_images/Logo_Written_White.png",
+            "subtext": "<p><br/>Handgefertigt aus hochwertigem Stahl, sind unsere Produkte <strong>zeitlose Erinnerungsstücke</strong>.<br/><br/>Gestalte <strong>Schlüsselanhänger</strong>, <strong>Wandschilder </strong>und <strong>Zunftzeichen</strong>, um Deine Liebe und Wertschätzung auszudrücken.</p>"
+          }
+        },
+        "footer-0": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Allgemeines",
+            "menu": "allgemeines"
+          }
+        },
+        "footer-1": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Rechtliches",
+            "menu": "footer"
+          }
+        },
+        "link_list_PhhAza": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Informatives",
+            "menu": "informatives"
+          }
+        }
+      },
+      "block_order": [
+        "text_LwniXk",
+        "footer-0",
+        "footer-1",
+        "link_list_PhhAza"
+      ],
+      "settings": {
+        "color_scheme": "scheme-f7848412-516f-4c26-bfb7-6306e78a7845",
+        "newsletter_enable": false,
+        "newsletter_heading": "Subscribe to our emails",
+        "enable_follow_on_shop": true,
+        "show_social": true,
+        "enable_country_selector": false,
+        "enable_language_selector": true,
+        "payment_enable": true,
+        "show_policy": false,
+        "margin_top": 0,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

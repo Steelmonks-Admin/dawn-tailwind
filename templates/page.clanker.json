@@ -1,1 +1,78 @@
-{"sections":{"main":{"type":"main-page","custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"steelmonks_sign_creator_FKYF46":{"type":"steelmonks-sign-creator","name":"SM Schild Konfigurator","settings":{"badge_text":"Dein persönliches Metallschild","heading":"Entwirf dein Steelmonks Schild","subheading":"Lade ein Motiv hoch, beschreibe deinen Wunsch und wähle Oberfläche und Größe. Wir kümmern uns um den Rest.","product":"","special_page_url":"","price_table_json":"{ \"prices\": [] }","fallback_price":"Wird berechnet","trust_row_enable":true}}},"order":["main","steelmonks_sign_creator_FKYF46"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "rich_text_rMFFNh": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_p3qP8D": {
+          "type": "heading",
+          "settings": {
+            "heading": "Erstellen Sie Ihr eigenes individuelles Design anhand eines Bildes",
+            "heading_size": "h1"
+          }
+        },
+        "text_c6tJGH": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Laden Sie ein Bild mit Ihrem Wunschmotiv hoch, wählen Sie Material und Größe nach Ihren Vorstellungen und kreieren Sie das perfekte Geschenk für sich selbst oder Ihre Lieben.</p>"
+          }
+        },
+        "button_4ikGHW": {
+          "type": "button",
+          "settings": {
+            "button_label": "Erstelle meine eigene",
+            "button_link": "#scroller",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_p3qP8D",
+        "text_c6tJGH",
+        "button_4ikGHW"
+      ],
+      "disabled": true,
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52,
+        "enable_smooth_scroll": true
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "custom_css": [],
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "enable_gutter": false,
+        "show_title": false
+      }
+    },
+    "steelmonks_sign_creator_FKYF46": {
+      "type": "steelmonks-sign-creator",
+      "name": "SM Schild Konfigurator",
+      "settings": {}
+    }
+  },
+  "order": [
+    "rich_text_rMFFNh",
+    "main",
+    "steelmonks_sign_creator_FKYF46"
+  ]
+}

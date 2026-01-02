@@ -1,1 +1,485 @@
-{"sections":{"main":{"type":"main-product","blocks":{"vendor":{"type":"text","disabled":true,"settings":{"text":"{{ product.vendor }}"}},"title":{"type":"title","settings":{}},"caption":{"type":"text","settings":{"text":"{{ product.metafields.descriptors.subtitle.value }}"}},"price":{"type":"price","settings":{}},"trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/product-review-list-extension\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}},"variant_picker":{"type":"variant_picker","settings":{"options_threshold":10}},"profy_banner_countdown_timer_app_block_jALVj7":{"type":"shopify:\/\/apps\/profy-banner-countdown-timer\/blocks\/app_block\/243a639f-ca73-4afe-b6aa-3a23277fb424","settings":{"banner_id":"c9ffb917-cc34-11f0-b848-da56541e1029"}},"buy_buttons":{"type":"buy_buttons","settings":{"enable_quantity_selector":true,"show_dynamic_checkout":false,"show_gift_card_recipient":true}},"description":{"type":"description","disabled":true,"settings":{}},"zepto_product_personalizer_product_personalizer_page_bj6dEi":{"type":"shopify:\/\/apps\/zepto-product-personalizer\/blocks\/product_personalizer_page\/7411210d-7b32-4c09-9455-e129e3be4729","settings":{"product":"{{product}}"}},"trusted_shops_reviews_and_more_trusted_stars_aNyqUW":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["vendor","title","caption","price","trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf","variant_picker","profy_banner_countdown_timer_app_block_jALVj7","buy_buttons","description","zepto_product_personalizer_product_personalizer_page_bj6dEi","trusted_shops_reviews_and_more_trusted_stars_aNyqUW"],"settings":{"enable_sticky_bar":true,"enable_sticky_bar_info":false,"enable_product_media_full_viewheight":false,"back_to_collection_button":"none","back_to_collection_button_text_before":"","back_to_collection_button_text_after":""}},"sm_button_back_to_collection_ENenrt":{"type":"sm-button-back-to-collection","custom_css":[".button-back-to-collection {margin: 2rem auto;}"],"name":"Back to Collection","settings":{"show_button":true,"button_text_before":"Zurück zu","button_text_after":"Kollektion","show_breadcrumb":true,"show_all_collections":true,"all_collections_text":"Alle Kollektionen","separator":"→"}},"sm_alternating_media_zDMx7c":{"type":"sm-alternating-media","blocks":{"alternating_media_hNRd8a":{"type":"alternating_media","settings":{"use_product_images":true,"image_border_radius":10,"image_box_shadow_visible":true,"image_max_width":0,"heading":"Ganz nach Deinem Wunsch","text":"<p>Unsere Möglichkeiten, kombiniert mit Deinem Wunschtext - so entsteht ein einzigartiges und persönliches Unikat.<br\/>Nichts ist individueller als ein Artikel, der speziell für Dich angefertigt wurde.<br\/><br\/>Unser Motto ist: \"Nichts ist persönlicher als personalisiert.\" <br\/><br\/>Wir verbinden individuelle Symbolik mit Deiner persönlichen Note.<\/p>","use_feature_highlights":true,"flex_justify_content":"start","flex_align_items":"center","heading_color":"#090a0c","text_color":"#090a0c","desktop_heading_size":26,"mobile_heading_size":18,"desktop_text_size":16,"mobile_text_size":14,"text_weight":400,"heading_weight":700,"flex_direction":"row","image_flex":1,"text_flex":1.8,"block_gap":12,"stack_on_mobile":true}},"alternating_media_UxxYzY":{"type":"alternating_media","settings":{"use_product_images":true,"image_border_radius":10,"image_box_shadow_visible":true,"image_max_width":0,"heading":"Ein ideales Geschenk","text":"<p>Dank der robusten Verarbeitung bleibt das Schild dauerhaft geschützt und rostfrei, besonders in pulverbeschichteten Farben – eine perfekte Geschenkidee für Familien, Paare oder als Andenken für besondere Anlässe.<\/p>","use_feature_highlights":true,"flex_justify_content":"end","flex_align_items":"center","heading_color":"#090a0c","text_color":"#090a0c","desktop_heading_size":26,"mobile_heading_size":18,"desktop_text_size":16,"mobile_text_size":14,"text_weight":400,"heading_weight":700,"flex_direction":"row","image_flex":1,"text_flex":1.8,"block_gap":12,"stack_on_mobile":true}},"alternating_media_kRfHjT":{"type":"alternating_media","settings":{"use_product_images":true,"image_border_radius":10,"image_box_shadow_visible":true,"image_max_width":0,"heading":"Ganz nach Deinem Wunsch","text":"<p>Wähle aus mehreren Größen und Materialien, um Dein Baum des Lebens Schild an Deinen Stil anzupassen – von klassischem Stahl über Edelstahl bis hin zu echtem Edelrost (Cortenstahl).<\/p>","use_feature_highlights":true,"flex_justify_content":"start","flex_align_items":"center","heading_color":"#090a0c","text_color":"#090a0c","desktop_heading_size":26,"mobile_heading_size":18,"desktop_text_size":16,"mobile_text_size":14,"text_weight":400,"heading_weight":700,"flex_direction":"row","image_flex":1,"text_flex":1.8,"block_gap":12,"stack_on_mobile":true}}},"block_order":["alternating_media_hNRd8a","alternating_media_UxxYzY","alternating_media_kRfHjT"],"name":"Alternating Media","settings":{"product_media_index_offset":1,"aspect_ratio":"1 \/ 1","heading":"","heading_size_mobile":22,"heading_size_desktop":24,"heading_alignment":"center","heading_weight":700,"ab_test_variant":"control"}},"17459065389a6ee71e":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_product_review_list_JrKwDz":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/product-review-list\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_product_review_list_JrKwDz"],"custom_css":[],"settings":{"include_margins":true}},"sm_product_features_VBwNpg":{"type":"sm-product-features","name":"Product Features","settings":{"cta_text":"","materials_heading":"Wähle Dein Material","materials_subheading":"Machen es mit einer Vielzahl von Materialien einzigartig.","quality_heading":"Für Dich, nur das Beste","quality_subheading":"Hochwertige Verarbeitung, langlebig, beeindruckend und sorgfältig verpackt.","custom_built_subheading_1":"Füge Deine persönliche Note hinzu","custom_built_subheading_2":"Gestalte es genau so, wie Du es willst.","gifting_heading":"Ein persönliches Geschenk, das Dir und den Beschenkten, Freude bereiten wird","materials_button":"Materialien","quality_button":"Qualität","custom_built_button":"Maßgefertigt","gifting_button":"Geschenk","cta_text_keychain":"","materials_heading_keychain":"Wähle Dein Band","materials_subheading_keychain":"Mache es mit einem unserer Materialien einzigartig.","quality_heading_keychain":"Für Dich, nur das Beste!","quality_subheading_keychain":"Hochwertige Bänder, langlebig, beeindruckend und sorgfältig verarbeitet.","custom_built_subheading_1_keychain":"Füge Deine persönliche Note hinzu","custom_built_subheading_2_keychain":"Gestalte es so, wie Du es möchtest.","gifting_heading_keychain":"Ein persönliches Geschenk, das Dir und den Beschenkten, Freude bereiten wird","materials_button_keychain":"Band","quality_button_keychain":"Qualität","custom_built_button_keychain":"Maßgefertigt","gifting_button_keychain":"Geschenk"}},"sm_scrolling_gallery_zh3P38":{"type":"sm-scrolling-gallery","blocks":{"row_of_images_EJVWbF":{"type":"row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"16 \/ 9"}},"inversed_row_of_images_naHFkC":{"type":"inversed_row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"5 \/ 4"}},"row_of_images_7C7nqm":{"type":"row_of_images","settings":{"use_custom_images":false,"aspect_ratio":"16 \/ 9"}}},"block_order":["row_of_images_EJVWbF","inversed_row_of_images_naHFkC","row_of_images_7C7nqm"],"name":"Scrolling Gallery","settings":{"overlay_text":"<h2>Inspired by Life.<\/h2><p><\/p><p><\/p><p>Steelmonks<\/p>","overlay_text_color":"#fafaff","overlay_background_color":"linear-gradient(45deg, rgba(9, 10, 12, 1) 25%, rgba(0, 68, 204, 1) 100%)","overlay_padding":"20px 20px 20px 20px","overlay_gradient_background_color":"radial-gradient(rgba(250, 250, 255, 1) 20%, rgba(250, 250, 255, 0) 80%)","overlay_style":"1","overlay_width":85,"show_box_shadow":true,"box_shadow_properties":"4px 4px 6px #090a0c40","show_overlay_text":true,"show_button":false,"overlay_border_radius":10,"img_width":250}},"related-products":{"type":"related-products","settings":{"heading":"Das könnte Dir auch gefallen...","heading_size":"h2","products_to_show":4,"columns_desktop":4,"color_scheme":"scheme-1","image_ratio":"square","image_shape":"default","show_secondary_image":true,"show_vendor":false,"show_rating":false,"columns_mobile":"2","padding_top":36,"padding_bottom":28}},"1748369267571d4330":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_review_carousel_69HGxt":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/review-carousel\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_review_carousel_69HGxt"],"settings":{"include_margins":true}},"accordions_PLagXY":{"type":"accordions","blocks":{"accordion_ztMBwk":{"type":"accordion","settings":{"parent":"","heading":"Beschreibung","content":"{{ product.description }}","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_3rkzRd":{"type":"accordion","settings":{"parent":"","heading":"Ich brauche ein dringendes Geschenk, bis wann hab ich mein Schild? (Produktionszeit)","content":"<p>Wir verstehen, wie wichtig es ist, besondere Anlässe rechtzeitig zu feiern.<\/p><p>Normalerweise dauert die Produktion eines Schildes einige Tage, je nach Komplexität und aktuellen Auftragsvolumen.<\/p><p>Hinzu kommt die Versandzeit. Wenn Du ein Schild dringend benötigst, kontaktiere uns bitte vor Deiner der Bestellung, damit wir die Produktion vorziehen und die besten Versandoptionen für Dich finden können.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_AC8i7b":{"type":"accordion","settings":{"parent":"","heading":"Wie werden diese Schilder denn gemacht? Wie ist die Qualität? (Farben & Oberflächen)","content":"<p>Unsere Schilder und Anhänger werden mit modernsten Technologien und Maschinen hergestellt.<\/p><p>Der Prozess beginnt mit einer hochwertigen Stahlplatte. Mit Hilfe von präzisen Lasern werden die Designs dann direkt aus dem Metall geschnitten. Dies garantiert eine exakte Umsetzung selbst feinster Details.<\/p><p>Wir verwenden nur hochwertigste Materialien, wie Edelstahl und Cortenstahl, um Langlebigkeit und Beständigkeit zu gewährleisten. <\/p><p>Unsere zahlreichen zufriedenen Kunden und die positiven Rückmeldungen bestätigen die herausragende Qualität unserer Produkte.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_fUpijX":{"type":"accordion","settings":{"parent":"","heading":"Wie kann ich euch erreichen? (Kontakt)","content":"<p>Du kannst uns auf verschiedene Weisen erreichen.<\/p><p>Am einfachsten geht es per E-Mail an: <a href=\"mailto:info@steelmonks.com\">info@steelmonks.com<\/a> <\/p><p>Am schnellsten ist der Live-Chat unten Links auf der Seite. (Einfach auf die Sprechblase klicken) Von Montag bis Freitag zwischen 8.00 und 16.00 Uhr sind wir erreichbar.<\/p><p>Wir freuen uns darauf, von dir zu hören und stehen dir gerne für alle Fragen und Anliegen zur Verfügung!<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_473kHH":{"type":"accordion","settings":{"parent":"","heading":"Ich brauche einen Artikel bis zu einem bestimmten Datum. Wie kann ich das garantieren? (Versand)","content":"<p>Wir können leider kein exaktes Lieferdatum garantieren, da dies abhängig davon ist, wie DHL Dich persönlich anfährt.<\/p><p>Wenn Du jedoch ein Produkt bis zu einem spezifischen Datum benötigst, nimm direkt Kontakt mit uns auf, um diese Option zu besprechen und sicherzustellen, dass dein Artikel rechtzeitig bei dir eintrifft.<\/p><p>Am schnellsten ist der Live-Chat unten Links auf der Seite. (Einfach auf die Sprechblase klicken) Von Montag bis Freitag zwischen 8.00 und 16.00 Uhr sind wir erreichbar.<\/p><p>Am einfachsten geht es per E-Mail an: <a href=\"mailto:info@steelmonks.com\">info@steelmonks.com<\/a> <\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_m4eEKL":{"type":"accordion","settings":{"parent":"","heading":"Könnt ihr ein individuelles Design für mich erstellen? (Sonderanfertigungen)","content":"<p>Spezielle Unikat und Sonderprojekte sind immer aufregend. <\/p><p>Die unbegrenzten Möglichkeiten ziehen dabei viel Aufmerksamkeit auf sich, so müssen wir unsere Projekte selber filtern und auswählen.<\/p><p>Teile uns einfach Deine Vorstellungen und Ideen mit. Unser kreatives Team wird sich daran setzen, ein einzigartiges Design speziell für dich zu entwerfen.<\/p><p>Deine Zufriedenheit und die Verwirklichung Deiner Vision stehen bei uns an erster Stelle!<\/p><p>Für weitere Details besuche bitte unsere <a href=\"\/pages\/anfragen\" title=\"Deine Sonderanfertigung\">Sonderanfertigungen<\/a>.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_XJXTAx":{"type":"accordion","settings":{"parent":"","heading":"100% Glücksgarantie","content":"<p>Wenn das von Dir verschenkte Schild dem Beschenkten nicht gefällt, erstatten wir dir den vollen Kaufpreis zurück. Denn wir möchten, dass jeder Einkauf bei Steelmonks zu <strong>100% glücklich<\/strong> macht.<\/p><p>Du kannst Dich bis 30 Tage nach erhalt bei uns melden und erhältst  nach Zurücklieferung des Produktes, den vollen Kaufpreis zurück - ohne Fragen, ohne Risiko.<\/p><p><a href=\"\/pages\/garantie\" title=\"Garantie\">Alles rechtliche zu unserer 100% Garantie findest Du hier:<\/a><\/p><p><a href=\"\/pages\/garantie\" title=\"Garantie\"><strong>(Garantie)<\/strong><\/a><\/p><p>Sobald Deine Bestellung bei uns eingeht, versuchen wir sie so schnell wie möglich zu bearbeiten. <\/p><p><br\/>Du hast aber das Recht, binnen <strong>24 Stunden <\/strong>ohne Angabe von Gründen diesen Vertrag zu widerrufen.<br\/><\/p><p>Das Widerrufsrecht besteht nicht mehr, sobald Deine personalisierte Ware erstellt wurde, da sie individuell und maßgeblich auf Deine Wünsche und persönlichen Bedürfnisse zugeschnitten wurde. Dies geschieht an Werktagen und generell 6-24 Stunden nach dem Eingang der Bestellung.<\/p><p>Unsere Wiederrufsbelehrung findest Du hier. (<a href=\"\/pages\/widerrufsbelehrung\" title=\"Widerrufsbelehrung\"><strong>Wiederrufsbelehrung<\/strong><\/a>)<\/p>","content_liquid":"","featured":true,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_ztMBwk","accordion_3rkzRd","accordion_AC8i7b","accordion_fUpijX","accordion_473kHH","accordion_m4eEKL","accordion_XJXTAx"],"custom_css":[],"name":"Accordions","settings":{"heading":"","subheading":"","padding_top":0,"padding_bottom":24,"padding_left":24,"padding_right":24}},"17483692443c700023":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_trusted_stars_ebJ4nN":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_trusted_stars_ebJ4nN"],"settings":{"include_margins":true}}},"order":["main","sm_button_back_to_collection_ENenrt","sm_alternating_media_zDMx7c","17459065389a6ee71e","sm_product_features_VBwNpg","sm_scrolling_gallery_zh3P38","related-products","1748369267571d4330","accordions_PLagXY","17483692443c700023"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "{{ product.vendor }}"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "caption": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.metafields.descriptors.subtitle.value }}"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/product-review-list-extension/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "options_threshold": 10
+          }
+        },
+        "profy_banner_countdown_timer_app_block_jALVj7": {
+          "type": "shopify://apps/profy-banner-countdown-timer/blocks/app_block/243a639f-ca73-4afe-b6aa-3a23277fb424",
+          "settings": {
+            "banner_id": "c9ffb917-cc34-11f0-b848-da56541e1029"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "enable_quantity_selector": true,
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {}
+        },
+        "zepto_product_personalizer_product_personalizer_page_bj6dEi": {
+          "type": "shopify://apps/zepto-product-personalizer/blocks/product_personalizer_page/7411210d-7b32-4c09-9455-e129e3be4729",
+          "settings": {
+            "product": "{{product}}"
+          }
+        },
+        "trusted_shops_reviews_and_more_trusted_stars_aNyqUW": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "caption",
+        "price",
+        "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf",
+        "variant_picker",
+        "profy_banner_countdown_timer_app_block_jALVj7",
+        "buy_buttons",
+        "description",
+        "zepto_product_personalizer_product_personalizer_page_bj6dEi",
+        "trusted_shops_reviews_and_more_trusted_stars_aNyqUW"
+      ],
+      "settings": {
+        "enable_sticky_bar": true,
+        "enable_sticky_bar_info": false,
+        "enable_product_media_full_viewheight": false,
+        "back_to_collection_button": "none",
+        "back_to_collection_button_text_before": "",
+        "back_to_collection_button_text_after": ""
+      }
+    },
+    "sm_button_back_to_collection_ENenrt": {
+      "type": "sm-button-back-to-collection",
+      "custom_css": [
+        ".button-back-to-collection {margin: 2rem auto;}"
+      ],
+      "name": "Back to Collection",
+      "settings": {
+        "show_button": true,
+        "button_text_before": "Zurück zu",
+        "button_text_after": "Kollektion",
+        "show_breadcrumb": true,
+        "show_all_collections": true,
+        "all_collections_text": "Alle Kollektionen",
+        "separator": "→"
+      }
+    },
+    "sm_alternating_media_zDMx7c": {
+      "type": "sm-alternating-media",
+      "blocks": {
+        "alternating_media_hNRd8a": {
+          "type": "alternating_media",
+          "settings": {
+            "use_product_images": true,
+            "image_border_radius": 10,
+            "image_box_shadow_visible": true,
+            "image_max_width": 0,
+            "heading": "Ganz nach Deinem Wunsch",
+            "text": "<p>Unsere Möglichkeiten, kombiniert mit Deinem Wunschtext - so entsteht ein einzigartiges und persönliches Unikat.<br/>Nichts ist individueller als ein Artikel, der speziell für Dich angefertigt wurde.<br/><br/>Unser Motto ist: \"Nichts ist persönlicher als personalisiert.\" <br/><br/>Wir verbinden individuelle Symbolik mit Deiner persönlichen Note.</p>",
+            "use_feature_highlights": true,
+            "flex_justify_content": "start",
+            "flex_align_items": "center",
+            "heading_color": "#090a0c",
+            "text_color": "#090a0c",
+            "desktop_heading_size": 26,
+            "mobile_heading_size": 18,
+            "desktop_text_size": 16,
+            "mobile_text_size": 14,
+            "text_weight": 400,
+            "heading_weight": 700,
+            "flex_direction": "row",
+            "image_flex": 1,
+            "text_flex": 1.8,
+            "block_gap": 12,
+            "stack_on_mobile": true
+          }
+        },
+        "alternating_media_UxxYzY": {
+          "type": "alternating_media",
+          "settings": {
+            "use_product_images": true,
+            "image_border_radius": 10,
+            "image_box_shadow_visible": true,
+            "image_max_width": 0,
+            "heading": "Ein ideales Geschenk",
+            "text": "<p>Dank der robusten Verarbeitung bleibt das Schild dauerhaft geschützt und rostfrei, besonders in pulverbeschichteten Farben – eine perfekte Geschenkidee für Familien, Paare oder als Andenken für besondere Anlässe.</p>",
+            "use_feature_highlights": true,
+            "flex_justify_content": "end",
+            "flex_align_items": "center",
+            "heading_color": "#090a0c",
+            "text_color": "#090a0c",
+            "desktop_heading_size": 26,
+            "mobile_heading_size": 18,
+            "desktop_text_size": 16,
+            "mobile_text_size": 14,
+            "text_weight": 400,
+            "heading_weight": 700,
+            "flex_direction": "row",
+            "image_flex": 1,
+            "text_flex": 1.8,
+            "block_gap": 12,
+            "stack_on_mobile": true
+          }
+        },
+        "alternating_media_kRfHjT": {
+          "type": "alternating_media",
+          "settings": {
+            "use_product_images": true,
+            "image_border_radius": 10,
+            "image_box_shadow_visible": true,
+            "image_max_width": 0,
+            "heading": "Ganz nach Deinem Wunsch",
+            "text": "<p>Wähle aus mehreren Größen und Materialien, um Dein Baum des Lebens Schild an Deinen Stil anzupassen – von klassischem Stahl über Edelstahl bis hin zu echtem Edelrost (Cortenstahl).</p>",
+            "use_feature_highlights": true,
+            "flex_justify_content": "start",
+            "flex_align_items": "center",
+            "heading_color": "#090a0c",
+            "text_color": "#090a0c",
+            "desktop_heading_size": 26,
+            "mobile_heading_size": 18,
+            "desktop_text_size": 16,
+            "mobile_text_size": 14,
+            "text_weight": 400,
+            "heading_weight": 700,
+            "flex_direction": "row",
+            "image_flex": 1,
+            "text_flex": 1.8,
+            "block_gap": 12,
+            "stack_on_mobile": true
+          }
+        }
+      },
+      "block_order": [
+        "alternating_media_hNRd8a",
+        "alternating_media_UxxYzY",
+        "alternating_media_kRfHjT"
+      ],
+      "name": "Alternating Media",
+      "settings": {
+        "product_media_index_offset": 1,
+        "aspect_ratio": "1 / 1",
+        "heading": "",
+        "heading_size_mobile": 22,
+        "heading_size_desktop": 24,
+        "heading_alignment": "center",
+        "heading_weight": 700,
+        "ab_test_variant": "control"
+      }
+    },
+    "17459065389a6ee71e": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_product_review_list_JrKwDz": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/product-review-list/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_product_review_list_JrKwDz"
+      ],
+      "custom_css": [],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "sm_product_features_VBwNpg": {
+      "type": "sm-product-features",
+      "name": "Product Features",
+      "settings": {
+        "cta_text": "",
+        "materials_heading": "Wähle Dein Material",
+        "materials_subheading": "Machen es mit einer Vielzahl von Materialien einzigartig.",
+        "quality_heading": "Für Dich, nur das Beste",
+        "quality_subheading": "Hochwertige Verarbeitung, langlebig, beeindruckend und sorgfältig verpackt.",
+        "custom_built_subheading_1": "Füge Deine persönliche Note hinzu",
+        "custom_built_subheading_2": "Gestalte es genau so, wie Du es willst.",
+        "gifting_heading": "Ein persönliches Geschenk, das Dir und den Beschenkten, Freude bereiten wird",
+        "materials_button": "Materialien",
+        "quality_button": "Qualität",
+        "custom_built_button": "Maßgefertigt",
+        "gifting_button": "Geschenk",
+        "cta_text_keychain": "",
+        "materials_heading_keychain": "Wähle Dein Band",
+        "materials_subheading_keychain": "Mache es mit einem unserer Materialien einzigartig.",
+        "quality_heading_keychain": "Für Dich, nur das Beste!",
+        "quality_subheading_keychain": "Hochwertige Bänder, langlebig, beeindruckend und sorgfältig verarbeitet.",
+        "custom_built_subheading_1_keychain": "Füge Deine persönliche Note hinzu",
+        "custom_built_subheading_2_keychain": "Gestalte es so, wie Du es möchtest.",
+        "gifting_heading_keychain": "Ein persönliches Geschenk, das Dir und den Beschenkten, Freude bereiten wird",
+        "materials_button_keychain": "Band",
+        "quality_button_keychain": "Qualität",
+        "custom_built_button_keychain": "Maßgefertigt",
+        "gifting_button_keychain": "Geschenk"
+      }
+    },
+    "sm_scrolling_gallery_zh3P38": {
+      "type": "sm-scrolling-gallery",
+      "blocks": {
+        "row_of_images_EJVWbF": {
+          "type": "row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "16 / 9"
+          }
+        },
+        "inversed_row_of_images_naHFkC": {
+          "type": "inversed_row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "5 / 4"
+          }
+        },
+        "row_of_images_7C7nqm": {
+          "type": "row_of_images",
+          "settings": {
+            "use_custom_images": false,
+            "aspect_ratio": "16 / 9"
+          }
+        }
+      },
+      "block_order": [
+        "row_of_images_EJVWbF",
+        "inversed_row_of_images_naHFkC",
+        "row_of_images_7C7nqm"
+      ],
+      "name": "Scrolling Gallery",
+      "settings": {
+        "overlay_text": "<h2>Inspired by Life.</h2><p></p><p></p><p>Steelmonks</p>",
+        "overlay_text_color": "#fafaff",
+        "overlay_background_color": "linear-gradient(45deg, rgba(9, 10, 12, 1) 25%, rgba(0, 68, 204, 1) 100%)",
+        "overlay_padding": "20px 20px 20px 20px",
+        "overlay_gradient_background_color": "radial-gradient(rgba(250, 250, 255, 1) 20%, rgba(250, 250, 255, 0) 80%)",
+        "overlay_style": "1",
+        "overlay_width": 85,
+        "show_box_shadow": true,
+        "box_shadow_properties": "4px 4px 6px #090a0c40",
+        "show_overlay_text": true,
+        "show_button": false,
+        "overlay_border_radius": 10,
+        "img_width": 250
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "Das könnte Dir auch gefallen...",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "1748369267571d4330": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_review_carousel_69HGxt": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/review-carousel/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_review_carousel_69HGxt"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "accordions_PLagXY": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_ztMBwk": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Beschreibung",
+            "content": "{{ product.description }}",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_3rkzRd": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Ich brauche ein dringendes Geschenk, bis wann hab ich mein Schild? (Produktionszeit)",
+            "content": "<p>Wir verstehen, wie wichtig es ist, besondere Anlässe rechtzeitig zu feiern.</p><p>Normalerweise dauert die Produktion eines Schildes einige Tage, je nach Komplexität und aktuellen Auftragsvolumen.</p><p>Hinzu kommt die Versandzeit. Wenn Du ein Schild dringend benötigst, kontaktiere uns bitte vor Deiner der Bestellung, damit wir die Produktion vorziehen und die besten Versandoptionen für Dich finden können.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_AC8i7b": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Wie werden diese Schilder denn gemacht? Wie ist die Qualität? (Farben & Oberflächen)",
+            "content": "<p>Unsere Schilder und Anhänger werden mit modernsten Technologien und Maschinen hergestellt.</p><p>Der Prozess beginnt mit einer hochwertigen Stahlplatte. Mit Hilfe von präzisen Lasern werden die Designs dann direkt aus dem Metall geschnitten. Dies garantiert eine exakte Umsetzung selbst feinster Details.</p><p>Wir verwenden nur hochwertigste Materialien, wie Edelstahl und Cortenstahl, um Langlebigkeit und Beständigkeit zu gewährleisten. </p><p>Unsere zahlreichen zufriedenen Kunden und die positiven Rückmeldungen bestätigen die herausragende Qualität unserer Produkte.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_fUpijX": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Wie kann ich euch erreichen? (Kontakt)",
+            "content": "<p>Du kannst uns auf verschiedene Weisen erreichen.</p><p>Am einfachsten geht es per E-Mail an: <a href=\"mailto:info@steelmonks.com\">info@steelmonks.com</a> </p><p>Am schnellsten ist der Live-Chat unten Links auf der Seite. (Einfach auf die Sprechblase klicken) Von Montag bis Freitag zwischen 8.00 und 16.00 Uhr sind wir erreichbar.</p><p>Wir freuen uns darauf, von dir zu hören und stehen dir gerne für alle Fragen und Anliegen zur Verfügung!</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_473kHH": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Ich brauche einen Artikel bis zu einem bestimmten Datum. Wie kann ich das garantieren? (Versand)",
+            "content": "<p>Wir können leider kein exaktes Lieferdatum garantieren, da dies abhängig davon ist, wie DHL Dich persönlich anfährt.</p><p>Wenn Du jedoch ein Produkt bis zu einem spezifischen Datum benötigst, nimm direkt Kontakt mit uns auf, um diese Option zu besprechen und sicherzustellen, dass dein Artikel rechtzeitig bei dir eintrifft.</p><p>Am schnellsten ist der Live-Chat unten Links auf der Seite. (Einfach auf die Sprechblase klicken) Von Montag bis Freitag zwischen 8.00 und 16.00 Uhr sind wir erreichbar.</p><p>Am einfachsten geht es per E-Mail an: <a href=\"mailto:info@steelmonks.com\">info@steelmonks.com</a> </p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_m4eEKL": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Könnt ihr ein individuelles Design für mich erstellen? (Sonderanfertigungen)",
+            "content": "<p>Spezielle Unikat und Sonderprojekte sind immer aufregend. </p><p>Die unbegrenzten Möglichkeiten ziehen dabei viel Aufmerksamkeit auf sich, so müssen wir unsere Projekte selber filtern und auswählen.</p><p>Teile uns einfach Deine Vorstellungen und Ideen mit. Unser kreatives Team wird sich daran setzen, ein einzigartiges Design speziell für dich zu entwerfen.</p><p>Deine Zufriedenheit und die Verwirklichung Deiner Vision stehen bei uns an erster Stelle!</p><p>Für weitere Details besuche bitte unsere <a href=\"/pages/anfragen\" title=\"Deine Sonderanfertigung\">Sonderanfertigungen</a>.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_XJXTAx": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "100% Glücksgarantie",
+            "content": "<p>Wenn das von Dir verschenkte Schild dem Beschenkten nicht gefällt, erstatten wir dir den vollen Kaufpreis zurück. Denn wir möchten, dass jeder Einkauf bei Steelmonks zu <strong>100% glücklich</strong> macht.</p><p>Du kannst Dich bis 30 Tage nach erhalt bei uns melden und erhältst  nach Zurücklieferung des Produktes, den vollen Kaufpreis zurück - ohne Fragen, ohne Risiko.</p><p><a href=\"/pages/garantie\" title=\"Garantie\">Alles rechtliche zu unserer 100% Garantie findest Du hier:</a></p><p><a href=\"/pages/garantie\" title=\"Garantie\"><strong>(Garantie)</strong></a></p><p>Sobald Deine Bestellung bei uns eingeht, versuchen wir sie so schnell wie möglich zu bearbeiten. </p><p><br/>Du hast aber das Recht, binnen <strong>24 Stunden </strong>ohne Angabe von Gründen diesen Vertrag zu widerrufen.<br/></p><p>Das Widerrufsrecht besteht nicht mehr, sobald Deine personalisierte Ware erstellt wurde, da sie individuell und maßgeblich auf Deine Wünsche und persönlichen Bedürfnisse zugeschnitten wurde. Dies geschieht an Werktagen und generell 6-24 Stunden nach dem Eingang der Bestellung.</p><p>Unsere Wiederrufsbelehrung findest Du hier. (<a href=\"/pages/widerrufsbelehrung\" title=\"Widerrufsbelehrung\"><strong>Wiederrufsbelehrung</strong></a>)</p>",
+            "content_liquid": "",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_ztMBwk",
+        "accordion_3rkzRd",
+        "accordion_AC8i7b",
+        "accordion_fUpijX",
+        "accordion_473kHH",
+        "accordion_m4eEKL",
+        "accordion_XJXTAx"
+      ],
+      "custom_css": [],
+      "name": "Accordions",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "padding_top": 0,
+        "padding_bottom": 24,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    },
+    "17483692443c700023": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_ebJ4nN": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_ebJ4nN"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "sm_button_back_to_collection_ENenrt",
+    "sm_alternating_media_zDMx7c",
+    "17459065389a6ee71e",
+    "sm_product_features_VBwNpg",
+    "sm_scrolling_gallery_zh3P38",
+    "related-products",
+    "1748369267571d4330",
+    "accordions_PLagXY",
+    "17483692443c700023"
+  ]
+}

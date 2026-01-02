@@ -1,1 +1,30 @@
-{"sections":{"fx":{"type":"fx-landing-gsap","settings":{}},"main":{"type":"main-page","settings":{"padding_top":0,"padding_bottom":0,"enable_gutter":false,"show_title":false}}},"order":["fx","main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "fx": {
+      "type": "fx-landing-gsap",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "enable_gutter": false,
+        "show_title": false
+      }
+    }
+  },
+  "order": [
+    "fx",
+    "main"
+  ]
+}
