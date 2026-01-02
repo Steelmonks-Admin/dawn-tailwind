@@ -7,6 +7,14 @@
   --smc-gold: #c8a45d;
   --smc-green: #16a34a;
   --smc-red: #dc2626;
+
+  --custom-scroll-margin-top-offset: 120px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --custom-scroll-margin-top-offset: 40px;
+  }
 }
 
 .smc {

@@ -78,7 +78,9 @@
 /* base */
 
 #scroller {
-  scroll-margin-top: var(--header-height);
+  scroll-margin-top: calc(
+    var(--header-height) + var(--custom-scroll-margin-top-offset, 0px)
+  );
 }
 
 .page-width {
