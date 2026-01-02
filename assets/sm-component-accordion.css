@@ -13,7 +13,7 @@ sm-accordions {
 }
 
 .accordions__wrapper > * + * {
-  margin-top: 5.6rem;
+  margin-top: 1.2rem;
 }
 .accordions__header {
   margin: 0 auto;

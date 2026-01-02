@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
   var uploadPrevEmpty = el('smc-upload-preview-empty-' + sid);
 
   var desc = el('smc-desc-' + sid);
+  desc.placeholder = `Lass Deiner Vorstellung freien Lauf. Probier doch:
+• Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
+• Mein Familienwappen wie aus der Zeichnung
+• Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
+• Oder ein Hausschild mit der Nummer 22 und einem Ritter`;
   var finish = el('smc-finish-' + sid);
   var size = el('smc-size-' + sid);
 
