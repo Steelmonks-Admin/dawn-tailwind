@@ -1,0 +1,1924 @@
+<section id="sm-sign-creator-min-{{ section.id }}" class="smc" aria-label="Steelmonks Creator">
+  <div class="smc__wrap">
+
+    <div class="smc__statuswrap">
+      <div class="smc__pill" id="smc-pill-{{ section.id }}" data-state="idle" aria-live="polite">
+        <span class="smc__pill-dot" aria-hidden="true"></span>
+        <span class="smc__pill-text" id="smc-pill-text-{{ section.id }}">Bereit</span>
+        <span class="smc__pill-anim" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="smc__eta" id="smc-eta-{{ section.id }}" style="display:none">
+      <span class="smc__eta-label" id="smc-eta-label-{{ section.id }}">Geschätzte Zeit</span>
+      <span class="smc__eta-time" id="smc-eta-time-{{ section.id }}">02:00</span>
+    </div>
+
+    <div class="smc__grid">
+      <div class="smc__col smc__col--left">
+        {%- assign base_product = section.settings.product -%}
+
+        {% if base_product != blank %}
+          <form method="post" action="/cart/add" enctype="multipart/form-data" class="smc__form" id="smc-form-{{ section.id }}">
+            <input type="hidden" name="id" value="{{ base_product.selected_or_first_available_variant.id }}">
+        {% else %}
+          <div class="smc__form" id="smc-form-{{ section.id }}">
+        {% endif %}
+
+          <div class="smc__field">
+            <label class="smc__label" for="smc-upload-{{ section.id }}">
+              Motiv hochladen <span class="smc__label-note">PNG oder JPG</span>
+            </label>
+
+            <div class="smc__file">
+              <input type="file" id="smc-upload-{{ section.id }}" class="smc__file-input" accept="image/*">
+
+              <div class="smc__file-ui" role="button" tabindex="0" aria-label="Datei auswählen">
+                <div class="smc__file-preview" aria-hidden="true">
+                  <img id="smc-upload-preview-{{ section.id }}" class="smc__file-preview-img" alt="" loading="lazy">
+                  <div id="smc-upload-preview-empty-{{ section.id }}" class="smc__file-preview-empty">+</div>
+                </div>
+
+                <div class="smc__file-meta">
+                  <div class="smc__file-title">Datei wählen</div>
+                  <div class="smc__file-sub" id="smc-upload-label-{{ section.id }}">Noch kein Upload</div>
+                </div>
+
+                <span class="smc__file-chip" aria-hidden="true">Upload</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="smc__field">
+            <label class="smc__label" for="smc-desc-{{ section.id }}">
+              Motiv Beschreibung <span class="smc__label-note">Pflichtfeld</span>
+            </label>
+            <textarea
+              id="smc-desc-{{ section.id }}"
+              class="smc__textarea"
+              rows="5"
+              placeholder="Lass Deiner Vorstellung freien Lauf. Probier doch:
+
+• Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
+• Mein Familienwappen wie aus der Zeichnung
+• Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
+• Oder ein Hausschild mit der Nummer 22 und einem Ritter"
+            ></textarea>
+          </div>
+
+          <div class="smc__row">
+            <div class="smc__field">
+              <label class="smc__label" for="smc-finish-{{ section.id }}">Oberfläche</label>
+              <div class="smc__select">
+                <select id="smc-finish-{{ section.id }}" class="smc__select-el">
+                  <option value="Schwarz pulverbeschichtet">Schwarz pulverbeschichtet</option>
+                  <option value="Anthrazit pulverbeschichtet">Anthrazit pulverbeschichtet</option>
+                  <option value="Weiß pulverbeschichtet">Weiß pulverbeschichtet</option>
+                  <option value="Gold">Gold</option>
+                  <option value="Cortenstahl Optik">Cortenstahl Optik</option>
+                  <option value="Satinierter Edelstahl">Satinierter Edelstahl</option>
+                </select>
+                <span class="smc__select-arrow" aria-hidden="true">⌄</span>
+              </div>
+            </div>
+
+            <div class="smc__field">
+              <label class="smc__label" for="smc-size-{{ section.id }}">Größe</label>
+              <div class="smc__select">
+                <select id="smc-size-{{ section.id }}" class="smc__select-el">
+                  <option value="22,5 cm">22,5 cm</option>
+                  <option value="45 cm">45 cm</option>
+                  <option value="55 cm">55 cm</option>
+                  <option value="75 cm">75 cm</option>
+                  <option value="75 cm+">75 cm+</option>
+                </select>
+                <span class="smc__select-arrow" aria-hidden="true">⌄</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="smc__price">
+            <div class="smc__price-left">
+              <div class="smc__price-kicker">Preis</div>
+              <div class="smc__price-val" id="smc-price-{{ section.id }}">Den Preis berechnen wir nach dem Entwurf.</div>
+            </div>
+
+            <div class="smc__price-right">
+              <div class="smc__price-cta">
+                <button type="button" class="smc__btn smc__btn--primary" id="smc-cta-btn-{{ section.id }}" disabled>
+                  <span class="smc__btn-label" id="smc-cta-label-{{ section.id }}">Entwurf erstellen</span>
+                </button>
+
+                <button type="button" class="smc__btn smc__btn--ghost smc__btn--reset" id="smc-reset-btn-{{ section.id }}" style="display:none">
+                  Neu anfangen
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <input type="hidden" name="properties[Bild]" id="smc-prop-img-{{ section.id }}">
+          <input type="hidden" name="properties[Beschreibung]" id="smc-prop-desc-{{ section.id }}">
+          <input type="hidden" name="properties[Oberfläche]" id="smc-prop-finish-{{ section.id }}">
+          <input type="hidden" name="properties[Größe]" id="smc-prop-size-{{ section.id }}">
+          <input type="hidden" name="properties[Route]" id="smc-prop-route-{{ section.id }}">
+          <input type="hidden" name="properties[Generator ID]" id="smc-prop-gen-{{ section.id }}">
+          <input type="hidden" name="properties[Preis]" id="smc-prop-price-{{ section.id }}">
+
+          {% if base_product != blank %}
+            <button type="submit" class="smc__btn smc__btn--primary smc__btn--full" id="smc-atc-{{ section.id }}" disabled style="display:none">
+              In den Warenkorb
+            </button>
+            </form>
+          {% else %}
+            </div>
+          {% endif %}
+      </div>
+
+      <div class="smc__col smc__col--right">
+        <div class="smc__preview">
+          <div class="smc__preview-top">
+            <div class="smc__preview-kicker" id="smc-preview-kicker-{{ section.id }}">Vorschau</div>
+          </div>
+
+          <div class="smc__preview-area" id="smc-preview-area-{{ section.id }}" data-loading="0" data-softblur="0" data-clickable="0" data-fade="0">
+            <div class="smc__preview-loading" aria-hidden="true">
+              <div class="smc__preview-shimmer"></div>
+              <div class="smc__preview-spinner"></div>
+            </div>
+
+            <div class="smc__preview-overlay" id="smc-preview-overlay-{{ section.id }}" aria-hidden="true" style="display:none">
+              <div class="smc__preview-overlay-pill">
+                <span class="smc__preview-overlay-title" id="smc-preview-overlay-title-{{ section.id }}">Bitte warten</span>
+                <span class="smc__preview-overlay-sub" id="smc-preview-overlay-sub-{{ section.id }}">Wir erstellen deine Vorschau</span>
+              </div>
+            </div>
+
+            <div class="smc__preview-empty" id="smc-preview-empty-{{ section.id }}">Starte zuerst den Entwurf</div>
+            <img id="smc-preview-img-{{ section.id }}" class="smc__preview-img smc__preview-img--hidden" alt="Vorschau" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="smc__modal" id="smc-modal-{{ section.id }}" aria-hidden="true" data-mode="product">
+      <div class="smc__modal-backdrop" id="smc-modal-backdrop-{{ section.id }}"></div>
+
+      <div class="smc__modal-card" role="dialog" aria-modal="true" aria-label="Schild ansehen">
+        <div class="smc__modal-top" id="smc-modal-top-{{ section.id }}">
+          <div class="smc__modal-title" id="smc-modal-title-{{ section.id }}">Schild ansehen</div>
+
+          <div class="smc__modal-top-actions">
+            <button type="button" class="smc__modal-dl" id="smc-modal-dl-{{ section.id }}" aria-label="Download">
+              <span class="smc__modal-dl-ico" aria-hidden="true">↓</span>
+              <span class="smc__modal-dl-label">Download</span>
+            </button>
+            <button type="button" class="smc__modal-x" id="smc-modal-close-{{ section.id }}" aria-label="Schließen">✕</button>
+          </div>
+        </div>
+
+        <div class="smc__modal-body">
+          <div class="smc__modal-preview" id="smc-modal-preview-{{ section.id }}" data-loading="0">
+            <div class="smc__modal-shimmer" aria-hidden="true"></div>
+            <img id="smc-modal-img-{{ section.id }}" class="smc__modal-img" alt="Vorschau" loading="lazy">
+          </div>
+
+          <div class="smc__modal-copy" id="smc-modal-copy-{{ section.id }}">
+            <div class="smc__modal-text" id="smc-modal-text-{{ section.id }}">Dein Schild ist bereit – wir erstellen gerade dein Produkt.</div>
+
+            <div class="smc__modal-hold" id="smc-modal-hold-{{ section.id }}" style="display:none">
+              <div class="smc__modal-hold-note">Wir speichern Dein Schild für die nächsten 30 Minuten. Kein Stress :)</div>
+              <div class="smc__modal-hold-row">
+                <div class="smc__modal-hold-time" id="smc-modal-hold-time-{{ section.id }}">30:00</div>
+                <div class="smc__modal-hold-bar">
+                  <div class="smc__modal-hold-barfill" id="smc-modal-hold-barfill-{{ section.id }}"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="smc__modal-actions" id="smc-modal-actions-{{ section.id }}">
+              <button type="button" class="smc__btn smc__btn--primary smc__btn--full" id="smc-modal-add-{{ section.id }}">
+                <span class="smc__btn-label" id="smc-modal-add-label-{{ section.id }}">Zum Warenkorb hinzufügen</span>
+                <span class="smc__btn-spin" aria-hidden="true"></span>
+              </button>
+
+              <a class="smc__btn smc__btn--ghost smc__btn--full" id="smc-modal-link-{{ section.id }}" href="#" target="_self" rel="noopener" style="display:none">
+                Produkt ansehen
+              </a>
+            </div>
+
+            <div class="smc__modal-foot" id="smc-modal-foot-{{ section.id }}"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  :root{
+    --smc-ink:#0B0B0D;
+    --smc-cream:#FAFAFF;
+    --smc-line:rgba(11,11,13,0.10);
+    --smc-blue:#0044CC;
+    --smc-orange:#ff9800;
+    --smc-gold:#C8A45D;
+    --smc-green:#16a34a;
+    --smc-red:#dc2626;
+  }
+
+  .smc{ color:var(--smc-ink); background:transparent; padding:18px 16px 28px; }
+  .smc__wrap{ max-width:1120px; margin:0 auto; }
+
+  .smc__statuswrap{ display:flex; justify-content:center; margin-bottom:10px; }
+  .smc__pill{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:10px 18px; border-radius:999px;
+    background:rgba(250,250,255,0.92);
+    color:var(--smc-ink);
+    font-weight:950; letter-spacing:0.12em; text-transform:uppercase;
+    font-size:0.86rem;
+    box-shadow:0 18px 42px rgba(0,0,0,0.12);
+    border:2px solid var(--smc-gold);
+    position:relative;
+  }
+  .smc__pill::after{
+    content:"";
+    position:absolute; inset:-9px;
+    border-radius:999px;
+    background:radial-gradient(circle at 40% 10%, rgba(200,164,93,0.34), rgba(0,68,204,0.10) 44%, rgba(0,0,0,0) 72%);
+    filter: blur(11px);
+    z-index:-1;
+    opacity:0.9;
+  }
+
+  .smc__pill[data-state="idle"]{ border-color:var(--smc-gold); }
+  .smc__pill[data-state="work"]{ border-color:var(--smc-gold); }
+  .smc__pill[data-state="ok"]{ border-color:var(--smc-green); }
+  .smc__pill[data-state="bad"]{ border-color:var(--smc-red); }
+
+  .smc__pill-dot{ width:10px;height:10px;border-radius:999px; background:var(--smc-gold); box-shadow:0 0 0 4px rgba(200,164,93,0.22); }
+  .smc__pill[data-state="work"] .smc__pill-dot{ animation: smcPulse 1.2s ease-in-out infinite; }
+  .smc__pill[data-state="ok"] .smc__pill-dot{ background:var(--smc-green); box-shadow:0 0 0 4px rgba(22,163,74,0.18); }
+  .smc__pill[data-state="bad"] .smc__pill-dot{ background:var(--smc-red); box-shadow:0 0 0 4px rgba(220,38,38,0.18); }
+  @keyframes smcPulse{ 0%{transform:scale(1);opacity:1} 50%{transform:scale(1.15);opacity:.85} 100%{transform:scale(1);opacity:1} }
+
+  .smc__pill-anim{ display:none; width:18px; height:10px; position:relative; }
+  .smc__pill[data-state="work"] .smc__pill-anim{ display:inline-block; }
+  .smc__pill-anim::before,
+  .smc__pill-anim::after{
+    content:"";
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:6px; height:6px; border-radius:999px;
+    background:rgba(0,68,204,0.75);
+    animation: smcBounce 900ms ease-in-out infinite;
+  }
+  .smc__pill-anim::before{ left:0; }
+  .smc__pill-anim::after{ right:0; animation-delay:150ms; }
+  @keyframes smcBounce{ 0%,100%{ transform:translateY(-50%) scale(0.8); opacity:.55; } 50%{ transform:translateY(-50%) scale(1.15); opacity:1; } }
+
+  .smc__eta{
+    position:fixed;
+    left:50%;
+    bottom:18px;
+    transform:translateX(-50%);
+    z-index:2147483646;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin:0;
+    font-weight:950;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:rgba(11,11,13,0.70);
+    pointer-events:none;
+    padding:10px 12px;
+    border-radius:999px;
+    background:rgba(250,250,255,0.62);
+    border:1px solid rgba(0,0,0,0.10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:0 18px 50px rgba(0,0,0,0.14);
+  }
+  .smc__eta-time{
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(250,250,255,0.92);
+    border:1px solid rgba(0,0,0,0.08);
+    box-shadow:0 12px 30px rgba(0,0,0,0.08);
+    color:var(--smc-blue);
+    letter-spacing:0.08em;
+  }
+
+  .smc__grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:46px; align-items:start; }
+  @media (max-width:920px){ .smc__grid{ grid-template-columns:1fr; gap:18px; } }
+
+  .smc__col--left{ position:relative; }
+
+  .smc__form{ display:flex; flex-direction:column; gap:14px; }
+  .smc__field{ display:flex; flex-direction:column; gap:6px; }
+
+  .smc__row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:600px){ .smc__row{ grid-template-columns:1fr; } }
+
+  .smc__label{ font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; font-weight:950; text-align:left; }
+  .smc__label-note{ margin-left:6px; font-weight:650; color:rgba(11,11,13,.55); letter-spacing:.12em; font-size:.75rem; }
+
+  .smc__file{ position:relative; }
+  .smc__file-input{ position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+  .smc__file-ui{
+    display:flex; align-items:center; gap:12px;
+    padding:10px 12px;
+    border-radius:18px;
+    background:rgba(0,68,204,0.05);
+    border:1px solid rgba(0,68,204,0.18);
+    box-shadow:0 12px 30px rgba(0,0,0,0.06);
+    user-select:none;
+  }
+  .smc__file-preview{
+    width:54px; height:54px; border-radius:14px; overflow:hidden;
+    background:rgba(11,11,13,0.06);
+    border:1px solid rgba(11,11,13,0.10);
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .smc__file-preview-img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .smc__file-preview-empty{ font-weight:950; font-size:1.4rem; color:rgba(0,68,204,0.75); line-height:1; }
+
+  .smc__file-meta{ flex:1 1 auto; min-width:0; }
+  .smc__file-title{ font-weight:950; font-size:0.98rem; color:var(--smc-blue); }
+  .smc__file-sub{ margin-top:2px; font-size:0.84rem; color:rgba(11,11,13,0.62); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .smc__file-chip{
+    flex:0 0 auto;
+    padding:8px 10px;
+    border-radius:999px;
+    background:rgba(0,68,204,0.10);
+    border:1px solid rgba(0,68,204,0.18);
+    color:var(--smc-blue);
+    font-weight:950;
+    font-size:0.82rem;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+  }
+
+  .smc__textarea{
+    border-radius:18px;
+    border:1px solid var(--smc-line);
+    background:rgba(250,250,255,0.92);
+    padding:10px 12px;
+    font-size:0.95rem;
+    min-height:118px;
+    resize:vertical;
+    box-shadow:0 10px 28px rgba(0,0,0,0.05);
+    font-family:inherit;
+    white-space:pre-wrap;
+  }
+  .smc__textarea:focus{ outline:none; border-color:rgba(0,68,204,0.45); box-shadow:0 0 0 2px rgba(0,68,204,0.14), 0 10px 28px rgba(0,0,0,0.05); }
+
+  .smc__select{ position:relative; }
+  .smc__select-el{
+    width:100%;
+    border-radius:999px;
+    border:1px solid var(--smc-line);
+    background:rgba(250,250,255,0.92);
+    padding:10px 36px 10px 12px;
+    font-size:0.95rem;
+    appearance:none;
+    box-shadow:0 10px 28px rgba(0,0,0,0.05);
+  }
+  .smc__select-el:focus{ outline:none; border-color:rgba(0,68,204,0.45); box-shadow:0 0 0 2px rgba(0,68,204,0.14), 0 10px 28px rgba(0,0,0,0.05); }
+  .smc__select-arrow{ position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:0.75rem; color:var(--smc-blue); pointer-events:none; }
+
+  .smc__price{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    padding-top:6px;
+    text-align:center;
+  }
+  .smc__price-left{ display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; }
+  .smc__price-kicker{ font-size:0.78rem; text-transform:uppercase; letter-spacing:0.14em; color:rgba(11,11,13,0.55); font-weight:950; }
+  .smc__price-val{ font-size:1.45rem; font-weight:950; letter-spacing:0.01em; color:var(--smc-blue); }
+  .smc__price-right{ display:flex; justify-content:center; width:100%; }
+  .smc__price-cta{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%; position:relative; }
+
+  .smc__btn{
+    border:1px solid transparent;
+    border-radius:999px;
+    padding:12px 20px;
+    font-weight:950;
+    font-size:0.98rem;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 150ms ease, box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, opacity 150ms ease;
+    white-space:nowrap;
+    position:relative;
+    min-width: 260px;
+  }
+  .smc__btn:active{ transform:translateY(0); }
+  .smc__btn--primary{ background:radial-gradient(circle at 0 0, var(--smc-orange) 0, var(--smc-blue) 48%, #001f4f 100%); color:var(--smc-cream); box-shadow:0 18px 44px rgba(0,68,204,0.42); }
+  .smc__btn--primary:hover{ transform:translateY(-2px); box-shadow:0 22px 54px rgba(0,68,204,0.55); }
+  .smc__btn--ghost{ background:rgba(0,68,204,0.06); border-color:rgba(0,68,204,0.22); color:var(--smc-blue); box-shadow:0 12px 28px rgba(0,0,0,0.06); }
+  .smc__btn--ghost:hover{ background:rgba(0,68,204,0.10); transform:translateY(-1px); }
+
+  .smc__btn:disabled{
+    opacity:0.45;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+    filter:saturate(0.9);
+  }
+
+  .smc__preview{ position:sticky; top:18px; display:flex; flex-direction:column; align-items:center; }
+  @media (max-width:920px){ .smc__preview{ position:relative; top:auto; } }
+
+  .smc__preview-top{ display:flex; align-items:center; justify-content:center; margin-bottom:10px; width:100%; }
+  .smc__preview-kicker{ font-size:0.80rem; text-transform:uppercase; letter-spacing:0.14em; font-weight:950; color:rgba(11,11,13,0.70); text-align:center; }
+
+  .smc__preview-area{
+    border-radius:18px;
+    overflow:hidden;
+    background:linear-gradient(180deg, rgba(11,11,13,0.06), rgba(11,11,13,0.02));
+    border:1px solid rgba(11,11,13,0.10);
+    box-shadow:0 22px 60px rgba(0,0,0,0.10);
+    width:100%;
+    aspect-ratio: 1 / 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    margin-left: 0;
+  }
+  @media (min-width: 921px){
+    .smc__preview-area{
+      width: min(430px, 100%);
+      margin-left: 22px;
+    }
+  }
+
+  .smc__preview-area[data-clickable="1"]{ cursor: zoom-in; }
+  .smc__preview-area[data-clickable="1"]:hover{
+    border-color: rgba(200,164,93,0.75);
+    box-shadow:0 26px 74px rgba(0,0,0,0.14), 0 0 0 3px rgba(200,164,93,0.16);
+  }
+
+  .smc__preview-img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:contain;
+    position:relative;
+    z-index:1;
+    transition: filter 200ms ease, opacity 260ms ease, transform 260ms ease;
+    opacity:1;
+    transform:translateY(0);
+  }
+  .smc__preview-area[data-fade="1"] .smc__preview-img{ opacity:0; transform:translateY(6px); }
+  .smc__preview-img--hidden{ display:none; }
+
+  .smc__preview-empty{
+    padding:22px;
+    color:rgba(11,11,13,0.55);
+    font-weight:950;
+    text-align:center;
+    font-size:1.10rem;
+    letter-spacing:0.01em;
+    position:relative;
+    z-index:1;
+  }
+
+  .smc__preview-loading{
+    position:absolute; inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:3;
+  }
+  .smc__preview-area[data-loading="1"] .smc__preview-loading{ display:flex; }
+
+  .smc__preview-area[data-softblur="1"] .smc__preview-img{
+    filter: blur(10px) saturate(0.9);
+    opacity:0.82;
+  }
+
+  .smc__preview-overlay{
+    position:absolute; inset:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding:14px;
+    z-index:4;
+    pointer-events:none;
+    background: radial-gradient(circle at 50% 20%, rgba(250,250,255,0.0) 0, rgba(10,14,22,0.12) 55%, rgba(10,14,22,0.22) 100%);
+  }
+  .smc__preview-overlay-pill{
+    width: calc(100% - 12px);
+    max-width: 360px;
+    border-radius: 18px;
+    padding: 10px 12px;
+    background: rgba(250,250,255,0.62);
+    border: 1px solid rgba(0,0,0,0.10);
+    box-shadow: 0 18px 46px rgba(0,0,0,0.18);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    text-align:center;
+  }
+  .smc__preview-overlay-title{
+    display:block;
+    font-weight:950;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:rgba(11,11,13,0.78);
+  }
+  .smc__preview-overlay-sub{
+    display:block;
+    margin-top:4px;
+    font-weight:850;
+    font-size:0.95rem;
+    color:rgba(0,68,204,0.92);
+  }
+
+  .smc__preview-shimmer{
+    position:absolute; inset:0;
+    background:linear-gradient(110deg, rgba(0,68,204,0.00), rgba(0,68,204,0.10), rgba(0,68,204,0.00));
+    transform:translateX(-60%);
+    animation: smcShimmer 1.1s ease-in-out infinite;
+  }
+  @keyframes smcShimmer{ 0%{ transform:translateX(-60%);} 100%{ transform:translateX(60%);} }
+
+  .smc__preview-spinner{
+    width:42px; height:42px; border-radius:999px;
+    border:3px solid rgba(0,68,204,0.25);
+    border-top-color: rgba(0,68,204,0.0);
+    animation: smcSpin 900ms linear infinite;
+    background:rgba(250,250,255,0.55);
+    backdrop-filter: blur(6px);
+    box-shadow:0 18px 46px rgba(0,0,0,0.18);
+  }
+  @keyframes smcSpin{ to{ transform:rotate(360deg); } }
+
+  .smc__modal{ position:fixed; inset:0; display:none; z-index:2147483647; }
+  .smc__modal[aria-hidden="false"]{ display:block; }
+
+  .smc__modal-backdrop{
+    position:absolute; inset:0;
+    background:rgba(10,14,22,0.46);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+  }
+
+  .smc__modal-card{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(980px, calc(100vw - 24px));
+    max-height: calc(100vh - 24px);
+    overflow:auto;
+    border-radius:26px;
+    background:linear-gradient(180deg, rgba(250,250,255,0.62), rgba(250,250,255,0.46));
+    border:1px solid rgba(0,0,0,0.10);
+    box-shadow:0 40px 120px rgba(0,0,0,0.30);
+    padding:14px 14px 16px;
+    color:var(--smc-ink);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .smc__modal-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  .smc__modal-title{ font-weight:950; letter-spacing:0.12em; text-transform:uppercase; font-size:0.90rem; color:rgba(11,11,13,0.78); }
+
+  .smc__modal-top-actions{ display:flex; align-items:center; gap:10px; }
+
+  .smc__modal-x{
+    width:40px; height:40px; border-radius:999px;
+    border:1px solid rgba(11,11,13,0.14);
+    background:rgba(250,250,255,0.62);
+    color:rgba(11,11,13,0.78);
+    cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+    line-height:1;
+  }
+
+  .smc__modal-dl{
+    height:40px;
+    border-radius:999px;
+    border:1px solid rgba(11,11,13,0.14);
+    background:rgba(250,250,255,0.62);
+    color:rgba(11,11,13,0.78);
+    cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:950;
+    letter-spacing:0.02em;
+    padding:0 12px;
+    gap:8px;
+    line-height:1;
+    white-space:nowrap;
+  }
+  .smc__modal-dl-ico{ display:inline-block; }
+  .smc__modal-dl-label{ font-size:0.82rem; letter-spacing:0.10em; text-transform:uppercase; }
+
+  .smc__modal-body{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    gap:14px;
+    align-items:center;
+  }
+
+  .smc__modal-preview{
+    border-radius:18px; overflow:hidden;
+    border:1px solid rgba(11,11,13,0.12);
+    background:rgba(11,11,13,0.04);
+    width:100%;
+    aspect-ratio: 1 / 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    box-shadow: 0 18px 46px rgba(0,0,0,0.12);
+  }
+  .smc__modal-img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .smc__modal-preview[data-loading="1"] .smc__modal-img{ filter: blur(2px) saturate(0.95); opacity:0.75; }
+
+  .smc__modal-shimmer{
+    position:absolute; inset:0;
+    display:none;
+    background:linear-gradient(110deg, rgba(200,164,93,0.00), rgba(200,164,93,0.20), rgba(200,164,93,0.00));
+    transform:translateX(-60%);
+    animation: smcShimmer 1.1s ease-in-out infinite;
+  }
+  .smc__modal-preview[data-loading="1"] .smc__modal-shimmer{ display:block; }
+
+  .smc__modal-copy{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+    text-align:center;
+    padding:8px 8px 6px;
+  }
+  .smc__modal-text{ color:rgba(11,11,13,0.85); font-weight:950; line-height:1.35; font-size:1.10rem; max-width:520px; }
+
+  .smc__modal-hold{
+    width:100%;
+    max-width:520px;
+    border-radius:18px;
+    padding:10px 12px;
+    background:rgba(0,68,204,0.06);
+    border:1px solid rgba(0,68,204,0.16);
+    box-shadow:0 12px 28px rgba(0,0,0,0.06);
+  }
+  .smc__modal-hold-note{
+    font-weight:900;
+    color:rgba(11,11,13,0.78);
+    line-height:1.35;
+    margin-bottom:10px;
+    text-align:center;
+  }
+  .smc__modal-hold-row{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .smc__modal-hold-time{
+    font-weight:950;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--smc-blue);
+    background:rgba(250,250,255,0.72);
+    border:1px solid rgba(0,0,0,0.08);
+    border-radius:999px;
+    padding:7px 10px;
+    min-width:92px;
+    text-align:center;
+  }
+  .smc__modal-hold-bar{
+    width:min(420px, 100%);
+    height:10px;
+    border-radius:999px;
+    background:rgba(0,0,0,0.08);
+    overflow:hidden;
+  }
+  .smc__modal-hold-barfill{
+    height:100%;
+    width:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.95));
+    transform-origin:left center;
+  }
+
+  .smc__modal-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%; }
+  .smc__modal-actions .smc__btn{ min-width: 260px; }
+  .smc__modal-foot{ font-size:0.85rem; color:rgba(11,11,13,0.52); word-break:break-word; text-align:center; width:100%; }
+
+  .smc__btn-spin{
+    width:16px; height:16px;
+    border-radius:999px;
+    border:2px solid rgba(250,250,255,0.75);
+    border-top-color: rgba(250,250,255,0.0);
+    display:none;
+    animation: smcSpin 900ms linear infinite;
+    margin-left:10px;
+  }
+  .smc__btn--ghost .smc__btn-spin{
+    border-color: rgba(0,68,204,0.34);
+    border-top-color: rgba(0,68,204,0.0);
+  }
+  .smc__btn[data-loading="1"] .smc__btn-spin{ display:inline-block; }
+  .smc__btn[data-loading="1"]{ pointer-events:none; }
+
+  .smc__btn--reset{
+    min-width:auto;
+    padding:10px 14px;
+    position:absolute;
+    top:-6px;
+    right:0;
+    box-shadow:0 16px 42px rgba(0,0,0,0.10);
+  }
+
+  @media (max-width: 600px){
+    .smc__price-cta{
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+    .smc__btn--reset{
+      position:static;
+      top:auto;
+      right:auto;
+      min-width: 0;
+      width:auto;
+      padding:9px 12px;
+      font-size:0.82rem;
+      letter-spacing:0.10em;
+      text-transform:uppercase;
+      border-radius:999px;
+      opacity:0.98;
+      box-shadow:0 10px 24px rgba(0,0,0,0.08);
+    }
+  }
+
+  .smc__modal[data-mode="viewer"] .smc__modal-copy{ display:none; }
+  .smc__modal[data-mode="viewer"] .smc__modal-body{ grid-template-columns: 1fr; }
+  .smc__modal[data-mode="viewer"] .smc__modal-preview{ width:min(760px, 100%); margin:0 auto; }
+
+  .smc__modal[data-mode="viewer"] .smc__modal-card{
+    background:transparent;
+    border:none;
+    box-shadow:none;
+    padding:0;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    overflow:visible;
+    width:min(820px, calc(100vw - 24px));
+  }
+  .smc__modal[data-mode="viewer"] .smc__modal-top{
+    position:absolute;
+    top:-54px;
+    right:0;
+    margin:0;
+    justify-content:flex-end;
+    gap:10px;
+    align-items:center;
+  }
+  .smc__modal[data-mode="viewer"] .smc__modal-title{ display:none; }
+  .smc__modal[data-mode="viewer"] .smc__modal-preview{
+    border:none;
+    background:transparent;
+    box-shadow:none;
+    border-radius:26px;
+    overflow:hidden;
+    width:min(760px, 100%);
+  }
+  .smc__modal[data-mode="viewer"] .smc__modal-img{
+    border-radius:26px;
+    object-fit:cover;
+  }
+
+  @media (max-width: 920px){
+    .smc__modal-body{ grid-template-columns: 1fr; }
+    .smc__modal-preview{ aspect-ratio: 1 / 1; }
+    .smc__modal[data-mode="viewer"] .smc__modal-preview{ width:100%; }
+    .smc__modal[data-mode="viewer"] .smc__modal-top{
+      top:-54px;
+    }
+  }
+
+  @media (max-width:420px){
+    .smc{ padding:16px 12px 24px; }
+    .smc__btn{ width:100%; min-width:0; }
+    .smc__modal-actions{ flex-direction:column; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .smc__btn{ transition:none; }
+    .smc__pill-dot{ animation:none; }
+    .smc__pill-anim{ display:none !important; }
+    .smc__preview-shimmer, .smc__modal-shimmer{ animation:none; }
+    .smc__preview-spinner, .smc__btn-spin{ animation:none; }
+    .smc__preview-img{ transition:none; }
+  }
+</style>
+
+<script>
+(function(){
+  var sid = "{{ section.id }}";
+  function el(id){ return document.getElementById(id); }
+
+  var upload = el("smc-upload-" + sid);
+  var uploadLabel = el("smc-upload-label-" + sid);
+  var uploadPrevImg = el("smc-upload-preview-" + sid);
+  var uploadPrevEmpty = el("smc-upload-preview-empty-" + sid);
+
+  var desc = el("smc-desc-" + sid);
+  var finish = el("smc-finish-" + sid);
+  var size = el("smc-size-" + sid);
+
+  var pill = el("smc-pill-" + sid);
+  var pillText = el("smc-pill-text-" + sid);
+
+  var priceVal = el("smc-price-" + sid);
+  var previewKicker = el("smc-preview-kicker-" + sid);
+
+  var previewArea = el("smc-preview-area-" + sid);
+  var previewEmpty = el("smc-preview-empty-" + sid);
+  var previewImg = el("smc-preview-img-" + sid);
+
+  var previewOverlay = el("smc-preview-overlay-" + sid);
+  var previewOverlayTitle = el("smc-preview-overlay-title-" + sid);
+  var previewOverlaySub = el("smc-preview-overlay-sub-" + sid);
+
+  var etaWrap = el("smc-eta-" + sid);
+  var etaLabel = el("smc-eta-label-" + sid);
+  var etaTime = el("smc-eta-time-" + sid);
+
+  var ctaBtn = el("smc-cta-btn-" + sid);
+  var ctaLabel = el("smc-cta-label-" + sid);
+  var resetBtn = el("smc-reset-btn-" + sid);
+
+  var propImg = el("smc-prop-img-" + sid);
+  var propDesc = el("smc-prop-desc-" + sid);
+  var propFinish = el("smc-prop-finish-" + sid);
+  var propSize = el("smc-prop-size-" + sid);
+  var propRoute = el("smc-prop-route-" + sid);
+  var propGen = el("smc-prop-gen-" + sid);
+  var propPrice = el("smc-prop-price-" + sid);
+
+  var modal = el("smc-modal-" + sid);
+  var modalBackdrop = el("smc-modal-backdrop-" + sid);
+  var modalClose = el("smc-modal-close-" + sid);
+  var modalDl = el("smc-modal-dl-" + sid);
+
+  var modalTitle = el("smc-modal-title-" + sid);
+  var modalPreview = el("smc-modal-preview-" + sid);
+  var modalImg = el("smc-modal-img-" + sid);
+  var modalCopy = el("smc-modal-copy-" + sid);
+  var modalText = el("smc-modal-text-" + sid);
+  var modalAdd = el("smc-modal-add-" + sid);
+  var modalAddLabel = el("smc-modal-add-label-" + sid);
+  var modalLink = el("smc-modal-link-" + sid);
+  var modalFoot = el("smc-modal-foot-" + sid);
+  var modalActions = el("smc-modal-actions-" + sid);
+
+  var modalHold = el("smc-modal-hold-" + sid);
+  var modalHoldTime = el("smc-modal-hold-time-" + sid);
+  var modalHoldBarfill = el("smc-modal-hold-barfill-" + sid);
+
+  var generatorId = "";
+  var lastMockUrl = "";
+  var lastEntUrl = "";
+
+  var checkoutReady = false;
+
+  var priceReady = false;
+  var priceRequested = false;
+  var pendingPriceValue = "";
+
+  var state = "init";
+  var locked = false;
+
+  var etaTick = null;
+  var etaEndsAt = 0;
+
+  var holdTick = null;
+  var holdEndsAt = 0;
+
+  var pollInFlight = false;
+
+  var timerPriceA = null;
+  var timerEntwurf = null;
+  var timerMock = null;
+  var mockPoll = null;
+  var mockPollEndsAt = 0;
+
+  var previewDone = false;
+  var previewInFlight = false;
+
+  var forceMockLoading = false;
+  var runStartedAt = 0;
+
+  var TOTAL_MS = 120000;
+  var FETCH_TIMEOUT_MS = 25000;
+
+  var TIME_PRICE_MS = 5000;
+  var TIME_ENTWURF_POLL_MS = 70000;
+
+  var MOCK_POLL_START_MS = 90000;
+  var MOCK_POLL_END_MS = 240000;
+  var MOCK_POLL_EVERY_MS = 10000;
+
+  var DEFAULT_ENDPOINTS = {
+    run: "/apps/creator/run-creator",
+    preview: "/apps/creator/run-creator-preview",
+    price: "/apps/creator/get-creator-price",
+    sign: "/apps/creator/get-creator-sign",
+    product: "/apps/creator/get-creator-product"
+  };
+
+  var ENDPOINTS = (function(){
+    var cfg = window.SMCREATOR_ENDPOINTS || {};
+    var merged = {};
+    Object.keys(DEFAULT_ENDPOINTS).forEach(function(k){ merged[k] = DEFAULT_ENDPOINTS[k]; });
+    try{
+      Object.keys(cfg).forEach(function(k){
+        if(cfg[k] != null && String(cfg[k]).trim() !== ""){
+          merged[k] = cfg[k];
+        }
+      });
+    }catch(_e){}
+    return merged;
+  })();
+
+  function fmtMMSS(ms){
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return String(m).padStart(2,"0") + ":" + String(r).padStart(2,"0");
+  }
+
+  function stopEta(){
+    if(etaTick) clearInterval(etaTick);
+    etaTick = null;
+    etaEndsAt = 0;
+    if(etaWrap) etaWrap.style.display = "none";
+  }
+
+  function onEtaFinished(){
+    if(state === "creating" && !lastMockUrl){
+      forceMockLoading = true;
+      setPillState("work", "Vorschau wird geladen");
+      setPreviewOverlay(true, "Vorschau wird geladen", "Bitte warten");
+      setPreviewLoading(true);
+    }
+  }
+
+  function startEta(label, ms){
+    stopEta();
+    etaEndsAt = Date.now() + ms;
+    if(etaLabel) etaLabel.textContent = label || "Geschätzte Zeit";
+    if(etaWrap) etaWrap.style.display = "flex";
+    function tick(){
+      var left = etaEndsAt - Date.now();
+      if(etaTime) etaTime.textContent = fmtMMSS(left);
+      if(left <= 0){
+        stopEta();
+        onEtaFinished();
+      }
+    }
+    tick();
+    etaTick = setInterval(tick, 1000);
+  }
+
+  function stopHold(){
+    if(holdTick) clearInterval(holdTick);
+    holdTick = null;
+    holdEndsAt = 0;
+    if(modalHold) modalHold.style.display = "none";
+  }
+
+  function startHold30(){
+    stopHold();
+    holdEndsAt = Date.now() + (30 * 60 * 1000);
+    if(modalHold) modalHold.style.display = "block";
+    function tick(){
+      var left = holdEndsAt - Date.now();
+      if(modalHoldTime) modalHoldTime.textContent = fmtMMSS(left);
+      var total = 30 * 60 * 1000;
+      var pct = Math.max(0, Math.min(1, left / total));
+      if(modalHoldBarfill) modalHoldBarfill.style.width = (pct * 100).toFixed(2) + "%";
+      if(left <= 0){
+        if(modalHoldTime) modalHoldTime.textContent = "00:00";
+        if(modalHoldBarfill) modalHoldBarfill.style.width = "0%";
+        clearInterval(holdTick);
+        holdTick = null;
+      }
+    }
+    tick();
+    holdTick = setInterval(tick, 1000);
+  }
+
+  function setPillState(kind, text){
+    if(pill) pill.setAttribute("data-state", kind || "idle");
+    if(pillText) pillText.textContent = text || "Bereit";
+  }
+
+  function setPreviewLoading(on){
+    if(!previewArea) return;
+    previewArea.setAttribute("data-loading", on ? "1" : "0");
+  }
+
+  function setSoftBlur(on){
+    if(!previewArea) return;
+    previewArea.setAttribute("data-softblur", on ? "1" : "0");
+  }
+
+  function setFade(on){
+    if(!previewArea) return;
+    previewArea.setAttribute("data-fade", on ? "1" : "0");
+  }
+
+  function setPreviewOverlay(on, title, sub){
+    if(previewOverlay) previewOverlay.style.display = on ? "flex" : "none";
+    if(previewOverlayTitle && title) previewOverlayTitle.textContent = title;
+    if(previewOverlaySub && sub) previewOverlaySub.textContent = sub;
+  }
+
+  function setClickable(on){
+    if(!previewArea) return;
+    previewArea.setAttribute("data-clickable", on ? "1" : "0");
+  }
+
+  function setModalPreviewLoading(on){
+    if(!modalPreview) return;
+    modalPreview.setAttribute("data-loading", on ? "1" : "0");
+  }
+
+  function hasImage(){
+    return !!(upload && upload.files && upload.files[0]);
+  }
+
+  function routeValue(){
+    return hasImage() ? "Edit" : "Generate";
+  }
+
+  function lockInputs(on){
+    if(!upload || !desc || !finish || !size) return;
+    locked = !!on;
+
+    upload.disabled = locked;
+    desc.disabled = locked;
+    finish.disabled = locked;
+    size.disabled = locked;
+
+    if(resetBtn) resetBtn.style.display = locked ? "inline-flex" : "none";
+  }
+
+  function updateProps(){
+    if(propDesc) propDesc.value = (desc && desc.value) ? desc.value : "";
+    if(propFinish) propFinish.value = (finish && finish.value) ? finish.value : "";
+    if(propSize) propSize.value = (size && size.value) ? size.value : "";
+    if(propRoute) propRoute.value = routeValue();
+    if(propGen) propGen.value = generatorId || "";
+    if(propImg) propImg.value = (upload && upload.files && upload.files[0]) ? upload.files[0].name : "";
+    if(propPrice) propPrice.value = pendingPriceValue || "";
+  }
+
+  function normalizePriceDisplay(p){
+    var s = (p == null) ? "" : String(p).trim();
+    if(!s) return "";
+    if(s.indexOf("€") !== -1) return s;
+    if(/[0-9]/.test(s)) return s + " €";
+    return s;
+  }
+
+  function applyPriceDisplay(){
+    if(!priceVal) return;
+    if(pendingPriceValue){
+      if(lastMockUrl){
+        priceVal.textContent = pendingPriceValue;
+      } else {
+        priceVal.textContent = "Preis berechnet";
+      }
+    } else {
+      priceVal.textContent = "Den Preis berechnen wir nach dem Entwurf.";
+    }
+  }
+
+  function setPrice(txt){
+    var out = normalizePriceDisplay(txt);
+    if(out){
+      pendingPriceValue = out;
+      priceReady = true;
+      updateProps();
+      applyPriceDisplay();
+      if(state === "creating" && !lastMockUrl){
+        setPillState("work", "Preis berechnet");
+      }
+      return;
+    }
+    pendingPriceValue = "";
+    priceReady = false;
+    updateProps();
+    applyPriceDisplay();
+  }
+
+  function setPriceCalculating(){
+    if(priceVal) priceVal.textContent = "Preis wird berechnet…";
+    pendingPriceValue = "";
+    priceReady = false;
+    updateProps();
+  }
+
+  function setCta(label, enabled){
+    if(ctaLabel) ctaLabel.textContent = label || "Entwurf erstellen";
+    if(ctaBtn) ctaBtn.disabled = !enabled;
+  }
+
+  function setCtaFromState(){
+    if(state === "init"){
+      var ok = (desc && desc.value && desc.value.trim().length >= 5);
+      setCta("Entwurf erstellen", ok && !locked);
+      return;
+    }
+    if(state === "creating"){
+      setCta("Wird erstellt", false);
+      return;
+    }
+    if(state === "ready"){
+      setCta("Schild ansehen", true);
+      return;
+    }
+    setCta("Wird erstellt", false);
+  }
+
+  function showPreview(url){
+    if(!url) return;
+    if(previewImg){
+      setFade(true);
+      previewImg.onload = function(){
+        setFade(false);
+        previewImg.onload = null;
+      };
+      previewImg.src = url;
+      previewImg.classList.remove("smc__preview-img--hidden");
+    }
+    if(previewEmpty) previewEmpty.style.display = "none";
+  }
+
+  function showPlaceholder(text){
+    if(previewEmpty){
+      previewEmpty.textContent = text || "Starte zuerst den Entwurf";
+      previewEmpty.style.display = "block";
+    }
+    if(previewImg) previewImg.classList.add("smc__preview-img--hidden");
+  }
+
+  function handleUploadUI(){
+    if(!upload || !uploadLabel) return;
+
+    if(upload.files && upload.files[0]){
+      uploadLabel.textContent = upload.files[0].name;
+      var file = upload.files[0];
+
+      if(file.type && file.type.indexOf("image") === 0){
+        var r = new FileReader();
+        r.onload = function(e){
+          if(uploadPrevImg && uploadPrevEmpty){
+            uploadPrevImg.src = (e && e.target) ? e.target.result : "";
+            uploadPrevImg.style.display = "block";
+            uploadPrevEmpty.style.display = "none";
+          }
+        };
+        r.readAsDataURL(file);
+      }
+    } else {
+      uploadLabel.textContent = "Noch kein Upload";
+      if(uploadPrevImg && uploadPrevEmpty){
+        uploadPrevImg.removeAttribute("src");
+        uploadPrevImg.style.display = "none";
+        uploadPrevEmpty.style.display = "flex";
+      }
+    }
+  }
+
+  function formDataPayload(extra){
+    var fd = new FormData();
+
+    if(upload && upload.files && upload.files[0]) fd.append("Bild", upload.files[0]);
+    else fd.append("Bild", "");
+
+    fd.append("Beschreibung", (desc && desc.value) ? desc.value : "");
+    fd.append("Oberfläche", (finish && finish.value) ? finish.value : "");
+    fd.append("Größe", (size && size.value) ? size.value : "");
+    fd.append("Route", routeValue());
+
+    fd.append("generator_id", generatorId || "");
+    fd.append("section_id", sid);
+
+    if(extra && typeof extra === "object"){
+      try{
+        Object.keys(extra).forEach(function(k){
+          fd.append(k, extra[k]);
+        });
+      }catch(_e){}
+    }
+
+    return fd;
+  }
+
+  async function postText(url, fd){
+    var ctrl = ("AbortController" in window) ? new AbortController() : null;
+    var t = null;
+    if(ctrl){
+      t = setTimeout(function(){
+        try{ ctrl.abort(); }catch(_e){}
+      }, FETCH_TIMEOUT_MS);
+    }
+
+    var res = await fetch(url, {
+      method: "POST",
+      body: fd,
+      signal: ctrl ? ctrl.signal : undefined
+    });
+
+    if(t) clearTimeout(t);
+
+    var text = await res.text();
+    if(!res.ok) throw new Error(text || ("HTTP " + res.status));
+    return text || "";
+  }
+
+  function tryParseJson(text){
+    try{ return JSON.parse(text); }catch(e){ return null; }
+  }
+
+  function extractIdFromText(text){
+    var m = text.match(/"id"\s*:\s*"([^"]+)"/i);
+    return m ? m[1] : "";
+  }
+
+  function toGoogleDriveUrl(id){
+    if(!id) return "";
+    return "https://lh3.googleusercontent.com/d/" + id;
+  }
+
+  function normalizeImageUrl(candidate){
+    if(!candidate) return "";
+    var c = String(candidate).trim();
+    if(/^https?:\/\//i.test(c)) return c;
+    if(/^[a-zA-Z0-9_-]{10,}$/.test(c)) return toGoogleDriveUrl(c);
+    return "";
+  }
+
+  function extractField(j, key){
+    function pick(o){
+      if(!o || typeof o !== "object") return "";
+      if(o[key] != null) return String(o[key]);
+      return "";
+    }
+    if(!j) return "";
+    if(Array.isArray(j) && j[0]) return pick(j[0]);
+    return pick(j);
+  }
+
+  function extractPriceValue(j, raw){
+    var keys = ["Preis","preis","price","display_price","price_display","amount","value"];
+    function pick(o){
+      if(!o || typeof o !== "object") return "";
+      for(var i=0;i<keys.length;i++){
+        if(o[keys[i]] != null && String(o[keys[i]]).trim() !== "") return String(o[keys[i]]);
+      }
+      return "";
+    }
+    if(j){
+      if(Array.isArray(j) && j[0]) {
+        var p0 = pick(j[0]);
+        if(p0) return p0;
+      }
+      var p = pick(j);
+      if(p) return p;
+    }
+    var m = raw && raw.match(/\d+([.,]\d+)?\s?€|€\s?\d+([.,]\d+)?/);
+    return m ? m[0] : "";
+  }
+
+  function clearTimers(){
+    if(timerPriceA) clearTimeout(timerPriceA);
+    if(timerEntwurf) clearTimeout(timerEntwurf);
+    if(timerMock) clearTimeout(timerMock);
+    timerPriceA = timerEntwurf = timerMock = null;
+
+    if(mockPoll) clearInterval(mockPoll);
+    mockPoll = null;
+    mockPollEndsAt = 0;
+  }
+
+  function lockScroll(on){
+    try{
+      if(on){
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+      } else {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+    }catch(_e){}
+  }
+
+  function setModalMode(mode){
+    if(modal) modal.setAttribute("data-mode", mode || "product");
+  }
+
+  function closeModal(){
+    if(modal) modal.setAttribute("aria-hidden", "true");
+    lockScroll(false);
+    if((modal && modal.getAttribute("data-mode") || "") === "product"){
+      stopHold();
+    }
+  }
+
+  async function downloadUrl(url, filename){
+    if(!url) return;
+    var name = filename || ("steelmonks-vorschau-" + (generatorId || "download") + ".png");
+    try{
+      var res = await fetch(url, { method:"GET", mode:"cors" });
+      if(!res.ok) throw new Error("download");
+      var blob = await res.blob();
+      var obj = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = obj;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function(){ try{ URL.revokeObjectURL(obj); }catch(_e){} }, 8000);
+    }catch(_e){
+      try{
+        var a2 = document.createElement("a");
+        a2.href = url;
+        a2.download = name;
+        document.body.appendChild(a2);
+        a2.click();
+        a2.remove();
+      }catch(_e2){
+        window.open(url, "_blank");
+      }
+    }
+  }
+
+  function openModalViewer(kind, url){
+    if(!url) return;
+    setModalMode("viewer");
+
+    if(modalTitle) modalTitle.textContent = kind || "Vorschau";
+
+    if(modalCopy) modalCopy.style.display = "none";
+    if(modalActions) modalActions.style.display = "none";
+    if(modalFoot) modalFoot.style.display = "none";
+    if(modalHold) modalHold.style.display = "none";
+
+    if(modalImg) modalImg.src = url;
+
+    if(modalDl){
+      modalDl.style.display = "inline-flex";
+      modalDl.onclick = function(){ downloadUrl(url, "steelmonks-vorschau-" + (generatorId || "download") + ".png"); };
+    }
+
+    if(modal) modal.setAttribute("aria-hidden", "false");
+    lockScroll(true);
+  }
+
+  function openModalProduct(){
+    setModalMode("product");
+
+    if(modalCopy) modalCopy.style.display = "flex";
+    if(modalActions) modalActions.style.display = "flex";
+    if(modalFoot) modalFoot.style.display = "block";
+
+    if(modalTitle) modalTitle.textContent = "Schild ansehen";
+    if(modalImg && lastMockUrl) modalImg.src = lastMockUrl;
+
+    if(modalText) modalText.textContent = "Dein Schild ist bereit – wir erstellen gerade dein Produkt.";
+
+    if(modalDl){
+      modalDl.style.display = "inline-flex";
+      modalDl.onclick = function(){
+        if(lastMockUrl) downloadUrl(lastMockUrl, "steelmonks-vorschau-" + (generatorId || "download") + ".png");
+      };
+    }
+
+    if(modal) modal.setAttribute("aria-hidden", "false");
+    lockScroll(true);
+  }
+
+  if(modalBackdrop) modalBackdrop.addEventListener("click", closeModal);
+  if(modalClose) modalClose.addEventListener("click", closeModal);
+  document.addEventListener("keydown", function(e){
+    if(e && e.key === "Escape") closeModal();
+  });
+
+  function statusToPill(status){
+    var s = (status || "").trim();
+
+    if(forceMockLoading && !lastMockUrl){
+      if(
+        s === "Entwurf ist fertig" ||
+        s === "Design ist Fertig" ||
+        s === "Entwurf ist fertig." ||
+        s === "Design ist fertig"
+      ){
+        return;
+      }
+    }
+
+    if(!s){
+      setPillState("work", "Bitte warten");
+      return;
+    }
+    if(s === "Fehlgeschlagen"){
+      setPillState("bad", "Fehlgeschlagen");
+      return;
+    }
+    if(s === "Vorschau ist fertig"){
+      setPillState("ok", "Vorschau ist fertig");
+      return;
+    }
+    if(s === "Entwurf ist fertig"){
+      setPillState("work", "Entwurf ist fertig");
+      return;
+    }
+    setPillState("work", s);
+  }
+
+  async function runPriceOnce(){
+    if(!generatorId) return;
+    if(priceRequested) return;
+    priceRequested = true;
+    try{
+      var raw = await postText(ENDPOINTS.price, formDataPayload());
+      var j = tryParseJson(raw);
+      var p = extractPriceValue(j, raw);
+      if(p) setPrice(p);
+    }catch(_e){
+      priceRequested = true;
+    }
+  }
+
+  async function runCreatorPreviewOnce(reason){
+    if(!generatorId) return;
+    if(previewDone) return;
+    if(previewInFlight) return;
+
+    previewInFlight = true;
+    try{
+      var fd = formDataPayload({ reason: (reason || "") });
+      await postText(ENDPOINTS.preview, fd);
+      previewDone = true;
+    }catch(_e){
+    }finally{
+      previewInFlight = false;
+    }
+  }
+
+  async function fetchSignOnce(mode){
+    if(!generatorId) return null;
+    if(pollInFlight) return null;
+    pollInFlight = true;
+    try{
+      var raw = await postText(ENDPOINTS.sign, formDataPayload());
+      var j = tryParseJson(raw);
+
+      var statusText = (extractField(j, "Status") || "").trim();
+      statusToPill(statusText);
+
+      var signPrice = extractField(j, "Preis");
+      if(signPrice && !pendingPriceValue){
+        setPrice(signPrice);
+      }
+
+      if(statusText === "Fehlgeschlagen"){
+        stopEta();
+        clearTimers();
+        setPreviewLoading(false);
+        setPreviewOverlay(false);
+        setClickable(false);
+        setSoftBlur(false);
+        showPlaceholder("Fehlgeschlagen. Bitte Neu anfangen");
+        pollInFlight = false;
+        return { failed:true, json:j };
+      }
+
+      if(mode === "entwurf" || mode === "any"){
+        var entUrl = normalizeImageUrl(extractField(j, "Entwurf"));
+        if(entUrl){
+          lastEntUrl = entUrl;
+          setPreviewLoading(false);
+          setClickable(false);
+          setSoftBlur(true);
+          showPreview(entUrl);
+          setPreviewOverlay(true, "Wir finalisieren dein Design", "Bitte warten");
+        }
+      }
+
+      if(mode === "mock" || mode === "any"){
+        var mockUrl = normalizeImageUrl(extractField(j, "Mock Up"));
+        if(mockUrl){
+          lastMockUrl = mockUrl;
+
+          forceMockLoading = false;
+
+          stopEta();
+          clearTimers();
+
+          setPreviewLoading(false);
+          setSoftBlur(false);
+          setPreviewOverlay(false);
+          setClickable(true);
+
+          applyPriceDisplay();
+
+          if(previewKicker) previewKicker.textContent = "Vorschau";
+          showPreview(mockUrl);
+
+          state = "ready";
+          setCtaFromState();
+
+          pollInFlight = false;
+          return { ok:true, mock:true, json:j };
+        }
+      }
+
+      pollInFlight = false;
+      return { ok:true, json:j };
+    }catch(_e){
+      pollInFlight = false;
+      return null;
+    }
+  }
+
+  function startMockPollingWindow(){
+    if(mockPoll) return;
+
+    var hardStart = runStartedAt ? (runStartedAt + MOCK_POLL_START_MS) : Date.now();
+    var hardEnd = runStartedAt ? (runStartedAt + MOCK_POLL_END_MS) : (Date.now() + 150000);
+
+    mockPollEndsAt = hardEnd;
+
+    if(Date.now() >= hardStart){
+      fetchSignOnce("mock");
+    }
+
+    mockPoll = setInterval(async function(){
+      if(!generatorId) return;
+      if(Date.now() > mockPollEndsAt){
+        clearInterval(mockPoll);
+        mockPoll = null;
+        return;
+      }
+      await fetchSignOnce("mock");
+    }, MOCK_POLL_EVERY_MS);
+  }
+
+  async function startRunCreator(){
+    var d = (desc && desc.value) ? desc.value.trim() : "";
+    if(d.length < 5) return;
+
+    checkoutReady = false;
+
+    priceReady = false;
+    priceRequested = false;
+    pendingPriceValue = "";
+
+    generatorId = "";
+    lastMockUrl = "";
+    lastEntUrl = "";
+
+    previewDone = false;
+    previewInFlight = false;
+
+    forceMockLoading = false;
+    runStartedAt = Date.now();
+
+    stopEta();
+    stopHold();
+    clearTimers();
+    closeModal();
+
+    setClickable(false);
+    setSoftBlur(false);
+
+    setPriceCalculating();
+    setPillState("work", "Wir starten…");
+    lockInputs(true);
+
+    state = "creating";
+    setCtaFromState();
+
+    if(previewKicker) previewKicker.textContent = "Vorschau";
+    showPlaceholder("Wir erstellen gerade deine Vorschau");
+    setPreviewLoading(true);
+    setFade(false);
+    setPreviewOverlay(true, "Bitte warten", "Wir erstellen deine Vorschau");
+
+    startEta("Geschätzte Zeit", TOTAL_MS);
+
+    updateProps();
+
+    try{
+      var raw = await postText(ENDPOINTS.run, formDataPayload());
+      var id = extractIdFromText(raw);
+
+      if(!id){
+        generatorId = "";
+        updateProps();
+
+        stopEta();
+        clearTimers();
+        setPreviewLoading(false);
+        setPreviewOverlay(false);
+        showPlaceholder("Starte zuerst den Entwurf");
+
+        state = "init";
+        setCtaFromState();
+        setPillState("bad", "Es fehlt eine ID, bitte Neu anfangen");
+        lockInputs(true);
+        return;
+      }
+
+      generatorId = id;
+      updateProps();
+
+      setPillState("work", "Wird erstellt");
+
+      runCreatorPreviewOnce("Sofort nach run-creator");
+
+      timerPriceA = setTimeout(function(){
+        setPillState("work", "Preis wird berechnet");
+        runPriceOnce();
+      }, TIME_PRICE_MS);
+
+      timerEntwurf = setTimeout(async function(){
+        setPillState("work", "Entwurf wird geladen");
+        await fetchSignOnce("entwurf");
+      }, TIME_ENTWURF_POLL_MS);
+
+      timerMock = setTimeout(function(){
+        setPillState("work", "Finale Vorschau wird geladen");
+        startMockPollingWindow();
+      }, MOCK_POLL_START_MS);
+
+    }catch(_e){
+      generatorId = "";
+      updateProps();
+
+      stopEta();
+      clearTimers();
+
+      setPreviewLoading(false);
+      setPreviewOverlay(false);
+      showPlaceholder("Starte zuerst den Entwurf");
+
+      state = "init";
+      setCtaFromState();
+      setPillState("bad", "Fehler beim Start, bitte Neu anfangen");
+      lockInputs(true);
+    }
+  }
+
+  function safeProductJsonUrl(productUrl){
+    try{
+      var u = new URL(productUrl, window.location.origin);
+      return u.origin + u.pathname.replace(/\/$/, "") + ".js";
+    }catch(_e){
+      return "";
+    }
+  }
+
+  async function addToCartFromProductUrl(productUrl){
+    var jsonUrl = safeProductJsonUrl(productUrl);
+    if(!jsonUrl) return { ok:false };
+
+    var pRes = await fetch(jsonUrl, { method:"GET", credentials:"same-origin" });
+    if(!pRes.ok) return { ok:false };
+
+    var p = await pRes.json();
+    var variants = (p && p.variants) ? p.variants : [];
+    if(!variants.length) return { ok:false };
+
+    var v = variants.find(function(x){ return x && x.available; }) || variants[0];
+    if(!v || !v.id) return { ok:false };
+
+    var properties = {
+      "Beschreibung": (desc && desc.value) ? desc.value : "",
+      "Oberfläche": (finish && finish.value) ? finish.value : "",
+      "Größe": (size && size.value) ? size.value : "",
+      "Route": routeValue(),
+      "Generator ID": generatorId || "",
+      "Preis": pendingPriceValue || ""
+    };
+
+    var payload = { id: v.id, quantity: 1, properties: properties };
+
+    var addRes = await fetch("/cart/add.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload),
+      credentials: "same-origin"
+    });
+
+    if(!addRes.ok) return { ok:false };
+    return { ok:true };
+  }
+
+  async function startProductModal(){
+    if(!generatorId || !lastMockUrl) return;
+
+    setPillState("work", "Produkt wird vorbereitet");
+    setModalPreviewLoading(true);
+
+    if(modalLink){
+      modalLink.href = "#";
+      modalLink.style.display = "none";
+    }
+    if(modalFoot) modalFoot.textContent = "";
+    if(modalAdd) modalAdd.disabled = true;
+
+    openModalProduct();
+
+    try{
+      var raw = await postText(ENDPOINTS.product, formDataPayload());
+      var j = tryParseJson(raw);
+
+      var productUrl = (extractField(j, "Product URL") || extractField(j, "product_url") || extractField(j, "url") || "").trim();
+      var productName = (extractField(j, "Product Name") || extractField(j, "product_name") || extractField(j, "name") || "").trim();
+
+      setModalPreviewLoading(false);
+
+      if(!productUrl){
+        setPillState("bad", "Produkt Link fehlt");
+        if(modalText) modalText.textContent = "Kein Product URL erhalten.";
+        if(modalAdd) modalAdd.disabled = false;
+        return;
+      }
+
+      if(modalLink){
+        modalLink.href = productUrl;
+        modalLink.style.display = "none";
+      }
+      if(modalFoot) modalFoot.textContent = productUrl;
+
+      setPillState("ok", "Produkt bereit");
+
+      if(modalText) modalText.textContent = productName ? productName : "Produkt bereit";
+
+      startHold30();
+
+      checkoutReady = false;
+      if(modalAddLabel) modalAddLabel.textContent = "Zum Warenkorb hinzufügen";
+      if(modalAdd) {
+        modalAdd.disabled = false;
+        modalAdd.onclick = async function(){
+          if(checkoutReady){
+            window.location.href = "/checkout";
+            return;
+          }
+
+          try{
+            if(modalAdd) modalAdd.setAttribute("data-loading", "1");
+            setModalPreviewLoading(true);
+            setPillState("work", "Wird in den Warenkorb gelegt");
+
+            var added = await addToCartFromProductUrl(productUrl);
+
+            setModalPreviewLoading(false);
+            if(modalAdd) modalAdd.setAttribute("data-loading", "0");
+
+            if(added && added.ok){
+              checkoutReady = true;
+              setPillState("ok", "Im Warenkorb");
+
+              if(modalText){
+                modalText.textContent = productName ? productName : "Produkt bereit";
+              }
+              if(modalAddLabel) modalAddLabel.textContent = "Zum Checkout";
+              return;
+            }
+
+            setPillState("ok", "Weiter");
+            if(modalText) modalText.textContent = "Öffne das Produkt und lege es dort in den Warenkorb.";
+          }catch(_e){
+            setModalPreviewLoading(false);
+            if(modalAdd) modalAdd.setAttribute("data-loading", "0");
+            setPillState("bad", "Warenkorb Fehler");
+            if(modalText) modalText.textContent = "Beim Hinzufügen zum Warenkorb ist etwas schiefgelaufen.";
+          }
+        };
+      }
+
+    }catch(_e){
+      setModalPreviewLoading(false);
+      setPillState("bad", "Produkt Fehler");
+      if(modalText) modalText.textContent = "Beim Erstellen des Produkts ist etwas schiefgelaufen.";
+      if(modalAdd) modalAdd.disabled = false;
+    }
+  }
+
+  function resetAll(){
+    clearTimers();
+    stopEta();
+    stopHold();
+
+    generatorId = "";
+    lastMockUrl = "";
+    lastEntUrl = "";
+    checkoutReady = false;
+
+    priceReady = false;
+    priceRequested = false;
+    pendingPriceValue = "";
+
+    previewDone = false;
+    previewInFlight = false;
+
+    forceMockLoading = false;
+    runStartedAt = 0;
+
+    setClickable(false);
+    setSoftBlur(false);
+    lockInputs(false);
+
+    setPillState("idle", "Bereit");
+    if(priceVal) priceVal.textContent = "Den Preis berechnen wir nach dem Entwurf.";
+
+    if(previewKicker) previewKicker.textContent = "Vorschau";
+    showPlaceholder("Starte zuerst den Entwurf");
+    setPreviewLoading(false);
+    setPreviewOverlay(false);
+    setFade(false);
+
+    if(modal) modal.setAttribute("aria-hidden", "true");
+    lockScroll(false);
+
+    state = "init";
+    setCtaFromState();
+    updateProps();
+  }
+
+  if(resetBtn) resetBtn.addEventListener("click", resetAll);
+
+  if(upload) upload.addEventListener("change", function(){
+    if(locked) return;
+    handleUploadUI();
+    updateProps();
+  });
+
+  if(desc) desc.addEventListener("input", function(){
+    if(locked) return;
+    setCtaFromState();
+    updateProps();
+  });
+
+  if(finish) finish.addEventListener("change", function(){
+    if(locked) return;
+    updateProps();
+  });
+  if(size) size.addEventListener("change", function(){
+    if(locked) return;
+    updateProps();
+  });
+
+  if(previewArea) previewArea.addEventListener("click", function(){
+    if(!lastMockUrl) return;
+    if(previewArea.getAttribute("data-clickable") !== "1") return;
+    openModalViewer("Vorschau", lastMockUrl);
+  });
+
+  if(ctaBtn) ctaBtn.addEventListener("click", function(){
+    if(state === "init") startRunCreator();
+    else if(state === "ready") startProductModal();
+  });
+
+  handleUploadUI();
+  updateProps();
+  if(priceVal) priceVal.textContent = "Den Preis berechnen wir nach dem Entwurf.";
+  setPillState("idle", "Bereit");
+  if(previewKicker) previewKicker.textContent = "Vorschau";
+  showPlaceholder("Starte zuerst den Entwurf");
+  setPreviewLoading(false);
+  setSoftBlur(false);
+  setPreviewOverlay(false);
+  setFade(false);
+
+  lockInputs(false);
+  state = "init";
+  setCtaFromState();
+})();
+</script>

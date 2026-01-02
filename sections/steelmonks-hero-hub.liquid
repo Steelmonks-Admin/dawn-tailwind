@@ -1,0 +1,754 @@
+{% comment %}
+  Steelmonks Hero Hub – Trust Row + per-card Sale Badges (text + color) + 3 CTAs
+{% endcomment %}
+
+<section 
+  id="section-{{ section.id }}" 
+  class="sm-hero-hub"
+  style="padding-top: {{ section.settings.top_spacing | default: 24 }}px;"
+>
+  <div class="sm-hero-hub__inner">
+
+    {%- comment -%} HERO AREA {%- endcomment -%}
+    <div class="sm-hero-hub__hero sm-animate-hero">
+
+      {% if section.settings.badge_text %}
+        <div class="sm-hero-hub__badge">
+          <span class="sm-hero-hub__badge-pill">
+            {{ section.settings.badge_text }}
+          </span>
+        </div>
+      {% endif %}
+
+      {%- comment -%} TRUST ROW {%- endcomment -%}
+      <div class="sm-hero-hub__trust-row">
+        <div class="sm-hero-hub__trust-item">
+          <div class="sm-hero-hub__trust-icon">🇩🇪</div>
+          <div class="sm-hero-hub__trust-text">Schneller Versand.</div>
+        </div>
+        <div class="sm-hero-hub__trust-item">
+          <div class="sm-hero-hub__trust-icon">🏅</div>
+          <div class="sm-hero-hub__trust-text">Über <strong>100.000+</strong> Bestellungen.</div>
+        </div>
+        <div class="sm-hero-hub__trust-item">
+          <div class="sm-hero-hub__trust-icon">⭐⭐⭐⭐⭐</div>
+          <div class="sm-hero-hub__trust-text"> <strong>10.000+</strong> Bewertungen.</div>
+        </div>
+      </div>
+
+      <div class="sm-hero-hub__pixel-shell">
+        <div class="sm-hero-hub__pixel-card sm-animate-pixel-float">
+
+          <div class="sm-hero-hub__pixel-img-wrap">
+            {% if section.settings.pixel_image %}
+              {{ section.settings.pixel_image | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'sm-hero-hub__pixel-img' }}
+            {% else %}
+              <div class="sm-hero-hub__pixel-placeholder">Pixel-Visual hochladen</div>
+            {% endif %}
+          </div>
+
+          {% if section.settings.heading %}
+            <div class="sm-hero-hub__speech">
+              <div class="sm-hero-hub__speech-text">
+                {{ section.settings.heading }}
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="sm-hero-hub__pixel-kpi-wrap">
+            <div class="sm-hero-hub__pixel-kpi-title">
+              {{ section.settings.kpi_title }}
+            </div>
+            <div class="sm-hero-hub__pixel-kpi-sub">
+              {{ section.settings.kpi_subtitle }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+     {%- comment -%} HERO CTA: Nur EIN Button oben {%- endcomment -%}
+<div class="sm-hero-hub__ctas">
+  {% if section.settings.primary_button_link %}
+    <a href="{{ section.settings.primary_button_link }}" class="sm-hero-hub__btn sm-hero-hub__btn--primary">
+      {{ section.settings.primary_button_label }}
+    </a>
+  {% endif %}
+</div>
+    </div>
+
+    {%- comment -%} MAIN CATEGORIES – Titel, Bild, Link, SALE BADGE pro Karte {%- endcomment -%}
+    {% if section.blocks.size > 0 %}
+      <div class="sm-hero-hub__categories-wrap sm-animate-categories">
+        <div class="sm-hero-hub__categories">
+          {% for block in section.blocks %}
+            {% if block.type == 'main_category' %}
+              <a 
+                href="{{ block.settings.link | default: '#' }}"
+                class="sm-hero-hub__category-card sm-animate-category-{{ forloop.index }}"
+                {{ block.shopify_attributes }}
+              >
+                <div class="sm-hero-hub__category-label">
+                  {{ block.settings.title }}
+                </div>
+
+                <div class="sm-hero-hub__category-media">
+                  {% if block.settings.sale_badge_text != blank %}
+                    {% assign badge_color = block.settings.sale_badge_color | default: '#DC2626' %}
+                    <div class="sm-hero-hub__sale-badge" style="background: {{ badge_color }};">
+                      {{ block.settings.sale_badge_text }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.image %}
+                    {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', class: 'sm-hero-hub__category-img' }}
+                  {% else %}
+                    <div class="sm-hero-hub__category-placeholder">Bild wählen</div>
+                  {% endif %}
+                </div>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} COLLECTION BUTTONS UNTEN {%- endcomment -%}
+    {% if section.settings.show_collection_row %}
+      <div class="sm-hero-hub__collections sm-animate-collections">
+
+        {% if section.settings.collection_fire_link %}
+          <a href="{{ section.settings.collection_fire_link }}" class="sm-hero-hub__collection-btn sm-hero-hub__collection-btn--fire">
+            <div class="sm-hero-hub__collection-icon">🔥</div>
+            <div class="sm-hero-hub__collection-text">
+              <span class="sm-hero-hub__collection-label">{{ section.settings.collection_fire_label }}</span>
+              <span class="sm-hero-hub__collection-sub">{{ section.settings.collection_fire_sub }}</span>
+            </div>
+          </a>
+        {% endif %}
+
+        {% if section.settings.collection_craft_link %}
+          <a href="{{ section.settings.collection_craft_link }}" class="sm-hero-hub__collection-btn sm-hero-hub__collection-btn--craft">
+            <div class="sm-hero-hub__collection-icon">🛠️</div>
+            <div class="sm-hero-hub__collection-text">
+              <span class="sm-hero-hub__collection-label">{{ section.settings.collection_craft_label }}</span>
+              <span class="sm-hero-hub__collection-sub">{{ section.settings.collection_craft_sub }}</span>
+            </div>
+          </a>
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Steelmonks Hero Hub",
+  "settings": [
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Abstand oben über dem Black-Friday Banner",
+      "default": 24,
+      "min": 0,
+      "max": 160,
+      "step": 4
+    },
+    {
+      "type": "image_picker",
+      "id": "pixel_image",
+      "label": "Hero Pixel-Bild"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Black Friday Banner",
+      "default": "Black Friday: bis zu 50 % – nur dieses Wochenende"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Speech-Text",
+      "default": "Persönliche Geschenke für die, die uns am liebsten sind."
+    },
+    {
+      "type": "text",
+      "id": "kpi_title",
+      "label": "KPI Titel unten rechts",
+      "default": "Top Geschenke Saison 2025"
+    },
+    {
+      "type": "text",
+      "id": "kpi_subtitle",
+      "label": "KPI Untertitel unten rechts",
+      "default": "Jetzt für Black Friday und Weihnachten sichern"
+    },
+
+    { "type": "header", "content": "Hero Buttons" },
+
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primärer Button-Text",
+      "default": "Jetzt Geschenke finden"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primärer Button-Link (z.B. /collections/beliebt)"
+    },
+    {
+      "type": "text",
+      "id": "fire_button_label",
+      "label": "Button-Text Feuerwehr",
+      "default": "Geschenke für Feuerwehr"
+    },
+    {
+      "type": "text",
+      "id": "craft_button_label",
+      "label": "Button-Text Handwerker",
+      "default": "Geschenke für Handwerker"
+    },
+
+    { "type": "header", "content": "Feuerwehr & Handwerker Links (oben & unten)" },
+
+    {
+      "type": "url",
+      "id": "collection_fire_link",
+      "label": "Link Für Feuerwehr"
+    },
+    {
+      "type": "text",
+      "id": "collection_fire_label",
+      "label": "Label Für Feuerwehr (unten)",
+      "default": "Für Feuerwehr"
+    },
+    {
+      "type": "text",
+      "id": "collection_fire_sub",
+      "label": "Sub Für Feuerwehr (unten)",
+      "default": "Beliebte Schilder, Anhänger und Geschenke"
+    },
+    {
+      "type": "url",
+      "id": "collection_craft_link",
+      "label": "Link Für Handwerker"
+    },
+    {
+      "type": "text",
+      "id": "collection_craft_label",
+      "label": "Label Für Handwerker (unten)",
+      "default": "Für Handwerker"
+    },
+    {
+      "type": "text",
+      "id": "collection_craft_sub",
+      "label": "Sub Für Handwerker (unten)",
+      "default": "Werkstattdeko, Schlüsselanhänger und mehr"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_row",
+      "label": "Collection Buttons unter den Karten anzeigen",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "main_category",
+      "name": "Hauptkategorie",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Kategorie"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bild"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "sale_badge_text",
+          "label": "Sale Badge Text",
+          "info": "Kompletter Text, z.B. „Bis zu 30 %“"
+        },
+        {
+          "type": "color",
+          "id": "sale_badge_color",
+          "label": "Sale Badge Farbe",
+          "default": "#DC2626"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Steelmonks Hero Hub",
+      "category": "Steelmonks"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+
+/* ===== Base Layout ===== */
+
+.sm-hero-hub {
+  background: #FAFAFF;
+  padding: 24px 16px 40px;
+  color: #090A0C;
+}
+
+.sm-hero-hub__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== HERO ===== */
+
+.sm-hero-hub__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Black Friday Badge */
+
+.sm-hero-hub__badge-pill,
+.sm-hero-hub_badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #090A0C;
+  color: #FAFAFF;
+  font-size: 1.125rem; /* ~18px */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+}
+
+.sm-hero-hub__badge-pill::before,
+.sm-hero-hub_badge-pill::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ff9800;
+  box-shadow: 0 0 0 4px rgba(255,152,0,0.35);
+}
+
+/* ===== TRUST ROW ===== */
+
+.sm-hero-hub__trust-row {
+  width: 100%;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.sm-hero-hub__trust-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sm-hero-hub__trust-icon {
+  font-size: 1.3rem;
+}
+
+.sm-hero-hub__trust-text {
+  font-size: 1.125rem; /* bigger, readable */
+  color: #3f3f46;
+}
+
+/* Pixel Hero */
+
+.sm-hero-hub__pixel-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.sm-hero-hub__pixel-card {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 28px 72px rgba(15,23,42,0.55);
+  background: #000;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+/* subtle float animation */
+
+@keyframes sm-pixel-float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+.sm-animate-pixel-float {
+  animation: sm-pixel-float 7s ease-in-out infinite;
+}
+
+.sm-hero-hub__pixel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 80px rgba(15,23,42,0.7);
+}
+
+.sm-hero-hub__pixel-img {
+  width: 100%;
+  display: block;
+}
+
+/* Speech bubble */
+
+.sm-hero-hub__speech,
+.sm-hero-hub_speech {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  max-width: 80%;
+}
+
+.sm-hero-hub__speech-text,
+.sm-hero-hub_speech-text {
+  display: inline-block;
+  background: #090A0C;
+  color: #FAFAFF;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+  position: relative;
+}
+
+.sm-hero-hub__speech-text::after,
+.sm-hero-hub_speech-text::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  background: #090A0C;
+  transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+/* KPI bottom-right */
+
+.sm-hero-hub__pixel-kpi-wrap {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 6px 10px;
+  background: rgba(9,10,12,0.86);
+  color: #FAFAFF;
+  border-radius: 12px;
+  text-align: right;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+}
+
+.sm-hero-hub__pixel-kpi-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.sm-hero-hub__pixel-kpi-sub {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* CTAs */
+
+.sm-hero-hub__ctas {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.sm-hero-hub__btn,
+.sm-hero-hub_btn {
+  padding: 11px 24px;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-weight: 650;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+/* Highlight primary */
+
+.sm-hero-hub__btn--primary,
+.sm-hero-hub_btn--primary {
+  background: radial-gradient(circle at 0 0, #ff9800 0, #0044CC 45%, #00235e 100%);
+  color: #FAFAFF;
+  box-shadow: 0 14px 32px rgba(0,68,204,0.45);
+}
+
+.sm-hero-hub__btn--primary:hover,
+.sm-hero-hub_btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(0,68,204,0.6);
+}
+
+.sm-hero-hub__btn--ghost,
+.sm-hero-hub_btn--ghost {
+  background: rgba(0,68,204,0.06);
+  color: #0044CC;
+  border-color: rgba(0,68,204,0.3);
+}
+
+.sm-hero-hub__btn--ghost:hover,
+.sm-hero-hub_btn--ghost:hover {
+  background: rgba(0,68,204,0.12);
+  transform: translateY(-1px);
+}
+
+/* ===== CATEGORIES ===== */
+
+.sm-hero-hub__categories-wrap {
+  margin-top: 24px;
+}
+
+.sm-hero-hub__categories {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 14px;
+  padding-bottom: 10px;
+}
+
+.sm-hero-hub__category-card {
+  min-width: 78%;
+  scroll-snap-align: center;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 22px;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.10);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.sm-hero-hub__category-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 46px rgba(15, 23, 42, 0.20);
+  border-color: rgba(0, 68, 204, 0.3);
+  background: #fdfdfd;
+}
+
+.sm-hero-hub__category-label,
+.sm-hero-hub_category-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.sm-hero-hub__category-media,
+.sm-hero-hub_category-media {
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sm-hero-hub__category-img,
+.sm-hero-hub_category-img {
+  width: 100%;
+  display: block;
+  border-radius: 18px;
+}
+
+.sm-hero-hub__category-placeholder {
+  height: 140px;
+  background: #E5E7EB;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+}
+
+/* Sale Badge per card – bigger font */
+
+.sm-hero-hub__sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.95);
+  color: #FEF2F2;
+  font-size: 1.125rem; /* ~18px */
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(0,38,38,0.35);
+  white-space: nowrap;
+}
+
+/* ===== COLLECTION BUTTONS ===== */
+
+.sm-hero-hub__collections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sm-hero-hub__collection-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFFFFF;
+  padding: 12px 16px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(15,23,42,0.12);
+  box-shadow: 0 12px 28px rgba(15,23,42,0.10);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.sm-hero-hub__collection-btn--fire {
+  background: linear-gradient(135deg, #fff3e0, #ffffff);
+}
+
+.sm-hero-hub__collection-btn--craft {
+  background: linear-gradient(135deg, #e3f2ff, #ffffff);
+}
+
+.sm-hero-hub__collection-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(15,23,42,0.18);
+  border-color: rgba(15,23,42,0.22);
+}
+
+.sm-hero-hub__collection-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(9,10,12,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.sm-hero-hub__collection-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-hero-hub__collection-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.sm-hero-hub__collection-sub {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* ===== DESKTOP ===== */
+
+@media (min-width: 768px) {
+  .sm-hero-hub {
+    padding: 32px 24px 48px;
+  }
+
+  .sm-hero-hub__trust-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .sm-hero-hub__categories {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 16px;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .sm-hero-hub__category-card {
+    min-width: 0;
+  }
+
+  .sm-hero-hub__collections {
+    flex-direction: row;
+  }
+
+  .sm-hero-hub__collection-btn {
+    flex: 1 1 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sm-hero-hub__badge-pill,
+  .sm-hero-hub_badge-pill {
+    padding: 12px 32px;
+    font-size: 1.4rem;
+  }
+
+  .sm-hero-hub__pixel-card {
+    max-width: 960px;
+    border-radius: 32px;
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes sm-fade-up {
+  0% { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.sm-animate-hero {
+  animation: sm-fade-up 0.7s ease-out 0.05s both;
+}
+
+.sm-animate-categories {
+  animation: sm-fade-up 0.7s ease-out 0.18s both;
+}
+
+.sm-animate-collections {
+  animation: sm-fade-up 0.7s ease-out 0.28s both;
+}
+
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

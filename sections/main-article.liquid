@@ -1,26 +1,33 @@
-{{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  Section: main-article.liquid
+  Loads a special stylesheet and adds a scope class when the article uses the template suffix "formatted-blog-post-v2".
+{% endcomment %}
+
+{% if template.suffix == 'formatted-blog-post-v2' %}
+  {{ 'formatted-blog-post-v2.css' | asset_url | stylesheet_tag }}
+{% else %}
+  {{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
+{% endif %}
 
 <style>
   @media (max-width: 767px) {
-    .mobile-hidden {
-      display: none !important;
-    }
+    .mobile-hidden { display: none !important; }
   }
 </style>
 
-<article class="article-template">
+
+<article class="article-template{% if template.suffix == 'formatted-blog-post-v2' %} formatted-blog-post-v2{% endif %}">
   {%- for block in section.blocks -%}
     {%- case block.type -%}
+
       {%- when '@app' -%}
         <div class="page-width page-width--narrow">
           {% render block %}
         </div>
+
       {%- when 'featured_image' -%}
         {%- if article.image -%}
-          <div
-            class="article-template__hero-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-            {{ block.shopify_attributes }}
-          >
+          <div class="article-template__hero-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" {{ block.shopify_attributes }}>
             <div
               class="article-template__hero-{{ block.settings.image_height }} media"
               {% if block.settings.image_height == 'adapt' and article.image %}
@@ -50,15 +57,8 @@
         {%- endif -%}
 
       {%- when 'title' -%}
-        <header
-          class="page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-          {{ block.shopify_attributes }}
-        >
-          <h2
-            class="article-template__title"
-          >
-            {{ article.title | escape }}
-          </h2>
+        <header class="page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}" {{ block.shopify_attributes }}>
+          <h2 class="article-template__title">{{ article.title | escape }}</h2>
           {%- if block.settings.blog_show_date -%}
             <span class="circle-divider caption-with-letter-spacing">
               {{- article.published_at | time_tag: format: 'date' -}}
@@ -72,21 +72,16 @@
         </header>
 
       {%- when 'content' -%}
-        <div
-          class="article-template__content page-width page-width--narrow rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {{ block.shopify_attributes }}
-        >
+        <div class="article-template__content page-width page-width--narrow rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" {{ block.shopify_attributes }}>
           {{ article.content }}
         </div>
 
       {%- when 'share' -%}
-        <div
-          class="article-template__social-sharing page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %} twcss-flex twcss-justify-center twcss-items-center"
-          {{ block.shopify_attributes }}
-        >
+        <div class="article-template__social-sharing page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %} twcss-flex twcss-justify-center twcss-items-center" {{ block.shopify_attributes }}>
           {% assign share_url = request.origin | append: article.url %}
           {% render 'share-button', block: block, share_link: share_url %}
         </div>
+
       {%- when 'excerpt' -%}
         {%- if article.excerpt.size > 0 -%}
           <div class="twcss-mb-4 page-width page-width--narrow">
@@ -95,6 +90,7 @@
             </p>
           </div>
         {%- endif -%}
+
       {%- when 'back-to-blog' -%}
         <div class="twcss-flex twcss-flex-col twcss-items-center twcss-mb-8 page-width page-width--narrow">
           <a href="{{ blog.url }}" class="btn btn-primary twcss-inline-flex twcss-items-center twcss-gap-2 twcss-bg-brandblue twcss-text-white twcss-px-6 twcss-py-3 twcss-rounded-xl twcss-font-semibold twcss-shadow-md twcss-border-2 twcss-border-[#090a0c] twcss-transition twcss-duration-200 hover:twcss-bg-[#090a0c] hover:twcss-text-[#f5ae2e] hover:twcss-border-[#090a0c] twcss-no-underline twcss-text-lg button-back-to-collection__button animate-arrow twcss-mb-2 twcss-p-4">
@@ -110,6 +106,7 @@
             <div class="twcss-text-gray-400">{{ article.title }}</div>
           </nav>
         </div>
+
       {%- when 'custom_breadcrumbs' -%}
         <div class="twcss-flex twcss-flex-col twcss-items-center twcss-mb-8 page-width page-width--narrow">
           <nav class="button-back-to-collection__text twcss-text-center twcss-flex twcss-flex-wrap twcss-items-center twcss-justify-center twcss-gap-2 twcss-px-3 twcss-text-base twcss-mt-2">
@@ -120,10 +117,10 @@
             <div class="twcss-text-gray-400">{{ article.title }}</div>
           </nav>
         </div>
+
       {%- when 'hero_side_by_side' -%}
         <div class="twcss-py-8">
           <div class="twcss-max-w-7xl twcss-mx-auto twcss-flex twcss-flex-col md:twcss-flex-row twcss-gap-6 twcss-items-start twcss-justify-between twcss-px-4">
-            <!-- Left: Title and Excerpt -->
             <div class="twcss-flex-1 twcss-flex twcss-flex-col twcss-justify-center twcss-h-full twcss-min-h-[600px]">
               <div class="twcss-flex-1 twcss-flex twcss-flex-col twcss-justify-center twcss-h-full">
                 <h1 class="twcss-text-brandblack twcss-text-4xl md:twcss-text-6xl twcss-font-bold twcss-mb-6">{{ article.title | escape }}</h1>
@@ -136,7 +133,6 @@
                 {%- endif -%}
               </div>
             </div>
-            <!-- Right: Featured Image -->
             <div class="twcss-mx-auto twcss-mb-4 twcss-flex twcss-items-center">
               {%- if article.image -%}
                 <div class="twcss-h-auto twcss-bg-black twcss-flex twcss-items-center twcss-justify-center twcss-rounded-lg twcss-overflow-hidden">
@@ -153,6 +149,7 @@
             </div>
           </div>
         </div>
+
     {%- endcase -%}
   {%- endfor -%}
 
@@ -162,6 +159,7 @@
       {%- assign has_back_to_blog_block = true -%}
     {%- endif -%}
   {%- endfor -%}
+
   {%- unless has_back_to_blog_block -%}
     <div class="article-template__back element-margin-top center{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <a href="{{ blog.url }}" class="article-template__link link animate-arrow">
@@ -177,13 +175,9 @@
 
   {%- if blog.comments_enabled? -%}
     <div class="article-template__comment-wrapper background-secondary">
-      <div
-        id="comments"
-        class="page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-      >
+      <div id="comments" class="page-width page-width--narrow{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         {%- if article.comments_count > 0 -%}
           {%- assign anchorId = '#Comments-' | append: article.id -%}
-
           <h2 id="Comments-{{ article.id }}" tabindex="-1">
             {{ 'blogs.article.comments' | t: count: article.comments_count }}
           </h2>
@@ -197,13 +191,12 @@
                   </footer>
                 </article>
               {%- endif -%}
-
               {%- for comment in article.comments -%}
                 <article id="{{ comment.id }}" class="article-template__comments-comment">
                   {{ comment.content }}
                   <footer class="right">
-                    <span class="circle-divider caption-with-letter-spacing">{{ comment.author }}</span
-                    ><span class="caption-with-letter-spacing">
+                    <span class="circle-divider caption-with-letter-spacing">{{ comment.author }}</span>
+                    <span class="caption-with-letter-spacing">
                       {{- comment.created_at | time_tag: format: 'date' -}}
                     </span>
                   </footer>
@@ -213,6 +206,7 @@
             </div>
           {% endpaginate %}
         {%- endif -%}
+
         {% form 'new_comment', article %}
           {%- liquid
             assign post_message = 'blogs.article.success'
@@ -220,7 +214,9 @@
               assign post_message = 'blogs.article.success_moderated'
             endif
           -%}
+
           <h2>{{ 'blogs.article.comment_form_title' | t }}</h2>
+
           {%- if form.errors -%}
             <div class="form__message" role="alert">
               <h3 class="form-status caption-large text-body" tabindex="-1" autofocus>
@@ -257,11 +253,7 @@
             </div>
           {%- endif -%}
 
-          <div
-            {% if blog.moderated? == false %}
-              class="article-template__comments-fields"
-            {% endif %}
-          >
+          <div {% if blog.moderated? == false %}class="article-template__comments-fields"{% endif %}>
             <div class="article-template__comment-fields">
               <div class="field field--with-error">
                 <input
@@ -280,21 +272,18 @@
                   placeholder="{{ 'blogs.article.name' | t }}"
                 >
                 <label class="field__label" for="CommentForm-author">
-                  {{- 'blogs.article.name' | t }}
-                  <span aria-hidden="true">*</span></label
-                >
+                  {{- 'blogs.article.name' | t }} <span aria-hidden="true">*</span>
+                </label>
                 {%- if form.errors contains 'author' -%}
                   <small id="CommentForm-author-error">
                     <span class="form__message">
-                      <span class="svg-wrapper">
-                        {{- 'icon-error.svg' | inline_asset_content -}}
-                      </span>
-                      {{- 'blogs.article.name' | t }}
-                      {{ form.errors.messages.author }}.</span
-                    >
+                      <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+                      {{- 'blogs.article.name' | t }} {{ form.errors.messages.author }}.
+                    </span>
                   </small>
                 {%- endif -%}
               </div>
+
               <div class="field field--with-error">
                 <input
                   type="email"
@@ -314,22 +303,19 @@
                   placeholder="{{ 'blogs.article.email' | t }}"
                 >
                 <label class="field__label" for="CommentForm-email">
-                  {{- 'blogs.article.email' | t }}
-                  <span aria-hidden="true">*</span></label
-                >
+                  {{- 'blogs.article.email' | t }} <span aria-hidden="true">*</span>
+                </label>
                 {%- if form.errors contains 'email' -%}
                   <small id="CommentForm-email-error">
                     <span class="form__message">
-                      <span class="svg-wrapper">
-                        {{- 'icon-error.svg' | inline_asset_content -}}
-                      </span>
-                      {{- 'blogs.article.email' | t }}
-                      {{ form.errors.messages.email }}.</span
-                    >
+                      <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+                      {{- 'blogs.article.email' | t }} {{ form.errors.messages.email }}.
+                    </span>
                   </small>
                 {%- endif -%}
               </div>
             </div>
+
             <div class="field field--with-error">
               <textarea
                 rows="5"
@@ -345,25 +331,26 @@
                 placeholder="{{ 'blogs.article.message' | t }}"
               >{{ form.body }}</textarea>
               <label class="form__label field__label" for="CommentForm-body">
-                {{- 'blogs.article.message' | t }}
-                <span aria-hidden="true">*</span></label
-              >
+                {{- 'blogs.article.message' | t }} <span aria-hidden="true">*</span>
+              </label>
             </div>
+
             {%- if form.errors contains 'body' -%}
               <small id="CommentForm-body-error">
                 <span class="form__message">
-                  <span class="svg-wrapper">
-                    {{- 'icon-error.svg' | inline_asset_content -}}
-                  </span>
-                  {{- 'blogs.article.message' | t }}
-                  {{ form.errors.messages.body }}.</span
-                >
+                  <span class="svg-wrapper">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+                  {{- 'blogs.article.message' | t }} {{ form.errors.messages.body }}.
+                </span>
               </small>
             {%- endif -%}
           </div>
+
           {%- if blog.moderated? -%}
-            <p class="article-template__comment-warning caption">{{ 'blogs.article.moderated' | t }}</p>
+            <p class="article-template__comment-warning caption">
+              {{ 'blogs.article.moderated' | t }}
+            </p>
           {%- endif -%}
+
           <input type="submit" class="button" value="{{ 'blogs.article.post' | t }}">
         {% endform %}
       </div>
@@ -381,9 +368,7 @@
   "tag": "section",
   "class": "section",
   "blocks": [
-    {
-      "type": "@app"
-    },
+    { "type": "@app" },
     {
       "type": "featured_image",
       "name": "t:sections.main-article.blocks.featured_image.name",
@@ -393,22 +378,10 @@
           "type": "select",
           "id": "image_height",
           "options": [
-            {
-              "value": "adapt",
-              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__1.label"
-            },
-            {
-              "value": "small",
-              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__2.label"
-            },
-            {
-              "value": "medium",
-              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__3.label"
-            },
-            {
-              "value": "large",
-              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__4.label"
-            }
+            { "value": "adapt", "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__1.label" },
+            { "value": "small", "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__2.label" },
+            { "value": "medium", "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__3.label" },
+            { "value": "large", "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__4.label" }
           ],
           "default": "adapt",
           "label": "t:sections.main-article.blocks.featured_image.settings.image_height.label",
@@ -421,66 +394,25 @@
       "name": "t:sections.main-article.blocks.title.name",
       "limit": 1,
       "settings": [
-        {
-          "type": "checkbox",
-          "id": "blog_show_date",
-          "default": true,
-          "label": "t:sections.main-article.blocks.title.settings.blog_show_date.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "blog_show_author",
-          "default": false,
-          "label": "t:sections.main-article.blocks.title.settings.blog_show_author.label"
-        }
+        { "type": "checkbox", "id": "blog_show_date", "default": true, "label": "t:sections.main-article.blocks.title.settings.blog_show_date.label" },
+        { "type": "checkbox", "id": "blog_show_author", "default": false, "label": "t:sections.main-article.blocks.title.settings.blog_show_author.label" }
       ]
     },
-    {
-      "type": "content",
-      "name": "t:sections.main-article.blocks.content.name",
-      "limit": 1
-    },
+    { "type": "content", "name": "t:sections.main-article.blocks.content.name", "limit": 1 },
     {
       "type": "share",
       "name": "t:sections.main-article.blocks.share.name",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "share_label",
-          "label": "t:sections.main-article.blocks.share.settings.text.label",
-          "default": "t:sections.main-article.blocks.share.settings.text.default"
-        },
-        {
-          "type": "paragraph",
-          "content": "t:sections.main-article.blocks.share.settings.featured_image_info.content"
-        },
-        {
-          "type": "paragraph",
-          "content": "t:sections.main-article.blocks.share.settings.title_info.content"
-        }
+        { "type": "text", "id": "share_label", "label": "t:sections.main-article.blocks.share.settings.text.label", "default": "t:sections.main-article.blocks.share.settings.text.default" },
+        { "type": "paragraph", "content": "t:sections.main-article.blocks.share.settings.featured_image_info.content" },
+        { "type": "paragraph", "content": "t:sections.main-article.blocks.share.settings.title_info.content" }
       ]
     },
-    {
-      "type": "excerpt",
-      "name": "Excerpt",
-      "limit": 1
-    },
-    {
-      "type": "back-to-blog",
-      "name": "Back to Blog Button",
-      "limit": 1
-    },
-    {
-      "type": "custom_breadcrumbs",
-      "name": "Breadcrumbs",
-      "limit": 1
-    },
-    {
-      "type": "hero_side_by_side",
-      "name": "Hero Side by Side",
-      "limit": 1
-    }
+    { "type": "excerpt", "name": "Excerpt", "limit": 1 },
+    { "type": "back-to-blog", "name": "Back to Blog Button", "limit": 1 },
+    { "type": "custom_breadcrumbs", "name": "Breadcrumbs", "limit": 1 },
+    { "type": "hero_side_by_side", "name": "Hero Side by Side", "limit": 1 }
   ]
 }
 {% endschema %}

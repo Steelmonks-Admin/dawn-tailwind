@@ -32,7 +32,7 @@
     {% endif %}
 
     {% unless template contains 'cart' or template contains 'customer' %}
-      {% comment %} <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/preload'></script> {% endcomment %}
+      <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/preload'></script>
     {% endunless %}
 
     {% render 'meta-tags' %}
@@ -50,7 +50,7 @@
     {%- endif -%}
 
     {% unless template contains 'cart' or template contains 'customer' %}
-      {% comment %} <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/lazyload'></script> {% endcomment %}
+      <script data-cfasync='false' src='https://cdn.fixvitals.com/resources/lazyload'></script>
     {% endunless %}
 
     {% comment %} ? START: Pandectes Rules {% endcomment %}

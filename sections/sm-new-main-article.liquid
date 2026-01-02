@@ -1,16 +1,23 @@
+{% if template.suffix == 'formatted-blog-post-v2' %}
+  {{ 'formatted-blog-post-v2.css' | asset_url | stylesheet_tag }}
+{% else %}
+  {{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
 {%- style -%}
   .sm-article-breadcrumbs {
     margin-top: {{ section.settings.top_spacing }}px;
   }
 {%- endstyle -%}
 
-<article class='twcss-max-w-[900px] twcss-mx-auto twcss-px-4 sm:twcss-px-4 twcss-text-gray-900'>
+<article class='twcss-max-w-[1100px] twcss-mx-auto twcss-px-4 sm:twcss-px-4 twcss-text-gray-900 {% if template.suffix == 'formatted-blog-post-v2' %}formatted-blog-post-v2{% endif %}'>
   {%- for block in section.blocks -%}
     {%- case block.type -%}
       {%- when '@app' -%}
         <div {{ block.shopify_attributes }}>
           {% render block %}
         </div>
+
       {%- when 'featured_image' -%}
         {%- if article.image -%}
           <div
@@ -38,6 +45,7 @@
             >
           </div>
         {%- endif -%}
+
       {%- when 'title' -%}
         <header class='twcss-mb-6 twcss-text-left' {{ block.shopify_attributes }}>
           <h1 class='twcss-text-4xl sm:twcss-text-[2.5rem] twcss-font-bold twcss-mb-3 twcss-text-gray-900 twcss-leading-tight'>
@@ -54,6 +62,7 @@
             </div>
           {%- endif -%}
         </header>
+
       {%- when 'content' -%}
         <div
           class='twcss-text-xl twcss-leading-relaxed twcss-mb-6 [&>*:first-child]:twcss-mt-0 [&>*:last-child]:twcss-mb-0'
@@ -61,11 +70,13 @@
         >
           {{ article.content }}
         </div>
+
       {%- when 'share' -%}
         <div class='twcss-flex twcss-justify-center twcss-items-center twcss-my-6' {{ block.shopify_attributes }}>
           {% assign share_url = request.origin | append: article.url %}
           {% render 'share-button', block: block, share_link: share_url %}
         </div>
+
       {%- when 'excerpt' -%}
         {%- if article.excerpt.size > 0 -%}
           <div
@@ -75,6 +86,7 @@
             <p>{{ article.excerpt | strip_html }}</p>
           </div>
         {%- endif -%}
+
       {%- when 'back-to-blog' -%}
         <div class='twcss-text-center twcss-my-6' {{ block.shopify_attributes }}>
           <a
@@ -84,6 +96,7 @@
             {{ 'blogs.article.back_to_blog' | t: title: blog.title | escape }}
           </a>
         </div>
+
       {%- when 'custom_breadcrumbs' -%}
         <nav
           class='sm-article-breadcrumbs twcss-mb-4 twcss-text-base twcss-text-gray-500 twcss-flex twcss-flex-wrap twcss-gap-2 twcss-items-center'
@@ -104,9 +117,10 @@
           <span>→</span>
           <span>{{ article.title }}</span>
         </nav>
+
       {%- when 'hero_side_by_side' -%}
         <div class='twcss-my-6' {{ block.shopify_attributes }}>
-          <div class='twcss-flex twcss-flex-col md:twcss-flex-row twcss-gap-6 md:twcss-gap-12 twcss-items-center twcss-justify-between twcss-max-w-[1200px] twcss-mx-auto'>
+          <div class='twcss-flex twcss-flex-col md:twcss-flex-row twcss-gap-6 md:twcss-gap-12 twcss-items-center twcss-justify-between twcss-max-w-[1100px] twcss-mx-auto'>
             <div class='twcss-flex-1 twcss-flex twcss-flex-col twcss-justify-center twcss-text-center md:twcss-text-left'>
               <h1 class='twcss-text-4xl sm:twcss-text-[2.5rem] twcss-font-bold twcss-mb-3 twcss-text-gray-900 twcss-leading-tight'>
                 {{ article.title | escape }}
@@ -189,6 +203,7 @@
             </div>
           {% endpaginate %}
         {%- endif -%}
+
         {% form 'new_comment', article %}
           {%- liquid
             assign post_message = 'blogs.article.success'
@@ -197,6 +212,7 @@
             endif
           -%}
           <h2 class='twcss-text-2xl twcss-font-bold twcss-mb-4'>{{ 'blogs.article.comment_form_title' | t }}</h2>
+
           {%- if form.errors -%}
             <div class='twcss-text-red-900 twcss-mb-3'>
               <h3 class='twcss-text-lg twcss-font-bold' tabindex='-1' autofocus>
@@ -247,8 +263,8 @@
                 >
                 <label for='CommentForm-author' class='twcss-block twcss-mb-1'>
                   {{- 'blogs.article.name' | t }}
-                  <span aria-hidden='true'>*</span></label
-                >
+                  <span aria-hidden='true'>*</span>
+                </label>
                 {%- if form.errors contains 'author' -%}
                   <small id='CommentForm-author-error' class='twcss-text-red-900'>
                     {{- 'blogs.article.name' | t }}
@@ -256,6 +272,7 @@
                   </small>
                 {%- endif -%}
               </div>
+
               <div>
                 <input
                   type='email'
@@ -276,8 +293,8 @@
                 >
                 <label for='CommentForm-email' class='twcss-block twcss-mb-1'>
                   {{- 'blogs.article.email' | t }}
-                  <span aria-hidden='true'>*</span></label
-                >
+                  <span aria-hidden='true'>*</span>
+                </label>
                 {%- if form.errors contains 'email' -%}
                   <small id='CommentForm-email-error' class='twcss-text-red-900'>
                     {{- 'blogs.article.email' | t }}
@@ -286,6 +303,7 @@
                 {%- endif -%}
               </div>
             </div>
+
             <div>
               <textarea
                 rows='5'
@@ -302,8 +320,8 @@
               >{{ form.body }}</textarea>
               <label for='CommentForm-body' class='twcss-block twcss-mb-1'>
                 {{- 'blogs.article.message' | t }}
-                <span aria-hidden='true'>*</span></label
-              >
+                <span aria-hidden='true'>*</span>
+              </label>
               {%- if form.errors contains 'body' -%}
                 <small id='CommentForm-body-error' class='twcss-text-red-900'>
                   {{- 'blogs.article.message' | t }}
@@ -312,9 +330,11 @@
               {%- endif -%}
             </div>
           </div>
+
           {%- if blog.moderated? -%}
             <p class='twcss-text-gray-500 twcss-text-sm'>{{ 'blogs.article.moderated' | t }}</p>
           {%- endif -%}
+
           <input
             type='submit'
             value='{{ 'blogs.article.post' | t }}'
@@ -328,11 +348,6 @@
 
 <script type='application/ld+json'>
   {{ article | structured_data }}
-</script>
-
-{% comment %} Debug section with script {% endcomment %}
-<script>
-  console.log('Debug section with script');
 </script>
 
 {% schema %}
