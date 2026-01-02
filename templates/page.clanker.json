@@ -42,7 +42,6 @@
         "text_c6tJGH",
         "button_4ikGHW"
       ],
-      "disabled": true,
       "name": "t:sections.rich-text.presets.name",
       "settings": {
         "desktop_content_position": "center",
@@ -145,7 +144,6 @@
         "accordion_eG9Wbf",
         "accordion_CUVVQr"
       ],
-      "disabled": true,
       "name": "Accordions",
       "settings": {
         "heading": "Häufig gestellte Fragen",
@@ -158,7 +156,6 @@
     },
     "masonry_gallery_yMJgLM": {
       "type": "masonry-gallery",
-      "disabled": true,
       "name": "Masonry Gallery",
       "settings": {
         "heading": "Galerie",
