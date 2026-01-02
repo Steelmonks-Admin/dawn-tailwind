@@ -155,12 +155,26 @@
         "padding_left": 24,
         "padding_right": 24
       }
+    },
+    "masonry_gallery_yMJgLM": {
+      "type": "masonry-gallery",
+      "disabled": true,
+      "name": "Masonry Gallery",
+      "settings": {
+        "heading": "Galerie",
+        "image_1": "shopify://shop_images/cat_345ef27e-f001-4773-bf3c-1a9d90d71acc.jpg",
+        "image_2": "shopify://shop_images/lion_schild.jpg",
+        "image_3": "shopify://shop_images/castle_under_attack.jpg",
+        "image_4": "shopify://shop_images/dragon-sign.jpg",
+        "image_5": "shopify://shop_images/download_cb020dcd-7832-4fcd-b673-ac814e4a7f9b.jpg"
+      }
     }
   },
   "order": [
     "rich_text_rMFFNh",
     "main",
     "steelmonks_sign_creator_FKYF46",
-    "accordions_EeXHEy"
+    "accordions_EeXHEy",
+    "masonry_gallery_yMJgLM"
   ]
 }
