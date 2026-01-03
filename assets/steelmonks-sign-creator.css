@@ -1004,9 +1004,9 @@
 .smc__btn--reset {
   min-width: auto;
   padding: 10px 14px;
-  position: absolute;
+  /* position: absolute;
   top: -6px;
-  right: 0;
+  right: 0; */
   box-shadow: 0 16px 42px rgba(0, 0, 0, 0.1);
 }
 
