@@ -1,7 +1,11 @@
 {% comment %} * Variables {% endcomment %}
+{% assign sid = section.id %}
 
 {% comment %} * Assets {% endcomment %}
 {{ 'steelmonks-sign-creator.css' | asset_url | stylesheet_tag }}
+<script>
+  var sid = '{{ sid }}';
+</script>
 <script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}

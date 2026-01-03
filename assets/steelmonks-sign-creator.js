@@ -1025,15 +1025,85 @@ document.addEventListener('DOMContentLoaded', () => {
       formData.updateProps();
 
       try {
-        const raw = await this.postText(
-          ENDPOINTS.run,
-          formData.createPayload(),
-        );
-        const id = extractIdFromText(raw);
+        // Validate required variables
+        if (typeof sid === 'undefined') {
+          logger.error('Section ID (sid) is undefined - check Liquid template');
+          this.handleCreationFailure('Konfigurationsfehler: Section ID fehlt');
+          return;
+        }
+
+        logger.debug('Creating payload for run-creator', {
+          hasImage: formData.hasImage(),
+          sectionId: sid,
+          descriptionLength: elements.desc?.value?.trim().length || 0,
+        });
+
+        let payload;
+        try {
+          payload = formData.createPayload();
+          logger.debug('Payload created successfully');
+        } catch (payloadError) {
+          logger.error('Failed to create form payload', payloadError, {
+            hasUpload: !!elements.upload,
+            hasDesc: !!elements.desc,
+            hasFinish: !!elements.finish,
+            hasSize: !!elements.size,
+            sectionId: sid,
+          });
+          throw payloadError;
+        }
+
+        logger.debug('Sending request to run-creator endpoint', {
+          url: ENDPOINTS.run,
+          endpointExists: !!ENDPOINTS.run,
+        });
+
+        let raw;
+        try {
+          raw = await this.postText(ENDPOINTS.run, payload);
+          logger.debug('Received response from run-creator', {
+            responseLength: raw?.length || 0,
+            preview: raw?.substring(0, 100),
+          });
+        } catch (postError) {
+          logger.error('Request to run-creator endpoint failed', postError, {
+            url: ENDPOINTS.run,
+            endpoint: ENDPOINTS.run,
+            errorName: postError?.name,
+            errorMessage: postError?.message,
+          });
+          throw postError;
+        }
+
+        if (!raw || typeof raw !== 'string') {
+          logger.error('Invalid response from backend', {
+            rawType: typeof raw,
+            rawValue: raw,
+            rawLength: raw?.length,
+          });
+          this.handleCreationFailure('Ungültige Antwort vom Server');
+          return;
+        }
+
+        let id;
+        try {
+          id = extractIdFromText(raw);
+          logger.debug('Attempted to extract ID from response', {
+            idFound: !!id,
+            idValue: id || null,
+          });
+        } catch (extractError) {
+          logger.error('Failed to extract ID from response', extractError, {
+            rawPreview: raw?.substring(0, 200),
+          });
+          throw extractError;
+        }
 
         if (!id) {
           logger.error('No generator ID returned from backend', {
             raw: raw?.substring(0, 200),
+            rawLength: raw?.length,
+            endpoint: ENDPOINTS.run,
           });
           this.handleCreationFailure('Es fehlt eine ID, bitte Neu anfangen');
           return;
@@ -1079,7 +1149,15 @@ document.addEventListener('DOMContentLoaded', () => {
           hasImage: formData.hasImage(),
         });
       } catch (error) {
-        logger.error('Failed to start creator workflow', error);
+        logger.error('Failed to start creator workflow', error, {
+          errorName: error?.name,
+          errorMessage: error?.message,
+          errorStack: error?.stack?.substring(0, 200),
+          endpoint: ENDPOINTS.run,
+          sectionId: typeof sid !== 'undefined' ? sid : 'UNDEFINED',
+          hasImage: formData.hasImage(),
+          descriptionLength: elements.desc?.value?.trim().length || 0,
+        });
         this.handleCreationFailure('Fehler beim Start, bitte Neu anfangen');
       }
     },
