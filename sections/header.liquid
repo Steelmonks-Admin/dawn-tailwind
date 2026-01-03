@@ -321,6 +321,7 @@
     </div>
 
   <!-- MILESTONES CODE WITHIN THE HEADER // CUSTOM_CUSTOM -->
+  {% unless request.path contains '/pages/werkstatt' %}
   <div class="milestones__container">
     <div class="milestones__timeline">
       <a class="milestones__timeline--1">
@@ -372,6 +373,7 @@
       >
     </div>
   </div>
+  {% endunless %}
   <!-- *** END OF CUSTOM_CUSTOM *** -->
   </header>
 </{% if section.settings.sticky_header_type != 'none' %}sticky-header{% else %}div{% endif %}>
