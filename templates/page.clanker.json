@@ -24,23 +24,11 @@
           "settings": {
             "text": "<p>Laden Sie ein Bild mit Ihrem Wunschmotiv hoch, wählen Sie Material und Größe nach Ihren Vorstellungen und kreieren Sie das perfekte Geschenk für sich selbst oder Ihre Lieben.</p>"
           }
-        },
-        "button_4ikGHW": {
-          "type": "button",
-          "settings": {
-            "button_label": "Erstelle meine eigene",
-            "button_link": "#scroller",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
         }
       },
       "block_order": [
         "heading_p3qP8D",
-        "text_c6tJGH",
-        "button_4ikGHW"
+        "text_c6tJGH"
       ],
       "name": "t:sections.rich-text.presets.name",
       "settings": {
@@ -75,10 +63,20 @@
       "settings": {
         "heading": "Galerie",
         "image_1": "shopify://shop_images/cat_345ef27e-f001-4773-bf3c-1a9d90d71acc.jpg",
+        "prompt_1": "Placeholder prompt for Image 1, replace this with the prompt used to generate the image.",
         "image_2": "shopify://shop_images/lion_schild.jpg",
+        "prompt_2": "Placeholder prompt for Image 2, replace this with the prompt used to generate the image.",
         "image_3": "shopify://shop_images/castle_under_attack.jpg",
+        "prompt_3": "Placeholder prompt for Image 3, replace this with the prompt used to generate the image.",
         "image_4": "shopify://shop_images/dragon-sign.jpg",
-        "image_5": "shopify://shop_images/download_cb020dcd-7832-4fcd-b673-ac814e4a7f9b.jpg"
+        "prompt_4": "Placeholder prompt for Image 4, replace this with the prompt used to generate the image.",
+        "image_5": "shopify://shop_images/download_cb020dcd-7832-4fcd-b673-ac814e4a7f9b.jpg",
+        "prompt_5": "Placeholder prompt for Image 5, replace this with the prompt used to generate the image.",
+        "prompt_6": "Placeholder prompt for Image 6, replace this with the prompt used to generate the image.",
+        "prompt_7": "Placeholder prompt for Image 7, replace this with the prompt used to generate the image.",
+        "prompt_8": "Placeholder prompt for Image 8, replace this with the prompt used to generate the image.",
+        "prompt_9": "Placeholder prompt for Image 9, replace this with the prompt used to generate the image.",
+        "prompt_10": "Placeholder prompt for Image 10, replace this with the prompt used to generate the image."
       }
     },
     "accordions_EeXHEy": {
