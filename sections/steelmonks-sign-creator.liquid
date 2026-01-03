@@ -1,296 +1,324 @@
 {% comment %} * Variables {% endcomment %}
-{% assign sid = section.id %}
 
 {% comment %} * Assets {% endcomment %}
 {{ 'steelmonks-sign-creator.css' | asset_url | stylesheet_tag }}
-<script>
-  var sid = '{{ sid }}';
-</script>
 <script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
-<section id='sm-sign-creator-min-{{ sid }}' class='smc' aria-label='Steelmonks Creator'>
-  <div class='smc__wrap' id='scroller'>
-    <div class='smc__statuswrap'>
-      <div class='smc__pill' id='smc-pill-{{ section.id }}' data-state='idle' aria-live='polite'>
-        <span class='smc__pill-dot' aria-hidden='true'></span>
-        <span class='smc__pill-text' id='smc-pill-text-{{ section.id }}'>Bereit</span>
-        <span class='smc__pill-anim' aria-hidden='true'></span>
+<div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
+  <button
+    id='smc-open-btn'
+    class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+  >
+    In die Werkstatt
+  </button>
+</div>
+
+<section
+  id='smc-container'
+  class='smc'
+  aria-label='Steelmonks Creator'
+  style='opacity: 0; visibility: hidden;'
+  aria-hidden='true'
+>
+  <div class='twcss-flex twcss-gap-4'>
+    <div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
+      <button
+        id='smc-close-btn'
+        class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+      >
+        Ausgang Werkstatt
+      </button>
+    </div>
+    <div
+      id='smc-pill'
+      data-state='idle'
+      aria-live='polite'
+      class='twcss-inline-flex twcss-items-center twcss-justify-center twcss-gap-4 twcss-py-3 twcss-px-5 twcss-rounded-full twcss-bg-[rgba(250,250,255,0.92)] twcss-text-[color:var(--smc-ink)] twcss-font-black twcss-uppercase twcss-tracking-[0.12em] twcss-text-[0.86rem] twcss-shadow-[0_18px_42px_rgba(0,0,0,0.12)] twcss-border-[2px] twcss-border-[var(--smc-gold)] twcss-relative'
+    >
+      <span
+        aria-hidden='true'
+        class='twcss-w-[10px] twcss-h-[10px] twcss-rounded-full twcss-bg-[var(--smc-gold)] twcss-shadow-[0_0_0_4px_rgba(200,164,93,0.22)] twcss-animate-pulse'
+      ></span>
+      <span id='smc-pill-text'>Bereit</span>
+      <span aria-hidden='true' class='twcss-hidden twcss-w-[18px] twcss-h-[10px]'></span>
+    </div>
+  </div>
+
+  <div class='smc__wrap' id='smc'>
+    <div
+      class='twcss-rounded-[20px] twcss-overflow-y-auto twcss-overflow-x-clip twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5]'
+      style='transform: scale(1);'
+    >
+      <div class='smc__eta' id='smc-eta' style='display:none'>
+        <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
+        <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
       </div>
-    </div>
 
-    <div class='smc__eta' id='smc-eta-{{ section.id }}' style='display:none'>
-      <span class='smc__eta-label' id='smc-eta-label-{{ section.id }}'>Geschätzte Zeit</span>
-      <span class='smc__eta-time' id='smc-eta-time-{{ section.id }}'>02:00</span>
-    </div>
+      <div class='smc__grid'>
+        <div class='smc__col smc__col--left'>
+          {%- assign base_product = section.settings.product -%}
 
-    <div class='smc__grid'>
-      <div class='smc__col smc__col--left'>
-        {%- assign base_product = section.settings.product -%}
+          {% if base_product != blank %}
+            <form
+              method='post'
+              action='/cart/add'
+              enctype='multipart/form-data'
+              class='smc__form'
+              id='smc-form'
+            >
+              <input type='hidden' name='id' value='{{ base_product.selected_or_first_available_variant.id }}'>
+          {% else %}
+            <div class='smc__form' id='smc-form'>
+          {% endif %}
 
-        {% if base_product != blank %}
-          <form
-            method='post'
-            action='/cart/add'
-            enctype='multipart/form-data'
-            class='smc__form'
-            id='smc-form-{{ section.id }}'
-          >
-            <input type='hidden' name='id' value='{{ base_product.selected_or_first_available_variant.id }}'>
-        {% else %}
-          <div class='smc__form' id='smc-form-{{ section.id }}'>
-        {% endif %}
+          <div class='smc__field'>
+            <label class='smc__label' for='smc-upload'>
+              Motiv hochladen <span class='smc__label-note'>PNG oder JPG</span>
+            </label>
 
-        <div class='smc__field'>
-          <label class='smc__label' for='smc-upload-{{ section.id }}'>
-            Motiv hochladen <span class='smc__label-note'>PNG oder JPG</span>
-          </label>
+            <div class='smc__file'>
+              <input type='file' id='smc-upload' class='smc__file-input' accept='image/*'>
 
-          <div class='smc__file'>
-            <input type='file' id='smc-upload-{{ section.id }}' class='smc__file-input' accept='image/*'>
+              <div class='smc__file-ui' role='button' tabindex='0' aria-label='Datei auswählen'>
+                <div class='smc__file-preview' aria-hidden='true'>
+                  <img
+                    id='smc-upload-preview'
+                    class='smc__file-preview-img'
+                    alt=''
+                    loading='lazy'
+                    width='100%'
+                    height='100%'
+                  >
+                  <div id='smc-upload-preview-empty' class='smc__file-preview-empty'>+</div>
+                </div>
 
-            <div class='smc__file-ui' role='button' tabindex='0' aria-label='Datei auswählen'>
-              <div class='smc__file-preview' aria-hidden='true'>
-                <img
-                  id='smc-upload-preview-{{ section.id }}'
-                  class='smc__file-preview-img'
-                  alt=''
-                  loading='lazy'
-                  width='100%'
-                  height='100%'
+                <div class='smc__file-meta'>
+                  <div class='smc__file-title'>Datei wählen</div>
+                  <div class='smc__file-sub' id='smc-upload-label'>Noch kein Upload</div>
+                </div>
+
+                <span class='smc__file-chip' aria-hidden='true'>Upload</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='smc__field'>
+            <label class='smc__label' for='smc-desc'>
+              Motiv Beschreibung <span class='smc__label-note'>Pflichtfeld</span>
+            </label>
+            <textarea
+              id='smc-desc'
+              class='smc__textarea'
+              rows='5'
+              {% comment %} * DO NOT EDIT: Placeholder added via JavaScript, see steelmonks-sign-creator.js. This text is only used as fallback {% endcomment %}
+              placeholder='
+                Lass Deiner Vorstellung freien Lauf. Probier doch:
+
+                • Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
+                • Mein Familienwappen wie aus der Zeichnung
+                • Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
+                • Oder ein Hausschild mit der Nummer 22 und einem Ritter
+              '
+            ></textarea>
+          </div>
+
+          <div class='smc__row'>
+            <div class='smc__field'>
+              <label class='smc__label' for='smc-finish'>Oberfläche</label>
+              <div class='smc__select'>
+                <select id='smc-finish' class='smc__select-el'>
+                  <option value='Schwarz pulverbeschichtet'>Schwarz pulverbeschichtet</option>
+                  <option value='Anthrazit pulverbeschichtet'>Anthrazit pulverbeschichtet</option>
+                  <option value='Weiß pulverbeschichtet'>Weiß pulverbeschichtet</option>
+                  <option value='Gold'>Gold</option>
+                  <option value='Cortenstahl Optik'>Cortenstahl Optik</option>
+                  <option value='Satinierter Edelstahl'>Satinierter Edelstahl</option>
+                </select>
+                <span class='smc__select-arrow' aria-hidden='true'>⌄</span>
+              </div>
+            </div>
+
+            <div class='smc__field'>
+              <label class='smc__label' for='smc-size'>Größe</label>
+              <div class='smc__select'>
+                <select id='smc-size' class='smc__select-el'>
+                  <option value='22,5 cm'>22,5 cm</option>
+                  <option value='45 cm'>45 cm</option>
+                  <option value='55 cm'>55 cm</option>
+                  <option value='75 cm'>75 cm</option>
+                  <option value='75 cm+'>75 cm+</option>
+                </select>
+                <span class='smc__select-arrow' aria-hidden='true'>⌄</span>
+              </div>
+            </div>
+          </div>
+
+          <div class='smc__price'>
+            <div class='smc__price-left'>
+              <div class='smc__price-kicker'>Preis</div>
+              <div class='smc__price-val' id='smc-price'>Den Preis berechnen wir nach dem Entwurf.</div>
+            </div>
+
+            <div class='smc__price-right'>
+              <div class='smc__price-cta'>
+                <button type='button' class='smc__btn smc__btn--primary' id='smc-cta-btn' disabled>
+                  <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
+                </button>
+
+                <button
+                  type='button'
+                  class='smc__btn smc__btn--ghost smc__btn--reset'
+                  id='smc-reset-btn'
+                  style='display:none'
                 >
-                <div id='smc-upload-preview-empty-{{ section.id }}' class='smc__file-preview-empty'>+</div>
+                  Neu anfangen
+                </button>
               </div>
-
-              <div class='smc__file-meta'>
-                <div class='smc__file-title'>Datei wählen</div>
-                <div class='smc__file-sub' id='smc-upload-label-{{ section.id }}'>Noch kein Upload</div>
-              </div>
-
-              <span class='smc__file-chip' aria-hidden='true'>Upload</span>
-            </div>
-          </div>
-        </div>
-
-        <div class='smc__field'>
-          <label class='smc__label' for='smc-desc-{{ section.id }}'>
-            Motiv Beschreibung <span class='smc__label-note'>Pflichtfeld</span>
-          </label>
-          <textarea
-            id='smc-desc-{{ section.id }}'
-            class='smc__textarea'
-            rows='5'
-            {% comment %} * DO NOT EDIT: Placeholder added via JavaScript, see steelmonks-sign-creator.js. This text is only used as fallback {% endcomment %}
-            placeholder='
-              Lass Deiner Vorstellung freien Lauf. Probier doch:
-
-              • Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
-              • Mein Familienwappen wie aus der Zeichnung
-              • Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
-              • Oder ein Hausschild mit der Nummer 22 und einem Ritter
-            '
-          ></textarea>
-        </div>
-
-        <div class='smc__row'>
-          <div class='smc__field'>
-            <label class='smc__label' for='smc-finish-{{ section.id }}'>Oberfläche</label>
-            <div class='smc__select'>
-              <select id='smc-finish-{{ section.id }}' class='smc__select-el'>
-                <option value='Schwarz pulverbeschichtet'>Schwarz pulverbeschichtet</option>
-                <option value='Anthrazit pulverbeschichtet'>Anthrazit pulverbeschichtet</option>
-                <option value='Weiß pulverbeschichtet'>Weiß pulverbeschichtet</option>
-                <option value='Gold'>Gold</option>
-                <option value='Cortenstahl Optik'>Cortenstahl Optik</option>
-                <option value='Satinierter Edelstahl'>Satinierter Edelstahl</option>
-              </select>
-              <span class='smc__select-arrow' aria-hidden='true'>⌄</span>
             </div>
           </div>
 
-          <div class='smc__field'>
-            <label class='smc__label' for='smc-size-{{ section.id }}'>Größe</label>
-            <div class='smc__select'>
-              <select id='smc-size-{{ section.id }}' class='smc__select-el'>
-                <option value='22,5 cm'>22,5 cm</option>
-                <option value='45 cm'>45 cm</option>
-                <option value='55 cm'>55 cm</option>
-                <option value='75 cm'>75 cm</option>
-                <option value='75 cm+'>75 cm+</option>
-              </select>
-              <span class='smc__select-arrow' aria-hidden='true'>⌄</span>
+          <input type='hidden' name='properties[Bild]' id='smc-prop-img'>
+          <input type='hidden' name='properties[Beschreibung]' id='smc-prop-desc'>
+          <input type='hidden' name='properties[Oberfläche]' id='smc-prop-finish'>
+          <input type='hidden' name='properties[Größe]' id='smc-prop-size'>
+          <input type='hidden' name='properties[Route]' id='smc-prop-route'>
+          <input type='hidden' name='properties[Generator ID]' id='smc-prop-gen'>
+          <input type='hidden' name='properties[Preis]' id='smc-prop-price'>
+
+          {% if base_product != blank %}
+            <button
+              type='submit'
+              class='smc__btn smc__btn--primary smc__btn--full'
+              id='smc-atc'
+              disabled
+              style='display:none'
+            >
+              In den Warenkorb
+            </button>
+            </form>
+          {% else %}
             </div>
-          </div>
+          {% endif %}
         </div>
 
-        <div class='smc__price'>
-          <div class='smc__price-left'>
-            <div class='smc__price-kicker'>Preis</div>
-            <div class='smc__price-val' id='smc-price-{{ section.id }}'>Den Preis berechnen wir nach dem Entwurf.</div>
-          </div>
-
-          <div class='smc__price-right'>
-            <div class='smc__price-cta'>
-              <button type='button' class='smc__btn smc__btn--primary' id='smc-cta-btn-{{ section.id }}' disabled>
-                <span class='smc__btn-label' id='smc-cta-label-{{ section.id }}'>Entwurf erstellen</span>
-              </button>
-
-              <button
-                type='button'
-                class='smc__btn smc__btn--ghost smc__btn--reset'
-                id='smc-reset-btn-{{ section.id }}'
-                style='display:none'
-              >
-                Neu anfangen
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <input type='hidden' name='properties[Bild]' id='smc-prop-img-{{ section.id }}'>
-        <input type='hidden' name='properties[Beschreibung]' id='smc-prop-desc-{{ section.id }}'>
-        <input type='hidden' name='properties[Oberfläche]' id='smc-prop-finish-{{ section.id }}'>
-        <input type='hidden' name='properties[Größe]' id='smc-prop-size-{{ section.id }}'>
-        <input type='hidden' name='properties[Route]' id='smc-prop-route-{{ section.id }}'>
-        <input type='hidden' name='properties[Generator ID]' id='smc-prop-gen-{{ section.id }}'>
-        <input type='hidden' name='properties[Preis]' id='smc-prop-price-{{ section.id }}'>
-
-        {% if base_product != blank %}
-          <button
-            type='submit'
-            class='smc__btn smc__btn--primary smc__btn--full'
-            id='smc-atc-{{ section.id }}'
-            disabled
-            style='display:none'
-          >
-            In den Warenkorb
-          </button>
-          </form>
-        {% else %}
-          </div>
-        {% endif %}
-      </div>
-
-      <div class='smc__col smc__col--right'>
-        <div class='smc__preview'>
-          <div class='smc__preview-top'>
-            <div class='smc__preview-kicker' id='smc-preview-kicker-{{ section.id }}'>Vorschau</div>
-          </div>
-
-          <div
-            class='smc__preview-area'
-            id='smc-preview-area-{{ section.id }}'
-            data-loading='0'
-            data-softblur='0'
-            data-clickable='0'
-            data-fade='0'
-          >
-            <div class='smc__preview-loading' aria-hidden='true'>
-              <div class='smc__preview-shimmer'></div>
-              <div class='smc__preview-spinner'></div>
+        <div class='smc__col smc__col--right'>
+          <div class='smc__preview'>
+            <div class='smc__preview-top'>
+              <div class='smc__preview-kicker' id='smc-preview-kicker'>Vorschau</div>
             </div>
 
             <div
-              class='smc__preview-overlay'
-              id='smc-preview-overlay-{{ section.id }}'
-              aria-hidden='true'
-              style='display:none'
+              class='smc__preview-area'
+              id='smc-preview-area'
+              data-loading='0'
+              data-softblur='0'
+              data-clickable='0'
+              data-fade='0'
             >
-              <div class='smc__preview-overlay-pill'>
-                <span class='smc__preview-overlay-title' id='smc-preview-overlay-title-{{ section.id }}'
-                  >Bitte warten</span
-                >
-                <span class='smc__preview-overlay-sub' id='smc-preview-overlay-sub-{{ section.id }}'
-                  >Wir erstellen deine Vorschau</span
-                >
+              <div class='smc__preview-loading' aria-hidden='true'>
+                <div class='smc__preview-shimmer'></div>
+                <div class='smc__preview-spinner'></div>
               </div>
-            </div>
 
-            <div class='smc__preview-empty' id='smc-preview-empty-{{ section.id }}'>Starte zuerst den Entwurf</div>
-            <img
-              id='smc-preview-img-{{ section.id }}'
-              class='smc__preview-img smc__preview-img--hidden'
-              alt='Vorschau'
-              loading='lazy'
-              width='100%'
-              height='100%'
-            >
+              <div
+                class='smc__preview-overlay'
+                id='smc-preview-overlay'
+                aria-hidden='true'
+                style='display:none'
+              >
+                <div class='smc__preview-overlay-pill'>
+                  <span class='smc__preview-overlay-title' id='smc-preview-overlay-title'>Bitte warten</span>
+                  <span class='smc__preview-overlay-sub' id='smc-preview-overlay-sub'
+                    >Wir erstellen deine Vorschau</span
+                  >
+                </div>
+              </div>
+
+              <div class='smc__preview-empty' id='smc-preview-empty'>Starte zuerst den Entwurf</div>
+              <img
+                id='smc-preview-img'
+                class='smc__preview-img smc__preview-img--hidden'
+                alt='Vorschau'
+                loading='lazy'
+                width='100%'
+                height='100%'
+              >
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class='smc__modal' id='smc-modal-{{ section.id }}' aria-hidden='true' data-mode='product'>
-      <div class='smc__modal-backdrop' id='smc-modal-backdrop-{{ section.id }}'></div>
+      <div class='smc__modal' id='smc-modal' aria-hidden='true' data-mode='product'>
+        <div class='smc__modal-backdrop' id='smc-modal-backdrop'></div>
 
-      <div class='smc__modal-card' role='dialog' aria-modal='true' aria-label='Schild ansehen'>
-        <div class='smc__modal-top' id='smc-modal-top-{{ section.id }}'>
-          <div class='smc__modal-title' id='smc-modal-title-{{ section.id }}'>Schild ansehen</div>
+        <div class='smc__modal-card' role='dialog' aria-modal='true' aria-label='Schild ansehen'>
+          <div class='smc__modal-top' id='smc-modal-top'>
+            <div class='smc__modal-title' id='smc-modal-title'>Schild ansehen</div>
 
-          <div class='smc__modal-top-actions'>
-            <button type='button' class='smc__modal-dl' id='smc-modal-dl-{{ section.id }}' aria-label='Download'>
-              <span class='smc__modal-dl-ico' aria-hidden='true'>↓</span>
-              <span class='smc__modal-dl-label'>Download</span>
-            </button>
-            <button type='button' class='smc__modal-x' id='smc-modal-close-{{ section.id }}' aria-label='Schließen'>
-              ✕
-            </button>
-          </div>
-        </div>
-
-        <div class='smc__modal-body'>
-          <div class='smc__modal-preview' id='smc-modal-preview-{{ section.id }}' data-loading='0'>
-            <div class='smc__modal-shimmer' aria-hidden='true'></div>
-            <img
-              id='smc-modal-img-{{ section.id }}'
-              class='smc__modal-img'
-              alt='Vorschau'
-              loading='lazy'
-              width='100%'
-              height='100%'
-            >
+            <div class='smc__modal-top-actions'>
+              <button type='button' class='smc__modal-dl' id='smc-modal-dl' aria-label='Download'>
+                <span class='smc__modal-dl-ico' aria-hidden='true'>↓</span>
+                <span class='smc__modal-dl-label'>Download</span>
+              </button>
+              <button type='button' class='smc__modal-x' id='smc-modal-close' aria-label='Schließen'>✕</button>
+            </div>
           </div>
 
-          <div class='smc__modal-copy' id='smc-modal-copy-{{ section.id }}'>
-            <div class='smc__modal-text' id='smc-modal-text-{{ section.id }}'>
-              Dein Schild ist bereit – wir erstellen gerade dein Produkt.
+          <div class='smc__modal-body'>
+            <div class='smc__modal-preview' id='smc-modal-preview' data-loading='0'>
+              <div class='smc__modal-shimmer' aria-hidden='true'></div>
+              <img
+                id='smc-modal-img'
+                class='smc__modal-img'
+                alt='Vorschau'
+                loading='lazy'
+                width='100%'
+                height='100%'
+              >
             </div>
 
-            <div class='smc__modal-hold' id='smc-modal-hold-{{ section.id }}' style='display:none'>
-              <div class='smc__modal-hold-note'>
-                Wir speichern Dein Schild für die nächsten 30 Minuten. Kein Stress :)
+            <div class='smc__modal-copy' id='smc-modal-copy'>
+              <div class='smc__modal-text' id='smc-modal-text'>
+                Dein Schild ist bereit – wir erstellen gerade dein Produkt.
               </div>
-              <div class='smc__modal-hold-row'>
-                <div class='smc__modal-hold-time' id='smc-modal-hold-time-{{ section.id }}'>30:00</div>
-                <div class='smc__modal-hold-bar'>
-                  <div class='smc__modal-hold-barfill' id='smc-modal-hold-barfill-{{ section.id }}'></div>
+
+              <div class='smc__modal-hold' id='smc-modal-hold' style='display:none'>
+                <div class='smc__modal-hold-note'>
+                  Wir speichern Dein Schild für die nächsten 30 Minuten. Kein Stress :)
+                </div>
+                <div class='smc__modal-hold-row'>
+                  <div class='smc__modal-hold-time' id='smc-modal-hold-time'>30:00</div>
+                  <div class='smc__modal-hold-bar'>
+                    <div class='smc__modal-hold-barfill' id='smc-modal-hold-barfill'></div>
+                  </div>
                 </div>
               </div>
+
+              <div class='smc__modal-actions' id='smc-modal-actions'>
+                <button
+                  type='button'
+                  class='smc__btn smc__btn--primary smc__btn--full'
+                  id='smc-modal-add'
+                >
+                  <span class='smc__btn-label' id='smc-modal-add-label'>Zum Warenkorb hinzufügen</span>
+                  <span class='smc__btn-spin' aria-hidden='true'></span>
+                </button>
+
+                <a
+                  class='smc__btn smc__btn--ghost smc__btn--full'
+                  id='smc-modal-link'
+                  href='#'
+                  target='_self'
+                  rel='noopener'
+                  style='display:none'
+                >
+                  Produkt ansehen
+                </a>
+              </div>
+
+              <div class='smc__modal-foot' id='smc-modal-foot'></div>
             </div>
-
-            <div class='smc__modal-actions' id='smc-modal-actions-{{ section.id }}'>
-              <button
-                type='button'
-                class='smc__btn smc__btn--primary smc__btn--full'
-                id='smc-modal-add-{{ section.id }}'
-              >
-                <span class='smc__btn-label' id='smc-modal-add-label-{{ section.id }}'>Zum Warenkorb hinzufügen</span>
-                <span class='smc__btn-spin' aria-hidden='true'></span>
-              </button>
-
-              <a
-                class='smc__btn smc__btn--ghost smc__btn--full'
-                id='smc-modal-link-{{ section.id }}'
-                href='#'
-                target='_self'
-                rel='noopener'
-                style='display:none'
-              >
-                Produkt ansehen
-              </a>
-            </div>
-
-            <div class='smc__modal-foot' id='smc-modal-foot-{{ section.id }}'></div>
           </div>
         </div>
       </div>

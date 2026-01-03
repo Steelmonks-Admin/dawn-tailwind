@@ -9,6 +9,14 @@
   --smc-red: #dc2626;
 
   --custom-scroll-margin-top-offset: 120px;
+  --werkstatt-gradient-shadow: linear-gradient(
+    45deg,
+    #ff9800,
+    #0044cc,
+    #ff9800,
+    #0044cc,
+    #ff9800
+  );
 }
 
 @media (max-width: 768px) {
@@ -17,57 +25,135 @@
   }
 }
 
-.smc {
-  color: var(--smc-ink);
-  background-color: transparent;
-  padding: 80px 12px;
-  margin: 0 12px;
-
-  border-radius: 20px;
-  border: 1px solid #090a0c;
-  box-shadow: inset 0 0 100px 10px #090a0c10;
-}
-.smc__wrap {
-  max-width: 1120px;
-  margin: 0 auto;
-}
-
-.smc__statuswrap {
+.werkstatt-shadow-wrap {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
-}
-.smc__pill {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: rgba(250, 250, 255, 0.92);
-  color: var(--smc-ink);
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-size: 0.86rem;
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
-  border: 2px solid var(--smc-gold);
   position: relative;
 }
-.smc__pill::after {
+
+/* Shadow effect similar to Spec, but adjusted for button sizing */
+.werkstatt-shadow-wrap::before,
+.werkstatt-shadow-wrap::after {
   content: '';
   position: absolute;
-  inset: -9px;
-  border-radius: 999px;
-  background: radial-gradient(
-    circle at 40% 10%,
-    rgba(200, 164, 93, 0.34),
-    rgba(0, 68, 204, 0.1) 44%,
-    rgba(0, 0, 0, 0) 72%
-  );
-  filter: blur(11px);
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: var(--werkstatt-gradient-shadow);
+  background-size: 400%;
+  z-index: 1;
+  border-radius: 9999px;
+  animation: werkstatt-animate 16s linear infinite;
+  pointer-events: none;
+}
+
+.werkstatt-shadow-wrap::after {
+  filter: blur(8px);
+  z-index: 0;
+}
+
+.werkstatt-btn {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes werkstatt-animate {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 300% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.smc {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+
+  height: 100dvh;
+
+  backdrop-filter: blur(10px);
+
+  color: var(--smc-ink);
+  background-color: #090a0c10;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: inset 0 0 100px 10px #090a0c10;
+
+  transition: opacity 0.3s ease-in-out;
+}
+#smc {
+  transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .smc {
+    bottom: unset;
+    padding: 80px 12px;
+  }
+}
+
+/* 
+  Glow effect around .smc__wrap inspired by .werkstatt-shadow-wrap from steelmonks-sign-creator.liquid (12-67)
+  Using before/after pseudo elements and keyframes for animated border glow.
+*/
+.smc__wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(250, 250, 255, 0.95);
+  border: 10px solid transparent;
+  margin: 24px;
+  /* padding: 80px; */
+
+  max-height: 100%;
+
+  border-radius: 20px;
+  border: 1px solid #090a0c40;
+  box-sizing: content-box;
+  /* z-index: 1; */
+  /* Extra for safe stacking */
+  /* box-shadow: 0 0 32px 0 #ff980088, 0 0 0 4px #0044cc22; */
+}
+@media (max-width: 768px) {
+  .smc__wrap {
+    /* padding: 20px; */
+  }
+}
+
+/* Shadow effect similar to werkstatt-shadow-wrap, but adjusted for .smc__wrap */
+.smc__wrap::before,
+.smc__wrap::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: var(--werkstatt-gradient-shadow);
+  background-size: 400%;
   z-index: -1;
-  opacity: 0.9;
+  border-radius: 20px;
+  animation: werkstatt-animate 16s linear infinite;
+  pointer-events: none;
+}
+
+.smc__wrap::after {
+  filter: blur(8px);
+  z-index: -2;
 }
 
 .smc__pill[data-state='idle'] {
@@ -392,7 +478,7 @@
   font-weight: 950;
 }
 .smc__price-val {
-  font-size: 1.45rem;
+  font-size: 1.15rem;
   font-weight: 950;
   letter-spacing: 0.01em;
   color: var(--smc-blue);
@@ -1008,9 +1094,6 @@
 }
 
 @media (max-width: 420px) {
-  .smc {
-    padding: 40px 12px;
-  }
   .smc__btn {
     width: 100%;
     min-width: 0;
