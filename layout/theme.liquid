@@ -339,18 +339,14 @@
       }
     </script>
 
-    
-
     {% comment %}  {% endcomment %}
-  
-  {% render 'shogun-head' %}
 
+    {% render 'shogun-head' %}
 
-{% if template contains 'article' %}
-  {{ 'steelmonks-fbp.css' | asset_url | stylesheet_tag }}
-{% endif %}
-
-</head>
+    {% if template contains 'article' %}
+      {{ 'steelmonks-fbp.css' | asset_url | stylesheet_tag }}
+    {% endif %}
+  </head>
 
   <body class='gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}'>
     <!-- Google Tag Manager (noscript) -->
@@ -449,5 +445,130 @@
     {% if template.name == 'article' %}
       <h1 style='display:none'>{{ article.title }}</h1>
     {% endif %}
+
+    {% comment %} ! GLOBAL SIGN CREATOR TIMER {% endcomment %}
+    <div
+      class='smc__eta'
+      id='smc-global-eta'
+      style='display:none; position:fixed; bottom:20px; right:20px; z-index:9999;'
+    >
+      <span class='smc__eta-label' id='smc-global-eta-label'>Geschätzte Zeit</span>
+      <span class='smc__eta-time' id='smc-global-eta-time'>02:00</span>
+    </div>
+
+    <style>
+      /* Global timer styles - minimal styles for cross-page timer display */
+      #smc-global-eta {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: rgba(250, 250, 255, 0.95);
+        border: 2px solid rgba(200, 164, 93, 0.8);
+        border-radius: 9999px;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.86rem;
+        color: var(--smc-ink, #1a1a1a);
+      }
+      #smc-global-eta-label {
+        font-weight: 900;
+      }
+      #smc-global-eta-time {
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+      }
+    </style>
+
+    <script>
+      (function () {
+        // Global timer for sign creator - shows across all pages
+        const STORAGE_TIMER_KEY = 'steelmonks-sign-creator-timer';
+        const globalEtaWrap = document.getElementById('smc-global-eta');
+        const globalEtaLabel = document.getElementById('smc-global-eta-label');
+        const globalEtaTime = document.getElementById('smc-global-eta-time');
+
+        function fmtMMSS(ms) {
+          const s = Math.max(0, Math.ceil(ms / 1000));
+          const m = Math.floor(s / 60);
+          const r = s % 60;
+          return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+        }
+
+        function checkAndDisplayTimer() {
+          try {
+            const saved = localStorage.getItem(STORAGE_TIMER_KEY);
+            if (!saved || !globalEtaWrap || !globalEtaTime) {
+              if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+              return;
+            }
+
+            const parsed = JSON.parse(saved);
+            if (parsed.etaEndsAt && parsed.etaEndsAt > Date.now()) {
+              const left = parsed.etaEndsAt - Date.now();
+              if (left > 0) {
+                globalEtaTime.textContent = fmtMMSS(left);
+                globalEtaWrap.style.display = 'flex';
+
+                // Update every second
+                const tick = setInterval(function () {
+                  try {
+                    const saved = localStorage.getItem(STORAGE_TIMER_KEY);
+                    if (!saved) {
+                      clearInterval(tick);
+                      if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+                      return;
+                    }
+                    const parsed = JSON.parse(saved);
+                    if (parsed.etaEndsAt && parsed.etaEndsAt > Date.now()) {
+                      const remaining = parsed.etaEndsAt - Date.now();
+                      if (remaining > 0) {
+                        globalEtaTime.textContent = fmtMMSS(remaining);
+                      } else {
+                        clearInterval(tick);
+                        if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+                        localStorage.removeItem(STORAGE_TIMER_KEY);
+                      }
+                    } else {
+                      clearInterval(tick);
+                      if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+                    }
+                  } catch (error) {
+                    console.error('Error updating global timer', error);
+                    clearInterval(tick);
+                  }
+                }, 1000);
+              } else {
+                if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+                localStorage.removeItem(STORAGE_TIMER_KEY);
+              }
+            } else {
+              if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+              localStorage.removeItem(STORAGE_TIMER_KEY);
+            }
+          } catch (error) {
+            console.error('Error checking global timer', error);
+            if (globalEtaWrap) globalEtaWrap.style.display = 'none';
+          }
+        }
+
+        // Check on page load
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', checkAndDisplayTimer);
+        } else {
+          checkAndDisplayTimer();
+        }
+
+        // Also listen for storage changes (in case timer is updated in another tab)
+        window.addEventListener('storage', function (e) {
+          if (e.key === STORAGE_TIMER_KEY) {
+            checkAndDisplayTimer();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

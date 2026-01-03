@@ -26,6 +26,7 @@
   aria-hidden='true'
 >
   <div class='twcss-flex twcss-gap-4'>
+    {% comment %} ! CLOSE BUTTON {% endcomment %}
     <div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
       <button
         id='smc-close-btn'
@@ -34,6 +35,8 @@
         Ausgang Werkstatt
       </button>
     </div>
+
+    {% comment %} ! STATUS PILL {% endcomment %}
     <div
       id='smc-pill'
       data-state='idle'
@@ -54,11 +57,6 @@
       class='twcss-rounded-[20px] twcss-overflow-y-auto twcss-overflow-x-clip twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5]'
       style='transform: scale(1);'
     >
-      <div class='smc__eta' id='smc-eta' style='display:none'>
-        <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
-        <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
-      </div>
-
       <div class='smc__grid'>
         <div class='smc__col smc__col--left'>
           {%- assign base_product = section.settings.product -%}
@@ -329,3 +327,9 @@
     </div>
   </div>
 </section>
+
+{% comment %} ! TIMER {% endcomment %}
+<div class='smc__eta' id='smc-eta' style='display:none'>
+  <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
+  <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
+</div>

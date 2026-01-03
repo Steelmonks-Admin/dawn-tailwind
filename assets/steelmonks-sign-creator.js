@@ -315,6 +315,198 @@ document.addEventListener('DOMContentLoaded', () => {
     pollInFlight: false,
   };
 
+  // ============================================================================
+  // LocalStorage Persistence
+  // ============================================================================
+  const STORAGE_KEY = 'steelmonks-sign-creator-state';
+  const STORAGE_TIMER_KEY = 'steelmonks-sign-creator-timer';
+  const STORAGE_FORM_KEY = 'steelmonks-sign-creator-form';
+
+  const storageManager = {
+    saveState() {
+      try {
+        const stateToSave = {
+          current: state.current,
+          generatorId: state.generatorId,
+          lastMockUrl: state.lastMockUrl,
+          lastEntUrl: state.lastEntUrl,
+          checkoutReady: state.checkoutReady,
+          priceReady: state.priceReady,
+          pendingPriceValue: state.pendingPriceValue,
+          previewDone: state.previewDone,
+          runStartedAt: state.runStartedAt,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+        logger.debug('State saved to localStorage', stateToSave);
+      } catch (error) {
+        logger.error('Failed to save state to localStorage', error);
+      }
+    },
+
+    loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        logger.debug('State loaded from localStorage', parsed);
+        return parsed;
+      } catch (error) {
+        logger.error('Failed to load state from localStorage', error);
+        return null;
+      }
+    },
+
+    clearState() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_TIMER_KEY);
+        localStorage.removeItem(STORAGE_FORM_KEY);
+        logger.debug('State cleared from localStorage');
+      } catch (error) {
+        logger.error('Failed to clear state from localStorage', error);
+      }
+    },
+
+    saveTimer(etaEndsAt) {
+      try {
+        if (etaEndsAt && etaEndsAt > Date.now()) {
+          localStorage.setItem(
+            STORAGE_TIMER_KEY,
+            JSON.stringify({ etaEndsAt }),
+          );
+          logger.debug('Timer saved to localStorage', { etaEndsAt });
+        } else {
+          localStorage.removeItem(STORAGE_TIMER_KEY);
+        }
+      } catch (error) {
+        logger.error('Failed to save timer to localStorage', error);
+      }
+    },
+
+    loadTimer() {
+      try {
+        const saved = localStorage.getItem(STORAGE_TIMER_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        // Only return if timer hasn't expired
+        if (parsed.etaEndsAt && parsed.etaEndsAt > Date.now()) {
+          logger.debug('Timer loaded from localStorage', parsed);
+          return parsed;
+        } else {
+          localStorage.removeItem(STORAGE_TIMER_KEY);
+          return null;
+        }
+      } catch (error) {
+        logger.error('Failed to load timer from localStorage', error);
+        return null;
+      }
+    },
+
+    saveFormData() {
+      try {
+        const formToSave = {
+          description: elements.desc?.value || '',
+          finish: elements.finish?.value || '',
+          size: elements.size?.value || '',
+          uploadFileName: elements.upload?.files?.[0]?.name || '',
+          uploadDataUrl: null, // Will be set if file exists
+        };
+
+        // Save file as data URL if it exists
+        const file = elements.upload?.files?.[0];
+        if (file && file.type?.startsWith('image')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              formToSave.uploadDataUrl = e.target?.result || null;
+              localStorage.setItem(
+                STORAGE_FORM_KEY,
+                JSON.stringify(formToSave),
+              );
+              logger.debug('Form data saved to localStorage');
+            } catch (error) {
+              logger.error(
+                'Failed to save form data URL to localStorage',
+                error,
+              );
+            }
+          };
+          reader.onerror = (error) => {
+            logger.error('FileReader error while saving form', error);
+            // Save without image
+            localStorage.setItem(STORAGE_FORM_KEY, JSON.stringify(formToSave));
+          };
+          reader.readAsDataURL(file);
+        } else {
+          localStorage.setItem(STORAGE_FORM_KEY, JSON.stringify(formToSave));
+          logger.debug('Form data saved to localStorage (no image)');
+        }
+      } catch (error) {
+        logger.error('Failed to save form data to localStorage', error);
+      }
+    },
+
+    loadFormData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_FORM_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        logger.debug('Form data loaded from localStorage', {
+          hasDescription: !!parsed.description,
+          hasFinish: !!parsed.finish,
+          hasSize: !!parsed.size,
+          hasImage: !!parsed.uploadDataUrl,
+        });
+        return parsed;
+      } catch (error) {
+        logger.error('Failed to load form data from localStorage', error);
+        return null;
+      }
+    },
+
+    restoreFormData(formDataObj) {
+      if (!formDataObj) return;
+
+      try {
+        // Restore description
+        if (formDataObj.description && elements.desc) {
+          elements.desc.value = formDataObj.description;
+        }
+
+        // Restore finish
+        if (formDataObj.finish && elements.finish) {
+          elements.finish.value = formDataObj.finish;
+        }
+
+        // Restore size
+        if (formDataObj.size && elements.size) {
+          elements.size.value = formDataObj.size;
+        }
+
+        // Restore image preview if available
+        if (
+          formDataObj.uploadDataUrl &&
+          elements.uploadPrevImg &&
+          elements.uploadPrevEmpty
+        ) {
+          elements.uploadPrevImg.src = formDataObj.uploadDataUrl;
+          elements.uploadPrevImg.style.display = 'block';
+          elements.uploadPrevEmpty.style.display = 'none';
+          if (elements.uploadLabel) {
+            elements.uploadLabel.textContent =
+              formDataObj.uploadFileName || 'Bild hochgeladen';
+          }
+          logger.debug('Image preview restored from localStorage');
+        }
+
+        formData.updateProps();
+        logger.debug('Form data restored from localStorage');
+      } catch (error) {
+        logger.error('Failed to restore form data', error);
+      }
+    },
+  };
+
   const timers = {
     etaTick: null,
     etaEndsAt: 0,
@@ -356,12 +548,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (timers.etaTick) clearInterval(timers.etaTick);
       timers.etaTick = null;
       timers.etaEndsAt = 0;
+      storageManager.saveTimer(null);
       if (elements.etaWrap) elements.etaWrap.style.display = 'none';
     },
 
     startEta(label, ms, onFinish) {
       this.stopEta();
       timers.etaEndsAt = Date.now() + ms;
+      storageManager.saveTimer(timers.etaEndsAt);
       if (elements.etaLabel)
         elements.etaLabel.textContent = label || 'Geschätzte Zeit';
       if (elements.etaWrap) elements.etaWrap.style.display = 'flex';
@@ -388,6 +582,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
       tick();
       timers.etaTick = setInterval(tick, 1000);
+    },
+
+    restoreEta() {
+      const savedTimer = storageManager.loadTimer();
+      if (savedTimer && savedTimer.etaEndsAt) {
+        timers.etaEndsAt = savedTimer.etaEndsAt;
+        const left = timers.etaEndsAt - Date.now();
+        if (left > 0) {
+          if (elements.etaLabel)
+            elements.etaLabel.textContent = 'Geschätzte Zeit';
+          if (elements.etaWrap) elements.etaWrap.style.display = 'flex';
+
+          const tick = () => {
+            try {
+              const remaining = timers.etaEndsAt - Date.now();
+              if (elements.etaTime)
+                elements.etaTime.textContent = fmtMMSS(remaining);
+              if (remaining <= 0) {
+                this.stopEta();
+                logger.debug('Restored ETA timer finished');
+              }
+            } catch (error) {
+              logger.error('Error in restored ETA tick', error);
+            }
+          };
+
+          tick();
+          timers.etaTick = setInterval(tick, 1000);
+          logger.debug('ETA timer restored from localStorage', { left });
+          return true;
+        } else {
+          storageManager.saveTimer(null);
+        }
+      }
+      return false;
     },
 
     stopHold() {
@@ -702,6 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (out) {
         state.pendingPriceValue = out;
         state.priceReady = true;
+        storageManager.saveState();
         formData.updateProps();
         ui.applyPriceDisplay();
         if (state.current === 'creating' && !state.lastMockUrl) {
@@ -861,6 +1091,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (entUrl) {
             logger.info('Draft (Entwurf) received', { entUrl, mode });
             state.lastEntUrl = entUrl;
+            storageManager.saveState();
             ui.setPreviewLoading(false);
             ui.setClickable(false);
             ui.setSoftBlur(true);
@@ -878,6 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (mockUrl) {
             state.lastMockUrl = mockUrl;
             state.forceMockLoading = false;
+            storageManager.saveState();
 
             timerManager.stopEta();
             timerManager.clearAll();
@@ -893,6 +1125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ui.showPreview(mockUrl);
 
             state.current = 'ready';
+            storageManager.saveState();
             ui.setCtaFromState();
 
             logger.info('Mock-up received, workflow complete', {
@@ -989,6 +1222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         runStartedAt: Date.now(),
         pollInFlight: false,
       });
+      storageManager.saveState();
+      storageManager.saveFormData();
 
       timerManager.stopEta();
       timerManager.stopHold();
@@ -1112,6 +1347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.info('Generator ID received', { generatorId: id });
 
         state.generatorId = id;
+        storageManager.saveState();
         formData.updateProps();
         ui.setPillState('work', 'Wird erstellt');
 
@@ -1542,6 +1778,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
               if (added?.ok) {
                 state.checkoutReady = true;
+                storageManager.saveState();
                 ui.setPillState('ok', 'Im Warenkorb');
                 if (elements.modalText) {
                   elements.modalText.textContent =
@@ -1593,6 +1830,7 @@ document.addEventListener('DOMContentLoaded', () => {
       timerManager.clearAll();
       timerManager.stopEta();
       timerManager.stopHold();
+      storageManager.clearState();
 
       Object.assign(state, {
         current: 'init',
@@ -1710,6 +1948,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         formData.handleUploadUI();
         formData.updateProps();
+        storageManager.saveFormData();
         logger.debug('File upload changed');
       } catch (error) {
         logger.error('Error handling file upload change', error);
@@ -1725,6 +1964,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (state.locked) return;
           ui.setCtaFromState();
           formData.updateProps();
+          storageManager.saveFormData();
         } catch (error) {
           logger.error('Error handling description input', error);
         }
@@ -1737,6 +1977,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.finish.addEventListener('change', () => {
       if (state.locked) return;
       formData.updateProps();
+      storageManager.saveFormData();
     });
   }
 
@@ -1744,6 +1985,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.size.addEventListener('change', () => {
       if (state.locked) return;
       formData.updateProps();
+      storageManager.saveFormData();
     });
   }
 
@@ -1841,24 +2083,83 @@ document.addEventListener('DOMContentLoaded', () => {
   logger.info('Steelmonks Sign Creator initializing...');
 
   try {
-    formData.handleUploadUI();
-    formData.updateProps();
+    // Try to restore state from localStorage
+    const savedState = storageManager.loadState();
+    const savedFormData = storageManager.loadFormData();
 
-    if (elements.priceVal) {
-      elements.priceVal.textContent =
-        'Den Preis berechnen wir nach dem Entwurf.';
+    if (savedState) {
+      logger.info('Restoring state from localStorage', savedState);
+      // Restore state values
+      Object.assign(state, {
+        current: savedState.current || 'init',
+        generatorId: savedState.generatorId || '',
+        lastMockUrl: savedState.lastMockUrl || '',
+        lastEntUrl: savedState.lastEntUrl || '',
+        checkoutReady: savedState.checkoutReady || false,
+        priceReady: savedState.priceReady || false,
+        pendingPriceValue: savedState.pendingPriceValue || '',
+        previewDone: savedState.previewDone || false,
+        runStartedAt: savedState.runStartedAt || 0,
+      });
+
+      // Restore form data if available
+      if (savedFormData) {
+        storageManager.restoreFormData(savedFormData);
+      }
+
+      // Restore preview if we have a mock URL
+      if (state.lastMockUrl) {
+        ui.showPreview(state.lastMockUrl);
+        ui.setClickable(true);
+        if (state.current === 'ready') {
+          ui.setPillState('ok', 'Entwurf ist fertig');
+          // If product is ready and checkout is ready, show modal
+          if (state.checkoutReady && modalManager) {
+            // Don't auto-open modal, let user click preview to open it
+            // But ensure the preview is visible and clickable
+          }
+        } else {
+          ui.setPillState('work', 'Wird erstellt');
+        }
+      } else if (state.lastEntUrl) {
+        ui.showPreview(state.lastEntUrl);
+        ui.setSoftBlur(true);
+        ui.setPillState('work', 'Wird erstellt');
+      }
+
+      // Restore price if available
+      if (state.priceReady && state.pendingPriceValue) {
+        ui.applyPriceDisplay();
+      }
+
+      // Restore timer if available
+      timerManager.restoreEta();
+
+      // Update UI based on restored state
+      ui.setCtaFromState();
+      formData.updateProps();
+    } else {
+      // No saved state, initialize normally
+      formData.handleUploadUI();
+      formData.updateProps();
+
+      if (elements.priceVal) {
+        elements.priceVal.textContent =
+          'Den Preis berechnen wir nach dem Entwurf.';
+      }
+
+      ui.setPillState('idle', 'Bereit');
+
+      if (elements.previewKicker)
+        elements.previewKicker.textContent = 'Vorschau';
+      ui.showPlaceholder('Starte zuerst den Entwurf');
+      ui.setPreviewLoading(false);
+      ui.setSoftBlur(false);
+      ui.setPreviewOverlay(false);
+      ui.setFade(false);
+      ui.lockInputs(false);
+      ui.setCtaFromState();
     }
-
-    ui.setPillState('idle', 'Bereit');
-
-    if (elements.previewKicker) elements.previewKicker.textContent = 'Vorschau';
-    ui.showPlaceholder('Starte zuerst den Entwurf');
-    ui.setPreviewLoading(false);
-    ui.setSoftBlur(false);
-    ui.setPreviewOverlay(false);
-    ui.setFade(false);
-    ui.lockInputs(false);
-    ui.setCtaFromState();
 
     logger.info('Steelmonks Sign Creator initialized successfully');
   } catch (error) {

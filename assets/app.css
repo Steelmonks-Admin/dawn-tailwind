@@ -1197,16 +1197,16 @@ video {
   overflow-x: clip;
 }
 
-.twcss-whitespace-nowrap {
-  white-space: nowrap;
-}
-
 .twcss-break-all {
   word-break: break-all;
 }
 
 .twcss-rounded {
   border-radius: 0.25rem;
+}
+
+.twcss-rounded-\[20px\] {
+  border-radius: 20px;
 }
 
 .twcss-rounded-full {
@@ -1223,10 +1223,6 @@ video {
 
 .twcss-rounded-xl {
   border-radius: 0.75rem;
-}
-
-.twcss-rounded-\[20px\] {
-  border-radius: 20px;
 }
 
 .twcss-border {
@@ -1291,8 +1287,8 @@ video {
   background-color: rgb(34 34 34 / var(--tw-bg-opacity, 1));
 }
 
-.twcss-bg-\[\#fafafff0\] {
-  background-color: #fafafff0;
+.twcss-bg-\[\#fafafff5\] {
+  background-color: #fafafff5;
 }
 
 .twcss-bg-\[rgba\(250\,250\,255\,0\.92\)\] {
@@ -1345,10 +1341,6 @@ video {
 .twcss-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-
-.twcss-bg-\[\#fafafff5\] {
-  background-color: #fafafff5;
 }
 
 .twcss-bg-opacity-10 {
@@ -2356,10 +2348,6 @@ video {
   .md\:twcss-object-contain {
     -o-object-fit: contain;
        object-fit: contain;
-  }
-
-  .md\:twcss-p-12 {
-    padding: 3rem;
   }
 
   .md\:twcss-p-16 {
