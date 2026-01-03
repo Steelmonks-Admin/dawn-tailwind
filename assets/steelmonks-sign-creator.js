@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
           merged[k] = cfg[k];
         }
       });
-    } catch {}
+    } catch (error) {
+      logger.error('Failed to merge custom endpoints configuration', error);
+    }
     return merged;
   })();
 
@@ -51,6 +53,68 @@ document.addEventListener('DOMContentLoaded', () => {
   const el = (id) => document.getElementById(id);
   const cls = (element, className) => element.classList.add(className);
 
+  // ============================================================================
+  // Logger Utility
+  // ============================================================================
+  const logger = {
+    styles: {
+      smc: 'font-weight: bold; color: #87CEEB;', // Light blue (sky blue)
+      reset: '',
+    },
+
+    log(message, ...args) {
+      if (typeof console !== 'undefined' && console.log) {
+        console.log(
+          `%cSMC%c: ${message}`,
+          this.styles.smc,
+          this.styles.reset,
+          ...args,
+        );
+      }
+    },
+
+    error(message, error, ...args) {
+      if (typeof console !== 'undefined') {
+        if (console.error) {
+          console.error(
+            `%cSMC%c: ${message}`,
+            this.styles.smc,
+            this.styles.reset,
+            ...args,
+          );
+          if (error) console.error('Error details:', error);
+        } else {
+          this.log(`ERROR - ${message}`, error, ...args);
+        }
+      }
+    },
+
+    warn(message, ...args) {
+      if (typeof console !== 'undefined') {
+        if (console.warn) {
+          console.warn(
+            `%cSMC%c: ${message}`,
+            this.styles.smc,
+            this.styles.reset,
+            ...args,
+          );
+        } else {
+          this.log(`WARN - ${message}`, ...args);
+        }
+      }
+    },
+
+    info(message, ...args) {
+      this.log(`INFO - ${message}`, ...args);
+    },
+
+    debug(message, ...args) {
+      if (window.location.search.includes('debug=true')) {
+        this.log(`DEBUG - ${message}`, ...args);
+      }
+    },
+  };
+
   const fmtMMSS = (ms) => {
     const s = Math.max(0, Math.ceil(ms / 1000));
     const m = Math.floor(s / 60);
@@ -61,7 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const tryParseJson = (text) => {
     try {
       return JSON.parse(text);
-    } catch {
+    } catch (error) {
+      logger.error('Failed to parse JSON', error, {
+        text: text?.substring(0, 100),
+      });
       return null;
     }
   };
@@ -133,7 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const u = new URL(productUrl, window.location.origin);
       return `${u.origin}${u.pathname.replace(/\/$/, '')}.js`;
-    } catch {
+    } catch (error) {
+      logger.error('Failed to create product JSON URL', error, { productUrl });
       return '';
     }
   };
@@ -214,11 +282,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Set placeholder text
   if (elements.desc) {
-    elements.desc.placeholder = `Lass Deiner Vorstellung freien Lauf. Probier doch:
+    try {
+      elements.desc.placeholder = `Lass Deiner Vorstellung freien Lauf. Probier doch:
 • Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
 • Mein Familienwappen wie aus der Zeichnung
 • Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
 • Oder ein Hausschild mit der Nummer 22 und einem Ritter`;
+    } catch (error) {
+      logger.error('Failed to set placeholder text', error);
+    }
+  } else {
+    logger.warn('Description element not found');
   }
 
   // ============================================================================
@@ -293,11 +367,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elements.etaWrap) elements.etaWrap.style.display = 'flex';
 
       const tick = () => {
-        const left = timers.etaEndsAt - Date.now();
-        if (elements.etaTime) elements.etaTime.textContent = fmtMMSS(left);
-        if (left <= 0) {
-          this.stopEta();
-          if (onFinish) onFinish();
+        try {
+          const left = timers.etaEndsAt - Date.now();
+          if (elements.etaTime) elements.etaTime.textContent = fmtMMSS(left);
+          if (left <= 0) {
+            this.stopEta();
+            logger.debug('ETA timer finished');
+            if (onFinish) {
+              try {
+                onFinish();
+              } catch (error) {
+                logger.error('Error in ETA finish callback', error);
+              }
+            }
+          }
+        } catch (error) {
+          logger.error('Error in ETA tick', error);
         }
       };
 
@@ -318,23 +403,30 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elements.modalHold) elements.modalHold.style.display = 'block';
 
       const tick = () => {
-        const left = timers.holdEndsAt - Date.now();
-        const total = TIMING.HOLD_DURATION_MS;
-        const pct = Math.max(0, Math.min(1, left / total));
+        try {
+          const left = timers.holdEndsAt - Date.now();
+          const total = TIMING.HOLD_DURATION_MS;
+          const pct = Math.max(0, Math.min(1, left / total));
 
-        if (elements.modalHoldTime)
-          elements.modalHoldTime.textContent = fmtMMSS(left);
-        if (elements.modalHoldBarfill) {
-          elements.modalHoldBarfill.style.width = `${(pct * 100).toFixed(2)}%`;
-        }
-
-        if (left <= 0) {
           if (elements.modalHoldTime)
-            elements.modalHoldTime.textContent = '00:00';
-          if (elements.modalHoldBarfill)
-            elements.modalHoldBarfill.style.width = '0%';
-          clearInterval(timers.holdTick);
-          timers.holdTick = null;
+            elements.modalHoldTime.textContent = fmtMMSS(left);
+          if (elements.modalHoldBarfill) {
+            elements.modalHoldBarfill.style.width = `${(pct * 100).toFixed(
+              2,
+            )}%`;
+          }
+
+          if (left <= 0) {
+            logger.debug('Hold timer finished');
+            if (elements.modalHoldTime)
+              elements.modalHoldTime.textContent = '00:00';
+            if (elements.modalHoldBarfill)
+              elements.modalHoldBarfill.style.width = '0%';
+            clearInterval(timers.holdTick);
+            timers.holdTick = null;
+          }
+        } catch (error) {
+          logger.error('Error in hold timer tick', error);
         }
       };
 
@@ -384,15 +476,34 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     showPreview(url) {
-      if (!url || !elements.previewImg) return;
-      this.setFade(true);
-      elements.previewImg.onload = () => {
-        this.setFade(false);
-        elements.previewImg.onload = null;
-      };
-      elements.previewImg.src = url;
-      elements.previewImg.classList.remove('smc__preview-img--hidden');
-      if (elements.previewEmpty) elements.previewEmpty.style.display = 'none';
+      if (!url || !elements.previewImg) {
+        logger.warn('Cannot show preview: missing URL or preview element', {
+          url,
+          hasElement: !!elements.previewImg,
+        });
+        return;
+      }
+      try {
+        this.setFade(true);
+        elements.previewImg.onload = () => {
+          try {
+            this.setFade(false);
+            elements.previewImg.onload = null;
+            logger.debug('Preview image loaded successfully', { url });
+          } catch (error) {
+            logger.error('Error in preview image onload handler', error);
+          }
+        };
+        elements.previewImg.onerror = (error) => {
+          logger.error('Failed to load preview image', error, { url });
+          this.setFade(false);
+        };
+        elements.previewImg.src = url;
+        elements.previewImg.classList.remove('smc__preview-img--hidden');
+        if (elements.previewEmpty) elements.previewEmpty.style.display = 'none';
+      } catch (error) {
+        logger.error('Failed to show preview', error, { url });
+      }
     },
 
     showPlaceholder(text) {
@@ -434,7 +545,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const value = on ? 'hidden' : '';
         document.documentElement.style.overflow = value;
         document.body.style.overflow = value;
-      } catch {}
+      } catch (error) {
+        logger.error('Failed to lock/unlock scroll', error, { on });
+      }
     },
 
     setCta(label, enabled) {
@@ -518,7 +631,11 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(extra).forEach((k) => {
           if (extra[k] != null) fd.append(k, extra[k]);
         });
-      } catch {}
+      } catch (error) {
+        logger.error('Failed to append extra form data fields', error, {
+          extra,
+        });
+      }
 
       return fd;
     },
@@ -533,13 +650,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (file.type?.startsWith('image')) {
           const reader = new FileReader();
           reader.onload = (e) => {
-            if (elements.uploadPrevImg && elements.uploadPrevEmpty) {
-              elements.uploadPrevImg.src = e.target?.result || '';
-              elements.uploadPrevImg.style.display = 'block';
-              elements.uploadPrevEmpty.style.display = 'none';
+            try {
+              if (elements.uploadPrevImg && elements.uploadPrevEmpty) {
+                elements.uploadPrevImg.src = e.target?.result || '';
+                elements.uploadPrevImg.style.display = 'block';
+                elements.uploadPrevEmpty.style.display = 'none';
+                logger.debug('File preview loaded', {
+                  fileName: file.name,
+                  size: file.size,
+                });
+              }
+            } catch (error) {
+              logger.error('Failed to display file preview', error, {
+                fileName: file.name,
+              });
             }
           };
-          reader.readAsDataURL(file);
+          reader.onerror = (error) => {
+            logger.error('FileReader error', error, { fileName: file.name });
+          };
+          try {
+            reader.readAsDataURL(file);
+          } catch (error) {
+            logger.error('Failed to read file as data URL', error, {
+              fileName: file.name,
+            });
+          }
+        } else {
+          logger.warn('Invalid file type uploaded', {
+            fileName: file.name,
+            type: file.type,
+          });
         }
       } else {
         elements.uploadLabel.textContent = 'Noch kein Upload';
@@ -595,11 +736,18 @@ document.addEventListener('DOMContentLoaded', () => {
         timeoutId = setTimeout(() => {
           try {
             ctrl.abort();
-          } catch {}
+            logger.warn('Request timeout, aborting', { url });
+          } catch (error) {
+            logger.error('Failed to abort request', error, { url });
+          }
         }, TIMING.FETCH_TIMEOUT_MS);
       }
 
       try {
+        logger.debug('Sending POST request', {
+          url,
+          hasFile: !!fd.get?.('Bild'),
+        });
         const res = await fetch(url, {
           method: 'POST',
           body: fd,
@@ -608,10 +756,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (timeoutId) clearTimeout(timeoutId);
         const text = await res.text();
-        if (!res.ok) throw new Error(text || `HTTP ${res.status}`);
+
+        if (!res.ok) {
+          logger.error(
+            'Request failed',
+            new Error(text || `HTTP ${res.status}`),
+            {
+              url,
+              status: res.status,
+              statusText: res.statusText,
+            },
+          );
+          throw new Error(text || `HTTP ${res.status}`);
+        }
+
+        logger.debug('Request successful', { url, status: res.status });
         return text;
       } catch (error) {
         if (timeoutId) clearTimeout(timeoutId);
+        if (error.name !== 'AbortError') {
+          logger.error('Network request failed', error, { url });
+        }
         throw error;
       }
     },
@@ -627,8 +792,16 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         const j = tryParseJson(raw);
         const p = extractPriceValue(j, raw);
-        if (p) priceManager.set(p);
-      } catch {
+        if (p) {
+          priceManager.set(p);
+          logger.info('Price fetched successfully', { price: p });
+        } else {
+          logger.warn('Price value not found in response', {
+            raw: raw?.substring(0, 200),
+          });
+        }
+      } catch (error) {
+        logger.error('Failed to fetch price', error);
         // Keep priceRequested as true on error
       }
     },
@@ -640,10 +813,12 @@ document.addEventListener('DOMContentLoaded', () => {
       state.previewInFlight = true;
       try {
         const fd = formData.createPayload({ reason });
+        logger.debug('Triggering preview generation', { reason });
         await this.postText(ENDPOINTS.preview, fd);
         state.previewDone = true;
-      } catch {
-        // Silent failure
+        logger.info('Preview generation triggered successfully', { reason });
+      } catch (error) {
+        logger.error('Failed to trigger preview generation', error, { reason });
       } finally {
         state.previewInFlight = false;
       }
@@ -660,6 +835,9 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         const j = tryParseJson(raw);
         const statusText = (extractField(j, 'Status') || '').trim();
+        if (statusText) {
+          logger.debug('Status update received', { statusText, mode });
+        }
 
         statusManager.updateFromStatus(statusText);
 
@@ -669,6 +847,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (statusText === STATUS_TEXTS.FAILED) {
+          logger.error(
+            'Creator workflow reported failure',
+            new Error('Status: Fehlgeschlagen'),
+            { json: j },
+          );
           this.handleFailure();
           return { failed: true, json: j };
         }
@@ -676,6 +859,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mode === 'entwurf' || mode === 'any') {
           const entUrl = normalizeImageUrl(extractField(j, 'Entwurf'));
           if (entUrl) {
+            logger.info('Draft (Entwurf) received', { entUrl, mode });
             state.lastEntUrl = entUrl;
             ui.setPreviewLoading(false);
             ui.setClickable(false);
@@ -711,12 +895,18 @@ document.addEventListener('DOMContentLoaded', () => {
             state.current = 'ready';
             ui.setCtaFromState();
 
+            logger.info('Mock-up received, workflow complete', {
+              mockUrl,
+              generatorId: state.generatorId,
+            });
+
             return { ok: true, mock: true, json: j };
           }
         }
 
         return { ok: true, json: j };
-      } catch {
+      } catch (error) {
+        logger.error('Failed to fetch sign status', error, { mode });
         return null;
       } finally {
         state.pollInFlight = false;
@@ -724,6 +914,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     handleFailure() {
+      logger.error('Creator workflow failure detected');
       timerManager.stopEta();
       timerManager.clearAll();
       ui.setPreviewLoading(false);
@@ -750,18 +941,36 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       timers.mockPoll = setInterval(async () => {
-        if (!state.generatorId || Date.now() > timers.mockPollEndsAt) {
-          clearInterval(timers.mockPoll);
-          timers.mockPoll = null;
-          return;
+        try {
+          if (!state.generatorId || Date.now() > timers.mockPollEndsAt) {
+            logger.debug('Mock polling window ended', {
+              hasGeneratorId: !!state.generatorId,
+              timeExceeded: Date.now() > timers.mockPollEndsAt,
+            });
+            clearInterval(timers.mockPoll);
+            timers.mockPoll = null;
+            return;
+          }
+          await this.fetchSignOnce('mock');
+        } catch (error) {
+          logger.error('Error in mock polling interval', error);
         }
-        await this.fetchSignOnce('mock');
       }, TIMING.MOCK_POLL_EVERY_MS);
     },
 
     async startRunCreator() {
       const descText = elements.desc?.value?.trim() || '';
-      if (descText.length < 5) return;
+      if (descText.length < 5) {
+        logger.warn('Cannot start creator: description too short', {
+          length: descText.length,
+        });
+        return;
+      }
+
+      logger.info('Starting creator workflow', {
+        hasImage: formData.hasImage(),
+        descriptionLength: descText.length,
+      });
 
       // Reset state
       Object.assign(state, {
@@ -823,9 +1032,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = extractIdFromText(raw);
 
         if (!id) {
+          logger.error('No generator ID returned from backend', {
+            raw: raw?.substring(0, 200),
+          });
           this.handleCreationFailure('Es fehlt eine ID, bitte Neu anfangen');
           return;
         }
+
+        logger.info('Generator ID received', { generatorId: id });
 
         state.generatorId = id;
         formData.updateProps();
@@ -834,25 +1048,44 @@ document.addEventListener('DOMContentLoaded', () => {
         this.runCreatorPreviewOnce('Sofort nach run-creator');
 
         timers.priceA = setTimeout(() => {
-          ui.setPillState('work', 'Preis wird berechnet');
-          this.runPriceOnce();
+          try {
+            ui.setPillState('work', 'Preis wird berechnet');
+            this.runPriceOnce();
+          } catch (error) {
+            logger.error('Error in price fetch timeout callback', error);
+          }
         }, TIMING.TIME_PRICE_MS);
 
         timers.entwurf = setTimeout(async () => {
-          ui.setPillState('work', 'Entwurf wird geladen');
-          await this.fetchSignOnce('entwurf');
+          try {
+            ui.setPillState('work', 'Entwurf wird geladen');
+            await this.fetchSignOnce('entwurf');
+          } catch (error) {
+            logger.error('Error in entwurf fetch timeout callback', error);
+          }
         }, TIMING.TIME_ENTWURF_POLL_MS);
 
         timers.mock = setTimeout(() => {
-          ui.setPillState('work', 'Finale Vorschau wird geladen');
-          this.startMockPollingWindow();
+          try {
+            ui.setPillState('work', 'Finale Vorschau wird geladen');
+            this.startMockPollingWindow();
+          } catch (error) {
+            logger.error('Error in mock polling start timeout callback', error);
+          }
         }, TIMING.MOCK_POLL_START_MS);
-      } catch {
+
+        logger.info('Creator workflow started successfully', {
+          generatorId: state.generatorId,
+          hasImage: formData.hasImage(),
+        });
+      } catch (error) {
+        logger.error('Failed to start creator workflow', error);
         this.handleCreationFailure('Fehler beim Start, bitte Neu anfangen');
       }
     },
 
     handleCreationFailure(message) {
+      logger.error('Creator workflow failed', new Error(message));
       state.generatorId = '';
       formData.updateProps();
       timerManager.stopEta();
@@ -871,18 +1104,43 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!jsonUrl) return { ok: false };
 
       try {
+        logger.debug('Fetching product JSON', { jsonUrl });
         const pRes = await fetch(jsonUrl, {
           method: 'GET',
           credentials: 'same-origin',
         });
-        if (!pRes.ok) return { ok: false };
+        if (!pRes.ok) {
+          logger.error(
+            'Failed to fetch product JSON',
+            new Error(`HTTP ${pRes.status}`),
+            {
+              jsonUrl,
+              status: pRes.status,
+            },
+          );
+          return { ok: false };
+        }
 
         const p = await pRes.json();
         const variants = p?.variants || [];
-        if (!variants.length) return { ok: false };
+        if (!variants.length) {
+          logger.error('Product has no variants', { jsonUrl, productData: p });
+          return { ok: false };
+        }
 
         const v = variants.find((x) => x?.available) || variants[0];
-        if (!v?.id) return { ok: false };
+        if (!v?.id) {
+          logger.error('No valid variant found', {
+            variantsCount: variants.length,
+            jsonUrl,
+          });
+          return { ok: false };
+        }
+
+        logger.debug('Found variant for cart', {
+          variantId: v.id,
+          available: v.available,
+        });
 
         const properties = {
           Beschreibung: elements.desc?.value || '',
@@ -903,8 +1161,28 @@ document.addEventListener('DOMContentLoaded', () => {
           credentials: 'same-origin',
         });
 
-        return { ok: addRes.ok };
-      } catch {
+        const success = addRes.ok;
+        if (success) {
+          logger.info('Product added to cart successfully', {
+            productUrl,
+            variantId: v.id,
+          });
+        } else {
+          logger.error(
+            'Failed to add product to cart',
+            new Error(`HTTP ${addRes.status}`),
+            {
+              productUrl,
+              variantId: v.id,
+              status: addRes.status,
+            },
+          );
+        }
+        return { ok: success };
+      } catch (error) {
+        logger.error('Exception while adding product to cart', error, {
+          productUrl,
+        });
         return { ok: false };
       }
     },
@@ -980,9 +1258,15 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           try {
             URL.revokeObjectURL(obj);
-          } catch {}
+          } catch (error) {
+            logger.error('Failed to revoke object URL', error);
+          }
         }, 8000);
-      } catch {
+      } catch (error) {
+        logger.warn('Blob download failed, trying direct link', error, {
+          url,
+          filename: name,
+        });
         try {
           const a = document.createElement('a');
           a.href = url;
@@ -990,7 +1274,16 @@ document.addEventListener('DOMContentLoaded', () => {
           document.body.appendChild(a);
           a.click();
           a.remove();
-        } catch {
+          logger.info('Download initiated via direct link', {
+            url,
+            filename: name,
+          });
+        } catch (fallbackError) {
+          logger.error(
+            'Direct link download failed, opening in new tab',
+            fallbackError,
+            { url },
+          );
           window.open(url, '_blank');
         }
       }
@@ -1006,7 +1299,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elements.modalActions) elements.modalActions.style.display = 'none';
       if (elements.modalFoot) elements.modalFoot.style.display = 'none';
       if (elements.modalHold) elements.modalHold.style.display = 'none';
-      if (elements.modalImg) elements.modalImg.src = url;
+      if (elements.modalImg) {
+        try {
+          elements.modalImg.onerror = (error) => {
+            logger.error('Failed to load modal image', error, { url });
+          };
+          elements.modalImg.src = url;
+        } catch (error) {
+          logger.error('Failed to set modal image source', error, { url });
+        }
+      }
 
       if (elements.modalDl) {
         elements.modalDl.style.display = 'inline-flex';
@@ -1030,8 +1332,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elements.modalFoot) elements.modalFoot.style.display = 'block';
       if (elements.modalTitle)
         elements.modalTitle.textContent = 'Schild ansehen';
-      if (elements.modalImg && state.lastMockUrl)
-        elements.modalImg.src = state.lastMockUrl;
+      if (elements.modalImg && state.lastMockUrl) {
+        try {
+          elements.modalImg.onerror = (error) => {
+            logger.error('Failed to load product modal image', error, {
+              url: state.lastMockUrl,
+            });
+          };
+          elements.modalImg.src = state.lastMockUrl;
+        } catch (error) {
+          logger.error('Failed to set product modal image source', error, {
+            url: state.lastMockUrl,
+          });
+        }
+      }
       if (elements.modalText) {
         elements.modalText.textContent =
           'Dein Schild ist bereit – wir erstellen gerade dein Produkt.';
@@ -1054,7 +1368,18 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     async startProductModal() {
-      if (!state.generatorId || !state.lastMockUrl) return;
+      if (!state.generatorId || !state.lastMockUrl) {
+        logger.warn('Cannot start product modal: missing requirements', {
+          hasGeneratorId: !!state.generatorId,
+          hasMockUrl: !!state.lastMockUrl,
+        });
+        return;
+      }
+
+      logger.info('Starting product modal', {
+        generatorId: state.generatorId,
+        mockUrl: state.lastMockUrl,
+      });
 
       ui.setPillState('work', 'Produkt wird vorbereitet');
       ui.setModalPreviewLoading(true);
@@ -1153,7 +1478,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Öffne das Produkt und lege es dort in den Warenkorb.';
                 }
               }
-            } catch {
+            } catch (error) {
+              logger.error('Exception while adding to cart in modal', error, {
+                productUrl,
+              });
               ui.setModalPreviewLoading(false);
               if (elements.modalAdd)
                 elements.modalAdd.setAttribute('data-loading', '0');
@@ -1165,7 +1493,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           };
         }
-      } catch {
+      } catch (error) {
+        logger.error('Failed to start product modal', error);
         ui.setModalPreviewLoading(false);
         ui.setPillState('bad', 'Produkt Fehler');
         if (elements.modalText) {
@@ -1181,46 +1510,54 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset & Initialization
   // ============================================================================
   const resetAll = () => {
-    timerManager.clearAll();
-    timerManager.stopEta();
-    timerManager.stopHold();
+    try {
+      logger.info('Resetting application state');
+      timerManager.clearAll();
+      timerManager.stopEta();
+      timerManager.stopHold();
 
-    Object.assign(state, {
-      current: 'init',
-      locked: false,
-      generatorId: '',
-      lastMockUrl: '',
-      lastEntUrl: '',
-      checkoutReady: false,
-      priceReady: false,
-      priceRequested: false,
-      pendingPriceValue: '',
-      previewDone: false,
-      previewInFlight: false,
-      forceMockLoading: false,
-      runStartedAt: 0,
-      pollInFlight: false,
-    });
+      Object.assign(state, {
+        current: 'init',
+        locked: false,
+        generatorId: '',
+        lastMockUrl: '',
+        lastEntUrl: '',
+        checkoutReady: false,
+        priceReady: false,
+        priceRequested: false,
+        pendingPriceValue: '',
+        previewDone: false,
+        previewInFlight: false,
+        forceMockLoading: false,
+        runStartedAt: 0,
+        pollInFlight: false,
+      });
 
-    ui.setClickable(false);
-    ui.setSoftBlur(false);
-    ui.lockInputs(false);
-    ui.setPillState('idle', 'Bereit');
+      ui.setClickable(false);
+      ui.setSoftBlur(false);
+      ui.lockInputs(false);
+      ui.setPillState('idle', 'Bereit');
 
-    if (elements.priceVal) {
-      elements.priceVal.textContent =
-        'Den Preis berechnen wir nach dem Entwurf.';
+      if (elements.priceVal) {
+        elements.priceVal.textContent =
+          'Den Preis berechnen wir nach dem Entwurf.';
+      }
+      if (elements.previewKicker)
+        elements.previewKicker.textContent = 'Vorschau';
+      ui.showPlaceholder('Starte zuerst den Entwurf');
+      ui.setPreviewLoading(false);
+      ui.setPreviewOverlay(false);
+      ui.setFade(false);
+
+      if (elements.modal) elements.modal.setAttribute('aria-hidden', 'true');
+      ui.lockScroll(false);
+      ui.setCtaFromState();
+      formData.updateProps();
+
+      logger.info('Application state reset complete');
+    } catch (error) {
+      logger.error('Error during reset', error);
     }
-    if (elements.previewKicker) elements.previewKicker.textContent = 'Vorschau';
-    ui.showPlaceholder('Starte zuerst den Entwurf');
-    ui.setPreviewLoading(false);
-    ui.setPreviewOverlay(false);
-    ui.setFade(false);
-
-    if (elements.modal) elements.modal.setAttribute('aria-hidden', 'true');
-    ui.lockScroll(false);
-    ui.setCtaFromState();
-    formData.updateProps();
   };
 
   // ============================================================================
@@ -1228,38 +1565,77 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================================
   if (elements.closeBtn) {
     elements.closeBtn.addEventListener('click', () => {
-      document.body.style.overflow = 'auto';
-      elements.smc?.classList.add('smc--scale-down');
+      try {
+        document.body.style.overflow = 'auto';
+        elements.smc?.classList.add('smc--scale-down');
+        logger.debug('Close button clicked');
+      } catch (error) {
+        logger.error('Error handling close button click', error);
+      }
     });
   }
 
   if (elements.modalBackdrop) {
-    elements.modalBackdrop.addEventListener('click', () =>
-      modalManager.close(),
-    );
+    elements.modalBackdrop.addEventListener('click', () => {
+      try {
+        logger.debug('Modal backdrop clicked, closing modal');
+        modalManager.close();
+      } catch (error) {
+        logger.error('Error closing modal via backdrop', error);
+      }
+    });
   }
 
   if (elements.modalClose) {
-    elements.modalClose.addEventListener('click', () => modalManager.close());
+    elements.modalClose.addEventListener('click', () => {
+      try {
+        logger.debug('Modal close button clicked');
+        modalManager.close();
+      } catch (error) {
+        logger.error('Error closing modal via close button', error);
+      }
+    });
   }
 
   document.addEventListener(
     'keydown',
     (e) => {
-      if (e?.key === 'Escape') modalManager.close();
+      try {
+        if (e?.key === 'Escape') {
+          logger.debug('Escape key pressed, closing modal');
+          modalManager.close();
+        }
+      } catch (error) {
+        logger.error('Error handling escape key', error);
+      }
     },
     { passive: true },
   );
 
   if (elements.resetBtn) {
-    elements.resetBtn.addEventListener('click', resetAll);
+    elements.resetBtn.addEventListener('click', () => {
+      try {
+        logger.debug('Reset button clicked');
+        resetAll();
+      } catch (error) {
+        logger.error('Error handling reset button click', error);
+      }
+    });
   }
 
   if (elements.upload) {
     elements.upload.addEventListener('change', () => {
-      if (state.locked) return;
-      formData.handleUploadUI();
-      formData.updateProps();
+      try {
+        if (state.locked) {
+          logger.debug('Upload change ignored: form locked');
+          return;
+        }
+        formData.handleUploadUI();
+        formData.updateProps();
+        logger.debug('File upload changed');
+      } catch (error) {
+        logger.error('Error handling file upload change', error);
+      }
     });
   }
 
@@ -1267,9 +1643,13 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.desc.addEventListener(
       'input',
       () => {
-        if (state.locked) return;
-        ui.setCtaFromState();
-        formData.updateProps();
+        try {
+          if (state.locked) return;
+          ui.setCtaFromState();
+          formData.updateProps();
+        } catch (error) {
+          logger.error('Error handling description input', error);
+        }
       },
       { passive: true },
     );
@@ -1291,18 +1671,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (elements.previewArea) {
     elements.previewArea.addEventListener('click', () => {
-      if (!state.lastMockUrl) return;
-      if (elements.previewArea.getAttribute('data-clickable') !== '1') return;
-      modalManager.openViewer('Vorschau', state.lastMockUrl);
+      try {
+        if (!state.lastMockUrl) {
+          logger.debug('Preview area clicked but no mock URL available');
+          return;
+        }
+        if (elements.previewArea.getAttribute('data-clickable') !== '1') {
+          logger.debug('Preview area clicked but not clickable');
+          return;
+        }
+        logger.debug('Opening preview viewer', { mockUrl: state.lastMockUrl });
+        modalManager.openViewer('Vorschau', state.lastMockUrl);
+      } catch (error) {
+        logger.error('Error handling preview area click', error);
+      }
     });
   }
 
   if (elements.ctaBtn) {
     elements.ctaBtn.addEventListener('click', () => {
-      if (state.current === 'init') {
-        api.startRunCreator();
-      } else if (state.current === 'ready') {
-        modalManager.startProductModal();
+      try {
+        logger.debug('CTA button clicked', { currentState: state.current });
+        if (state.current === 'init') {
+          api.startRunCreator();
+        } else if (state.current === 'ready') {
+          modalManager.startProductModal();
+        }
+      } catch (error) {
+        logger.error('Error handling CTA button click', error, {
+          currentState: state.current,
+        });
       }
     });
   }
@@ -1313,49 +1711,80 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.smc && elements.openBtn && elements.closeBtn) {
     // Open Button (scales up the whole container: #sm-sign-creator then #smc)
     elements.openBtn.addEventListener('click', () => {
-      elements.smcContainer.style.opacity = '1';
-      elements.smcContainer.style.visibility = 'visible';
-      elements.smc.setAttribute('aria-hidden', 'false');
-      setTimeout(() => {
-        elements.smc.style.transform = 'scale(1)';
-      }, 300);
+      try {
+        logger.debug('Open button clicked, showing creator');
+        elements.smcContainer.style.opacity = '1';
+        elements.smcContainer.style.visibility = 'visible';
+        elements.smc.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+          try {
+            elements.smc.style.transform = 'scale(1)';
+          } catch (error) {
+            logger.error('Error in open animation timeout', error);
+          }
+        }, 300);
 
-      // Set body overflow to hidden
-      document.body.style.overflow = 'hidden';
+        // Set body overflow to hidden
+        document.body.style.overflow = 'hidden';
+      } catch (error) {
+        logger.error('Error handling open button click', error);
+      }
     });
 
     // Close Button (scales down the whole container: #smc then #sm-sign-creator )
     elements.closeBtn.addEventListener('click', () => {
-      elements.smc.style.transform = 'scale(0)';
-      setTimeout(() => {
-        elements.smcContainer.style.opacity = '0';
-        elements.smcContainer.style.visibility = 'hidden';
-        elements.smc.setAttribute('aria-hidden', 'true');
-      }, 300);
+      try {
+        logger.debug('Close button clicked, hiding creator');
+        elements.smc.style.transform = 'scale(0)';
+        setTimeout(() => {
+          try {
+            elements.smcContainer.style.opacity = '0';
+            elements.smcContainer.style.visibility = 'hidden';
+            elements.smc.setAttribute('aria-hidden', 'true');
+          } catch (error) {
+            logger.error('Error in close animation timeout', error);
+          }
+        }, 300);
 
-      // Set body overflow back to auto
-      document.body.style.overflow = 'auto';
+        // Set body overflow back to auto
+        document.body.style.overflow = 'auto';
+      } catch (error) {
+        logger.error(
+          'Error handling close button click in animation handler',
+          error,
+        );
+      }
     });
   }
 
   // ============================================================================
   // Initialization
   // ============================================================================
-  formData.handleUploadUI();
-  formData.updateProps();
+  logger.info('Steelmonks Sign Creator initializing...');
 
-  if (elements.priceVal) {
-    elements.priceVal.textContent = 'Den Preis berechnen wir nach dem Entwurf.';
+  try {
+    formData.handleUploadUI();
+    formData.updateProps();
+
+    if (elements.priceVal) {
+      elements.priceVal.textContent =
+        'Den Preis berechnen wir nach dem Entwurf.';
+    }
+
+    ui.setPillState('idle', 'Bereit');
+
+    if (elements.previewKicker) elements.previewKicker.textContent = 'Vorschau';
+    ui.showPlaceholder('Starte zuerst den Entwurf');
+    ui.setPreviewLoading(false);
+    ui.setSoftBlur(false);
+    ui.setPreviewOverlay(false);
+    ui.setFade(false);
+    ui.lockInputs(false);
+    ui.setCtaFromState();
+
+    logger.info('Steelmonks Sign Creator initialized successfully');
+  } catch (error) {
+    logger.error('Failed to initialize Steelmonks Sign Creator', error);
+    ui.setPillState('bad', 'Initialisierungsfehler');
   }
-
-  ui.setPillState('idle', 'Bereit');
-
-  if (elements.previewKicker) elements.previewKicker.textContent = 'Vorschau';
-  ui.showPlaceholder('Starte zuerst den Entwurf');
-  ui.setPreviewLoading(false);
-  ui.setSoftBlur(false);
-  ui.setPreviewOverlay(false);
-  ui.setFade(false);
-  ui.lockInputs(false);
-  ui.setCtaFromState();
 });
