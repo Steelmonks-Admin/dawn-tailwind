@@ -199,10 +199,26 @@
         "padding_left": 24,
         "padding_right": 24
       }
+    },
+    "steelmonks_sign_creator_possibilites_xqt7F6": {
+      "type": "steelmonks-sign-creator-possibilites",
+      "name": "From This to That Timer",
+      "settings": {
+        "heading": "Von diesem Foto",
+        "heading_2": "zu deinem Metallschild",
+        "subheading": "in 2 Minuten",
+        "badge_left": "From this",
+        "badge_right": "To this",
+        "from_caption": "Lade ein Foto oder eine Skizze hoch",
+        "to_caption": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
+        "autoplay": true,
+        "duration_seconds": 10
+      }
     }
   },
   "order": [
     "steelmonks_hero_hub_QbmbCe",
+    "steelmonks_sign_creator_possibilites_xqt7F6",
     "rich_text_rMFFNh",
     "main",
     "steelmonks_sign_creator_steps_R8BrfQ",
