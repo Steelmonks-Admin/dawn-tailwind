@@ -15,11 +15,20 @@
       "settings": {
         "top_spacing": 40,
         "bottom_spacing": 40,
+        "badge_text": "Die Steelmonks Werkstatt",
+        "trust_1_icon": "🇩🇪",
+        "trust_1_text": "Schneller Versand.",
+        "trust_2_icon": "🏅",
+        "trust_2_text": "Über 100.000+ Bestellungen.",
+        "trust_3_icon": "⭐⭐⭐⭐⭐",
+        "trust_3_text": "10.000+ Bewertungen.",
         "heading": "Von einem Satz oder Foto",
         "heading_2": "einzigartigen Wandkunst",
         "subheading": "Las Deiner Vorstellungskraft, freien Lauf.",
         "from_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
+        "from_label": "Lade ein Foto oder eine Skizze hoch",
         "to_image": "shopify://shop_images/Werkstatt-Hero-2_b01f300c-2845-482b-9ca4-08774101e84c.jpg",
+        "to_label": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
         "autoplay": true,
         "duration_seconds": 10
       }
@@ -91,6 +100,78 @@
         "show_title": false
       }
     },
+    "accordions_EeXHEy": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_XcfyCL": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Ich möchte ein Geschenk für einen Schlagzeuger erstellen, was soll ich eingeben?",
+            "content": "<p>In der Steelmonks Werkstatt kannst du dein persönliches Metallschild ganz einfach selbst gestalten. Lade dafür ein Foto, eine Skizze oder ein Motiv hoch und beschreibe kurz deine Idee. Unsere Werkstatt verwandelt deinen Entwurf automatisch in ein sauberes, schnittfähiges Design, das anschließend aus hochwertigem Stahl gefertigt wird. In wenigen Minuten siehst du bereits eine Vorschau deines individuellen Schildes.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_HxC6kM": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Ich suche ein Geschenk zum Valentinstag für meine Frau, habt ihr Ideen?",
+            "content": "<p>Nein. Die Erstellung deines Entwurfs und die Vorschau sind komplett kostenlos. Du kannst dein Design ganz in Ruhe ausprobieren und erst dann entscheiden, ob du das Schild bestellen möchtest. Kosten entstehen erst, wenn du dein fertiges Design in den Warenkorb legst.</p>",
+            "content_liquid": "",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_xjxiHm": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Wie erstelle ich ein einfaches Hausschild für mich?",
+            "content": "<p>Unsere Schilder werden aus hochwertigem Stahl gefertigt und präzise gelasert. Dein Motiv wird so aufbereitet, dass es technisch perfekt umsetzbar ist. Anschließend wird das Schild je nach Auswahl veredelt, zum Beispiel pulverbeschichtet oder in Edelstahloptik, und sorgfältig von Hand geprüft. Das Ergebnis ist ein langlebiges, wetterfestes Metallschild in echter Steelmonks Qualität.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_RahxpG": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Ich habe ein Wappen, wie soll ich vorgehen?",
+            "content": "<p>Unsere Schilder werden aus hochwertigem Stahl gefertigt und präzise gelasert. Dein Motiv wird so aufbereitet, dass es technisch perfekt umsetzbar ist. Anschließend wird das Schild je nach Auswahl veredelt, zum Beispiel pulverbeschichtet oder in Edelstahloptik, und sorgfältig von Hand geprüft. Das Ergebnis ist ein langlebiges, wetterfestes Metallschild in echter Steelmonks Qualität.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_XcfyCL",
+        "accordion_HxC6kM",
+        "accordion_xjxiHm",
+        "accordion_RahxpG"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "Ideen und Vorschläge",
+        "subheading": "",
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    },
     "masonry_gallery_yMJgLM": {
       "type": "masonry-gallery",
       "name": "Masonry Gallery",
@@ -113,10 +194,10 @@
         "prompt_10": "Placeholder prompt for Image 10, replace this with the prompt used to generate the image."
       }
     },
-    "accordions_EeXHEy": {
+    "accordions_EWwRhh": {
       "type": "accordions",
       "blocks": {
-        "accordion_XcfyCL": {
+        "accordion_3dffKx": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -129,7 +210,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_HxC6kM": {
+        "accordion_tkaiN9": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -142,7 +223,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_xjxiHm": {
+        "accordion_mnr9yV": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -155,7 +236,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_eG9Wbf": {
+        "accordion_dwX4rw": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -168,7 +249,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_CUVVQr": {
+        "accordion_rpGxaA": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -181,7 +262,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_Kh8hri": {
+        "accordion_bRxR6G": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -194,7 +275,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_XEwYzD": {
+        "accordion_dfDBJL": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -207,7 +288,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_HMi4Cm": {
+        "accordion_4caC6T": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -220,7 +301,7 @@
             "featured_image_aspect_ratio": "233 / 349"
           }
         },
-        "accordion_wJhEf3": {
+        "accordion_cPmDdF": {
           "type": "accordion",
           "settings": {
             "parent": "",
@@ -235,15 +316,15 @@
         }
       },
       "block_order": [
-        "accordion_XcfyCL",
-        "accordion_HxC6kM",
-        "accordion_xjxiHm",
-        "accordion_eG9Wbf",
-        "accordion_CUVVQr",
-        "accordion_Kh8hri",
-        "accordion_XEwYzD",
-        "accordion_HMi4Cm",
-        "accordion_wJhEf3"
+        "accordion_3dffKx",
+        "accordion_tkaiN9",
+        "accordion_mnr9yV",
+        "accordion_dwX4rw",
+        "accordion_rpGxaA",
+        "accordion_bRxR6G",
+        "accordion_dfDBJL",
+        "accordion_4caC6T",
+        "accordion_cPmDdF"
       ],
       "name": "Accordions",
       "settings": {
@@ -262,7 +343,8 @@
     "steelmonks_werkstatt_steps_bk7jyj",
     "rich_text_rMFFNh",
     "main",
+    "accordions_EeXHEy",
     "masonry_gallery_yMJgLM",
-    "accordions_EeXHEy"
+    "accordions_EWwRhh"
   ]
 }
