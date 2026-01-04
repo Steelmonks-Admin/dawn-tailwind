@@ -1,10 +1,11 @@
 {% comment %}
-  Werkstatt From-To (Improved)
+  Werkstatt From-To (Final)
   - Wide like Werkstatt Steps (max-width 1240)
   - Two square images with larger spacing
-  - Timer block sits BETWEEN the two images (center column), not above
+  - Timer block BETWEEN the two images (center column)
   - Timer animation fixed + robust init (DOMContentLoaded + theme editor events)
-  - More pronounced Steelmonks highlight styling (orange/blue like primary button)
+  - One single label text per image (no badge+caption combo)
+  - Mobile optimized, pixel perfect
 {% endcomment %}
 
 {% schema %}
@@ -49,26 +50,14 @@
       "default": "in 2 Minuten"
     },
     {
-      "type": "text",
-      "id": "badge_left",
-      "label": "Left badge",
-      "default": "Von einem Foto"
-    },
-    {
-      "type": "text",
-      "id": "badge_right",
-      "label": "Right badge",
-      "default": "Zu einem Entwurf"
-    },
-    {
       "type": "image_picker",
       "id": "from_image",
       "label": "From image (photo reference)"
     },
     {
       "type": "textarea",
-      "id": "from_caption",
-      "label": "From caption",
+      "id": "from_label",
+      "label": "Label unter linkem Bild",
       "default": "Lade ein Foto oder eine Skizze hoch"
     },
     {
@@ -78,8 +67,8 @@
     },
     {
       "type": "textarea",
-      "id": "to_caption",
-      "label": "To caption",
+      "id": "to_label",
+      "label": "Label unter rechtem Bild",
       "default": "Wir verwandeln es in ein sauberes, schnittfähiges Schild"
     },
     {
@@ -122,14 +111,15 @@
       --radius: 32px;
       --img-radius: 30px;
 
-      /* Steelmonks accents (match primary button vibe) */
+      /* Steelmonks accents */
       --a1: #ff9800;
       --a2: #0044CC;
       --a3: #00235e;
 
       --loop: {{ section.settings.duration_seconds | default: 10 }}s;
-      --gap: 34px;         /* BIGGER SPACE between images */
-      --midw: 270px;       /* center timer width */
+
+      --gap: 38px;         /* larger space between image + timer */
+      --midw: 248px;       /* slightly smaller timer block */
     }
 
     #smwh-fromto-{{ section.id }}{
@@ -164,18 +154,18 @@
       letter-spacing: 0.2px;
     }
 
-    /* LAYOUT: image | timer | image */
+    /* Layout: image | timer | image */
     #smwh-fromto-{{ section.id }} .smwft__grid{
       display: grid;
       grid-template-columns: 1fr var(--midw) 1fr;
       gap: var(--gap);
-      align-items: center; /* keeps timer perfectly centered vertically */
+      align-items: center;
     }
 
-    /* IMAGE CARDS (square always) */
+    /* Image blocks */
     #smwh-fromto-{{ section.id }} .smwft__img-card{
       border-radius: var(--img-radius);
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 1 / 1; /* ALWAYS SQUARE */
       overflow: hidden;
       background: rgba(9,10,12,0.05);
       border: 1px solid rgba(9,10,12,0.08);
@@ -201,51 +191,33 @@
       filter: saturate(0.96);
     }
 
-    /* UNDER-CAPTIONS (freestanding, no overlays) */
-    #smwh-fromto-{{ section.id }} .smwft__caps{
-      display: grid;
-      gap: 10px;
+    /* Single label under each image */
+    #smwh-fromto-{{ section.id }} .smwft__label{
       margin-top: 12px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__cap-pill{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
       width: 100%;
       border-radius: 999px;
       border: 1px solid rgba(9,10,12,0.10);
       background: rgba(255,255,255,0.62);
       box-shadow: var(--shadow2);
       padding: 11px 14px;
+      text-align: center;
       color: rgba(9,10,12,0.82);
       font-size: 13px;
       font-weight: 800;
       letter-spacing: 0.1px;
       line-height: 1.25;
       min-height: 46px;
-      text-align: center;
       white-space: pre-wrap;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__dot{
-      width: 10px;
-      height: 10px;
-      border-radius: 99px;
-      background: rgba(9,10,12,0.72);
-      box-shadow: 0 0 0 6px rgba(9,10,12,0.08);
-      flex: 0 0 auto;
-    }
-
-    /* TIMER BLOCK (more pronounced, on-brand) */
+    /* Timer block */
     #smwh-fromto-{{ section.id }} .smwft__mid{
       position: relative;
       display: grid;
-      gap: 12px;
+      gap: 10px;
       justify-items: center;
-      padding: 16px 14px 14px;
-      border-radius: 26px;
+      padding: 14px 12px 12px;
+      border-radius: 24px;
       background: rgba(9,10,12,0.28);
       border: 1px solid rgba(255,255,255,0.18);
       box-shadow: 0 22px 60px rgba(0,0,0,0.22);
@@ -260,7 +232,7 @@
       content: "";
       position: absolute;
       inset: -2px;
-      border-radius: 28px;
+      border-radius: 26px;
       background:
         radial-gradient(90% 70% at 20% 10%, rgba(255,152,0,0.40), rgba(255,255,255,0) 55%),
         radial-gradient(90% 70% at 80% 10%, rgba(0,68,204,0.35), rgba(255,255,255,0) 55%);
@@ -274,10 +246,9 @@
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: 26px;
+      border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.14);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
       z-index: 0;
       pointer-events: none;
     }
@@ -288,7 +259,7 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.10);
@@ -309,8 +280,8 @@
     #smwh-fromto-{{ section.id }} .smwft__ring{
       position: relative;
       z-index: 1;
-      width: 92px;
-      height: 92px;
+      width: 86px;
+      height: 86px;
       border-radius: 999px;
       display: grid;
       place-items: center;
@@ -345,7 +316,6 @@
       stroke: rgba(255,255,255,0.16);
     }
 
-    /* Animated stroke */
     #smwh-fromto-{{ section.id }} .smwft__prog{
       stroke: url(#smwft-grad-{{ section.id }});
       stroke-dasharray: 251.2;
@@ -370,7 +340,7 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      height: 10px;
+      height: 9px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.10);
@@ -433,10 +403,10 @@
       100%{ left: 110%; opacity: 0.0; }
     }
 
-    /* MOBILE: stack image, timer, image (timer stays between) */
+    /* MOBILE: stack image, timer, image */
     @media (max-width: 900px){
       #smwh-fromto-{{ section.id }}{
-        --gap: 18px;
+        --gap: 16px;
         --midw: 1fr;
       }
 
@@ -446,7 +416,7 @@
       }
 
       #smwh-fromto-{{ section.id }} .smwft__mid{
-        max-width: 420px;
+        max-width: 400px;
         margin: 0 auto;
         animation: none;
       }
@@ -496,16 +466,10 @@
             >
           {% endif %}
         </div>
-
-        <div class="smwft__caps">
-          <div class="smwft__cap-pill">
-            <span class="smwft__dot" aria-hidden="true"></span>
-            <span>{{ section.settings.badge_left | escape }} · {{ section.settings.from_caption | escape }}</span>
-          </div>
-        </div>
+        <div class="smwft__label">{{ section.settings.from_label | escape }}</div>
       </div>
 
-      {% comment %} MIDDLE TIMER (between images) {% endcomment %}
+      {% comment %} MIDDLE TIMER {% endcomment %}
       <div class="smwft__mid" aria-hidden="false">
         <div class="smwft__pill" aria-label="in 2 Minuten">
           <span class="smwft__pill-dot" aria-hidden="true"></span>
@@ -554,13 +518,7 @@
             >
           {% endif %}
         </div>
-
-        <div class="smwft__caps">
-          <div class="smwft__cap-pill">
-            <span class="smwft__dot" aria-hidden="true"></span>
-            <span>{{ section.settings.badge_right | escape }} · {{ section.settings.to_caption | escape }}</span>
-          </div>
-        </div>
+        <div class="smwft__label">{{ section.settings.to_label | escape }}</div>
       </div>
     </div>
   </div>
@@ -574,7 +532,6 @@
         var root = document.getElementById(rootId);
         if(!root) return false;
 
-        // Stable autoplay attr for CSS
         root.setAttribute('data-autoplay', {{ section.settings.autoplay | json }} ? '1' : '0');
 
         var timeEl = document.getElementById("smwft-time-" + SECTION_ID);
@@ -591,14 +548,13 @@
 
         function pad(n){ return (n < 10 ? '0' : '') + n; }
 
-        // Cancel any previous loop for theme editor re-renders
         if(root.__smwftRAF) cancelAnimationFrame(root.__smwftRAF);
 
         function tick(){
           if(root.getAttribute('data-autoplay') !== '1') return;
 
           var now = Date.now();
-          var phase = (now % loopMs) / loopMs; // 0..1
+          var phase = (now % loopMs) / loopMs;
 
           var seconds = Math.max(0, Math.round(120 * (1 - phase)));
           var mm = Math.floor(seconds / 60);
@@ -613,7 +569,6 @@
           root.__smwftRAF = requestAnimationFrame(tick);
         }
 
-        // Start reliably
         root.__smwftRAF = requestAnimationFrame(tick);
         return true;
       }
@@ -635,7 +590,6 @@
         boot();
       }
 
-      // Shopify Theme Editor: re-init on section load/select
       document.addEventListener("shopify:section:load", function(e){
         if(!e || !e.detail || !e.detail.sectionId) return;
         if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
