@@ -1,11 +1,7 @@
 {% comment %}
-  Werkstatt From-To (Final)
-  - Wide like Werkstatt Steps (max-width 1240)
-  - Two square images with larger spacing
-  - Timer block BETWEEN the two images (center column)
-  - Timer animation fixed + robust init (DOMContentLoaded + theme editor events)
-  - One single label text per image (no badge+caption combo)
-  - Mobile optimized, pixel perfect
+  Werkstatt From-To (Final + Black Pill + 3 Trust Features)
+  - Keeps exact From-To layout as approved
+  - Adds Black pill + 3 features row above (same style language as your hero)
 {% endcomment %}
 
 {% schema %}
@@ -31,6 +27,51 @@
       "max": 200,
       "step": 2
     },
+
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Black Pill Text",
+      "default": "Die Steelmonks Werkstatt"
+    },
+
+    {
+      "type": "text",
+      "id": "trust_1_icon",
+      "label": "Trust 1 Icon",
+      "default": "🇩🇪"
+    },
+    {
+      "type": "text",
+      "id": "trust_1_text",
+      "label": "Trust 1 Text",
+      "default": "Schneller Versand."
+    },
+    {
+      "type": "text",
+      "id": "trust_2_icon",
+      "label": "Trust 2 Icon",
+      "default": "🏅"
+    },
+    {
+      "type": "text",
+      "id": "trust_2_text",
+      "label": "Trust 2 Text",
+      "default": "Über 100.000+ Bestellungen."
+    },
+    {
+      "type": "text",
+      "id": "trust_3_icon",
+      "label": "Trust 3 Icon",
+      "default": "⭐⭐⭐⭐⭐"
+    },
+    {
+      "type": "text",
+      "id": "trust_3_text",
+      "label": "Trust 3 Text",
+      "default": "10.000+ Bewertungen."
+    },
+
     {
       "type": "text",
       "id": "heading",
@@ -49,6 +90,7 @@
       "label": "Subheading",
       "default": "in 2 Minuten"
     },
+
     {
       "type": "image_picker",
       "id": "from_image",
@@ -71,6 +113,7 @@
       "label": "Label unter rechtem Bild",
       "default": "Wir verwandeln es in ein sauberes, schnittfähiges Schild"
     },
+
     {
       "type": "checkbox",
       "id": "autoplay",
@@ -105,7 +148,6 @@
       --ink: rgba(9,10,12,0.92);
       --muted: rgba(9,10,12,0.68);
       --stroke: rgba(9,10,12,0.10);
-      --shadow: 0 34px 110px rgba(15,23,42,0.14);
       --shadow2: 0 16px 34px rgba(15,23,42,0.10);
 
       --radius: 32px;
@@ -118,8 +160,8 @@
 
       --loop: {{ section.settings.duration_seconds | default: 10 }}s;
 
-      --gap: 38px;         /* larger space between image + timer */
-      --midw: 248px;       /* slightly smaller timer block */
+      --gap: 38px;
+      --midw: 248px;
     }
 
     #smwh-fromto-{{ section.id }}{
@@ -133,6 +175,75 @@
       padding: 0 16px;
     }
 
+    /* ===== Top (Black pill + Trust row) ===== */
+    #smwh-fromto-{{ section.id }} .smwft__top{
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__pill-black{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: #090A0C;
+      color: rgba(255,255,255,0.96);
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__pill-black::before{
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--a1);
+      box-shadow: 0 0 0 4px rgba(255,152,0,0.35);
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__trust{
+      width: 100%;
+      max-width: 980px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__trust-item{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__trust-ico{
+      font-size: 1.2rem;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__trust-txt{
+      font-size: 1.05rem;
+      color: rgba(9,10,12,0.68);
+      font-weight: 700;
+    }
+
+    @media (min-width: 768px){
+      #smwh-fromto-{{ section.id }} .smwft__trust{
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      #smwh-fromto-{{ section.id }} .smwft__pill-black{
+        padding: 12px 28px;
+        font-size: 1.18rem;
+      }
+    }
+
+    /* ===== Headline ===== */
     #smwh-fromto-{{ section.id }} .smwft__head{
       text-align: center;
       margin-bottom: 18px;
@@ -154,7 +265,7 @@
       letter-spacing: 0.2px;
     }
 
-    /* Layout: image | timer | image */
+    /* ===== Layout: image | timer | image ===== */
     #smwh-fromto-{{ section.id }} .smwft__grid{
       display: grid;
       grid-template-columns: 1fr var(--midw) 1fr;
@@ -162,10 +273,10 @@
       align-items: center;
     }
 
-    /* Image blocks */
+    /* Image cards */
     #smwh-fromto-{{ section.id }} .smwft__img-card{
       border-radius: var(--img-radius);
-      aspect-ratio: 1 / 1; /* ALWAYS SQUARE */
+      aspect-ratio: 1 / 1;
       overflow: hidden;
       background: rgba(9,10,12,0.05);
       border: 1px solid rgba(9,10,12,0.08);
@@ -191,7 +302,7 @@
       filter: saturate(0.96);
     }
 
-    /* Single label under each image */
+    /* Single labels */
     #smwh-fromto-{{ section.id }} .smwft__label{
       margin-top: 12px;
       width: 100%;
@@ -379,7 +490,6 @@
       font-weight: 900;
     }
 
-    /* subtle float (desktop only) */
     @keyframes smwftFloat{
       0%{ transform: translateY(0); }
       50%{ transform: translateY(-6px); }
@@ -403,7 +513,7 @@
       100%{ left: 110%; opacity: 0.0; }
     }
 
-    /* MOBILE: stack image, timer, image */
+    /* Mobile */
     @media (max-width: 900px){
       #smwh-fromto-{{ section.id }}{
         --gap: 16px;
@@ -434,6 +544,27 @@
   </style>
 
   <div class="smwft__wrap">
+    <div class="smwft__top">
+      {% if section.settings.badge_text != blank %}
+        <div class="smwft__pill-black">{{ section.settings.badge_text }}</div>
+      {% endif %}
+
+      <div class="smwft__trust" aria-label="Trust Row">
+        <div class="smwft__trust-item">
+          <div class="smwft__trust-ico">{{ section.settings.trust_1_icon }}</div>
+          <div class="smwft__trust-txt">{{ section.settings.trust_1_text }}</div>
+        </div>
+        <div class="smwft__trust-item">
+          <div class="smwft__trust-ico">{{ section.settings.trust_2_icon }}</div>
+          <div class="smwft__trust-txt">{{ section.settings.trust_2_text }}</div>
+        </div>
+        <div class="smwft__trust-item">
+          <div class="smwft__trust-ico">{{ section.settings.trust_3_icon }}</div>
+          <div class="smwft__trust-txt">{{ section.settings.trust_3_text }}</div>
+        </div>
+      </div>
+    </div>
+
     <div class="smwft__head">
       <h2 class="smwft__title">
         <span>{{ section.settings.heading }}</span>
@@ -443,33 +574,17 @@
     </div>
 
     <div class="smwft__grid">
-      {% comment %} LEFT {% endcomment %}
       <div>
         <div class="smwft__img-card">
           {% if section.settings.from_image != blank %}
-            <img
-              class="smwft__img"
-              src="{{ section.settings.from_image | image_url: width: 1800 }}"
-              alt="{{ section.settings.from_image.alt | escape }}"
-              loading="lazy"
-              width="1800"
-              height="1800"
-            >
+            <img class="smwft__img" src="{{ section.settings.from_image | image_url: width: 1800 }}" alt="{{ section.settings.from_image.alt | escape }}" loading="lazy" width="1800" height="1800">
           {% else %}
-            <img
-              class="smwft__img"
-              src="https://placehold.co/1800x1800"
-              alt="Placeholder"
-              loading="lazy"
-              width="1800"
-              height="1800"
-            >
+            <img class="smwft__img" src="https://placehold.co/1800x1800" alt="Placeholder" loading="lazy" width="1800" height="1800">
           {% endif %}
         </div>
         <div class="smwft__label">{{ section.settings.from_label | escape }}</div>
       </div>
 
-      {% comment %} MIDDLE TIMER {% endcomment %}
       <div class="smwft__mid" aria-hidden="false">
         <div class="smwft__pill" aria-label="in 2 Minuten">
           <span class="smwft__pill-dot" aria-hidden="true"></span>
@@ -495,27 +610,12 @@
         <div class="smwft__status" id="smwft-status-{{ section.id }}">Wir bauen deinen <b>Entwurf</b> …</div>
       </div>
 
-      {% comment %} RIGHT {% endcomment %}
       <div>
         <div class="smwft__img-card">
           {% if section.settings.to_image != blank %}
-            <img
-              class="smwft__img"
-              src="{{ section.settings.to_image | image_url: width: 1800 }}"
-              alt="{{ section.settings.to_image.alt | escape }}"
-              loading="lazy"
-              width="1800"
-              height="1800"
-            >
+            <img class="smwft__img" src="{{ section.settings.to_image | image_url: width: 1800 }}" alt="{{ section.settings.to_image.alt | escape }}" loading="lazy" width="1800" height="1800">
           {% else %}
-            <img
-              class="smwft__img"
-              src="https://placehold.co/1800x1800"
-              alt="Placeholder"
-              loading="lazy"
-              width="1800"
-              height="1800"
-            >
+            <img class="smwft__img" src="https://placehold.co/1800x1800" alt="Placeholder" loading="lazy" width="1800" height="1800">
           {% endif %}
         </div>
         <div class="smwft__label">{{ section.settings.to_label | escape }}</div>
