@@ -11,7 +11,7 @@
   "sections": {
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
-      "name": "From This to That Timer",
+      "name": "Werkstatt Hero Section",
       "settings": {
         "top_spacing": 40,
         "heading": "Von einem Satz oder Foto",
@@ -30,7 +30,7 @@
     },
     "steelmonks_sign_creator_FKYF46": {
       "type": "steelmonks-sign-creator",
-      "name": "SM Schild Konfigurator",
+      "name": "Werkstatt (Sign Creator)",
       "settings": {}
     },
     "rich_text_rMFFNh": {
@@ -54,13 +54,14 @@
         "heading_p3qP8D",
         "text_c6tJGH"
       ],
+      "disabled": true,
       "name": "t:sections.rich-text.presets.name",
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "center",
         "color_scheme": "",
         "full_width": true,
-        "padding_top": 40,
+        "padding_top": 52,
         "padding_bottom": 52,
         "enable_smooth_scroll": true
       }
@@ -78,7 +79,7 @@
     },
     "steelmonks_sign_creator_steps_R8BrfQ": {
       "type": "steelmonks-sign-creator-steps",
-      "name": "3-Image Arrow Flow",
+      "name": "Werkstatt Steps",
       "settings": {
         "heading": "So entsteht dein Schild",
         "subheading": "Idee → Entwurf → Fertiges Schild",
