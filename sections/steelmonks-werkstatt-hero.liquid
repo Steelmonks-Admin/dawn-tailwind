@@ -1,166 +1,35 @@
 {% comment %}
-  Werkstatt Hero Section
-  Badge pill + trust row + floating From/To (square) + optional CTA (hides when empty)
+  Werkstatt From-To (Improved)
+  - Wide like Werkstatt Steps (max-width 1240)
+  - Two square images with larger spacing
+  - Timer block sits BETWEEN the two images (center column), not above
+  - Timer animation fixed + robust init (DOMContentLoaded + theme editor events)
+  - More pronounced Steelmonks highlight styling (orange/blue like primary button)
 {% endcomment %}
-
-<section
-  id="section-{{ section.id }}"
-  class="sm-wh"
-  style="padding-top: {{ section.settings.top_spacing | default: 40 }}px;"
->
-  <div class="sm-wh__inner">
-    <div class="sm-wh__hero sm-wh-animate-hero">
-
-      <div class="sm-wh__badge">
-        <span class="sm-wh__badge-pill">Die Steelmonks Werkstatt</span>
-      </div>
-
-      <div class="sm-wh__trust-row">
-        <div class="sm-wh__trust-item">
-          <div class="sm-wh__trust-icon">🇩🇪</div>
-          <div class="sm-wh__trust-text">Schneller Versand.</div>
-        </div>
-        <div class="sm-wh__trust-item">
-          <div class="sm-wh__trust-icon">🏅</div>
-          <div class="sm-wh__trust-text">Über <strong>100.000+</strong> Bestellungen.</div>
-        </div>
-        <div class="sm-wh__trust-item">
-          <div class="sm-wh__trust-icon">⭐⭐⭐⭐⭐</div>
-          <div class="sm-wh__trust-text"><strong>10.000+</strong> Bewertungen.</div>
-        </div>
-      </div>
-
-      <div id="smwh-fromto-{{ section.id }}" class="smwhft" aria-label="Von diesem Foto zu deinem Metallschild">
-        <div class="smwhft__head">
-          <h2 class="smwhft__title">
-            <span>{{ section.settings.heading }}</span>
-            <span> {{ section.settings.heading_2 }}</span>
-          </h2>
-          <p class="smwhft__sub">{{ section.settings.subheading }}</p>
-        </div>
-
-        <div class="smwhft__card sm-wh-animate-float">
-          <div class="smwhft__images">
-            <div class="smwhft__img-col">
-              {% if section.settings.from_image != blank %}
-                <img
-                  class="smwhft__img"
-                  src="{{ section.settings.from_image | image_url: width: 1800 }}"
-                  alt="{{ section.settings.from_image.alt | escape }}"
-                  loading="lazy"
-                  width="1800"
-                  height="1800"
-                >
-              {% else %}
-                <img
-                  class="smwhft__img"
-                  src="https://placehold.co/1800x1800"
-                  alt="Placeholder"
-                  loading="lazy"
-                  width="1800"
-                  height="1800"
-                >
-              {% endif %}
-            </div>
-
-            <div class="smwhft__img-col">
-              {% if section.settings.to_image != blank %}
-                <img
-                  class="smwhft__img"
-                  src="{{ section.settings.to_image | image_url: width: 1800 }}"
-                  alt="{{ section.settings.to_image.alt | escape }}"
-                  loading="lazy"
-                  width="1800"
-                  height="1800"
-                >
-              {% else %}
-                <img
-                  class="smwhft__img"
-                  src="https://placehold.co/1800x1800"
-                  alt="Placeholder"
-                  loading="lazy"
-                  width="1800"
-                  height="1800"
-                >
-              {% endif %}
-            </div>
-
-            <div class="smwhft__center" aria-hidden="false">
-              <div class="smwhft__center-shell">
-                <div class="smwhft__pill" aria-label="in 2 Minuten">
-                  <span class="smwhft__pill-dot" aria-hidden="true"></span>
-                  <span><b>in 2 Minuten</b></span>
-                </div>
-
-                <div class="smwhft__ring" aria-label="Processing indicator">
-                  <svg viewBox="0 0 100 100" aria-hidden="true">
-                    <circle class="smwhft__track" cx="50" cy="50" r="40"></circle>
-                    <circle class="smwhft__prog" cx="50" cy="50" r="40"></circle>
-                  </svg>
-                  <div class="smwhft__time" id="smwhft-time-{{ section.id }}">02:00</div>
-                </div>
-
-                <div class="smwhft__scan" aria-hidden="true"></div>
-                <div class="smwhft__status" id="smwhft-status-{{ section.id }}">Wir bauen deinen <b>Entwurf</b> …</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="smwhft__labels" aria-hidden="false">
-            <div class="smwhft__label-card">
-              <div class="smwhft__label-top">
-                <span class="smwhft__label-badge">
-                  <span class="smwhft__label-dot" aria-hidden="true"></span>
-                  {{ section.settings.badge_left | escape }}
-                </span>
-              </div>
-              <div class="smwhft__label-text">{{ section.settings.from_caption | escape }}</div>
-            </div>
-
-            <div class="smwhft__label-card">
-              <div class="smwhft__label-top">
-                <span class="smwhft__label-badge">
-                  <span class="smwhft__label-dot" aria-hidden="true"></span>
-                  {{ section.settings.badge_right | escape }}
-                </span>
-              </div>
-              <div class="smwhft__label-text">{{ section.settings.to_caption | escape }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {% comment %} Optional CTA, hides if no label or no link {% endcomment %}
-      {% assign cta_label = section.settings.primary_button_label | strip %}
-      {% assign cta_link = section.settings.primary_button_link | default: '#scroller' %}
-      {% if cta_label != blank and section.settings.primary_button_link != blank %}
-        <div class="sm-wh__ctas">
-          <a href="{{ section.settings.primary_button_link }}" class="sm-wh__btn sm-wh__btn--primary">
-            {{ cta_label }}
-          </a>
-        </div>
-      {% endif %}
-
-    </div>
-  </div>
-</section>
 
 {% schema %}
 {
-  "name": "Werkstatt Hero Section",
+  "name": "Werkstatt From-To",
+  "tag": "section",
   "settings": [
     {
       "type": "range",
       "id": "top_spacing",
       "label": "Abstand oben",
-      "default": 40,
+      "default": 34,
       "min": 0,
       "max": 180,
-      "step": 4
+      "step": 2
     },
-
-    { "type": "header", "content": "From this to that" },
-
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Abstand unten",
+      "default": 40,
+      "min": 0,
+      "max": 200,
+      "step": 2
+    },
     {
       "type": "text",
       "id": "heading",
@@ -171,7 +40,7 @@
       "type": "text",
       "id": "heading_2",
       "label": "Heading (right)",
-      "default": "zu einem Entwurf"
+      "default": "zu deinem Metallschild"
     },
     {
       "type": "text",
@@ -228,547 +97,553 @@
       "unit": "s",
       "label": "Animation loop duration (visual)",
       "default": 10
-    },
-
-    { "type": "header", "content": "Button (optional)" },
-
-    {
-      "type": "text",
-      "id": "primary_button_label",
-      "label": "Button Text",
-      "default": "Zur Werkstatt"
-    },
-    {
-      "type": "url",
-      "id": "primary_button_link",
-      "label": "Button Link (z.B. #scroller)"
     }
   ],
   "presets": [
-    {
-      "name": "Werkstatt Hero Section",
-      "category": "Steelmonks"
-    }
+    { "name": "Werkstatt From-To" }
   ]
 }
 {% endschema %}
 
-{% stylesheet %}
-#section-{{ section.id }}.sm-wh{
-  background: transparent;
-  padding: 48px 16px 84px;
-  color: #090A0C;
-}
-
-#section-{{ section.id }} .sm-wh__inner{
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-#section-{{ section.id }} .sm-wh__hero{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 26px;
-}
-
-/* Black pill */
-#section-{{ section.id }} .sm-wh__badge-pill{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 26px;
-  border-radius: 999px;
-  background: #090A0C;
-  color: #FAFAFF;
-  font-size: 1.08rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
-}
-
-#section-{{ section.id }} .sm-wh__badge-pill::before{
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: #ff9800;
-  box-shadow: 0 0 0 4px rgba(255,152,0,0.35);
-}
-
-/* Trust row */
-#section-{{ section.id }} .sm-wh__trust-row{
-  width: 100%;
-  max-width: 980px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-#section-{{ section.id }} .sm-wh__trust-item{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-#section-{{ section.id }} .sm-wh__trust-icon{ font-size: 1.3rem; }
-#section-{{ section.id }} .sm-wh__trust-text{
-  font-size: 1.125rem;
-  color: #3f3f46;
-}
-
-/* CTA */
-#section-{{ section.id }} .sm-wh__ctas{
-  display: flex;
-  justify-content: center;
-  margin-top: 4px;
-}
-
-#section-{{ section.id }} .sm-wh__btn{
-  padding: 18px 40px;
-  border-radius: 999px;
-  font-size: 1.14rem;
-  font-weight: 900;
-  text-decoration: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
-}
-
-#section-{{ section.id }} .sm-wh__btn--primary{
-  background: radial-gradient(circle at 0 0, #ff9800 0, #0044CC 45%, #00235e 100%);
-  color: #FAFAFF;
-  box-shadow: 0 18px 44px rgba(0,68,204,0.48);
-}
-
-#section-{{ section.id }} .sm-wh__btn--primary:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 24px 56px rgba(0,68,204,0.62);
-}
-
-/* From,to wrapper */
-#smwh-fromto-{{ section.id }}{
-  --ink: rgba(9,10,12,0.92);
-  --muted: rgba(9,10,12,0.68);
-  --stroke: rgba(9,10,12,0.10);
-  --shadow: 0 34px 110px rgba(15,23,42,0.18);
-  --shadow2: 0 16px 34px rgba(15,23,42,0.12);
-  --radius: 32px;
-  --loop: {{ section.settings.duration_seconds | default: 10 }}s;
-
-  width: 100%;
-  max-width: 1160px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__head{
-  text-align: center;
-  margin: 6px 0 18px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__title{
-  margin: 0;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  font-size: clamp(22px, 2.9vw, 38px);
-  line-height: 1.12;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__sub{
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-  letter-spacing: 0.2px;
-}
-
-/* Floating card, no "cut off" background */
-#smwh-fromto-{{ section.id }} .smwhft__card{
-  border-radius: var(--radius);
-  border: 1px solid var(--stroke);
-  background: rgba(255,255,255,0.40);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, var(--shadow);
-  overflow: visible;
-  position: relative;
-  isolation: isolate;
-  padding: 0;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__card::before{
-  content: "";
-  position: absolute;
-  inset: -70px;
-  border-radius: calc(var(--radius) + 70px);
-  background:
-    radial-gradient(closest-side at 32% 25%, rgba(255,152,0,0.12), rgba(255,255,255,0) 62%),
-    radial-gradient(closest-side at 72% 22%, rgba(0,68,204,0.10), rgba(255,255,255,0) 64%);
-  pointer-events: none;
-  filter: blur(2px);
-  opacity: 0.9;
-  z-index: 0;
-}
-
-/* Images as freestanding squares with generous gap */
-#smwh-fromto-{{ section.id }} .smwhft__images{
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 26px;
-  padding: 18px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__img-col{
-  position: relative;
-  overflow: hidden;
-  border-radius: 30px;
-  aspect-ratio: 1 / 1;
-  background: rgba(9,10,12,0.05);
-  box-shadow: var(--shadow2);
-  border: 1px solid rgba(9,10,12,0.08);
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__img{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1);
-  transition: transform 520ms cubic-bezier(0.2,0.8,0.2,1), filter 320ms ease;
-  will-change: transform, filter;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__img-col:hover .smwhft__img{
-  transform: scale(1.04);
-  filter: saturate(0.95);
-}
-
-/* Center floating processor */
-#smwh-fromto-{{ section.id }} .smwhft__center{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  pointer-events: none;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__center-shell{
-  width: 240px;
-  padding: 14px 14px 12px;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(9,10,12,0.34);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 18px 42px rgba(0,0,0,0.25);
-  display: grid;
-  gap: 12px;
-  justify-items: center;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__pill{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.92);
-  font-size: 12px;
-  line-height: 1;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__pill-dot{
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.80);
-  box-shadow: 0 0 0 6px rgba(255,255,255,0.10);
-}
-
-/* Progress ring */
-#smwh-fromto-{{ section.id }} .smwhft__ring{
-  width: 90px;
-  height: 90px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.12);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
-  display: grid;
-  place-items: center;
-  position: relative;
-  overflow: hidden;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__ring:before{
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.14);
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__ring svg{
-  position: absolute;
-  inset: 0;
-  transform: rotate(-90deg);
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__ring circle{
-  fill: none;
-  stroke-width: 8;
-  stroke-linecap: round;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__track{ stroke: rgba(255,255,255,0.16); }
-
-#smwh-fromto-{{ section.id }} .smwhft__prog{
-  stroke: rgba(255,255,255,0.92);
-  stroke-dasharray: 251.2;
-  stroke-dashoffset: 251.2;
-  animation: smwhftRing var(--loop) linear infinite;
-}
-
-#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__prog{ animation: none !important; }
-
-#smwh-fromto-{{ section.id }} .smwhft__time{
-  position: relative;
-  z-index: 1;
-  color: rgba(255,255,255,0.94);
-  font-weight: 900;
-  letter-spacing: -0.01em;
-  font-size: 14px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__scan{
-  width: 100%;
-  height: 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.10);
-  overflow: hidden;
-  position: relative;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__scan:before{
-  content: "";
-  position: absolute;
-  top: -40%;
-  left: -30%;
-  width: 40%;
-  height: 180%;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 45%, rgba(255,255,255,0) 100%);
-  transform: skewX(-18deg);
-  animation: smwhftScan var(--loop) cubic-bezier(0.2,0.8,0.2,1) infinite;
-  opacity: 0.95;
-}
-
-#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__scan:before{ animation: none !important; }
-
-#smwh-fromto-{{ section.id }} .smwhft__status{
-  font-size: 12px;
-  color: rgba(255,255,255,0.82);
-  letter-spacing: 0.2px;
-  text-align: center;
-  min-height: 18px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__status b{
-  color: rgba(255,255,255,0.96);
-  font-weight: 900;
-}
-
-/* Labels under images */
-#smwh-fromto-{{ section.id }} .smwhft__labels{
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  padding: 2px 18px 18px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__label-card{
-  border-radius: 20px;
-  border: 1px solid rgba(9,10,12,0.10);
-  background: rgba(255,255,255,0.62);
-  box-shadow: var(--shadow2);
-  padding: 12px 12px;
-  display: grid;
-  gap: 8px;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__label-badge{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(9,10,12,0.12);
-  background: rgba(9,10,12,0.06);
-  color: rgba(9,10,12,0.82);
-  font-size: 12px;
-  line-height: 1;
-  width: fit-content;
-  font-weight: 800;
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__label-dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(9,10,12,0.70);
-  box-shadow: 0 0 0 4px rgba(9,10,12,0.08);
-}
-
-#smwh-fromto-{{ section.id }} .smwhft__label-text{
-  font-size: 13px;
-  color: rgba(9,10,12,0.78);
-  line-height: 1.35;
-  white-space: pre-wrap;
-}
-
-/* No "white background on hover" anywhere, only subtle lift */
-#smwh-fromto-{{ section.id }} .smwhft__card:hover{
-  transform: translateY(-2px);
-  transition: transform 220ms ease, box-shadow 220ms ease;
-  box-shadow: 0 40px 130px rgba(15,23,42,0.20);
-}
-
-/* Animations */
-@keyframes smwhFadeUp{
-  0%{ opacity: 0; transform: translateY(14px); }
-  100%{ opacity: 1; transform: translateY(0); }
-}
-.sm-wh-animate-hero{ animation: smwhFadeUp 0.7s ease-out 0.05s both; }
-
-@keyframes smwhFloat{
-  0%{ transform: translateY(0); }
-  50%{ transform: translateY(-6px); }
-  100%{ transform: translateY(0); }
-}
-.sm-wh-animate-float{ animation: smwhFloat 7.5s ease-in-out infinite; }
-
-@keyframes smwhftRing{
-  0%{ stroke-dashoffset: 251.2; }
-  100%{ stroke-dashoffset: 0; }
-}
-@keyframes smwhftScan{
-  0%{ left: -45%; opacity: 0.0; }
-  8%{ opacity: 0.95; }
-  40%{ left: 110%; opacity: 0.95; }
-  55%{ opacity: 0.0; }
-  100%{ left: 110%; opacity: 0.0; }
-}
-
-/* Desktop */
-@media (min-width: 768px){
-  #section-{{ section.id }} .sm-wh__trust-row{
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  #section-{{ section.id }} .sm-wh__badge-pill{
-    padding: 14px 34px;
-    font-size: 1.18rem;
-  }
-}
-
-/* Mobile stack */
-@media (max-width: 900px){
-  #smwh-fromto-{{ section.id }} .smwhft__images{
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 16px;
-  }
-
-  #smwh-fromto-{{ section.id }} .smwhft__labels{
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 0 16px 16px;
-  }
-
-  #smwh-fromto-{{ section.id }} .smwhft__center-shell{
-    width: 228px;
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .sm-wh-animate-float{ animation: none !important; }
-  #smwh-fromto-{{ section.id }} .smwhft__prog,
-  #smwh-fromto-{{ section.id }} .smwhft__scan:before,
-  #smwh-fromto-{{ section.id }} .smwhft__img{
-    animation: none !important;
-    transition: none !important;
-  }
-}
-{% endstylesheet %}
-
-{% javascript %}
-(function(){
-  function init(){
-    var root = document.getElementById('smwh-fromto-{{ section.id }}');
-    if(!root) return false;
-
-    // Ensure autoplay state is always 1/0 for CSS selectors
-    root.setAttribute('data-autoplay', {{ section.settings.autoplay | json }} ? '1' : '0');
-
-    var timeEl = document.getElementById('smwhft-time-{{ section.id }}');
-    var statusEl = document.getElementById('smwhft-status-{{ section.id }}');
-    if(!timeEl) return true;
-
-    var loopMs = ({{ section.settings.duration_seconds | default: 10 }} * 1000) || 10000;
-
-    var labels = [
-      'Wir prüfen dein <b>Motiv</b> …',
-      'Wir bauen deinen <b>Entwurf</b> …',
-      'Wir optimieren die <b>Konturen</b> …',
-      'Wir finalisieren das <b>Schild</b> …'
-    ];
-
-    function pad(n){ return (n < 10 ? '0' : '') + n; }
-
-    function tick(){
-      if(root.getAttribute('data-autoplay') !== '1') return;
-
-      var now = Date.now();
-      var phase = (now % loopMs) / loopMs;
-
-      var seconds = Math.max(0, Math.round(120 * (1 - phase)));
-      var mm = Math.floor(seconds / 60);
-      var ss = seconds % 60;
-      timeEl.textContent = pad(mm) + ':' + pad(ss);
-
-      if(statusEl){
-        var idx = Math.min(labels.length - 1, Math.floor(phase * labels.length));
-        statusEl.innerHTML = labels[idx];
-      }
-
-      requestAnimationFrame(tick);
+<section
+  id="smwh-fromto-{{ section.id }}"
+  class="smwft"
+  aria-label="Von Foto zu Schild"
+  style="padding-top: {{ section.settings.top_spacing | default: 34 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 40 }}px;"
+>
+  <style>
+    #smwh-fromto-{{ section.id }}{
+      --ink: rgba(9,10,12,0.92);
+      --muted: rgba(9,10,12,0.68);
+      --stroke: rgba(9,10,12,0.10);
+      --shadow: 0 34px 110px rgba(15,23,42,0.14);
+      --shadow2: 0 16px 34px rgba(15,23,42,0.10);
+
+      --radius: 32px;
+      --img-radius: 30px;
+
+      /* Steelmonks accents (match primary button vibe) */
+      --a1: #ff9800;
+      --a2: #0044CC;
+      --a3: #00235e;
+
+      --loop: {{ section.settings.duration_seconds | default: 10 }}s;
+      --gap: 34px;         /* BIGGER SPACE between images */
+      --midw: 270px;       /* center timer width */
     }
 
-    requestAnimationFrame(tick);
-    return true;
-  }
+    #smwh-fromto-{{ section.id }}{
+      background: transparent;
+      color: var(--ink);
+    }
 
-  if(!init()){
-    var tries = 0;
-    (function retry(){
-      tries += 1;
-      if(init()) return;
-      if(tries > 60) return;
-      requestAnimationFrame(retry);
+    #smwh-fromto-{{ section.id }} .smwft__wrap{
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__head{
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__title{
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      font-size: clamp(22px, 2.9vw, 38px);
+      line-height: 1.12;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__sub{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    /* LAYOUT: image | timer | image */
+    #smwh-fromto-{{ section.id }} .smwft__grid{
+      display: grid;
+      grid-template-columns: 1fr var(--midw) 1fr;
+      gap: var(--gap);
+      align-items: center; /* keeps timer perfectly centered vertically */
+    }
+
+    /* IMAGE CARDS (square always) */
+    #smwh-fromto-{{ section.id }} .smwft__img-card{
+      border-radius: var(--img-radius);
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: rgba(9,10,12,0.05);
+      border: 1px solid rgba(9,10,12,0.08);
+      box-shadow: var(--shadow2);
+      position: relative;
+      transform: translateZ(0);
+      will-change: transform;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__img{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1);
+      transition: transform 560ms cubic-bezier(0.2,0.8,0.2,1), filter 320ms ease;
+      will-change: transform, filter;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__img-card:hover .smwft__img{
+      transform: scale(1.04);
+      filter: saturate(0.96);
+    }
+
+    /* UNDER-CAPTIONS (freestanding, no overlays) */
+    #smwh-fromto-{{ section.id }} .smwft__caps{
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__cap-pill{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(9,10,12,0.10);
+      background: rgba(255,255,255,0.62);
+      box-shadow: var(--shadow2);
+      padding: 11px 14px;
+      color: rgba(9,10,12,0.82);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.1px;
+      line-height: 1.25;
+      min-height: 46px;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      background: rgba(9,10,12,0.72);
+      box-shadow: 0 0 0 6px rgba(9,10,12,0.08);
+      flex: 0 0 auto;
+    }
+
+    /* TIMER BLOCK (more pronounced, on-brand) */
+    #smwh-fromto-{{ section.id }} .smwft__mid{
+      position: relative;
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      padding: 16px 14px 14px;
+      border-radius: 26px;
+      background: rgba(9,10,12,0.28);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 22px 60px rgba(0,0,0,0.22);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transform: translateZ(0);
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__mid:before{
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 28px;
+      background:
+        radial-gradient(90% 70% at 20% 10%, rgba(255,152,0,0.40), rgba(255,255,255,0) 55%),
+        radial-gradient(90% 70% at 80% 10%, rgba(0,68,204,0.35), rgba(255,255,255,0) 55%);
+      filter: blur(2px);
+      opacity: 0.85;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__mid:after{
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__pill{
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.92);
+      font-size: 12px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__pill-dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.84);
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.10);
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__ring{
+      position: relative;
+      z-index: 1;
+      width: 92px;
+      height: 92px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
+      overflow: hidden;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__ring:before{
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__ring svg{
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__ring circle{
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__track{
+      stroke: rgba(255,255,255,0.16);
+    }
+
+    /* Animated stroke */
+    #smwh-fromto-{{ section.id }} .smwft__prog{
+      stroke: url(#smwft-grad-{{ section.id }});
+      stroke-dasharray: 251.2;
+      stroke-dashoffset: 251.2;
+      animation: smwftRing var(--loop) linear infinite;
+    }
+
+    #smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwft__prog{
+      animation: none !important;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__time{
+      position: relative;
+      z-index: 1;
+      color: rgba(255,255,255,0.95);
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      font-size: 14px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__scan{
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.10);
+      overflow: hidden;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__scan:before{
+      content: "";
+      position: absolute;
+      top: -40%;
+      left: -30%;
+      width: 40%;
+      height: 180%;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 45%, rgba(255,255,255,0) 100%);
+      transform: skewX(-18deg);
+      animation: smwftScan var(--loop) cubic-bezier(0.2,0.8,0.2,1) infinite;
+      opacity: 0.95;
+    }
+
+    #smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwft__scan:before{
+      animation: none !important;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__status{
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+      color: rgba(255,255,255,0.84);
+      letter-spacing: 0.2px;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    #smwh-fromto-{{ section.id }} .smwft__status b{
+      color: rgba(255,255,255,0.96);
+      font-weight: 900;
+    }
+
+    /* subtle float (desktop only) */
+    @keyframes smwftFloat{
+      0%{ transform: translateY(0); }
+      50%{ transform: translateY(-6px); }
+      100%{ transform: translateY(0); }
+    }
+
+    #smwh-fromto-{{ section.id }}[data-autoplay="1"] .smwft__mid{
+      animation: smwftFloat 7.5s ease-in-out infinite;
+    }
+
+    @keyframes smwftRing{
+      0%{ stroke-dashoffset: 251.2; }
+      100%{ stroke-dashoffset: 0; }
+    }
+
+    @keyframes smwftScan{
+      0%{ left: -45%; opacity: 0.0; }
+      8%{ opacity: 0.95; }
+      40%{ left: 110%; opacity: 0.95; }
+      55%{ opacity: 0.0; }
+      100%{ left: 110%; opacity: 0.0; }
+    }
+
+    /* MOBILE: stack image, timer, image (timer stays between) */
+    @media (max-width: 900px){
+      #smwh-fromto-{{ section.id }}{
+        --gap: 18px;
+        --midw: 1fr;
+      }
+
+      #smwh-fromto-{{ section.id }} .smwft__grid{
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      #smwh-fromto-{{ section.id }} .smwft__mid{
+        max-width: 420px;
+        margin: 0 auto;
+        animation: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #smwh-fromto-{{ section.id }} .smwft__prog,
+      #smwh-fromto-{{ section.id }} .smwft__scan:before,
+      #smwh-fromto-{{ section.id }} .smwft__mid,
+      #smwh-fromto-{{ section.id }} .smwft__img{
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+
+  <div class="smwft__wrap">
+    <div class="smwft__head">
+      <h2 class="smwft__title">
+        <span>{{ section.settings.heading }}</span>
+        <span> {{ section.settings.heading_2 }}</span>
+      </h2>
+      <p class="smwft__sub">{{ section.settings.subheading }}</p>
+    </div>
+
+    <div class="smwft__grid">
+      {% comment %} LEFT {% endcomment %}
+      <div>
+        <div class="smwft__img-card">
+          {% if section.settings.from_image != blank %}
+            <img
+              class="smwft__img"
+              src="{{ section.settings.from_image | image_url: width: 1800 }}"
+              alt="{{ section.settings.from_image.alt | escape }}"
+              loading="lazy"
+              width="1800"
+              height="1800"
+            >
+          {% else %}
+            <img
+              class="smwft__img"
+              src="https://placehold.co/1800x1800"
+              alt="Placeholder"
+              loading="lazy"
+              width="1800"
+              height="1800"
+            >
+          {% endif %}
+        </div>
+
+        <div class="smwft__caps">
+          <div class="smwft__cap-pill">
+            <span class="smwft__dot" aria-hidden="true"></span>
+            <span>{{ section.settings.badge_left | escape }} · {{ section.settings.from_caption | escape }}</span>
+          </div>
+        </div>
+      </div>
+
+      {% comment %} MIDDLE TIMER (between images) {% endcomment %}
+      <div class="smwft__mid" aria-hidden="false">
+        <div class="smwft__pill" aria-label="in 2 Minuten">
+          <span class="smwft__pill-dot" aria-hidden="true"></span>
+          <span><b>in 2 Minuten</b></span>
+        </div>
+
+        <div class="smwft__ring" aria-label="Processing indicator">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <linearGradient id="smwft-grad-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="var(--a1)"/>
+                <stop offset="55%" stop-color="var(--a2)"/>
+                <stop offset="100%" stop-color="var(--a3)"/>
+              </linearGradient>
+            </defs>
+            <circle class="smwft__track" cx="50" cy="50" r="40"></circle>
+            <circle class="smwft__prog" cx="50" cy="50" r="40"></circle>
+          </svg>
+          <div class="smwft__time" id="smwft-time-{{ section.id }}">02:00</div>
+        </div>
+
+        <div class="smwft__scan" aria-hidden="true"></div>
+        <div class="smwft__status" id="smwft-status-{{ section.id }}">Wir bauen deinen <b>Entwurf</b> …</div>
+      </div>
+
+      {% comment %} RIGHT {% endcomment %}
+      <div>
+        <div class="smwft__img-card">
+          {% if section.settings.to_image != blank %}
+            <img
+              class="smwft__img"
+              src="{{ section.settings.to_image | image_url: width: 1800 }}"
+              alt="{{ section.settings.to_image.alt | escape }}"
+              loading="lazy"
+              width="1800"
+              height="1800"
+            >
+          {% else %}
+            <img
+              class="smwft__img"
+              src="https://placehold.co/1800x1800"
+              alt="Placeholder"
+              loading="lazy"
+              width="1800"
+              height="1800"
+            >
+          {% endif %}
+        </div>
+
+        <div class="smwft__caps">
+          <div class="smwft__cap-pill">
+            <span class="smwft__dot" aria-hidden="true"></span>
+            <span>{{ section.settings.badge_right | escape }} · {{ section.settings.to_caption | escape }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var SECTION_ID = "{{ section.id }}";
+      var rootId = "smwh-fromto-" + SECTION_ID;
+
+      function init(){
+        var root = document.getElementById(rootId);
+        if(!root) return false;
+
+        // Stable autoplay attr for CSS
+        root.setAttribute('data-autoplay', {{ section.settings.autoplay | json }} ? '1' : '0');
+
+        var timeEl = document.getElementById("smwft-time-" + SECTION_ID);
+        var statusEl = document.getElementById("smwft-status-" + SECTION_ID);
+        if(!timeEl) return true;
+
+        var loopMs = ({{ section.settings.duration_seconds | default: 10 }} * 1000) || 10000;
+        var labels = [
+          'Wir prüfen dein <b>Motiv</b> …',
+          'Wir bauen deinen <b>Entwurf</b> …',
+          'Wir optimieren die <b>Konturen</b> …',
+          'Wir finalisieren das <b>Schild</b> …'
+        ];
+
+        function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+        // Cancel any previous loop for theme editor re-renders
+        if(root.__smwftRAF) cancelAnimationFrame(root.__smwftRAF);
+
+        function tick(){
+          if(root.getAttribute('data-autoplay') !== '1') return;
+
+          var now = Date.now();
+          var phase = (now % loopMs) / loopMs; // 0..1
+
+          var seconds = Math.max(0, Math.round(120 * (1 - phase)));
+          var mm = Math.floor(seconds / 60);
+          var ss = seconds % 60;
+          timeEl.textContent = pad(mm) + ':' + pad(ss);
+
+          if(statusEl){
+            var idx = Math.min(labels.length - 1, Math.floor(phase * labels.length));
+            statusEl.innerHTML = labels[idx];
+          }
+
+          root.__smwftRAF = requestAnimationFrame(tick);
+        }
+
+        // Start reliably
+        root.__smwftRAF = requestAnimationFrame(tick);
+        return true;
+      }
+
+      function boot(){
+        if(init()) return;
+        var tries = 0;
+        (function retry(){
+          tries += 1;
+          if(init()) return;
+          if(tries > 80) return;
+          requestAnimationFrame(retry);
+        })();
+      }
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", boot, { once: true });
+      } else {
+        boot();
+      }
+
+      // Shopify Theme Editor: re-init on section load/select
+      document.addEventListener("shopify:section:load", function(e){
+        if(!e || !e.detail || !e.detail.sectionId) return;
+        if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
+      });
+      document.addEventListener("shopify:section:select", function(e){
+        if(!e || !e.detail || !e.detail.sectionId) return;
+        if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
+      });
     })();
-  }
-})();
-{% endjavascript %}
+  </script>
+</section>
