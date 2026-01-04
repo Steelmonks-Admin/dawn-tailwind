@@ -34,6 +34,24 @@
       "name": "Werkstatt (Sign Creator)",
       "settings": {}
     },
+    "steelmonks_werkstatt_steps_bk7jyj": {
+      "type": "steelmonks-werkstatt-steps",
+      "name": "Werkstatt Steps",
+      "settings": {
+        "top_spacing": 34,
+        "bottom_spacing": 46,
+        "heading": "So entsteht dein Schild",
+        "subheading": "Upload → Entwurf → Fertiges Schild",
+        "image_1": "shopify://shop_images/Steelmonks-Werkstatt-1.jpg",
+        "caption_1": "Motiv hochladen",
+        "image_2": "shopify://shop_images/Steelmonks-Werkstatt-2.jpg",
+        "caption_2": "Entwurf generieren",
+        "image_3": "shopify://shop_images/Steelmonks-Werkstatt-3.jpg",
+        "caption_3": "Fertiges Schild",
+        "show_numbers": true,
+        "enable_animations": true
+      }
+    },
     "rich_text_rMFFNh": {
       "type": "rich-text",
       "blocks": {
@@ -190,6 +208,7 @@
   "order": [
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "steelmonks_sign_creator_FKYF46",
+    "steelmonks_werkstatt_steps_bk7jyj",
     "rich_text_rMFFNh",
     "main",
     "masonry_gallery_yMJgLM",
