@@ -25,8 +25,13 @@
         "to_caption": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
         "autoplay": true,
         "duration_seconds": 10,
-        "primary_button_link": "#scroller"
+        "primary_button_link": ""
       }
+    },
+    "steelmonks_sign_creator_FKYF46": {
+      "type": "steelmonks-sign-creator",
+      "name": "SM Schild Konfigurator",
+      "settings": {}
     },
     "rich_text_rMFFNh": {
       "type": "rich-text",
@@ -77,16 +82,12 @@
       "settings": {
         "heading": "So entsteht dein Schild",
         "subheading": "Idee → Entwurf → Fertiges Schild",
+        "image_1": "shopify://shop_images/Steelmonks-Werkstatt-1.jpg",
         "caption_1": "1) Motiv hochladen",
         "caption_2": "2) Entwurf generieren",
         "caption_3": "3) Fertiges Schild",
         "show_numbers": true
       }
-    },
-    "steelmonks_sign_creator_FKYF46": {
-      "type": "steelmonks-sign-creator",
-      "name": "SM Schild Konfigurator",
-      "settings": {}
     },
     "masonry_gallery_yMJgLM": {
       "type": "masonry-gallery",
@@ -199,10 +200,10 @@
   },
   "order": [
     "steelmonks_sign_creator_possibilites_3nqh9k",
+    "steelmonks_sign_creator_FKYF46",
     "rich_text_rMFFNh",
     "main",
     "steelmonks_sign_creator_steps_R8BrfQ",
-    "steelmonks_sign_creator_FKYF46",
     "masonry_gallery_yMJgLM",
     "accordions_EeXHEy"
   ]
