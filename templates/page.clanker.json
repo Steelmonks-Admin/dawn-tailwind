@@ -107,8 +107,8 @@
           "type": "accordion",
           "settings": {
             "parent": "",
-            "heading": "Ich möchte ein Geschenk für einen Schlagzeuger erstellen, was soll ich eingeben?",
-            "content": "<p>In der Steelmonks Werkstatt kannst du dein persönliches Metallschild ganz einfach selbst gestalten. Lade dafür ein Foto, eine Skizze oder ein Motiv hoch und beschreibe kurz deine Idee. Unsere Werkstatt verwandelt deinen Entwurf automatisch in ein sauberes, schnittfähiges Design, das anschließend aus hochwertigem Stahl gefertigt wird. In wenigen Minuten siehst du bereits eine Vorschau deines individuellen Schildes.</p>",
+            "heading": "Ich möchte ein Schild für einen Schlagzeuger erstellen, was soll ich eingeben?",
+            "content": "<p>Beschreibe einfach, was die Person ausmacht. Zum Beispiel: Schlagzeug, Drumsticks, ein Drumset, der Name oder ein kurzer Schriftzug wie „Rock on“ oder „Born to drum“. Du kannst auch eine Skizze oder ein Foto hochladen. Unsere Werkstatt verwandelt deine Idee automatisch in ein stilvolles Metallschild, das perfekt als persönliches Musiker-Geschenk passt.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -121,7 +121,7 @@
           "settings": {
             "parent": "",
             "heading": "Ich suche ein Geschenk zum Valentinstag für meine Frau, habt ihr Ideen?",
-            "content": "<p>Nein. Die Erstellung deines Entwurfs und die Vorschau sind komplett kostenlos. Du kannst dein Design ganz in Ruhe ausprobieren und erst dann entscheiden, ob du das Schild bestellen möchtest. Kosten entstehen erst, wenn du dein fertiges Design in den Warenkorb legst.</p>",
+            "content": "<p>Für ein Valentinsgeschenk eignen sich besonders persönliche Motive. Herzen, Initialen, ein wichtiges Datum, ein gemeinsames Symbol oder ein kurzer Satz mit Bedeutung. Du kannst deine Idee einfach in Worten beschreiben oder ein Bild hochladen. Daraus entsteht ein individuelles Metallschild, das nicht kitschig wirkt, sondern zeitlos und emotional.</p>",
             "content_liquid": "",
             "featured": true,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -134,7 +134,7 @@
           "settings": {
             "parent": "",
             "heading": "Wie erstelle ich ein einfaches Hausschild für mich?",
-            "content": "<p>Unsere Schilder werden aus hochwertigem Stahl gefertigt und präzise gelasert. Dein Motiv wird so aufbereitet, dass es technisch perfekt umsetzbar ist. Anschließend wird das Schild je nach Auswahl veredelt, zum Beispiel pulverbeschichtet oder in Edelstahloptik, und sorgfältig von Hand geprüft. Das Ergebnis ist ein langlebiges, wetterfestes Metallschild in echter Steelmonks Qualität.</p>",
+            "content": "<p>Gib einfach an, was auf dem Schild stehen soll, zum Beispiel deinen Nachnamen, die Hausnummer oder beides. Wenn du einen bestimmten Stil möchtest, etwa modern, minimalistisch oder klassisch, kannst du das kurz dazuschreiben. Unsere Werkstatt sorgt automatisch für ein sauberes, ausgewogenes Design, das sich perfekt für den Eingangsbereich eignet.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -147,7 +147,7 @@
           "settings": {
             "parent": "",
             "heading": "Ich habe ein Wappen, wie soll ich vorgehen?",
-            "content": "<p>Unsere Schilder werden aus hochwertigem Stahl gefertigt und präzise gelasert. Dein Motiv wird so aufbereitet, dass es technisch perfekt umsetzbar ist. Anschließend wird das Schild je nach Auswahl veredelt, zum Beispiel pulverbeschichtet oder in Edelstahloptik, und sorgfältig von Hand geprüft. Das Ergebnis ist ein langlebiges, wetterfestes Metallschild in echter Steelmonks Qualität.</p>",
+            "content": "<p>Lade dein Wappen als Bild oder Scan hoch, auch ältere oder nicht perfekte Vorlagen sind kein Problem. Falls es Besonderheiten gibt, zum Beispiel Schriftzüge, Jahreszahlen oder eine gewünschte Form, kannst du diese kurz beschreiben. Unsere Werkstatt bereitet dein Wappen technisch so auf, dass es als hochwertiges, detailreiches Metallschild umgesetzt werden kann.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
