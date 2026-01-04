@@ -25,6 +25,7 @@
         "to_caption": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
         "autoplay": true,
         "duration_seconds": 10,
+        "primary_button_label": "",
         "primary_button_link": ""
       }
     },
