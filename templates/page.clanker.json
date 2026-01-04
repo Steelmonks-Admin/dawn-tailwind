@@ -191,7 +191,7 @@
           "settings": {
             "parent": "",
             "heading": "Welche Vorlage kann ich hochladen?",
-            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content": "<p>Du kannst nahezu jede Art von Vorlage hochladen. Geeignet sind Fotos, Grafiken, Logos, Zeichnungen oder einfache Bilddateien im PNG- oder JPG-Format. Auch Motive aus dem Internet sind möglich, sofern du die Nutzungsrechte besitzt. Wichtig ist nicht die Perfektion der Vorlage, sondern die Idee dahinter, unsere Werkstatt bereitet dein Motiv technisch sauber für ein Metallschild auf.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -204,7 +204,7 @@
           "settings": {
             "parent": "",
             "heading": "Kann die Vorlage auch eine eigene Skizze sein.",
-            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content": "<p>Ja, absolut. Eine handgezeichnete Skizze reicht völlig aus. Du kannst sie einfach fotografieren oder scannen und hochladen. Unsere Werkstatt interpretiert deine Skizze und verwandelt sie in ein klares, schnittfähiges Design aus Metall. Viele individuelle Schilder entstehen genau auf diese Weise.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -217,7 +217,7 @@
           "settings": {
             "parent": "",
             "heading": "Wie viele/ welche Angaben sind ausschlaggebend?",
-            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content": "<p>Je klarer deine Angaben, desto besser das Ergebnis. Besonders hilfreich sind Informationen zum gewünschten Motiv, eventuellem Text, Symbolen oder besonderen Details. Falls du dir bei einzelnen Punkten unsicher bist, ist das kein Problem. Eine grobe Beschreibung reicht aus, um einen passenden Entwurf zu erstellen.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -230,7 +230,7 @@
           "settings": {
             "parent": "",
             "heading": "Kann ich Hilfe bekommen, wenn ich Schwierigkeiten habe?",
-            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content": "<p>Ja. Wenn du unsicher bist oder Unterstützung brauchst, kannst du dich jederzeit an uns wenden. Unser Team hilft dir bei Fragen zur Vorlage, zur Gestaltung oder zum gesamten Prozess. Du wirst nicht allein gelassen, wir begleiten dich von der Idee bis zum fertigen Metallschild.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
