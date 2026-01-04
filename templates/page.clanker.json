@@ -185,6 +185,58 @@
             "featured_image_alignment": "center",
             "featured_image_aspect_ratio": "233 / 349"
           }
+        },
+        "accordion_Kh8hri": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Welche Vorlage kann ich hochladen?",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_XEwYzD": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Kann die Vorlage auch eine eigene Skizze sein.",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_HMi4Cm": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Wie viele/ welche Angaben sind ausschlaggebend?",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_wJhEf3": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Kann ich Hilfe bekommen, wenn ich Schwierigkeiten habe?",
+            "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
         }
       },
       "block_order": [
@@ -192,7 +244,11 @@
         "accordion_HxC6kM",
         "accordion_xjxiHm",
         "accordion_eG9Wbf",
-        "accordion_CUVVQr"
+        "accordion_CUVVQr",
+        "accordion_Kh8hri",
+        "accordion_XEwYzD",
+        "accordion_HMi4Cm",
+        "accordion_wJhEf3"
       ],
       "name": "Accordions",
       "settings": {
