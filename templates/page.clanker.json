@@ -14,6 +14,7 @@
       "name": "Werkstatt Hero Section",
       "settings": {
         "top_spacing": 40,
+        "bottom_spacing": 40,
         "heading": "Von einem Satz oder Foto",
         "heading_2": "einzigartigen Wandkunst",
         "subheading": "Las Deiner Vorstellungskraft, freien Lauf.",
@@ -22,11 +23,9 @@
         "from_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58.jpg",
         "from_caption": "Lade ein Foto oder eine Skizze hoch",
         "to_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58_1.jpg",
-        "to_caption": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
+        "to_caption": "Wir verwandeln es in ein sauberes Schild",
         "autoplay": true,
-        "duration_seconds": 10,
-        "primary_button_label": "",
-        "primary_button_link": ""
+        "duration_seconds": 10
       }
     },
     "steelmonks_sign_creator_FKYF46": {
