@@ -1,7 +1,6 @@
 {% comment %}
   Werkstatt Hero Section
-  Badge pill + trust row + large floating From,To visual (square images) + single CTA
-  Removed: Hauptkategorien blocks, Feuerwehr and Handwerker links row
+  Badge pill + trust row + floating From/To (square) + optional CTA (hides when empty)
 {% endcomment %}
 
 <section
@@ -10,17 +9,12 @@
   style="padding-top: {{ section.settings.top_spacing | default: 40 }}px;"
 >
   <div class="sm-wh__inner">
-
     <div class="sm-wh__hero sm-wh-animate-hero">
 
-      {% comment %} Black pill {% endcomment %}
       <div class="sm-wh__badge">
-        <span class="sm-wh__badge-pill">
-          Die Steelmonks Werkstatt
-        </span>
+        <span class="sm-wh__badge-pill">Die Steelmonks Werkstatt</span>
       </div>
 
-      {% comment %} Trust row {% endcomment %}
       <div class="sm-wh__trust-row">
         <div class="sm-wh__trust-item">
           <div class="sm-wh__trust-icon">🇩🇪</div>
@@ -36,12 +30,7 @@
         </div>
       </div>
 
-      {% comment %} From this to that, large, floating, square images, no overlays {% endcomment %}
-      <div
-        id="smwh-fromto-{{ section.id }}"
-        class="smwhft"
-        aria-label="Von diesem Foto zu deinem Metallschild"
-      >
+      <div id="smwh-fromto-{{ section.id }}" class="smwhft" aria-label="Von diesem Foto zu deinem Metallschild">
         <div class="smwhft__head">
           <h2 class="smwhft__title">
             <span>{{ section.settings.heading }}</span>
@@ -96,7 +85,6 @@
               {% endif %}
             </div>
 
-            {% comment %} Center floating processor {% endcomment %}
             <div class="smwhft__center" aria-hidden="false">
               <div class="smwhft__center-shell">
                 <div class="smwhft__pill" aria-label="in 2 Minuten">
@@ -118,7 +106,6 @@
             </div>
           </div>
 
-          {% comment %} Labels below images {% endcomment %}
           <div class="smwhft__labels" aria-hidden="false">
             <div class="smwhft__label-card">
               <div class="smwhft__label-top">
@@ -143,16 +130,18 @@
         </div>
       </div>
 
-      {% comment %} CTA {% endcomment %}
-      <div class="sm-wh__ctas">
-        {% assign cta_href = section.settings.primary_button_link | default: '#scroller' %}
-        <a href="{{ cta_href }}" class="sm-wh__btn sm-wh__btn--primary">
-          {{ section.settings.primary_button_label | default: 'Zur Werkstatt' }}
-        </a>
-      </div>
+      {% comment %} Optional CTA, hides if no label or no link {% endcomment %}
+      {% assign cta_label = section.settings.primary_button_label | strip %}
+      {% assign cta_link = section.settings.primary_button_link | default: '#scroller' %}
+      {% if cta_label != blank and section.settings.primary_button_link != blank %}
+        <div class="sm-wh__ctas">
+          <a href="{{ section.settings.primary_button_link }}" class="sm-wh__btn sm-wh__btn--primary">
+            {{ cta_label }}
+          </a>
+        </div>
+      {% endif %}
 
     </div>
-
   </div>
 </section>
 
@@ -241,7 +230,7 @@
       "default": 10
     },
 
-    { "type": "header", "content": "Hauptbutton" },
+    { "type": "header", "content": "Button (optional)" },
 
     {
       "type": "text",
@@ -252,7 +241,7 @@
     {
       "type": "url",
       "id": "primary_button_link",
-      "label": "Button Link (Fallback ist #scroller)"
+      "label": "Button Link (z.B. #scroller)"
     }
   ],
   "presets": [
@@ -266,8 +255,8 @@
 
 {% stylesheet %}
 #section-{{ section.id }}.sm-wh{
-  background: #FAFAFF;
-  padding: 42px 16px 70px;
+  background: transparent;
+  padding: 48px 16px 84px;
   color: #090A0C;
 }
 
@@ -283,7 +272,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 26px;
 }
 
 /* Black pill */
@@ -318,7 +307,6 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  margin-top: 2px;
 }
 
 #section-{{ section.id }} .sm-wh__trust-item{
@@ -338,7 +326,7 @@
 #section-{{ section.id }} .sm-wh__ctas{
   display: flex;
   justify-content: center;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 #section-{{ section.id }} .sm-wh__btn{
@@ -368,8 +356,8 @@
 #smwh-fromto-{{ section.id }}{
   --ink: rgba(9,10,12,0.92);
   --muted: rgba(9,10,12,0.68);
-  --stroke: rgba(9,10,12,0.12);
-  --shadow: 0 30px 90px rgba(15,23,42,0.18);
+  --stroke: rgba(9,10,12,0.10);
+  --shadow: 0 34px 110px rgba(15,23,42,0.18);
   --shadow2: 0 16px 34px rgba(15,23,42,0.12);
   --radius: 32px;
   --loop: {{ section.settings.duration_seconds | default: 10 }}s;
@@ -380,7 +368,7 @@
 
 #smwh-fromto-{{ section.id }} .smwhft__head{
   text-align: center;
-  margin: 6px 0 16px;
+  margin: 6px 0 18px;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__title{
@@ -399,43 +387,50 @@
   letter-spacing: 0.2px;
 }
 
-/* Big floating card */
+/* Floating card, no "cut off" background */
 #smwh-fromto-{{ section.id }} .smwhft__card{
   border-radius: var(--radius);
   border: 1px solid var(--stroke);
-  background: rgba(255,255,255,0.50);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.72) inset, var(--shadow);
-  overflow: hidden;
+  background: rgba(255,255,255,0.40);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.55) inset, var(--shadow);
+  overflow: visible;
   position: relative;
   isolation: isolate;
+  padding: 0;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__card::before{
   content: "";
   position: absolute;
-  inset: -45%;
+  inset: -70px;
+  border-radius: calc(var(--radius) + 70px);
   background:
-    radial-gradient(closest-side at 30% 30%, rgba(255,152,0,0.14), rgba(255,255,255,0) 60%),
-    radial-gradient(closest-side at 70% 25%, rgba(0,68,204,0.12), rgba(255,255,255,0) 62%);
-  transform: rotate(8deg);
+    radial-gradient(closest-side at 32% 25%, rgba(255,152,0,0.12), rgba(255,255,255,0) 62%),
+    radial-gradient(closest-side at 72% 22%, rgba(0,68,204,0.10), rgba(255,255,255,0) 64%);
   pointer-events: none;
+  filter: blur(2px);
+  opacity: 0.9;
+  z-index: 0;
 }
 
+/* Images as freestanding squares with generous gap */
 #smwh-fromto-{{ section.id }} .smwhft__images{
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  padding: 14px;
-  background: transparent;
+  gap: 26px;
+  padding: 18px;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__img-col{
   position: relative;
   overflow: hidden;
-  border-radius: 26px;
+  border-radius: 30px;
   aspect-ratio: 1 / 1;
-  background: rgba(9,10,12,0.06);
+  background: rgba(9,10,12,0.05);
+  box-shadow: var(--shadow2);
+  border: 1px solid rgba(9,10,12,0.08);
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__img{
@@ -465,11 +460,11 @@
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__center-shell{
-  width: 230px;
+  width: 240px;
   padding: 14px 14px 12px;
   border-radius: 22px;
   border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(9,10,12,0.36);
+  background: rgba(9,10,12,0.34);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 18px 42px rgba(0,0,0,0.25);
@@ -501,8 +496,8 @@
 
 /* Progress ring */
 #smwh-fromto-{{ section.id }} .smwhft__ring{
-  width: 88px;
-  height: 88px;
+  width: 90px;
+  height: 90px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.18);
   background: rgba(255,255,255,0.12);
@@ -537,15 +532,13 @@
 #smwh-fromto-{{ section.id }} .smwhft__track{ stroke: rgba(255,255,255,0.16); }
 
 #smwh-fromto-{{ section.id }} .smwhft__prog{
-  stroke: rgba(255,255,255,0.90);
+  stroke: rgba(255,255,255,0.92);
   stroke-dasharray: 251.2;
   stroke-dashoffset: 251.2;
   animation: smwhftRing var(--loop) linear infinite;
 }
 
-#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__prog{
-  animation: none !important;
-}
+#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__prog{ animation: none !important; }
 
 #smwh-fromto-{{ section.id }} .smwhft__time{
   position: relative;
@@ -579,9 +572,7 @@
   opacity: 0.95;
 }
 
-#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__scan:before{
-  animation: none !important;
-}
+#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__scan:before{ animation: none !important; }
 
 #smwh-fromto-{{ section.id }} .smwhft__status{
   font-size: 12px;
@@ -598,17 +589,19 @@
 
 /* Labels under images */
 #smwh-fromto-{{ section.id }} .smwhft__labels{
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 0 14px 16px;
+  gap: 16px;
+  padding: 2px 18px 18px;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__label-card{
-  border-radius: 18px;
+  border-radius: 20px;
   border: 1px solid rgba(9,10,12,0.10);
-  background: rgba(255,255,255,0.72);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.70) inset, var(--shadow2);
+  background: rgba(255,255,255,0.62);
+  box-shadow: var(--shadow2);
   padding: 12px 12px;
   display: grid;
   gap: 8px;
@@ -644,11 +637,11 @@
   white-space: pre-wrap;
 }
 
-/* Hover polish */
+/* No "white background on hover" anywhere, only subtle lift */
 #smwh-fromto-{{ section.id }} .smwhft__card:hover{
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   transition: transform 220ms ease, box-shadow 220ms ease;
-  box-shadow: 0 36px 104px rgba(15,23,42,0.22);
+  box-shadow: 0 40px 130px rgba(15,23,42,0.20);
 }
 
 /* Animations */
@@ -656,7 +649,6 @@
   0%{ opacity: 0; transform: translateY(14px); }
   100%{ opacity: 1; transform: translateY(0); }
 }
-
 .sm-wh-animate-hero{ animation: smwhFadeUp 0.7s ease-out 0.05s both; }
 
 @keyframes smwhFloat{
@@ -664,14 +656,12 @@
   50%{ transform: translateY(-6px); }
   100%{ transform: translateY(0); }
 }
-
 .sm-wh-animate-float{ animation: smwhFloat 7.5s ease-in-out infinite; }
 
 @keyframes smwhftRing{
   0%{ stroke-dashoffset: 251.2; }
   100%{ stroke-dashoffset: 0; }
 }
-
 @keyframes smwhftScan{
   0%{ left: -45%; opacity: 0.0; }
   8%{ opacity: 0.95; }
@@ -682,10 +672,6 @@
 
 /* Desktop */
 @media (min-width: 768px){
-  #section-{{ section.id }}.sm-wh{
-    padding: 48px 24px 84px;
-  }
-
   #section-{{ section.id }} .sm-wh__trust-row{
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
@@ -697,20 +683,22 @@
   }
 }
 
-/* Mobile stack, keep squares */
+/* Mobile stack */
 @media (max-width: 900px){
   #smwh-fromto-{{ section.id }} .smwhft__images{
     grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 14px;
-  }
-
-  #smwh-fromto-{{ section.id }} .smwhft__center-shell{
-    width: 220px;
+    gap: 18px;
+    padding: 16px;
   }
 
   #smwh-fromto-{{ section.id }} .smwhft__labels{
     grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 16px 16px;
+  }
+
+  #smwh-fromto-{{ section.id }} .smwhft__center-shell{
+    width: 228px;
   }
 }
 
@@ -732,9 +720,8 @@
     var root = document.getElementById('smwh-fromto-{{ section.id }}');
     if(!root) return false;
 
-    // Normalize autoplay to 1/0 so CSS and JS match, avoids "true/false" edge cases.
-    var autoplay = {{ section.settings.autoplay | json }} ? '1' : '0';
-    root.setAttribute('data-autoplay', autoplay);
+    // Ensure autoplay state is always 1/0 for CSS selectors
+    root.setAttribute('data-autoplay', {{ section.settings.autoplay | json }} ? '1' : '0');
 
     var timeEl = document.getElementById('smwhft-time-{{ section.id }}');
     var statusEl = document.getElementById('smwhft-status-{{ section.id }}');
@@ -774,7 +761,6 @@
     return true;
   }
 
-  // Robust init for theme editors and deferred script execution
   if(!init()){
     var tries = 0;
     (function retry(){
