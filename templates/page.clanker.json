@@ -36,6 +36,8 @@
       "type": "steelmonks-werkstatt-hero",
       "name": "From This to That Timer",
       "settings": {
+        "top_spacing": 24,
+        "badge_text": "Black Friday: bis zu 50 % – nur dieses Wochenende",
         "heading": "Von einem Satz oder Foto",
         "heading_2": "einzigartigen Wandkunst",
         "subheading": "Las Deiner Vorstellungskraft, freien Lauf.",
@@ -46,7 +48,16 @@
         "to_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58_1.jpg",
         "to_caption": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
         "autoplay": true,
-        "duration_seconds": 10
+        "duration_seconds": 10,
+        "primary_button_label": "In die Werkstatt",
+        "primary_button_link": "#scroll",
+        "collection_fire_link": "",
+        "collection_fire_label": "Für Feuerwehr",
+        "collection_fire_sub": "Beliebte Schilder, Anhänger und Geschenke",
+        "collection_craft_link": "",
+        "collection_craft_label": "Für Handwerker",
+        "collection_craft_sub": "Werkstattdeko, Schlüsselanhänger und mehr",
+        "show_collection_row": true
       }
     },
     "rich_text_rMFFNh": {
