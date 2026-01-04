@@ -78,21 +78,6 @@
         "show_title": false
       }
     },
-    "steelmonks_sign_creator_steps_R8BrfQ": {
-      "type": "steelmonks-sign-creator-steps",
-      "name": "Werkstatt Steps",
-      "settings": {
-        "heading": "So entsteht dein Schild",
-        "subheading": "Idee → Entwurf → Fertiges Schild",
-        "image_1": "shopify://shop_images/Steelmonks-Werkstatt-1.jpg",
-        "caption_1": "1) Motiv hochladen",
-        "image_2": "shopify://shop_images/Steelmonks-Werkstatt-2.jpg",
-        "caption_2": "2) Entwurf generieren",
-        "image_3": "shopify://shop_images/Steelmonks-Werkstatt-3.jpg",
-        "caption_3": "3) Fertiges Schild",
-        "show_numbers": true
-      }
-    },
     "masonry_gallery_yMJgLM": {
       "type": "masonry-gallery",
       "name": "Masonry Gallery",
@@ -138,7 +123,7 @@
             "heading": "Do I need to pay to create a design?",
             "content": "<p>Use this section to provide a brief description of your product or service. Highlight the key features, benefits, and what makes it unique.</p>",
             "content_liquid": "",
-            "featured": true,
+            "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
             "featured_image_alignment": "center",
             "featured_image_aspect_ratio": "233 / 349"
@@ -207,7 +192,6 @@
     "steelmonks_sign_creator_FKYF46",
     "rich_text_rMFFNh",
     "main",
-    "steelmonks_sign_creator_steps_R8BrfQ",
     "masonry_gallery_yMJgLM",
     "accordions_EeXHEy"
   ]
