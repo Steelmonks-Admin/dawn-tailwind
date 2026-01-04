@@ -1,13 +1,13 @@
 {% comment %}
   Werkstatt Hero Section
-  Badge pill + trust row + large floating From,To visual + single CTA
+  Badge pill + trust row + large floating From,To visual (square images) + single CTA
   Removed: Hauptkategorien blocks, Feuerwehr and Handwerker links row
 {% endcomment %}
 
 <section
   id="section-{{ section.id }}"
   class="sm-wh"
-  style="padding-top: {{ section.settings.top_spacing | default: 28 }}px;"
+  style="padding-top: {{ section.settings.top_spacing | default: 40 }}px;"
 >
   <div class="sm-wh__inner">
 
@@ -36,11 +36,10 @@
         </div>
       </div>
 
-      {% comment %} From this to that, large, floating, no overlays {% endcomment %}
+      {% comment %} From this to that, large, floating, square images, no overlays {% endcomment %}
       <div
         id="smwh-fromto-{{ section.id }}"
         class="smwhft"
-        data-autoplay="{{ section.settings.autoplay | json }}"
         aria-label="Von diesem Foto zu deinem Metallschild"
       >
         <div class="smwhft__head">
@@ -61,16 +60,16 @@
                   alt="{{ section.settings.from_image.alt | escape }}"
                   loading="lazy"
                   width="1800"
-                  height="1350"
+                  height="1800"
                 >
               {% else %}
                 <img
                   class="smwhft__img"
-                  src="https://placehold.co/1800x1350"
+                  src="https://placehold.co/1800x1800"
                   alt="Placeholder"
                   loading="lazy"
                   width="1800"
-                  height="1350"
+                  height="1800"
                 >
               {% endif %}
             </div>
@@ -83,21 +82,21 @@
                   alt="{{ section.settings.to_image.alt | escape }}"
                   loading="lazy"
                   width="1800"
-                  height="1350"
+                  height="1800"
                 >
               {% else %}
                 <img
                   class="smwhft__img"
-                  src="https://placehold.co/1800x1350"
+                  src="https://placehold.co/1800x1800"
                   alt="Placeholder"
                   loading="lazy"
                   width="1800"
-                  height="1350"
+                  height="1800"
                 >
               {% endif %}
             </div>
 
-            {% comment %} Center floating processor, no white middle column {% endcomment %}
+            {% comment %} Center floating processor {% endcomment %}
             <div class="smwhft__center" aria-hidden="false">
               <div class="smwhft__center-shell">
                 <div class="smwhft__pill" aria-label="in 2 Minuten">
@@ -119,7 +118,7 @@
             </div>
           </div>
 
-          {% comment %} Labels below images (instead of overlays) {% endcomment %}
+          {% comment %} Labels below images {% endcomment %}
           <div class="smwhft__labels" aria-hidden="false">
             <div class="smwhft__label-card">
               <div class="smwhft__label-top">
@@ -146,9 +145,9 @@
 
       {% comment %} CTA {% endcomment %}
       <div class="sm-wh__ctas">
-        {% assign cta_href = section.settings.primary_button_link | default: '#scroll' %}
+        {% assign cta_href = section.settings.primary_button_link | default: '#scroller' %}
         <a href="{{ cta_href }}" class="sm-wh__btn sm-wh__btn--primary">
-          In die Werkstatt
+          {{ section.settings.primary_button_label | default: 'Zur Werkstatt' }}
         </a>
       </div>
 
@@ -165,7 +164,7 @@
       "type": "range",
       "id": "top_spacing",
       "label": "Abstand oben",
-      "default": 28,
+      "default": 40,
       "min": 0,
       "max": 180,
       "step": 4
@@ -177,13 +176,13 @@
       "type": "text",
       "id": "heading",
       "label": "Heading (left)",
-      "default": "Von diesem Foto"
+      "default": "Von einem Foto"
     },
     {
       "type": "text",
       "id": "heading_2",
       "label": "Heading (right)",
-      "default": "zu deinem Metallschild"
+      "default": "zu einem Entwurf"
     },
     {
       "type": "text",
@@ -195,13 +194,13 @@
       "type": "text",
       "id": "badge_left",
       "label": "Left badge",
-      "default": "From this"
+      "default": "Von einem Foto"
     },
     {
       "type": "text",
       "id": "badge_right",
       "label": "Right badge",
-      "default": "To this"
+      "default": "Zu einem Entwurf"
     },
     {
       "type": "image_picker",
@@ -245,9 +244,15 @@
     { "type": "header", "content": "Hauptbutton" },
 
     {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Button Text",
+      "default": "Zur Werkstatt"
+    },
+    {
       "type": "url",
       "id": "primary_button_link",
-      "label": "Button Link (Fallback ist #scroll)"
+      "label": "Button Link (Fallback ist #scroller)"
     }
   ],
   "presets": [
@@ -262,23 +267,23 @@
 {% stylesheet %}
 #section-{{ section.id }}.sm-wh{
   background: #FAFAFF;
-  padding: 30px 16px 56px;
+  padding: 42px 16px 70px;
   color: #090A0C;
 }
 
 #section-{{ section.id }} .sm-wh__inner{
-  max-width: 1260px;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 30px;
 }
 
 #section-{{ section.id }} .sm-wh__hero{
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 22px;
+  gap: 24px;
 }
 
 /* Black pill */
@@ -286,11 +291,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 22px;
+  padding: 12px 26px;
   border-radius: 999px;
   background: #090A0C;
   color: #FAFAFF;
-  font-size: 1.1rem;
+  font-size: 1.08rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -313,7 +318,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 #section-{{ section.id }} .sm-wh__trust-item{
@@ -337,26 +342,26 @@
 }
 
 #section-{{ section.id }} .sm-wh__btn{
-  padding: 16px 34px;
+  padding: 18px 40px;
   border-radius: 999px;
-  font-size: 1.12rem;
-  font-weight: 800;
+  font-size: 1.14rem;
+  font-weight: 900;
   text-decoration: none;
   border: 1px solid transparent;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
 #section-{{ section.id }} .sm-wh__btn--primary{
   background: radial-gradient(circle at 0 0, #ff9800 0, #0044CC 45%, #00235e 100%);
   color: #FAFAFF;
-  box-shadow: 0 16px 38px rgba(0,68,204,0.45);
+  box-shadow: 0 18px 44px rgba(0,68,204,0.48);
 }
 
 #section-{{ section.id }} .sm-wh__btn--primary:hover{
   transform: translateY(-2px);
-  box-shadow: 0 22px 48px rgba(0,68,204,0.60);
+  box-shadow: 0 24px 56px rgba(0,68,204,0.62);
 }
 
 /* From,to wrapper */
@@ -364,21 +369,18 @@
   --ink: rgba(9,10,12,0.92);
   --muted: rgba(9,10,12,0.68);
   --stroke: rgba(9,10,12,0.12);
-  --white: rgba(255,255,255,0.96);
-  --shadow: 0 28px 78px rgba(15,23,42,0.18);
-  --shadow2: 0 16px 32px rgba(15,23,42,0.12);
+  --shadow: 0 30px 90px rgba(15,23,42,0.18);
+  --shadow2: 0 16px 34px rgba(15,23,42,0.12);
   --radius: 32px;
-  --radius-sm: 18px;
-
   --loop: {{ section.settings.duration_seconds | default: 10 }}s;
 
   width: 100%;
-  max-width: 1100px;
+  max-width: 1160px;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__head{
   text-align: center;
-  margin: 4px 0 14px;
+  margin: 6px 0 16px;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__title{
@@ -386,7 +388,7 @@
   font-weight: 900;
   letter-spacing: -0.02em;
   color: var(--ink);
-  font-size: clamp(22px, 2.8vw, 36px);
+  font-size: clamp(22px, 2.9vw, 38px);
   line-height: 1.12;
 }
 
@@ -423,14 +425,17 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
-  min-height: 420px;
+  gap: 14px;
+  padding: 14px;
   background: transparent;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__img-col{
   position: relative;
   overflow: hidden;
+  border-radius: 26px;
+  aspect-ratio: 1 / 1;
+  background: rgba(9,10,12,0.06);
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__img{
@@ -460,7 +465,7 @@
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__center-shell{
-  width: 220px;
+  width: 230px;
   padding: 14px 14px 12px;
   border-radius: 22px;
   border: 1px solid rgba(255,255,255,0.22);
@@ -538,6 +543,10 @@
   animation: smwhftRing var(--loop) linear infinite;
 }
 
+#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__prog{
+  animation: none !important;
+}
+
 #smwh-fromto-{{ section.id }} .smwhft__time{
   position: relative;
   z-index: 1;
@@ -570,6 +579,10 @@
   opacity: 0.95;
 }
 
+#smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwhft__scan:before{
+  animation: none !important;
+}
+
 #smwh-fromto-{{ section.id }} .smwhft__status{
   font-size: 12px;
   color: rgba(255,255,255,0.82);
@@ -588,7 +601,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  padding: 14px 14px 16px;
+  padding: 0 14px 16px;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__label-card{
@@ -613,7 +626,7 @@
   font-size: 12px;
   line-height: 1;
   width: fit-content;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 #smwh-fromto-{{ section.id }} .smwhft__label-dot{
@@ -635,7 +648,7 @@
 #smwh-fromto-{{ section.id }} .smwhft__card:hover{
   transform: translateY(-3px);
   transition: transform 220ms ease, box-shadow 220ms ease;
-  box-shadow: 0 34px 96px rgba(15,23,42,0.22);
+  box-shadow: 0 36px 104px rgba(15,23,42,0.22);
 }
 
 /* Animations */
@@ -667,10 +680,10 @@
   100%{ left: 110%; opacity: 0.0; }
 }
 
-/* Desktop spacing */
+/* Desktop */
 @media (min-width: 768px){
   #section-{{ section.id }}.sm-wh{
-    padding: 40px 24px 72px;
+    padding: 48px 24px 84px;
   }
 
   #section-{{ section.id }} .sm-wh__trust-row{
@@ -679,28 +692,21 @@
   }
 
   #section-{{ section.id }} .sm-wh__badge-pill{
-    padding: 12px 30px;
-    font-size: 1.22rem;
+    padding: 14px 34px;
+    font-size: 1.18rem;
   }
 }
 
-/* Mobile stack */
+/* Mobile stack, keep squares */
 @media (max-width: 900px){
   #smwh-fromto-{{ section.id }} .smwhft__images{
     grid-template-columns: 1fr;
-    min-height: 520px;
-  }
-
-  #smwh-fromto-{{ section.id }} .smwhft__img-col{
-    min-height: 240px;
-  }
-
-  #smwh-fromto-{{ section.id }} .smwhft__center{
-    top: 50%;
+    gap: 14px;
+    padding: 14px;
   }
 
   #smwh-fromto-{{ section.id }} .smwhft__center-shell{
-    width: 210px;
+    width: 220px;
   }
 
   #smwh-fromto-{{ section.id }} .smwhft__labels{
@@ -722,46 +728,61 @@
 
 {% javascript %}
 (function(){
-  var root = document.getElementById('smwh-fromto-{{ section.id }}');
-  if(!root) return;
+  function init(){
+    var root = document.getElementById('smwh-fromto-{{ section.id }}');
+    if(!root) return false;
 
-  var timeEl = document.getElementById('smwhft-time-{{ section.id }}');
-  var statusEl = document.getElementById('smwhft-status-{{ section.id }}');
-  if(!timeEl) return;
+    // Normalize autoplay to 1/0 so CSS and JS match, avoids "true/false" edge cases.
+    var autoplay = {{ section.settings.autoplay | json }} ? '1' : '0';
+    root.setAttribute('data-autoplay', autoplay);
 
-  var autoplay = root.getAttribute('data-autoplay') === 'true';
-  if(!autoplay) return;
+    var timeEl = document.getElementById('smwhft-time-{{ section.id }}');
+    var statusEl = document.getElementById('smwhft-status-{{ section.id }}');
+    if(!timeEl) return true;
 
-  var loopMs = ({{ section.settings.duration_seconds | default: 10 }} * 1000) || 10000;
+    var loopMs = ({{ section.settings.duration_seconds | default: 10 }} * 1000) || 10000;
 
-  var labels = [
-    'Wir prüfen dein <b>Motiv</b> …',
-    'Wir bauen deinen <b>Entwurf</b> …',
-    'Wir optimieren die <b>Konturen</b> …',
-    'Wir finalisieren das <b>Schild</b> …'
-  ];
+    var labels = [
+      'Wir prüfen dein <b>Motiv</b> …',
+      'Wir bauen deinen <b>Entwurf</b> …',
+      'Wir optimieren die <b>Konturen</b> …',
+      'Wir finalisieren das <b>Schild</b> …'
+    ];
 
-  function pad(n){ return (n < 10 ? '0' : '') + n; }
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
 
-  function tick(){
-    if(root.getAttribute('data-autoplay') !== 'true') return;
+    function tick(){
+      if(root.getAttribute('data-autoplay') !== '1') return;
 
-    var now = Date.now();
-    var phase = (now % loopMs) / loopMs;
+      var now = Date.now();
+      var phase = (now % loopMs) / loopMs;
 
-    var seconds = Math.max(0, Math.round(120 * (1 - phase)));
-    var mm = Math.floor(seconds / 60);
-    var ss = seconds % 60;
-    timeEl.textContent = pad(mm) + ':' + pad(ss);
+      var seconds = Math.max(0, Math.round(120 * (1 - phase)));
+      var mm = Math.floor(seconds / 60);
+      var ss = seconds % 60;
+      timeEl.textContent = pad(mm) + ':' + pad(ss);
 
-    if(statusEl){
-      var idx = Math.min(labels.length - 1, Math.floor(phase * labels.length));
-      statusEl.innerHTML = labels[idx];
+      if(statusEl){
+        var idx = Math.min(labels.length - 1, Math.floor(phase * labels.length));
+        statusEl.innerHTML = labels[idx];
+      }
+
+      requestAnimationFrame(tick);
     }
 
     requestAnimationFrame(tick);
+    return true;
   }
 
-  requestAnimationFrame(tick);
+  // Robust init for theme editors and deferred script execution
+  if(!init()){
+    var tries = 0;
+    (function retry(){
+      tries += 1;
+      if(init()) return;
+      if(tries > 60) return;
+      requestAnimationFrame(retry);
+    })();
+  }
 })();
 {% endjavascript %}
