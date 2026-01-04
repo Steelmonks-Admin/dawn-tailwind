@@ -9,35 +9,11 @@
  */
 {
   "sections": {
-    "steelmonks_hero_hub_QbmbCe": {
-      "type": "steelmonks-hero-hub",
-      "name": "Steelmonks Hero Hub",
-      "settings": {
-        "top_spacing": 40,
-        "pixel_image": "shopify://shop_images/f3550ed7-3bf9-4e01-b189-49ac4a43d6b8_4fb59445-08ea-4aab-8a21-cf54b52b916c.png",
-        "badge_text": "Die Steelmonks Werkstatt",
-        "heading": "",
-        "kpi_title": "Nur 2 Minuten",
-        "kpi_subtitle": "",
-        "primary_button_label": "In die Werkstatt",
-        "primary_button_link": "#scroller",
-        "fire_button_label": "",
-        "craft_button_label": "",
-        "collection_fire_link": "",
-        "collection_fire_label": "",
-        "collection_fire_sub": "",
-        "collection_craft_link": "",
-        "collection_craft_label": "",
-        "collection_craft_sub": "",
-        "show_collection_row": false
-      }
-    },
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
       "name": "From This to That Timer",
       "settings": {
-        "top_spacing": 24,
-        "badge_text": "Black Friday: bis zu 50 % – nur dieses Wochenende",
+        "top_spacing": 40,
         "heading": "Von einem Satz oder Foto",
         "heading_2": "einzigartigen Wandkunst",
         "subheading": "Las Deiner Vorstellungskraft, freien Lauf.",
@@ -49,15 +25,7 @@
         "to_caption": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
         "autoplay": true,
         "duration_seconds": 10,
-        "primary_button_label": "In die Werkstatt",
-        "primary_button_link": "#scroll",
-        "collection_fire_link": "",
-        "collection_fire_label": "Für Feuerwehr",
-        "collection_fire_sub": "Beliebte Schilder, Anhänger und Geschenke",
-        "collection_craft_link": "",
-        "collection_craft_label": "Für Handwerker",
-        "collection_craft_sub": "Werkstattdeko, Schlüsselanhänger und mehr",
-        "show_collection_row": true
+        "primary_button_link": "#scroller"
       }
     },
     "rich_text_rMFFNh": {
@@ -108,7 +76,7 @@
       "name": "3-Image Arrow Flow",
       "settings": {
         "heading": "So entsteht dein Schild",
-        "subheading": "Upload → Entwurf → Fertiges Schild",
+        "subheading": "Idee → Entwurf → Fertiges Schild",
         "caption_1": "1) Motiv hochladen",
         "caption_2": "2) Entwurf generieren",
         "caption_3": "3) Fertiges Schild",
@@ -230,7 +198,6 @@
     }
   },
   "order": [
-    "steelmonks_hero_hub_QbmbCe",
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "rich_text_rMFFNh",
     "main",
