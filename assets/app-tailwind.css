@@ -5,6 +5,9 @@
 .btn {
   @apply twcss-text-center twcss-p-5 twcss-rounded-xl twcss-font-semibold twcss-transition-colors twcss-duration-300 twcss-text-[1.2rem] md:twcss-text-[1.4rem] lg:twcss-text-[1.6rem] twcss-border-2 md:twcss-px-5 md:twcss-py-3 twcss-shadow-lg twcss-shadow-brandblack/25;
 }
+.pill {
+  @apply twcss-text-center twcss-px-4 twcss-py-2 twcss-rounded-full twcss-font-semibold twcss-transition-colors twcss-duration-300 twcss-text-[1.2rem] md:twcss-text-[1.4rem] lg:twcss-text-[1.6rem] twcss-border-2 md:twcss-px-5 md:twcss-py-3 twcss-shadow-lg twcss-shadow-brandblack/25;
+}
 
 .btn-big {
   @apply twcss-px-24 twcss-py-5 md:twcss-px-24 md:twcss-py-3;
@@ -30,6 +33,10 @@
 }
 .btn-red:hover {
   @apply twcss-bg-brandblack twcss-text-brandyellow twcss-border-brandyellow;
+}
+
+.btn-gray {
+  @apply twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500;
 }
 
 .mobile-only {

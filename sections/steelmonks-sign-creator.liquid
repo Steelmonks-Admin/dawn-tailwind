@@ -29,16 +29,6 @@
 >
   {% comment %} ! Navigation & Status Pill {% endcomment %}
   <div class='twcss-flex twcss-gap-4 twcss-justify-center twcss-relative twcss-z-20'>
-    {% comment %} ! CLOSE BUTTON {% endcomment %}
-    <div class='werkstatt-shadow-wrap twcss-w-fit'>
-      <button
-        id='smc-close-btn'
-        class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
-      >
-        Ausgang Werkstatt
-      </button>
-    </div>
-
     {% comment %} ! STATUS PILL {% endcomment %}
     <div
       id='smc-pill'
@@ -63,13 +53,14 @@
     <div
       id='smc-slider'
       class='twcss-flex twcss-items-start twcss-w-full twcss-h-full twcss-transition-transform twcss-duration-500 twcss-ease-in-out'
+      style='transform: translateX(-100%);'
     >
       {% comment %} ! Page 1: Configuration {% endcomment %}
       <div
         id='smc-page-1'
         class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
       >
-        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] md:twcss-min-w-[460px]'>
+        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
           <h2 class='twcss-text-3xl twcss-font-bold twcss-mb-8 twcss-text-center twcss-text-brandblack'>
             Design konfigurieren
           </h2>
@@ -91,7 +82,7 @@
           {% endif %}
 
           {% comment %} ! Prompt Textarea Field {% endcomment %}
-          <div class='smc__field twcss-mb-6'>
+          <div class='smc__field'>
             <label class='smc__label twcss-block twcss-font-bold' for='smc-desc'>
               Motiv Beschreibung
               <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>Pflichtfeld</span>
@@ -105,7 +96,7 @@
           </div>
 
           {% comment %} ! Upload Field {% endcomment %}
-          <div class='smc__field twcss-mb-6'>
+          <div class='smc__field'>
             <label class='smc__label twcss-block twcss-font-bold' for='smc-upload'>
               Motiv hochladen
               <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>PNG oder JPG</span>
@@ -117,7 +108,7 @@
                 for='smc-upload'
                 class='smc__file-ui twcss-block twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-dashed twcss-border-gray-400 twcss-cursor-pointer hover:twcss-bg-gray-50 twcss-transition-colors'
               >
-                <div class='twcss-flex twcss-items-center twcss-gap-4'>
+                <div class='twcss-flex twcss-items-center twcss-gap-4 twcss-w-full'>
                   <div class='smc__file-preview twcss-w-16 twcss-h-16 twcss-bg-gray-200 twcss-rounded-lg twcss-overflow-hidden twcss-flex twcss-items-center twcss-justify-center'>
                     <img
                       id='smc-upload-preview'
@@ -137,7 +128,10 @@
                   </div>
                   <div class='smc__file-meta'>
                     <div class='smc__file-title twcss-font-bold'>Datei wählen</div>
-                    <div class='smc__file-sub twcss-text-sm twcss-text-gray-500' id='smc-upload-label'>
+                    <div
+                      class='smc__file-sub twcss-text-sm twcss-text-gray-500 twcss-max-w-[75px] md:twcss-max-w-[150px]'
+                      id='smc-upload-label'
+                    >
                       Noch kein Upload
                     </div>
                   </div>
@@ -150,7 +144,7 @@
           </div>
 
           {% comment %} ! Material select {% endcomment %}
-          <div class='smc__field'>
+          <div class='smc__field twcss-mb-6'>
             <label class='smc__label twcss-block twcss-font-bold' for='smc-finish'>Oberfläche</label>
             <div class='smc__select twcss-relative'>
               <select
@@ -173,14 +167,24 @@
           </div>
 
           {% comment %} ! CTAs/buttons {% endcomment %}
-          <div class='smc__actions twcss-flex twcss-flex-col twcss-gap-4 twcss-mt-2 md:twcss-mt-6'>
+          <div class='smc__actions twcss-flex twcss-gap-4 twcss-mt-2 md:twcss-mt-6 md:twcss-flex-row-reverse twcss-flex-col'>
+            <div class='werkstatt-shadow-wrap twcss-flex-1'>
+              <button
+                type='button'
+                class='werkstatt-btn twcss-w-full twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+                id='smc-cta-btn'
+                disabled
+              >
+                <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
+              </button>
+            </div>
+
+            {% comment %} ! CLOSE BUTTON {% endcomment %}
             <button
-              type='button'
-              class='smc__btn smc__btn--primary twcss-w-full twcss-py-4 twcss-bg-brandblack twcss-text-white twcss-rounded-xl twcss-font-bold twcss-text-lg disabled:twcss-opacity-50 disabled:twcss-cursor-not-allowed'
-              id='smc-cta-btn'
-              disabled
+              data-close-button
+              class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
             >
-              <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
+              Ausgang Werkstatt
             </button>
           </div>
 
@@ -208,23 +212,23 @@
         id='smc-page-2'
         class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
       >
-        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5]'>
+        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
           <div class='twcss-flex twcss-flex-col twcss-items-center twcss-gap-6'>
             {% comment %} ! Preview Image Container {% endcomment %}
             <div class='twcss-w-full twcss-aspect-square twcss-max-w-md twcss-bg-white twcss-rounded-xl twcss-shadow-lg twcss-overflow-hidden twcss-flex twcss-items-center twcss-justify-center twcss-relative'>
               {% comment %} Loading State {% endcomment %}
               <div
                 id='smc-preview-loading'
-                class='twcss-absolute twcss-inset-0 twcss-flex twcss-items-center twcss-justify-center twcss-bg-gray-100'
+                class='twcss-absolute twcss-rounded-xl twcss-inset-0 twcss-flex twcss-flex-col twcss-items-center twcss-justify-center twcss-bg-gray-300 twcss-border-2 twcss-border-brandblack'
               >
                 <div
                   class='twcss-animate-spin twcss-rounded-full twcss-h-12 twcss-w-12 twcss-border-b-2 twcss-border-brandblack'
+                  style='display: block;'
                 ></div>
-              </div>
-
-              {% comment %} Empty State {% endcomment %}
-              <div id='smc-preview-empty' class='twcss-text-center twcss-text-gray-400 twcss-p-8'>
-                <p class='twcss-text-lg twcss-font-medium'>Starte zuerst den Entwurf</p>
+                {% comment %} Empty State {% endcomment %}
+                <div id='smc-preview-empty' class='twcss-text-center twcss-text-gray-400 twcss-p-8'>
+                  <p class='twcss-text-lg twcss-font-medium'>Starte zuerst den Entwurf</p>
+                </div>
               </div>
 
               {% comment %} Preview Image {% endcomment %}
@@ -239,31 +243,52 @@
             </div>
 
             {% comment %} ! Action Buttons {% endcomment %}
-            <div class='twcss-flex twcss-gap-4 twcss-w-full twcss-max-w-md'>
-              <button
-                type='button'
-                id='smc-preview-download'
-                class='twcss-flex-1 twcss-py-3 twcss-px-6 twcss-bg-brandblack twcss-text-white twcss-rounded-xl twcss-font-bold twcss-transition-colors hover:twcss-bg-brandblack/80 disabled:twcss-opacity-50 disabled:twcss-cursor-not-allowed'
-                disabled
-                aria-label='Vorschau herunterladen'
-              >
-                Download
-              </button>
-              <button
-                type='button'
-                id='smc-preview-share'
-                class='twcss-flex-1 twcss-py-3 twcss-px-6 twcss-bg-gray-200 twcss-text-brandblack twcss-rounded-xl twcss-font-bold twcss-transition-colors hover:twcss-bg-gray-300 disabled:twcss-opacity-50 disabled:twcss-cursor-not-allowed'
-                disabled
-                aria-label='Vorschau teilen'
-              >
-                Teilen
-              </button>
-            </div>
+            <div class='twcss-flex twcss-flex-col twcss-gap-4 twcss-w-full twcss-max-w-md'>
+              {% comment %} Social Buttons {% endcomment %}
+              <div class='twcss-flex twcss-gap-4 twcss-justify-center '>
+                <button
+                  type='button'
+                  id='smc-preview-share'
+                  class='link'
+                  disabled
+                  aria-label='Vorschau teilen'
+                >
+                  Teilen
+                </button>
+                <button
+                  type='button'
+                  id='smc-preview-download'
+                  class='link'
+                  disabled
+                  aria-label='Vorschau herunterladen'
+                >
+                  Download
+                </button>
+              </div>
 
-            {% comment %} ! AI Notice {% endcomment %}
-            <p class='twcss-text-xs twcss-text-gray-500 twcss-text-center twcss-max-w-md'>
-              * Dieses Bild wurde mit Hilfe von KI generiert
-            </p>
+              {% comment %} Back to Configuration and Continue buttons {% endcomment %}
+              <div class='twcss-flex twcss-gap-4 twcss-flex-col-reverse md:twcss-flex-row'>
+                {% comment %} Back button - navigates to page 1, doesn't close modal {% endcomment %}
+                <button
+                  data-back-to-config
+                  class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
+                >
+                  ← Konfiguration
+                </button>
+
+                {% comment %} Continnue button {% endcomment %}
+                <div class='werkstatt-shadow-wrap twcss-flex-1'>
+                  <button
+                    type='button'
+                    class='werkstatt-btn twcss-py-3 twcss-w-full twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+                    id='smc-continue-btn'
+                    disabled
+                  >
+                    <span class='smc__btn-label' id='smc-continue-label'>Weiter →</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -273,7 +298,7 @@
         id='smc-page-3'
         class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
       >
-        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] md:twcss-min-w-[460px]'>
+        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
           {% comment %} ! Result container {% endcomment %}
           <div class='twcss-flex twcss-justify-center twcss-flex-col twcss-gap-8'>
             {% comment %} ! Small Preview + nanme, price and size columns {% endcomment %}
@@ -332,6 +357,13 @@
               ></textarea>
             </div>
 
+            {% comment %} ! Price {% endcomment %}
+            <div class='smc__price'>
+              <span class='smc__label twcss-block twcss-font-bold'>Preis</span>
+              <div class='smc__price-val twcss-text-2xl twcss-font-black twcss-text-brandblack' id='smc-price'></div>
+            </div>
+
+            {% comment %} ! Actions buttons {% endcomment %}
             <div class='smc__actions twcss-flex twcss-flex-col twcss-gap-4'>
               {% if base_product != blank %}
                 <button
@@ -345,17 +377,11 @@
 
               <button
                 type='button'
-                class='smc__btn smc__btn--ghost twcss-w-full twcss-py-3 twcss-text-gray-500 hover:twcss-text-brandblack twcss-transition-colors twcss-font-medium'
+                class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
                 id='smc-back-btn'
               >
-                Neu anfangen (von vorne beginnen)
+                Neu anfangen
               </button>
-            </div>
-
-            {% comment %} ! Price {% endcomment %}
-            <div class='smc__price'>
-              <span class='smc__label twcss-block twcss-font-bold'>Preis</span>
-              <div class='smc__price-val twcss-text-2xl twcss-font-black twcss-text-brandblack' id='smc-price'></div>
             </div>
           </div>
         </div>
@@ -365,7 +391,9 @@
 </section>
 
 {% comment %} ! TIMER {% endcomment %}
-<div class='smc__eta werkstatt-btn' id='smc-eta' style='display:block'>
+<div class='smc__eta werkstatt-btn' id='smc-eta' style='display:none'>
   <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
   <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
 </div>
+
+{{ base_product | json }}

@@ -71,7 +71,7 @@
   bottom: 0;
   z-index: 9999;
 
-  height: 100dvh;
+  height: 100%;
 
   backdrop-filter: blur(10px);
 
@@ -495,7 +495,6 @@
     border-color 150ms ease, opacity 150ms ease;
   white-space: nowrap;
   position: relative;
-  min-width: 260px;
 }
 .smc__btn:active {
   transform: translateY(0);
@@ -513,16 +512,6 @@
 .smc__btn--primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 22px 54px rgba(0, 68, 204, 0.55);
-}
-.smc__btn--ghost {
-  background: rgba(0, 68, 204, 0.06);
-  border-color: rgba(0, 68, 204, 0.22);
-  color: var(--smc-blue);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-}
-.smc__btn--ghost:hover {
-  background: rgba(0, 68, 204, 0.1);
-  transform: translateY(-1px);
 }
 
 .smc__btn:disabled {
@@ -786,10 +775,6 @@
   display: none;
   animation: smcSpin 900ms linear infinite;
   margin-left: 10px;
-}
-.smc__btn--ghost .smc__btn-spin {
-  border-color: rgba(0, 68, 204, 0.34);
-  border-top-color: rgba(0, 68, 204, 0);
 }
 .smc__btn[data-loading='1'] .smc__btn-spin {
   display: inline-block;

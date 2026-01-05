@@ -256,7 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ctaLabel: el('smc-cta-label'),
     resetBtn: el('smc-reset-btn'),
     openBtn: el('smc-open-btn'),
-    closeBtn: el('smc-close-btn'),
+    continueBtn: el('smc-continue-btn'),
+    continueLabel: el('smc-continue-label'),
 
     // Hidden form properties
     propImg: el('smc-prop-img'),
@@ -308,6 +309,8 @@ document.addEventListener('DOMContentLoaded', () => {
     pollInFlight: false,
     generatedProductUrl: '',
     generatedProductName: '',
+    hasGeneratedDesign: false,
+    cooldown: null, // Timestamp when cooldown expires (current time + 5 minutes)
   };
 
   // ============================================================================
@@ -332,6 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
           runStartedAt: state.runStartedAt,
           generatedProductUrl: state.generatedProductUrl,
           generatedProductName: state.generatedProductName,
+          hasGeneratedDesign: state.hasGeneratedDesign,
+          cooldown: state.cooldown,
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
         logger.debug('State saved to localStorage', stateToSave);
@@ -704,11 +709,15 @@ document.addEventListener('DOMContentLoaded', () => {
           if (elements.previewEmpty) {
             elements.previewEmpty.style.display = 'none';
           }
-          // Show image and enable download and share buttons
+          // Show image and enable download, share, and continue buttons
           elements.previewImg.classList.remove('twcss-hidden');
           if (elements.previewDownload)
             elements.previewDownload.disabled = false;
           if (elements.previewShare) elements.previewShare.disabled = false;
+          // Enable continue button when preview is available
+          if (elements.continueBtn && state.current === 'creating') {
+            elements.continueBtn.disabled = false;
+          }
           logger.debug('Preview image loaded successfully', { url });
         };
         elements.previewImg.onerror = () => {
@@ -788,19 +797,65 @@ document.addEventListener('DOMContentLoaded', () => {
       // Only updates CTA button state without navigation
       switch (state.current) {
         case 'init': {
+          // If a design has been generated and we're back on page 1, show "Weiter →"
+          if (
+            state.hasGeneratedDesign &&
+            (state.lastMockUrl || state.lastEntUrl)
+          ) {
+            this.setCta('Weiter →', true);
+            return;
+          }
+
           const ok = elements.desc?.value?.trim().length >= 5;
+
+          // Check for cooldown
+          const cooldownInfo = this.checkCooldown();
+          if (cooldownInfo.isOnCooldown) {
+            this.setCta(cooldownInfo.countdownText, false);
+            return;
+          }
+
+          // Default: "Entwurf erstellen"
           this.setCta('Entwurf erstellen', ok && !state.locked);
           break;
         }
         case 'creating':
-          this.setCta('Wird erstellt', false);
+          // Show "Weiter →" when creating (user can navigate to preview page)
+          this.setCta('Weiter →', true);
           break;
         case 'ready':
-          this.setCta('Schild ansehen', true);
+          // Show "Weiter →" when ready (user can navigate to preview page)
+          this.setCta('Weiter →', true);
           break;
         default:
           this.setCta('Wird erstellt', false);
       }
+    },
+
+    checkCooldown() {
+      if (!state.cooldown) {
+        return { isOnCooldown: false, countdownText: '' };
+      }
+
+      const now = Date.now();
+      const remaining = state.cooldown - now;
+
+      if (remaining <= 0) {
+        // Cooldown expired, clear it
+        state.cooldown = null;
+        storageManager.saveState();
+        return { isOnCooldown: false, countdownText: '' };
+      }
+
+      // Calculate minutes and seconds
+      const minutes = Math.floor(remaining / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+      const countdownText = `Bitte warten (${String(minutes).padStart(
+        2,
+        '0',
+      )}:${String(seconds).padStart(2, '0')})`;
+
+      return { isOnCooldown: true, countdownText };
     },
 
     navigateTo(page) {
@@ -821,26 +876,68 @@ document.addEventListener('DOMContentLoaded', () => {
           translateX = '0%';
       }
 
+      // Set opacity for all pages: fade out inactive pages, fade in active page
+      const pages = [elements.page1, elements.page2, elements.page3];
+      pages.forEach((pageEl, index) => {
+        if (pageEl) {
+          const targetPage = page - 1; // Convert to 0-based index
+          if (index === targetPage) {
+            // Fade in the active page
+            pageEl.style.opacity = '0';
+            pageEl.style.transition = 'opacity 0.3s ease-in-out';
+            // Use requestAnimationFrame to ensure the opacity: 0 is applied before transitioning to 1
+            requestAnimationFrame(() => {
+              if (pageEl) {
+                pageEl.style.opacity = '1';
+              }
+            });
+          } else {
+            // Fade out inactive pages
+            pageEl.style.opacity = '0';
+            pageEl.style.transition = 'opacity 0.3s ease-in-out';
+          }
+        }
+      });
+
       elements.slider.style.transform = `translateX(${translateX})`;
       logger.debug('Navigating to page', { page, translateX });
     },
 
     updateUIFromState() {
+      logger.debug('updateUIFromState called', { current: state.current });
+
       // Navigation
       switch (state.current) {
         case 'init':
           this.navigateTo(1);
           break;
         case 'creating':
+          logger.debug('Navigating to page 2 (creating state)');
           this.navigateTo(2);
+          // Enable continue button when we have a preview
+          if (elements.continueBtn) {
+            elements.continueBtn.disabled =
+              !state.lastMockUrl && !state.lastEntUrl;
+          }
           break;
         case 'ready':
           this.navigateTo(3);
           if (state.generatedProductName && elements.productName) {
             elements.productName.textContent = state.generatedProductName;
           }
+          // Enable continue button when ready
+          if (elements.continueBtn) {
+            elements.continueBtn.disabled = false;
+          }
+          // Update backBtn state (Neu anfangen) based on cooldown
+          if (typeof updateBackBtnState === 'function') {
+            updateBackBtnState();
+          }
           break;
         default:
+          logger.warn('Unknown state in updateUIFromState', {
+            current: state.current,
+          });
           this.navigateTo(1);
       }
 
@@ -1293,6 +1390,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ui.showPreview(mockUrl);
 
             state.current = 'ready';
+
+            // ! RATE LIMIT
+            // Mark that a design has been generated and set cooldown (5 minutes)
+            state.hasGeneratedDesign = true;
+            state.cooldown = Date.now() + 5 * 60 * 1000; // 5 minutes from now
+
             storageManager.saveState();
 
             ui.setPillState('ok', 'Fertig!');
@@ -1417,6 +1520,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Check for cooldown
+      const cooldownInfo = ui.checkCooldown();
+      if (cooldownInfo.isOnCooldown) {
+        logger.warn('Cannot start creator: still on cooldown', {
+          cooldownText: cooldownInfo.countdownText,
+        });
+        ui.setCtaFromState(); // Update button with countdown
+        return;
+      }
+
       logger.info('Starting creator workflow', {
         hasImage: formData.hasImage(),
         descriptionLength: descText.length,
@@ -1441,7 +1554,29 @@ document.addEventListener('DOMContentLoaded', () => {
         generatedProductUrl: '',
         generatedProductName: '',
       });
+
+      logger.info('State set to creating', {
+        current: state.current,
+        runStartedAt: state.runStartedAt,
+        timestamp: new Date().toISOString(),
+      });
+
       storageManager.saveState();
+
+      // Verify state was saved correctly
+      const savedState = storageManager.loadState();
+      if (savedState && savedState.current !== 'creating') {
+        logger.error('State was not saved correctly!', {
+          expected: 'creating',
+          actual: savedState.current,
+          savedState: savedState,
+        });
+      } else {
+        logger.debug('State verified in localStorage', {
+          current: savedState?.current,
+        });
+      }
+
       storageManager.saveFormData();
 
       timerManager.stopEta();
@@ -1451,7 +1586,22 @@ document.addEventListener('DOMContentLoaded', () => {
       priceManager.setCalculating();
       ui.setPillState('work', 'Wir starten…');
       ui.lockInputs(true);
+
+      // Verify state is still 'creating' before updating UI
+      if (state.current !== 'creating') {
+        logger.error('State changed before UI update!', {
+          expected: 'creating',
+          actual: state.current,
+        });
+        state.current = 'creating';
+        storageManager.saveState();
+      }
+
       ui.updateUIFromState(); // Navigate to page 2
+
+      logger.debug('UI updated after setting state to creating', {
+        current: state.current,
+      });
 
       ui.showPlaceholder('Wir erstellen gerade deine Vorschau');
       ui.setPreviewLoading(true);
@@ -1554,9 +1704,27 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.info('Generator ID received', { generatorId: id });
 
         state.generatorId = id;
+
+        // Ensure state is still 'creating' after receiving generator ID
+        if (state.current !== 'creating') {
+          logger.warn(
+            'State was not creating when generator ID received, resetting',
+            {
+              current: state.current,
+              generatorId: id,
+            },
+          );
+          state.current = 'creating';
+        }
+
         storageManager.saveState();
         formData.updateProps();
         ui.setPillState('work', 'Wird erstellt');
+
+        logger.debug('State after generator ID', {
+          current: state.current,
+          generatorId: state.generatorId,
+        });
 
         this.runCreatorPreviewOnce('Sofort nach run-creator');
 
@@ -1801,9 +1969,36 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================================
   // ! Event Listeners
   // ============================================================================
-  if (elements.closeBtn) {
-    elements.closeBtn.addEventListener('click', () => {
+  // Back to configuration button handler (page 2) - navigates to page 1, doesn't change state
+  const backToConfigBtn = document.querySelector('[data-back-to-config]');
+  if (backToConfigBtn) {
+    backToConfigBtn.addEventListener('click', () => {
       try {
+        logger.debug(
+          'Back to configuration button clicked - navigating to page 1',
+          {
+            currentState: state.current,
+          },
+        );
+        // Only navigate to page 1, do NOT change state
+        ui.navigateTo(1);
+        ui.setCtaFromState(); // Update button text based on current state
+      } catch (error) {
+        logger.error(
+          'Error handling back to configuration button click',
+          error,
+        );
+      }
+    });
+  }
+
+  // Close button handlers (using data-close-button attribute)
+  // These will close the modal
+  const closeButtons = document.querySelectorAll('[data-close-button]');
+  closeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      try {
+        // Close the modal
         document.body.style.overflow = 'auto';
         elements.smc?.classList.add('smc--scale-down');
         logger.debug('Close button clicked');
@@ -1811,7 +2006,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.error('Error handling close button click', error);
       }
     });
-  }
+  });
 
   if (elements.resetBtn) {
     elements.resetBtn.addEventListener('click', () => {
@@ -1827,21 +2022,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.backBtn) {
     elements.backBtn.addEventListener('click', () => {
       try {
-        logger.debug('Back button clicked');
-        // Allow user to edit, but keep generated data in case they want to return?
-        // Usually back implies "Edit", so we go to Page 1
-        // But we should probably keep the state as is, just unlock inputs and go to page 1
-        // Changing inputs will invalidate the generated sign, so maybe reset is safer?
-        // "Zurück zur Bearbeitung" usually means modify inputs.
+        logger.debug('Neu anfangen button clicked');
 
-        // For now, let's behave like a reset but keep the values in the form
-        // So we don't clear form data, but we reset generation state
+        // Check for cooldown - if on cooldown, don't allow reset
+        const cooldownInfo = ui.checkCooldown();
+        if (cooldownInfo.isOnCooldown) {
+          logger.warn('Cannot reset: still on cooldown', {
+            cooldownText: cooldownInfo.countdownText,
+          });
+          return;
+        }
 
-        logger.info('Resetting state for editing');
+        logger.info('Resetting state for new design');
         timerManager.clearAll();
         timerManager.stopEta();
 
-        // Clear generation state but keep form values
+        // Clear all generation state including preview URLs
+        // Reset hasGeneratedDesign so CTA button goes back to "Entwurf erstellen"
         Object.assign(state, {
           current: 'init',
           locked: false,
@@ -1849,23 +2046,53 @@ document.addEventListener('DOMContentLoaded', () => {
           lastMockUrl: '',
           lastEntUrl: '',
           checkoutReady: false,
-          priceReady: false, // Keep price? No, if they change inputs price recalculates
-          // Actually price is local, so it recalculates instantly
+          priceReady: false,
           previewDone: false,
           runStartedAt: 0,
           generatedProductUrl: '',
           generatedProductName: '',
+          hasGeneratedDesign: false, // Reset so CTA button shows "Entwurf erstellen"
+          // Keep cooldown - rate limit persists across resets
         });
         storageManager.saveState();
 
         ui.lockInputs(false);
         ui.setPillState('idle', 'Bereit');
-        ui.updateUIFromState();
+        ui.showPlaceholder('Starte zuerst den Entwurf');
+        ui.setPreviewLoading(false);
+        ui.updateUIFromState(); // Navigate to page 1
+        ui.setCtaFromState(); // Update button text back to "Entwurf erstellen"
       } catch (error) {
-        logger.error('Error handling back button click', error);
+        logger.error('Error handling Neu anfangen button click', error);
       }
     });
   }
+
+  // Function to update backBtn state based on cooldown
+  const updateBackBtnState = () => {
+    if (!elements.backBtn) return;
+
+    const cooldownInfo = ui.checkCooldown();
+    if (cooldownInfo.isOnCooldown) {
+      elements.backBtn.disabled = true;
+      // Extract countdown time from the text (format: "Bitte warten (MM:SS)")
+      const countdownMatch =
+        cooldownInfo.countdownText.match(/\((\d{2}:\d{2})\)/);
+      const countdownTime = countdownMatch ? countdownMatch[1] : '';
+      // Update button text with countdown
+      if (!elements.backBtn.hasAttribute('data-original-text')) {
+        elements.backBtn.setAttribute('data-original-text', 'Neu anfangen');
+      }
+      elements.backBtn.textContent = `Neu anfangen (${countdownTime})`;
+    } else {
+      elements.backBtn.disabled = false;
+      // Restore original text
+      const originalText =
+        elements.backBtn.getAttribute('data-original-text') || 'Neu anfangen';
+      elements.backBtn.textContent = originalText;
+      elements.backBtn.removeAttribute('data-original-text');
+    }
+  };
 
   if (elements.atcTrigger) {
     elements.atcTrigger.addEventListener('click', async () => {
@@ -1991,10 +2218,29 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.ctaBtn.addEventListener('click', () => {
       try {
         logger.debug('CTA button clicked', { currentState: state.current });
+        const buttonText = elements.ctaLabel?.textContent?.trim() || '';
+
+        // If button says "Weiter →", navigate to page 2 (preview)
+        if (buttonText === 'Weiter →' || buttonText.includes('Weiter')) {
+          logger.debug('Continue button clicked, navigating to page 2');
+          // Always navigate to page 2 when "Weiter →" is clicked
+          // If state is creating or ready, we can navigate directly
+          if (state.current === 'creating' || state.current === 'ready') {
+            ui.navigateTo(2);
+          } else if (
+            state.current === 'init' &&
+            (state.lastMockUrl || state.lastEntUrl)
+          ) {
+            // If on init but have preview, navigate to page 2
+            ui.navigateTo(2);
+          }
+          return;
+        }
+
+        // Otherwise, if on init state, start creating a new design
         if (state.current === 'init') {
           api.startRunCreator();
         }
-        // No other states handled by this button anymore, as it's on Page 1
       } catch (error) {
         logger.error('Error handling CTA button click', error, {
           currentState: state.current,
@@ -2040,10 +2286,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Continue button (Page 2) - navigates to page 3, doesn't change state
+  if (elements.continueBtn) {
+    elements.continueBtn.addEventListener('click', () => {
+      try {
+        logger.debug('Continue button clicked - navigating to page 3', {
+          currentState: state.current,
+        });
+        // Only navigate to page 3, do NOT change state
+        ui.navigateTo(3);
+      } catch (error) {
+        logger.error('Error handling continue button click', error);
+      }
+    });
+  }
+
   // ============================================================================
   // ! Animations (Closing, Opening)
   // ============================================================================
-  if (elements.smc && elements.openBtn && elements.closeBtn) {
+  if (elements.smc && elements.openBtn) {
     // Open Button (scales up the whole container: #sm-sign-creator then #smc)
     elements.openBtn.addEventListener('click', () => {
       try {
@@ -2066,29 +2327,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Close Button (scales down the whole container: #smc then #sm-sign-creator )
-    elements.closeBtn.addEventListener('click', () => {
-      try {
-        logger.debug('Close button clicked, hiding creator');
-        elements.smc.style.transform = 'scale(0)';
-        setTimeout(() => {
-          try {
-            elements.smcContainer.style.opacity = '0';
-            elements.smcContainer.style.visibility = 'hidden';
-            elements.smc.setAttribute('aria-hidden', 'true');
-          } catch (error) {
-            logger.error('Error in close animation timeout', error);
-          }
-        }, 300);
+    // Close Button handlers (using data-close-button attribute)
+    // This allows multiple close buttons across different pages
+    const closeButtonsForAnimation = document.querySelectorAll(
+      '[data-close-button]',
+    );
+    closeButtonsForAnimation.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        try {
+          logger.debug('Close button clicked, hiding creator');
+          elements.smc.style.transform = 'scale(0)';
+          setTimeout(() => {
+            try {
+              elements.smcContainer.style.opacity = '0';
+              elements.smcContainer.style.visibility = 'hidden';
+              elements.smc.setAttribute('aria-hidden', 'true');
+            } catch (error) {
+              logger.error('Error in close animation timeout', error);
+            }
+          }, 300);
 
-        // Set body overflow back to auto
-        document.body.style.overflow = 'auto';
-      } catch (error) {
-        logger.error(
-          'Error handling close button click in animation handler',
-          error,
-        );
-      }
+          // Set body overflow back to auto
+          document.body.style.overflow = 'auto';
+        } catch (error) {
+          logger.error(
+            'Error handling close button click in animation handler',
+            error,
+          );
+        }
+      });
     });
   }
 
@@ -2117,6 +2384,8 @@ document.addEventListener('DOMContentLoaded', () => {
         runStartedAt: savedState.runStartedAt || 0,
         generatedProductUrl: savedState.generatedProductUrl || '',
         generatedProductName: savedState.generatedProductName || '',
+        hasGeneratedDesign: savedState.hasGeneratedDesign || false,
+        cooldown: savedState.cooldown || null,
       });
 
       // Restore form data if available
@@ -2129,12 +2398,49 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.showPreview(state.lastMockUrl);
         if (state.current === 'ready') {
           ui.setPillState('ok', 'Entwurf ist fertig');
+          // Enable continue button when ready
+          if (elements.continueBtn) {
+            elements.continueBtn.disabled = false;
+          }
         } else {
           ui.setPillState('work', 'Wird erstellt');
         }
       } else if (state.lastEntUrl) {
         ui.showPreview(state.lastEntUrl);
         ui.setPillState('work', 'Wird erstellt');
+      }
+
+      // Start cooldown countdown if on cooldown
+      if (state.cooldown) {
+        const cooldownInterval = setInterval(() => {
+          const cooldownInfo = ui.checkCooldown();
+          if (!cooldownInfo.isOnCooldown) {
+            clearInterval(cooldownInterval);
+            // Update button text when cooldown expires
+            if (state.current === 'init') {
+              ui.setCtaFromState();
+            }
+            // Update backBtn state when cooldown expires
+            if (
+              state.current === 'ready' &&
+              typeof updateBackBtnState === 'function'
+            ) {
+              updateBackBtnState();
+            }
+          } else {
+            // Update button text with countdown
+            if (state.current === 'init' && elements.ctaBtn) {
+              ui.setCtaFromState();
+            }
+            // Update backBtn state with countdown
+            if (
+              state.current === 'ready' &&
+              typeof updateBackBtnState === 'function'
+            ) {
+              updateBackBtnState();
+            }
+          }
+        }, 1000); // Update every second
       }
 
       // Restore price if available, or calculate if material and size are set
