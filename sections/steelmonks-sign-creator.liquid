@@ -9,6 +9,7 @@
 <script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
+{% comment %} ! Open button {% endcomment %}
 <div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
   <button
     id='smc-open-btn'
@@ -18,6 +19,7 @@
   </button>
 </div>
 
+{% comment %} ! Main container {% endcomment %}
 <section
   id='smc-container'
   class='smc'
@@ -25,9 +27,10 @@
   style='opacity: 0; visibility: hidden;'
   aria-hidden='true'
 >
-  <div class='twcss-flex twcss-gap-4'>
+  {% comment %} ! Navigation & Status Pill {% endcomment %}
+  <div class='twcss-flex twcss-gap-4 twcss-justify-center twcss-relative twcss-z-20'>
     {% comment %} ! CLOSE BUTTON {% endcomment %}
-    <div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
+    <div class='werkstatt-shadow-wrap twcss-w-fit'>
       <button
         id='smc-close-btn'
         class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
@@ -52,19 +55,32 @@
     </div>
   </div>
 
-  <div class='smc__wrap' id='smc'>
+  {% comment %} ! Main content (SMC) {% endcomment %}
+  <div
+    id='smc'
+  >
+    {% comment %} ! SLIDER CONTAINER {% endcomment %}
     <div
-      class='twcss-rounded-[20px] twcss-overflow-y-auto twcss-overflow-x-clip twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5]'
-      style='transform: scale(1);'
+      id='smc-slider'
+      class='twcss-flex twcss-items-start twcss-w-full twcss-h-full twcss-transition-transform twcss-duration-500 twcss-ease-in-out'
     >
-      <div class='smc__grid'>
-        <div class='smc__col smc__col--left'>
+      {% comment %} ! Page 1: Configuration {% endcomment %}
+      <div
+        id='smc-page-1'
+        class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
+      >
+        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] md:twcss-min-w-[460px]'>
+          <h2 class='twcss-text-3xl twcss-font-bold twcss-mb-8 twcss-text-center twcss-text-brandblack'>
+            Design konfigurieren
+          </h2>
+
           {%- assign base_product = section.settings.product -%}
 
+          {% comment %} Hidden form for data persistence {% endcomment %}
           {% if base_product != blank %}
             <form
               method='post'
-              action='/cart/add'
+              action='{{ routes.cart_add_url }}'
               enctype='multipart/form-data'
               class='smc__form'
               id='smc-form'
@@ -74,112 +90,101 @@
             <div class='smc__form' id='smc-form'>
           {% endif %}
 
-          <div class='smc__field'>
-            <label class='smc__label' for='smc-upload'>
-              Motiv hochladen <span class='smc__label-note'>PNG oder JPG</span>
-            </label>
-
-            <div class='smc__file'>
-              <input type='file' id='smc-upload' class='smc__file-input' accept='image/*'>
-
-              <div class='smc__file-ui' role='button' tabindex='0' aria-label='Datei auswählen'>
-                <div class='smc__file-preview' aria-hidden='true'>
-                  <img
-                    id='smc-upload-preview'
-                    class='smc__file-preview-img'
-                    alt=''
-                    loading='lazy'
-                    width='100%'
-                    height='100%'
-                  >
-                  <div id='smc-upload-preview-empty' class='smc__file-preview-empty'>+</div>
-                </div>
-
-                <div class='smc__file-meta'>
-                  <div class='smc__file-title'>Datei wählen</div>
-                  <div class='smc__file-sub' id='smc-upload-label'>Noch kein Upload</div>
-                </div>
-
-                <span class='smc__file-chip' aria-hidden='true'>Upload</span>
-              </div>
-            </div>
-          </div>
-
-          <div class='smc__field'>
-            <label class='smc__label' for='smc-desc'>
-              Motiv Beschreibung <span class='smc__label-note'>Pflichtfeld</span>
+          {% comment %} ! Prompt Textarea Field {% endcomment %}
+          <div class='smc__field twcss-mb-6'>
+            <label class='smc__label twcss-block twcss-font-bold' for='smc-desc'>
+              Motiv Beschreibung
+              <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>Pflichtfeld</span>
             </label>
             <textarea
               id='smc-desc'
-              class='smc__textarea'
+              class='smc__textarea twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-gray-300 twcss-min-h-[120px] twcss-max-h-[260px]'
               rows='5'
-              {% comment %} * DO NOT EDIT: Placeholder added via JavaScript, see steelmonks-sign-creator.js. This text is only used as fallback {% endcomment %}
-              placeholder='
-                Lass Deiner Vorstellung freien Lauf. Probier doch:
-
-                • Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
-                • Mein Familienwappen wie aus der Zeichnung
-                • Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
-                • Oder ein Hausschild mit der Nummer 22 und einem Ritter
-              '
+              placeholder='Lass Deiner Vorstellung freien Lauf...'
             ></textarea>
           </div>
 
-          <div class='smc__row'>
-            <div class='smc__field'>
-              <label class='smc__label' for='smc-finish'>Oberfläche</label>
-              <div class='smc__select'>
-                <select id='smc-finish' class='smc__select-el'>
-                  <option value='Schwarz pulverbeschichtet'>Schwarz pulverbeschichtet</option>
-                  <option value='Anthrazit pulverbeschichtet'>Anthrazit pulverbeschichtet</option>
-                  <option value='Weiß pulverbeschichtet'>Weiß pulverbeschichtet</option>
-                  <option value='Gold'>Gold</option>
-                  <option value='Cortenstahl Optik'>Cortenstahl Optik</option>
-                  <option value='Satinierter Edelstahl'>Satinierter Edelstahl</option>
-                </select>
-                <span class='smc__select-arrow' aria-hidden='true'>⌄</span>
-              </div>
-            </div>
+          {% comment %} ! Upload Field {% endcomment %}
+          <div class='smc__field twcss-mb-6'>
+            <label class='smc__label twcss-block twcss-font-bold' for='smc-upload'>
+              Motiv hochladen
+              <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>PNG oder JPG</span>
+            </label>
 
-            <div class='smc__field'>
-              <label class='smc__label' for='smc-size'>Größe</label>
-              <div class='smc__select'>
-                <select id='smc-size' class='smc__select-el'>
-                  <option value='22,5 cm'>22,5 cm</option>
-                  <option value='45 cm'>45 cm</option>
-                  <option value='55 cm'>55 cm</option>
-                  <option value='75 cm'>75 cm</option>
-                  <option value='75 cm+'>75 cm+</option>
-                </select>
-                <span class='smc__select-arrow' aria-hidden='true'>⌄</span>
-              </div>
-            </div>
-          </div>
-
-          <div class='smc__price'>
-            <div class='smc__price-left'>
-              <div class='smc__price-kicker'>Preis</div>
-              <div class='smc__price-val' id='smc-price'>Den Preis berechnen wir nach dem Entwurf.</div>
-            </div>
-
-            <div class='smc__price-right'>
-              <div class='smc__price-cta'>
-                <button type='button' class='smc__btn smc__btn--primary' id='smc-cta-btn' disabled>
-                  <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
-                </button>
-
-                <button
-                  type='button'
-                  class='smc__btn smc__btn--ghost smc__btn--reset'
-                  id='smc-reset-btn'
-                  style='display:none'
-                >
-                  Neu anfangen
-                </button>
-              </div>
+            <div class='smc__file twcss-relative'>
+              <input type='file' id='smc-upload' class='smc__file-input twcss-hidden' accept='image/*'>
+              <label
+                for='smc-upload'
+                class='smc__file-ui twcss-block twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-dashed twcss-border-gray-400 twcss-cursor-pointer hover:twcss-bg-gray-50 twcss-transition-colors'
+              >
+                <div class='twcss-flex twcss-items-center twcss-gap-4'>
+                  <div class='smc__file-preview twcss-w-16 twcss-h-16 twcss-bg-gray-200 twcss-rounded-lg twcss-overflow-hidden twcss-flex twcss-items-center twcss-justify-center'>
+                    <img
+                      id='smc-upload-preview'
+                      class='smc__file-preview-img twcss-w-full twcss-h-full twcss-object-cover'
+                      alt=''
+                      loading='lazy'
+                      style='display:none'
+                      width='64px'
+                      height='64px'
+                    >
+                    <div
+                      id='smc-upload-preview-empty'
+                      class='smc__file-preview-empty twcss-text-2xl twcss-text-gray-400'
+                    >
+                      +
+                    </div>
+                  </div>
+                  <div class='smc__file-meta'>
+                    <div class='smc__file-title twcss-font-bold'>Datei wählen</div>
+                    <div class='smc__file-sub twcss-text-sm twcss-text-gray-500' id='smc-upload-label'>
+                      Noch kein Upload
+                    </div>
+                  </div>
+                  <span class='smc__file-chip twcss-ml-auto twcss-bg-brandblack twcss-text-white twcss-px-3 twcss-py-1 twcss-rounded-full twcss-text-xs twcss-font-bold twcss-uppercase'
+                    >Upload</span
+                  >
+                </div>
+              </label>
             </div>
           </div>
 
+          {% comment %} ! Material select {% endcomment %}
+          <div class='smc__field'>
+            <label class='smc__label twcss-block twcss-font-bold' for='smc-finish'>Oberfläche</label>
+            <div class='smc__select twcss-relative'>
+              <select
+                id='smc-finish'
+                class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
+              >
+                <option value='Schwarz pulverbeschichtet'>Schwarz pulverbeschichtet</option>
+                <option value='Anthrazit pulverbeschichtet'>Anthrazit pulverbeschichtet</option>
+                <option value='Weiß pulverbeschichtet'>Weiß pulverbeschichtet</option>
+                <option value='Gold'>Gold</option>
+                <option value='Cortenstahl Optik'>Cortenstahl Optik</option>
+                <option value='Satinierter Edelstahl'>Satinierter Edelstahl</option>
+              </select>
+              <span
+                class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
+                aria-hidden='true'
+                >⌄</span
+              >
+            </div>
+          </div>
+
+          {% comment %} ! CTAs/buttons {% endcomment %}
+          <div class='smc__actions twcss-flex twcss-flex-col twcss-gap-4 twcss-mt-2 md:twcss-mt-6'>
+            <button
+              type='button'
+              class='smc__btn smc__btn--primary twcss-w-full twcss-py-4 twcss-bg-brandblack twcss-text-white twcss-rounded-xl twcss-font-bold twcss-text-lg disabled:twcss-opacity-50 disabled:twcss-cursor-not-allowed'
+              id='smc-cta-btn'
+              disabled
+            >
+              <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
+            </button>
+          </div>
+
+          {% comment %} Hidden inputs for cart {% endcomment %}
           <input type='hidden' name='properties[Bild]' id='smc-prop-img'>
           <input type='hidden' name='properties[Beschreibung]' id='smc-prop-desc'>
           <input type='hidden' name='properties[Oberfläche]' id='smc-prop-finish'>
@@ -187,139 +192,170 @@
           <input type='hidden' name='properties[Route]' id='smc-prop-route'>
           <input type='hidden' name='properties[Generator ID]' id='smc-prop-gen'>
           <input type='hidden' name='properties[Preis]' id='smc-prop-price'>
+          <input type='hidden' name='properties[Anmerkung]' id='smc-prop-note'>
 
           {% if base_product != blank %}
-            <button
-              type='submit'
-              class='smc__btn smc__btn--primary smc__btn--full'
-              id='smc-atc'
-              disabled
-              style='display:none'
-            >
-              In den Warenkorb
-            </button>
+            {% comment %} Submit button is on page 3 {% endcomment %}
             </form>
           {% else %}
             </div>
           {% endif %}
         </div>
+      </div>
 
-        <div class='smc__col smc__col--right'>
-          <div class='smc__preview'>
-            <div class='smc__preview-top'>
-              <div class='smc__preview-kicker' id='smc-preview-kicker'>Vorschau</div>
-            </div>
-
-            <div
-              class='smc__preview-area'
-              id='smc-preview-area'
-              data-loading='0'
-              data-softblur='0'
-              data-clickable='0'
-              data-fade='0'
-            >
-              <div class='smc__preview-loading' aria-hidden='true'>
-                <div class='smc__preview-shimmer'></div>
-                <div class='smc__preview-spinner'></div>
-              </div>
-
+      {% comment %} ! Page 2: Creating (Preview Area) {% endcomment %}
+      <div
+        id='smc-page-2'
+        class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
+      >
+        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5]'>
+          <div class='twcss-flex twcss-flex-col twcss-items-center twcss-gap-6'>
+            {% comment %} ! Preview Image Container {% endcomment %}
+            <div class='twcss-w-full twcss-aspect-square twcss-max-w-md twcss-bg-white twcss-rounded-xl twcss-shadow-lg twcss-overflow-hidden twcss-flex twcss-items-center twcss-justify-center twcss-relative'>
+              {% comment %} Loading State {% endcomment %}
               <div
-                class='smc__preview-overlay'
-                id='smc-preview-overlay'
-                aria-hidden='true'
-                style='display:none'
+                id='smc-preview-loading'
+                class='twcss-absolute twcss-inset-0 twcss-flex twcss-items-center twcss-justify-center twcss-bg-gray-100'
               >
-                <div class='smc__preview-overlay-pill'>
-                  <span class='smc__preview-overlay-title' id='smc-preview-overlay-title'>Bitte warten</span>
-                  <span class='smc__preview-overlay-sub' id='smc-preview-overlay-sub'
-                    >Wir erstellen deine Vorschau</span
-                  >
-                </div>
+                <div
+                  class='twcss-animate-spin twcss-rounded-full twcss-h-12 twcss-w-12 twcss-border-b-2 twcss-border-brandblack'
+                ></div>
               </div>
 
-              <div class='smc__preview-empty' id='smc-preview-empty'>Starte zuerst den Entwurf</div>
+              {% comment %} Empty State {% endcomment %}
+              <div id='smc-preview-empty' class='twcss-text-center twcss-text-gray-400 twcss-p-8'>
+                <p class='twcss-text-lg twcss-font-medium'>Starte zuerst den Entwurf</p>
+              </div>
+
+              {% comment %} Preview Image {% endcomment %}
               <img
                 id='smc-preview-img'
-                class='smc__preview-img smc__preview-img--hidden'
+                class='twcss-w-full twcss-h-full twcss-object-contain twcss-hidden'
                 alt='Vorschau'
                 loading='lazy'
                 width='100%'
                 height='100%'
               >
             </div>
+
+            {% comment %} ! Action Buttons {% endcomment %}
+            <div class='twcss-flex twcss-gap-4 twcss-w-full twcss-max-w-md'>
+              <button
+                type='button'
+                id='smc-preview-download'
+                class='twcss-flex-1 twcss-py-3 twcss-px-6 twcss-bg-brandblack twcss-text-white twcss-rounded-xl twcss-font-bold twcss-transition-colors hover:twcss-bg-brandblack/80 disabled:twcss-opacity-50 disabled:twcss-cursor-not-allowed'
+                disabled
+                aria-label='Vorschau herunterladen'
+              >
+                Download
+              </button>
+              <button
+                type='button'
+                id='smc-preview-share'
+                class='twcss-flex-1 twcss-py-3 twcss-px-6 twcss-bg-gray-200 twcss-text-brandblack twcss-rounded-xl twcss-font-bold twcss-transition-colors hover:twcss-bg-gray-300 disabled:twcss-opacity-50 disabled:twcss-cursor-not-allowed'
+                disabled
+                aria-label='Vorschau teilen'
+              >
+                Teilen
+              </button>
+            </div>
+
+            {% comment %} ! AI Notice {% endcomment %}
+            <p class='twcss-text-xs twcss-text-gray-500 twcss-text-center twcss-max-w-md'>
+              * Dieses Bild wurde mit Hilfe von KI generiert
+            </p>
           </div>
         </div>
       </div>
 
-      <div class='smc__modal' id='smc-modal' aria-hidden='true' data-mode='product'>
-        <div class='smc__modal-backdrop' id='smc-modal-backdrop'></div>
-
-        <div class='smc__modal-card' role='dialog' aria-modal='true' aria-label='Schild ansehen'>
-          <div class='smc__modal-top' id='smc-modal-top'>
-            <div class='smc__modal-title' id='smc-modal-title'>Schild ansehen</div>
-
-            <div class='smc__modal-top-actions'>
-              <button type='button' class='smc__modal-dl' id='smc-modal-dl' aria-label='Download'>
-                <span class='smc__modal-dl-ico' aria-hidden='true'>↓</span>
-                <span class='smc__modal-dl-label'>Download</span>
-              </button>
-              <button type='button' class='smc__modal-x' id='smc-modal-close' aria-label='Schließen'>✕</button>
-            </div>
-          </div>
-
-          <div class='smc__modal-body'>
-            <div class='smc__modal-preview' id='smc-modal-preview' data-loading='0'>
-              <div class='smc__modal-shimmer' aria-hidden='true'></div>
+      {% comment %} ! Page 3: Result & Checkout {% endcomment %}
+      <div
+        id='smc-page-3'
+        class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
+      >
+        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] md:twcss-min-w-[460px]'>
+          {% comment %} ! Result container {% endcomment %}
+          <div class='twcss-flex twcss-justify-center twcss-flex-col twcss-gap-8'>
+            {% comment %} ! Small Preview + nanme, price and size columns {% endcomment %}
+            <div class='twcss-flex twcss-items-center twcss-gap-4 twcss-flex-col md:twcss-flex-row'>
+              {% comment %} * Small Preview {% endcomment %}
               <img
-                id='smc-modal-img'
-                class='smc__modal-img'
-                alt='Vorschau'
+                id='smc-result-img'
+                class='twcss-object-contain twcss-rounded-xl twcss-shadow-lg twcss-bg-white'
+                alt='Dein Schild'
                 loading='lazy'
-                width='100%'
-                height='100%'
+                width='140px'
+                height='140px'
               >
-            </div>
+              {% comment %} * Name and size column {% endcomment %}
+              <div>
+                {% comment %} * Name {% endcomment %}
+                <h3 id='smc-product-name' class='twcss-text-xl twcss-font-bold twcss-mb-2'>
+                  Dein personalisiertes Schild
+                </h3>
 
-            <div class='smc__modal-copy' id='smc-modal-copy'>
-              <div class='smc__modal-text' id='smc-modal-text'>
-                Dein Schild ist bereit – wir erstellen gerade dein Produkt.
-              </div>
-
-              <div class='smc__modal-hold' id='smc-modal-hold' style='display:none'>
-                <div class='smc__modal-hold-note'>
-                  Wir speichern Dein Schild für die nächsten 30 Minuten. Kein Stress :)
-                </div>
-                <div class='smc__modal-hold-row'>
-                  <div class='smc__modal-hold-time' id='smc-modal-hold-time'>30:00</div>
-                  <div class='smc__modal-hold-bar'>
-                    <div class='smc__modal-hold-barfill' id='smc-modal-hold-barfill'></div>
+                {% comment %} * Size select {% endcomment %}
+                <div class='smc__field'>
+                  <label class='smc__label twcss-block twcss-font-bold' for='smc-size'>Größe</label>
+                  <div class='smc__select twcss-relative'>
+                    <select
+                      id='smc-size'
+                      class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
+                    >
+                      <option value='22,5 cm'>22,5 cm</option>
+                      <option value='45 cm'>45 cm</option>
+                      <option value='55 cm'>55 cm</option>
+                      <option value='75 cm'>75 cm</option>
+                      <option value='75 cm+'>75 cm+</option>
+                    </select>
+                    <span
+                      class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
+                      aria-hidden='true'
+                      >⌄</span
+                    >
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class='smc__modal-actions' id='smc-modal-actions'>
+            {% comment %} ! Note Field {% endcomment %}
+            <div class='smc__field'>
+              <label class='smc__label twcss-block twcss-font-bold' for='smc-note'>
+                Anmerkung zum Design
+                <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>Optional</span>
+              </label>
+              <textarea
+                id='smc-note'
+                class='smc__textarea twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-gray-300'
+                rows='3'
+                placeholder='Hast du noch Wünsche oder Anmerkungen?'
+              ></textarea>
+            </div>
+
+            <div class='smc__actions twcss-flex twcss-flex-col twcss-gap-4'>
+              {% if base_product != blank %}
                 <button
                   type='button'
-                  class='smc__btn smc__btn--primary smc__btn--full'
-                  id='smc-modal-add'
+                  class='smc__btn smc__btn--primary smc__btn--full twcss-w-full twcss-py-4 twcss-bg-brandblack twcss-text-white twcss-rounded-xl twcss-font-bold twcss-text-lg'
+                  id='smc-atc-trigger'
                 >
-                  <span class='smc__btn-label' id='smc-modal-add-label'>Zum Warenkorb hinzufügen</span>
-                  <span class='smc__btn-spin' aria-hidden='true'></span>
+                  In den Warenkorb
                 </button>
+              {% endif %}
 
-                <a
-                  class='smc__btn smc__btn--ghost smc__btn--full'
-                  id='smc-modal-link'
-                  href='#'
-                  target='_self'
-                  rel='noopener'
-                  style='display:none'
-                >
-                  Produkt ansehen
-                </a>
-              </div>
+              <button
+                type='button'
+                class='smc__btn smc__btn--ghost twcss-w-full twcss-py-3 twcss-text-gray-500 hover:twcss-text-brandblack twcss-transition-colors twcss-font-medium'
+                id='smc-back-btn'
+              >
+                Neu anfangen (von vorne beginnen)
+              </button>
+            </div>
 
-              <div class='smc__modal-foot' id='smc-modal-foot'></div>
+            {% comment %} ! Price {% endcomment %}
+            <div class='smc__price'>
+              <span class='smc__label twcss-block twcss-font-bold'>Preis</span>
+              <div class='smc__price-val twcss-text-2xl twcss-font-black twcss-text-brandblack' id='smc-price'></div>
             </div>
           </div>
         </div>
@@ -329,7 +365,7 @@
 </section>
 
 {% comment %} ! TIMER {% endcomment %}
-<div class='smc__eta' id='smc-eta' style='display:none'>
+<div class='smc__eta werkstatt-btn' id='smc-eta' style='display:block'>
   <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
   <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
 </div>

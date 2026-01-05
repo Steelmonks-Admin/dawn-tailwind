@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ============================================================================
-  // Configuration & Constants
+  // ! Configuration & Constants
   // ============================================================================
   const TIMING = {
     TOTAL_MS: 120000,
@@ -48,13 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // Utility Functions
-  // ============================================================================
-  const el = (id) => document.getElementById(id);
-  const cls = (element, className) => element.classList.add(className);
-
-  // ============================================================================
-  // Logger Utility
+  // ! Logger Utility
   // ============================================================================
   const logger = {
     styles: {
@@ -114,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
   };
+
+  // ============================================================================
+  // ! Utility Functions
+  // ============================================================================
+  const el = (id) => document.getElementById(id);
+  const cls = (element, className) => element.classList.add(className);
 
   const fmtMMSS = (ms) => {
     const s = Math.max(0, Math.ceil(ms / 1000));
@@ -207,9 +207,15 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // DOM Elements
+  // ! DOM Elements
   // ============================================================================
   const elements = {
+    // Navigation
+    slider: el('smc-slider'),
+    page1: el('smc-page-1'),
+    page2: el('smc-page-2'),
+    page3: el('smc-page-3'),
+
     // Form inputs
     upload: el('smc-upload'),
     uploadLabel: el('smc-upload-label'),
@@ -218,22 +224,27 @@ document.addEventListener('DOMContentLoaded', () => {
     desc: el('smc-desc'),
     finish: el('smc-finish'),
     size: el('smc-size'),
+    note: el('smc-note'), // New note field
 
     // Status pill
     pill: el('smc-pill'),
     pillText: el('smc-pill-text'),
 
     // Price
-    priceVal: el('smc-price'),
+    priceVal: el('smc-price'), // Moved to Page 3
 
-    // Preview
-    previewKicker: el('smc-preview-kicker'),
-    previewArea: el('smc-preview-area'),
+    // Preview (Page 2)
+    previewLoading: el('smc-preview-loading'),
     previewEmpty: el('smc-preview-empty'),
     previewImg: el('smc-preview-img'),
-    previewOverlay: el('smc-preview-overlay'),
-    previewOverlayTitle: el('smc-preview-overlay-title'),
-    previewOverlaySub: el('smc-preview-overlay-sub'),
+    previewDownload: el('smc-preview-download'),
+    previewShare: el('smc-preview-share'),
+
+    // Result (Page 3)
+    resultImg: el('smc-result-img'),
+    productName: el('smc-product-name'),
+    atcTrigger: el('smc-atc-trigger'),
+    backBtn: el('smc-back-btn'),
 
     // ETA
     etaWrap: el('smc-eta'),
@@ -255,25 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     propRoute: el('smc-prop-route'),
     propGen: el('smc-prop-gen'),
     propPrice: el('smc-prop-price'),
-
-    // Modal
-    modal: el('smc-modal'),
-    modalBackdrop: el('smc-modal-backdrop'),
-    modalClose: el('smc-modal-close'),
-    modalDl: el('smc-modal-dl'),
-    modalTitle: el('smc-modal-title'),
-    modalPreview: el('smc-modal-preview'),
-    modalImg: el('smc-modal-img'),
-    modalCopy: el('smc-modal-copy'),
-    modalText: el('smc-modal-text'),
-    modalAdd: el('smc-modal-add'),
-    modalAddLabel: el('smc-modal-add-label'),
-    modalLink: el('smc-modal-link'),
-    modalFoot: el('smc-modal-foot'),
-    modalActions: el('smc-modal-actions'),
-    modalHold: el('smc-modal-hold'),
-    modalHoldTime: el('smc-modal-hold-time'),
-    modalHoldBarfill: el('smc-modal-hold-barfill'),
+    propNote: el('smc-prop-note'), // New prop for note
 
     // Main containers
     smc: el('smc'),
@@ -296,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================================
-  // State Management
+  // ! State Management
   // ============================================================================
   const state = {
     current: 'init',
@@ -313,10 +306,12 @@ document.addEventListener('DOMContentLoaded', () => {
     forceMockLoading: false,
     runStartedAt: 0,
     pollInFlight: false,
+    generatedProductUrl: '',
+    generatedProductName: '',
   };
 
   // ============================================================================
-  // LocalStorage Persistence
+  // ! LocalStorage Persistence
   // ============================================================================
   const STORAGE_KEY = 'steelmonks-sign-creator-state';
   const STORAGE_TIMER_KEY = 'steelmonks-sign-creator-timer';
@@ -335,6 +330,8 @@ document.addEventListener('DOMContentLoaded', () => {
           pendingPriceValue: state.pendingPriceValue,
           previewDone: state.previewDone,
           runStartedAt: state.runStartedAt,
+          generatedProductUrl: state.generatedProductUrl,
+          generatedProductName: state.generatedProductName,
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
         logger.debug('State saved to localStorage', stateToSave);
@@ -408,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
           description: elements.desc?.value || '',
           finish: elements.finish?.value || '',
           size: elements.size?.value || '',
+          note: elements.note?.value || '',
           uploadFileName: elements.upload?.files?.[0]?.name || '',
           uploadDataUrl: null, // Will be set if file exists
         };
@@ -455,6 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
           hasDescription: !!parsed.description,
           hasFinish: !!parsed.finish,
           hasSize: !!parsed.size,
+          hasNote: !!parsed.note,
           hasImage: !!parsed.uploadDataUrl,
         });
         return parsed;
@@ -481,6 +480,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Restore size
         if (formDataObj.size && elements.size) {
           elements.size.value = formDataObj.size;
+        }
+
+        // Restore note
+        if (formDataObj.note && elements.note) {
+          elements.note.value = formDataObj.note;
         }
 
         // Restore image preview if available
@@ -520,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // Timer Management
+  // ! Timer Management
   // ============================================================================
   const timerManager = {
     clearAll() {
@@ -665,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // UI Updates
+  // ! UI Updates
   // ============================================================================
   const ui = {
     setPillState(kind, text) {
@@ -674,64 +678,58 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elements.pillText) elements.pillText.textContent = text || 'Bereit';
     },
 
-    setPreviewState(attr, value) {
-      if (!elements.previewArea) return;
-      elements.previewArea.setAttribute(attr, value ? '1' : '0');
-    },
-
     setPreviewLoading(on) {
-      this.setPreviewState('data-loading', on);
-    },
-
-    setSoftBlur(on) {
-      this.setPreviewState('data-softblur', on);
-    },
-
-    setFade(on) {
-      this.setPreviewState('data-fade', on);
-    },
-
-    setClickable(on) {
-      this.setPreviewState('data-clickable', on);
-    },
-
-    setPreviewOverlay(on, title, sub) {
-      if (elements.previewOverlay)
-        elements.previewOverlay.style.display = on ? 'flex' : 'none';
-      if (elements.previewOverlayTitle && title)
-        elements.previewOverlayTitle.textContent = title;
-      if (elements.previewOverlaySub && sub)
-        elements.previewOverlaySub.textContent = sub;
+      if (elements.previewLoading) {
+        elements.previewLoading.style.display = on ? 'flex' : 'none';
+      }
     },
 
     showPreview(url) {
-      if (!url || !elements.previewImg) {
-        logger.warn('Cannot show preview: missing URL or preview element', {
-          url,
-          hasElement: !!elements.previewImg,
-        });
+      if (!url) {
+        this.showPlaceholder('Keine Vorschau verfügbar');
         return;
       }
-      try {
-        this.setFade(true);
+
+      // Show loading state
+      this.setPreviewLoading(true);
+      if (elements.previewEmpty) {
+        elements.previewEmpty.style.display = 'none';
+      }
+
+      // Update page 2 preview
+      if (elements.previewImg) {
         elements.previewImg.onload = () => {
-          try {
-            this.setFade(false);
-            elements.previewImg.onload = null;
-            logger.debug('Preview image loaded successfully', { url });
-          } catch (error) {
-            logger.error('Error in preview image onload handler', error);
+          // Hide loading and empty states when image loads
+          this.setPreviewLoading(false);
+          if (elements.previewEmpty) {
+            elements.previewEmpty.style.display = 'none';
           }
+          // Show image and enable download and share buttons
+          elements.previewImg.classList.remove('twcss-hidden');
+          if (elements.previewDownload)
+            elements.previewDownload.disabled = false;
+          if (elements.previewShare) elements.previewShare.disabled = false;
+          logger.debug('Preview image loaded successfully', { url });
         };
-        elements.previewImg.onerror = (error) => {
-          logger.error('Failed to load preview image', error, { url });
-          this.setFade(false);
+        elements.previewImg.onerror = () => {
+          logger.error('Failed to load preview image', { url });
+          this.setPreviewLoading(false);
+          if (elements.previewEmpty) {
+            elements.previewEmpty.textContent =
+              'Fehler beim Laden der Vorschau';
+            elements.previewEmpty.style.display = 'block';
+          }
+          // Keep buttons disabled on error
+          if (elements.previewDownload)
+            elements.previewDownload.disabled = true;
+          if (elements.previewShare) elements.previewShare.disabled = true;
         };
         elements.previewImg.src = url;
-        elements.previewImg.classList.remove('smc__preview-img--hidden');
-        if (elements.previewEmpty) elements.previewEmpty.style.display = 'none';
-      } catch (error) {
-        logger.error('Failed to show preview', error, { url });
+      }
+
+      // Update page 3 preview
+      if (elements.resultImg) {
+        elements.resultImg.src = url;
       }
     },
 
@@ -740,14 +738,13 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.previewEmpty.textContent = text || 'Starte zuerst den Entwurf';
         elements.previewEmpty.style.display = 'block';
       }
-      if (elements.previewImg)
-        elements.previewImg.classList.add('smc__preview-img--hidden');
-    },
-
-    setModalPreviewLoading(on) {
-      if (elements.modalPreview) {
-        elements.modalPreview.setAttribute('data-loading', on ? '1' : '0');
+      if (elements.previewImg) {
+        elements.previewImg.classList.add('twcss-hidden');
       }
+      // Disable buttons when showing placeholder
+      if (elements.previewDownload) elements.previewDownload.disabled = true;
+      if (elements.previewShare) elements.previewShare.disabled = true;
+      this.setPreviewLoading(false);
     },
 
     lockInputs(on) {
@@ -756,6 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.desc,
         elements.finish,
         elements.size,
+        elements.note,
       ];
       if (inputs.some((el) => !el)) return;
 
@@ -765,7 +763,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (elements.resetBtn) {
-        elements.resetBtn.style.display = state.locked ? 'inline-flex' : 'none';
+        // Only show reset button on page 1 if not locked, or if state is not init?
+        // Actually reset is available via back button on page 3 or direct reset on page 1
       }
     },
 
@@ -786,6 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     setCtaFromState() {
+      // Only updates CTA button state without navigation
       switch (state.current) {
         case 'init': {
           const ok = elements.desc?.value?.trim().length >= 5;
@@ -803,12 +803,56 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
 
+    navigateTo(page) {
+      if (!elements.slider) return;
+
+      let translateX = '0%';
+      switch (page) {
+        case 1:
+          translateX = '0%';
+          break;
+        case 2:
+          translateX = '-100%';
+          break;
+        case 3:
+          translateX = '-200%';
+          break;
+        default:
+          translateX = '0%';
+      }
+
+      elements.slider.style.transform = `translateX(${translateX})`;
+      logger.debug('Navigating to page', { page, translateX });
+    },
+
+    updateUIFromState() {
+      // Navigation
+      switch (state.current) {
+        case 'init':
+          this.navigateTo(1);
+          break;
+        case 'creating':
+          this.navigateTo(2);
+          break;
+        case 'ready':
+          this.navigateTo(3);
+          if (state.generatedProductName && elements.productName) {
+            elements.productName.textContent = state.generatedProductName;
+          }
+          break;
+        default:
+          this.navigateTo(1);
+      }
+
+      // CTA State
+      this.setCtaFromState();
+    },
+
     applyPriceDisplay() {
       if (!elements.priceVal) return;
-      if (state.pendingPriceValue) {
-        elements.priceVal.textContent = state.lastMockUrl
-          ? state.pendingPriceValue
-          : 'Preis berechnet';
+      if (state.pendingPriceValue && state.priceReady) {
+        // Always show the calculated price when available
+        elements.priceVal.textContent = state.pendingPriceValue;
       } else {
         elements.priceVal.textContent =
           'Den Preis berechnen wir nach dem Entwurf.';
@@ -817,7 +861,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // Form & Data Management
+  // ! Form & Data Management
   // ============================================================================
   const formData = {
     hasImage() {
@@ -842,6 +886,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (elements.propPrice)
         elements.propPrice.value = state.pendingPriceValue || '';
+      if (elements.propNote && elements.note)
+        elements.propNote.value = elements.note.value || '';
     },
 
     createPayload(extra = {}) {
@@ -923,10 +969,140 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // Price Management
+  // ! Price Management
   // ============================================================================
+  const PRICE_MATRIX = {
+    // Material prices by size (in euros)
+    'Schwarz pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0, // Custom pricing
+    },
+    'Anthrazit pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    'Weiß pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    Gold: {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    'Cortenstahl Optik': {
+      '22,5 cm': 69,
+      '45 cm': 99,
+      '55 cm': 129,
+      '75 cm': 199,
+      '75 cm+': 0,
+    },
+    'Satinierter Edelstahl': {
+      '22,5 cm': 69,
+      '45 cm': 99,
+      '55 cm': 129,
+      '75 cm': 199,
+      '75 cm+': 0,
+    },
+  };
+
+  const calculatePrice = (material, size) => {
+    if (!material || !size) return null;
+
+    const materialPrices = PRICE_MATRIX[material];
+    if (!materialPrices) {
+      logger.warn('Unknown material for price calculation', { material });
+      return null;
+    }
+
+    const price = materialPrices[size];
+    if (price === undefined) {
+      logger.warn('Unknown size for price calculation', { material, size });
+      return null;
+    }
+
+    // Custom pricing for 75 cm+
+    if (price === 0 && size === '75 cm+') {
+      return null; // Return null to indicate custom pricing needed
+    }
+
+    return price;
+  };
+
+  const formatPrice = (price) => {
+    if (price === null || price === undefined) return '';
+    // Format with two decimal places and comma as decimal separator
+    const formatted = Number(price).toFixed(2).replace('.', ',');
+    return `${formatted} €`;
+  };
+
   const priceManager = {
+    calculate(material, size) {
+      const price = calculatePrice(material, size);
+      const formattedPrice = formatPrice(price);
+
+      if (formattedPrice) {
+        // Valid price calculated
+        state.pendingPriceValue = formattedPrice;
+        state.priceReady = true;
+        storageManager.saveState(); // Save to localStorage
+        formData.updateProps();
+        ui.applyPriceDisplay(); // Update UI immediately
+        if (state.current === 'creating' && !state.lastMockUrl) {
+          ui.setPillState('work', 'Preis berechnet');
+        }
+        logger.debug('Price calculated and saved', {
+          material,
+          size,
+          price,
+          formattedPrice,
+        });
+        return formattedPrice;
+      } else {
+        // No valid price (missing material/size or custom pricing needed)
+        const wasPriceReady = state.priceReady;
+        state.pendingPriceValue = '';
+        state.priceReady = false;
+        storageManager.saveState(); // Save cleared state to localStorage
+        formData.updateProps();
+
+        // Update UI with appropriate message
+        if (!material || !size) {
+          // Missing material or size
+          if (elements.priceVal) {
+            elements.priceVal.textContent =
+              'Den Preis berechnen wir nach dem Entwurf.';
+          }
+        } else {
+          // Custom pricing needed (75 cm+)
+          if (elements.priceVal) {
+            elements.priceVal.textContent = 'Preis auf Anfrage';
+          }
+        }
+
+        logger.debug('Price calculation returned null', {
+          material,
+          size,
+          hasMaterial: !!material,
+          hasSize: !!size,
+        });
+        return null;
+      }
+    },
+
     set(txt) {
+      // Legacy method for backward compatibility - can still accept text
       const out = normalizePriceDisplay(txt);
       if (out) {
         state.pendingPriceValue = out;
@@ -955,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // API Communication
+  // ! API Communication
   // ============================================================================
   const api = {
     async postText(url, fd) {
@@ -1011,28 +1187,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
 
-    async runPriceOnce() {
-      if (!state.generatorId || state.priceRequested) return;
-      state.priceRequested = true;
+    runPriceOnce() {
+      // Calculate price locally based on material and size
+      const material = elements.finish?.value || '';
+      const size = elements.size?.value || '';
 
-      try {
-        const raw = await this.postText(
-          ENDPOINTS.price,
-          formData.createPayload(),
-        );
-        const j = tryParseJson(raw);
-        const p = extractPriceValue(j, raw);
-        if (p) {
-          priceManager.set(p);
-          logger.info('Price fetched successfully', { price: p });
-        } else {
-          logger.warn('Price value not found in response', {
-            raw: raw?.substring(0, 200),
-          });
-        }
-      } catch (error) {
-        logger.error('Failed to fetch price', error);
-        // Keep priceRequested as true on error
+      if (!material || !size) {
+        logger.warn('Cannot calculate price: missing material or size', {
+          hasMaterial: !!material,
+          hasSize: !!size,
+        });
+        return;
+      }
+
+      const calculatedPrice = priceManager.calculate(material, size);
+      if (calculatedPrice) {
+        logger.info('Price calculated locally', {
+          material,
+          size,
+          price: calculatedPrice,
+        });
+      } else {
+        logger.debug('Price calculation returned null (custom pricing)', {
+          material,
+          size,
+        });
       }
     },
 
@@ -1093,14 +1272,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.lastEntUrl = entUrl;
             storageManager.saveState();
             ui.setPreviewLoading(false);
-            ui.setClickable(false);
-            ui.setSoftBlur(true);
             ui.showPreview(entUrl);
-            ui.setPreviewOverlay(
-              true,
-              'Wir finalisieren dein Design',
-              'Bitte warten',
-            );
           }
         }
 
@@ -1109,24 +1281,29 @@ document.addEventListener('DOMContentLoaded', () => {
           if (mockUrl) {
             state.lastMockUrl = mockUrl;
             state.forceMockLoading = false;
-            storageManager.saveState();
+
+            // Start preparing product info immediately
+            this.prepareProduct();
 
             timerManager.stopEta();
             timerManager.clearAll();
 
             ui.setPreviewLoading(false);
-            ui.setSoftBlur(false);
-            ui.setPreviewOverlay(false);
-            ui.setClickable(true);
             ui.applyPriceDisplay();
-
-            if (elements.previewKicker)
-              elements.previewKicker.textContent = 'Vorschau';
             ui.showPreview(mockUrl);
 
             state.current = 'ready';
             storageManager.saveState();
-            ui.setCtaFromState();
+
+            ui.setPillState('ok', 'Fertig!');
+
+            // Wait 3 seconds then move to page 3
+            logger.info(
+              'Mock received, waiting 3s before switching to result page',
+            );
+            setTimeout(() => {
+              ui.updateUIFromState();
+            }, 3000);
 
             logger.info('Mock-up received, workflow complete', {
               mockUrl,
@@ -1146,15 +1323,55 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
 
+    async prepareProduct() {
+      try {
+        logger.info('Fetching product info...');
+        const raw = await this.postText(
+          ENDPOINTS.product,
+          formData.createPayload(),
+        );
+        const j = tryParseJson(raw);
+
+        const productUrl = (
+          extractField(j, 'Product URL') ||
+          extractField(j, 'product_url') ||
+          extractField(j, 'url') ||
+          ''
+        ).trim();
+
+        const productName = (
+          extractField(j, 'Product Name') ||
+          extractField(j, 'product_name') ||
+          extractField(j, 'name') ||
+          ''
+        ).trim();
+
+        if (productName) {
+          state.generatedProductName = productName;
+          if (elements.productName)
+            elements.productName.textContent = productName;
+        }
+
+        if (productUrl) {
+          state.generatedProductUrl = productUrl;
+        }
+
+        state.checkoutReady = true;
+        storageManager.saveState();
+        logger.info('Product info prepared', { productName, productUrl });
+      } catch (error) {
+        logger.error('Failed to prepare product info', error);
+      }
+    },
+
     handleFailure() {
       logger.error('Creator workflow failure detected');
       timerManager.stopEta();
       timerManager.clearAll();
       ui.setPreviewLoading(false);
-      ui.setPreviewOverlay(false);
-      ui.setClickable(false);
-      ui.setSoftBlur(false);
       ui.showPlaceholder('Fehlgeschlagen. Bitte Neu anfangen');
+      state.current = 'init';
+      ui.updateUIFromState();
     },
 
     startMockPollingWindow() {
@@ -1221,6 +1438,8 @@ document.addEventListener('DOMContentLoaded', () => {
         forceMockLoading: false,
         runStartedAt: Date.now(),
         pollInFlight: false,
+        generatedProductUrl: '',
+        generatedProductName: '',
       });
       storageManager.saveState();
       storageManager.saveFormData();
@@ -1228,31 +1447,19 @@ document.addEventListener('DOMContentLoaded', () => {
       timerManager.stopEta();
       timerManager.stopHold();
       timerManager.clearAll();
-      modalManager.close();
 
-      ui.setClickable(false);
-      ui.setSoftBlur(false);
       priceManager.setCalculating();
       ui.setPillState('work', 'Wir starten…');
       ui.lockInputs(true);
-      ui.setCtaFromState();
+      ui.updateUIFromState(); // Navigate to page 2
 
-      if (elements.previewKicker)
-        elements.previewKicker.textContent = 'Vorschau';
       ui.showPlaceholder('Wir erstellen gerade deine Vorschau');
       ui.setPreviewLoading(true);
-      ui.setFade(false);
-      ui.setPreviewOverlay(
-        true,
-        'Bitte warten',
-        'Wir erstellen deine Vorschau',
-      );
 
       timerManager.startEta('Geschätzte Zeit', TIMING.TOTAL_MS, () => {
         if (state.current === 'creating' && !state.lastMockUrl) {
           state.forceMockLoading = true;
           ui.setPillState('work', 'Vorschau wird geladen');
-          ui.setPreviewOverlay(true, 'Vorschau wird geladen', 'Bitte warten');
           ui.setPreviewLoading(true);
         }
       });
@@ -1353,12 +1560,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         this.runCreatorPreviewOnce('Sofort nach run-creator');
 
+        // Calculate price immediately (no API call needed)
         timers.priceA = setTimeout(() => {
           try {
             ui.setPillState('work', 'Preis wird berechnet');
             this.runPriceOnce();
           } catch (error) {
-            logger.error('Error in price fetch timeout callback', error);
+            logger.error('Error in price calculation callback', error);
           }
         }, TIMING.TIME_PRICE_MS);
 
@@ -1398,112 +1606,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
 
-    handleCreationFailure(message) {
-      logger.error('Creator workflow failed', new Error(message));
-      state.generatorId = '';
-      formData.updateProps();
-      timerManager.stopEta();
-      timerManager.clearAll();
-      ui.setPreviewLoading(false);
-      ui.setPreviewOverlay(false);
-      ui.showPlaceholder('Starte zuerst den Entwurf');
-      state.current = 'init';
-      ui.setCtaFromState();
-      ui.setPillState('bad', message);
-      ui.lockInputs(true);
-    },
-
-    async addToCartFromProductUrl(productUrl) {
-      const jsonUrl = safeProductJsonUrl(productUrl);
-      if (!jsonUrl) return { ok: false };
-
-      try {
-        logger.debug('Fetching product JSON', { jsonUrl });
-        const pRes = await fetch(jsonUrl, {
-          method: 'GET',
-          credentials: 'same-origin',
-        });
-        if (!pRes.ok) {
-          logger.error(
-            'Failed to fetch product JSON',
-            new Error(`HTTP ${pRes.status}`),
-            {
-              jsonUrl,
-              status: pRes.status,
-            },
-          );
-          return { ok: false };
-        }
-
-        const p = await pRes.json();
-        const variants = p?.variants || [];
-        if (!variants.length) {
-          logger.error('Product has no variants', { jsonUrl, productData: p });
-          return { ok: false };
-        }
-
-        const v = variants.find((x) => x?.available) || variants[0];
-        if (!v?.id) {
-          logger.error('No valid variant found', {
-            variantsCount: variants.length,
-            jsonUrl,
-          });
-          return { ok: false };
-        }
-
-        logger.debug('Found variant for cart', {
-          variantId: v.id,
-          available: v.available,
-        });
-
-        const properties = {
-          Beschreibung: elements.desc?.value || '',
-          Oberfläche: elements.finish?.value || '',
-          Größe: elements.size?.value || '',
-          Route: formData.routeValue(),
-          'Generator ID': state.generatorId || '',
-          Preis: state.pendingPriceValue || '',
-        };
-
-        const addRes = await fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify({ id: v.id, quantity: 1, properties }),
-          credentials: 'same-origin',
-        });
-
-        const success = addRes.ok;
-        if (success) {
-          logger.info('Product added to cart successfully', {
-            productUrl,
-            variantId: v.id,
-          });
-        } else {
-          logger.error(
-            'Failed to add product to cart',
-            new Error(`HTTP ${addRes.status}`),
-            {
-              productUrl,
-              variantId: v.id,
-              status: addRes.status,
-            },
-          );
-        }
-        return { ok: success };
-      } catch (error) {
-        logger.error('Exception while adding product to cart', error, {
-          productUrl,
-        });
-        return { ok: false };
-      }
-    },
+    // ...
   };
 
   // ============================================================================
-  // Status Management
+  // ! Status Management
   // ============================================================================
   const statusManager = {
     updateFromStatus(statusText) {
@@ -1535,21 +1642,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // Modal Management
+  // ! Download & Share Helpers
   // ============================================================================
-  const modalManager = {
-    setMode(mode) {
-      if (elements.modal)
-        elements.modal.setAttribute('data-mode', mode || 'product');
-    },
-
-    close() {
-      if (elements.modal) elements.modal.setAttribute('aria-hidden', 'true');
-      ui.lockScroll(false);
-      const mode = elements.modal?.getAttribute('data-mode') || '';
-      if (mode === 'product') timerManager.stopHold();
-    },
-
+  const downloadHelper = {
     async downloadUrl(url, filename) {
       if (!url) return;
       const name =
@@ -1576,6 +1671,8 @@ document.addEventListener('DOMContentLoaded', () => {
             logger.error('Failed to revoke object URL', error);
           }
         }, 8000);
+
+        logger.info('Preview downloaded successfully', { filename: name });
       } catch (error) {
         logger.warn('Blob download failed, trying direct link', error, {
           url,
@@ -1588,241 +1685,71 @@ document.addEventListener('DOMContentLoaded', () => {
           document.body.appendChild(a);
           a.click();
           a.remove();
-          logger.info('Download initiated via direct link', {
-            url,
-            filename: name,
-          });
+          logger.info('Preview downloaded via direct link', { filename: name });
         } catch (fallbackError) {
           logger.error(
             'Direct link download failed, opening in new tab',
             fallbackError,
-            { url },
           );
           window.open(url, '_blank');
         }
       }
     },
+  };
 
-    openViewer(kind, url) {
-      if (!url) return;
-      this.setMode('viewer');
+  const shareHelper = {
+    async shareUrl(url, title = 'Mein personalisiertes Schild') {
+      if (!url) return false;
 
-      if (elements.modalTitle)
-        elements.modalTitle.textContent = kind || 'Vorschau';
-      if (elements.modalCopy) elements.modalCopy.style.display = 'none';
-      if (elements.modalActions) elements.modalActions.style.display = 'none';
-      if (elements.modalFoot) elements.modalFoot.style.display = 'none';
-      if (elements.modalHold) elements.modalHold.style.display = 'none';
-      if (elements.modalImg) {
+      // Try Web Share API first (mobile-friendly)
+      if (navigator.share) {
         try {
-          elements.modalImg.onerror = (error) => {
-            logger.error('Failed to load modal image', error, { url });
-          };
-          elements.modalImg.src = url;
-        } catch (error) {
-          logger.error('Failed to set modal image source', error, { url });
-        }
-      }
-
-      if (elements.modalDl) {
-        elements.modalDl.style.display = 'inline-flex';
-        elements.modalDl.onclick = () => {
-          this.downloadUrl(
-            url,
-            `steelmonks-vorschau-${state.generatorId || 'download'}.png`,
-          );
-        };
-      }
-
-      if (elements.modal) elements.modal.setAttribute('aria-hidden', 'false');
-      ui.lockScroll(true);
-    },
-
-    openProduct() {
-      this.setMode('product');
-
-      if (elements.modalCopy) elements.modalCopy.style.display = 'flex';
-      if (elements.modalActions) elements.modalActions.style.display = 'flex';
-      if (elements.modalFoot) elements.modalFoot.style.display = 'block';
-      if (elements.modalTitle)
-        elements.modalTitle.textContent = 'Schild ansehen';
-      if (elements.modalImg && state.lastMockUrl) {
-        try {
-          elements.modalImg.onerror = (error) => {
-            logger.error('Failed to load product modal image', error, {
-              url: state.lastMockUrl,
-            });
-          };
-          elements.modalImg.src = state.lastMockUrl;
-        } catch (error) {
-          logger.error('Failed to set product modal image source', error, {
-            url: state.lastMockUrl,
+          await navigator.share({
+            title: title,
+            text: 'Schau dir mein personalisiertes Schild an!',
+            url: url,
           });
-        }
-      }
-      if (elements.modalText) {
-        elements.modalText.textContent =
-          'Dein Schild ist bereit – wir erstellen gerade dein Produkt.';
-      }
-
-      if (elements.modalDl) {
-        elements.modalDl.style.display = 'inline-flex';
-        elements.modalDl.onclick = () => {
-          if (state.lastMockUrl) {
-            this.downloadUrl(
-              state.lastMockUrl,
-              `steelmonks-vorschau-${state.generatorId || 'download'}.png`,
+          logger.info('Shared via Web Share API');
+          return true;
+        } catch (error) {
+          // User cancelled or error occurred
+          if (error.name !== 'AbortError') {
+            logger.warn(
+              'Web Share API failed, falling back to clipboard',
+              error,
             );
+          } else {
+            return false; // User cancelled
           }
-        };
+        }
       }
 
-      if (elements.modal) elements.modal.setAttribute('aria-hidden', 'false');
-      ui.lockScroll(true);
-    },
-
-    async startProductModal() {
-      if (!state.generatorId || !state.lastMockUrl) {
-        logger.warn('Cannot start product modal: missing requirements', {
-          hasGeneratorId: !!state.generatorId,
-          hasMockUrl: !!state.lastMockUrl,
-        });
-        return;
-      }
-
-      logger.info('Starting product modal', {
-        generatorId: state.generatorId,
-        mockUrl: state.lastMockUrl,
-      });
-
-      ui.setPillState('work', 'Produkt wird vorbereitet');
-      ui.setModalPreviewLoading(true);
-
-      if (elements.modalLink) {
-        elements.modalLink.href = '#';
-        elements.modalLink.style.display = 'none';
-      }
-      if (elements.modalFoot) elements.modalFoot.textContent = '';
-      if (elements.modalAdd) elements.modalAdd.disabled = true;
-
-      this.openProduct();
-
+      // Fallback: Copy to clipboard
       try {
-        const raw = await api.postText(
-          ENDPOINTS.product,
-          formData.createPayload(),
-        );
-        const j = tryParseJson(raw);
-
-        const productUrl = (
-          extractField(j, 'Product URL') ||
-          extractField(j, 'product_url') ||
-          extractField(j, 'url') ||
-          ''
-        ).trim();
-
-        const productName = (
-          extractField(j, 'Product Name') ||
-          extractField(j, 'product_name') ||
-          extractField(j, 'name') ||
-          ''
-        ).trim();
-
-        ui.setModalPreviewLoading(false);
-
-        if (!productUrl) {
-          ui.setPillState('bad', 'Produkt Link fehlt');
-          if (elements.modalText)
-            elements.modalText.textContent = 'Kein Product URL erhalten.';
-          if (elements.modalAdd) elements.modalAdd.disabled = false;
-          return;
-        }
-
-        if (elements.modalLink) {
-          elements.modalLink.href = productUrl;
-          elements.modalLink.style.display = 'none';
-        }
-        if (elements.modalFoot) elements.modalFoot.textContent = productUrl;
-
-        ui.setPillState('ok', 'Produkt bereit');
-        if (elements.modalText) {
-          elements.modalText.textContent = productName || 'Produkt bereit';
-        }
-
-        timerManager.startHold30();
-        state.checkoutReady = false;
-
-        if (elements.modalAddLabel) {
-          elements.modalAddLabel.textContent = 'Zum Warenkorb hinzufügen';
-        }
-
-        if (elements.modalAdd) {
-          elements.modalAdd.disabled = false;
-          elements.modalAdd.onclick = async () => {
-            if (state.checkoutReady) {
-              window.location.href = '/checkout';
-              return;
+        await navigator.clipboard.writeText(url);
+        logger.info('URL copied to clipboard');
+        // Show a brief feedback (you could add a toast notification here)
+        if (elements.previewShare) {
+          const originalText = elements.previewShare.textContent;
+          elements.previewShare.textContent = 'Kopiert!';
+          setTimeout(() => {
+            if (elements.previewShare) {
+              elements.previewShare.textContent = originalText;
             }
-
-            try {
-              if (elements.modalAdd)
-                elements.modalAdd.setAttribute('data-loading', '1');
-              ui.setModalPreviewLoading(true);
-              ui.setPillState('work', 'Wird in den Warenkorb gelegt');
-
-              const added = await api.addToCartFromProductUrl(productUrl);
-
-              ui.setModalPreviewLoading(false);
-              if (elements.modalAdd)
-                elements.modalAdd.setAttribute('data-loading', '0');
-
-              if (added?.ok) {
-                state.checkoutReady = true;
-                storageManager.saveState();
-                ui.setPillState('ok', 'Im Warenkorb');
-                if (elements.modalText) {
-                  elements.modalText.textContent =
-                    productName || 'Produkt bereit';
-                }
-                if (elements.modalAddLabel)
-                  elements.modalAddLabel.textContent = 'Zum Checkout';
-              } else {
-                ui.setPillState('ok', 'Weiter');
-                if (elements.modalText) {
-                  elements.modalText.textContent =
-                    'Öffne das Produkt und lege es dort in den Warenkorb.';
-                }
-              }
-            } catch (error) {
-              logger.error('Exception while adding to cart in modal', error, {
-                productUrl,
-              });
-              ui.setModalPreviewLoading(false);
-              if (elements.modalAdd)
-                elements.modalAdd.setAttribute('data-loading', '0');
-              ui.setPillState('bad', 'Warenkorb Fehler');
-              if (elements.modalText) {
-                elements.modalText.textContent =
-                  'Beim Hinzufügen zum Warenkorb ist etwas schiefgelaufen.';
-              }
-            }
-          };
+          }, 2000);
         }
+        return true;
       } catch (error) {
-        logger.error('Failed to start product modal', error);
-        ui.setModalPreviewLoading(false);
-        ui.setPillState('bad', 'Produkt Fehler');
-        if (elements.modalText) {
-          elements.modalText.textContent =
-            'Beim Erstellen des Produkts ist etwas schiefgelaufen.';
-        }
-        if (elements.modalAdd) elements.modalAdd.disabled = false;
+        logger.error('Failed to copy URL to clipboard', error);
+        // Last resort: show URL in alert
+        alert(`Link zum Teilen:\n${url}`);
+        return false;
       }
     },
   };
 
   // ============================================================================
-  // Reset & Initialization
+  // ! Reset & Initialization
   // ============================================================================
   const resetAll = () => {
     try {
@@ -1847,10 +1774,10 @@ document.addEventListener('DOMContentLoaded', () => {
         forceMockLoading: false,
         runStartedAt: 0,
         pollInFlight: false,
+        generatedProductUrl: '',
+        generatedProductName: '',
       });
 
-      ui.setClickable(false);
-      ui.setSoftBlur(false);
       ui.lockInputs(false);
       ui.setPillState('idle', 'Bereit');
 
@@ -1858,16 +1785,11 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.priceVal.textContent =
           'Den Preis berechnen wir nach dem Entwurf.';
       }
-      if (elements.previewKicker)
-        elements.previewKicker.textContent = 'Vorschau';
       ui.showPlaceholder('Starte zuerst den Entwurf');
       ui.setPreviewLoading(false);
-      ui.setPreviewOverlay(false);
-      ui.setFade(false);
 
-      if (elements.modal) elements.modal.setAttribute('aria-hidden', 'true');
       ui.lockScroll(false);
-      ui.setCtaFromState();
+      ui.updateUIFromState();
       formData.updateProps();
 
       logger.info('Application state reset complete');
@@ -1877,7 +1799,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ============================================================================
-  // Event Listeners
+  // ! Event Listeners
   // ============================================================================
   if (elements.closeBtn) {
     elements.closeBtn.addEventListener('click', () => {
@@ -1891,43 +1813,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (elements.modalBackdrop) {
-    elements.modalBackdrop.addEventListener('click', () => {
-      try {
-        logger.debug('Modal backdrop clicked, closing modal');
-        modalManager.close();
-      } catch (error) {
-        logger.error('Error closing modal via backdrop', error);
-      }
-    });
-  }
-
-  if (elements.modalClose) {
-    elements.modalClose.addEventListener('click', () => {
-      try {
-        logger.debug('Modal close button clicked');
-        modalManager.close();
-      } catch (error) {
-        logger.error('Error closing modal via close button', error);
-      }
-    });
-  }
-
-  document.addEventListener(
-    'keydown',
-    (e) => {
-      try {
-        if (e?.key === 'Escape') {
-          logger.debug('Escape key pressed, closing modal');
-          modalManager.close();
-        }
-      } catch (error) {
-        logger.error('Error handling escape key', error);
-      }
-    },
-    { passive: true },
-  );
-
   if (elements.resetBtn) {
     elements.resetBtn.addEventListener('click', () => {
       try {
@@ -1935,6 +1820,95 @@ document.addEventListener('DOMContentLoaded', () => {
         resetAll();
       } catch (error) {
         logger.error('Error handling reset button click', error);
+      }
+    });
+  }
+
+  if (elements.backBtn) {
+    elements.backBtn.addEventListener('click', () => {
+      try {
+        logger.debug('Back button clicked');
+        // Allow user to edit, but keep generated data in case they want to return?
+        // Usually back implies "Edit", so we go to Page 1
+        // But we should probably keep the state as is, just unlock inputs and go to page 1
+        // Changing inputs will invalidate the generated sign, so maybe reset is safer?
+        // "Zurück zur Bearbeitung" usually means modify inputs.
+
+        // For now, let's behave like a reset but keep the values in the form
+        // So we don't clear form data, but we reset generation state
+
+        logger.info('Resetting state for editing');
+        timerManager.clearAll();
+        timerManager.stopEta();
+
+        // Clear generation state but keep form values
+        Object.assign(state, {
+          current: 'init',
+          locked: false,
+          generatorId: '',
+          lastMockUrl: '',
+          lastEntUrl: '',
+          checkoutReady: false,
+          priceReady: false, // Keep price? No, if they change inputs price recalculates
+          // Actually price is local, so it recalculates instantly
+          previewDone: false,
+          runStartedAt: 0,
+          generatedProductUrl: '',
+          generatedProductName: '',
+        });
+        storageManager.saveState();
+
+        ui.lockInputs(false);
+        ui.setPillState('idle', 'Bereit');
+        ui.updateUIFromState();
+      } catch (error) {
+        logger.error('Error handling back button click', error);
+      }
+    });
+  }
+
+  if (elements.atcTrigger) {
+    elements.atcTrigger.addEventListener('click', async () => {
+      try {
+        logger.debug('ATC trigger clicked');
+        if (!state.generatedProductUrl) {
+          // If we don't have a product URL yet (maybe prepareProduct failed), try again?
+          // Or fallback to base product add?
+          logger.warn('No generated product URL found');
+
+          // Fallback: Submit the base form with properties?
+          // The form is on Page 1.
+          // But we are on Page 3.
+          // We can submit the form programmatically?
+          // The form action is cart/add.
+          // Let's try adding the generated product if available, else fail.
+
+          // If we have state.generatedProductUrl, use api.addToCartFromProductUrl
+          // Wait, api.addToCartFromProductUrl was adding a NEW variant.
+          // If we just want to add the current product with properties, we can submit the form #smc-form.
+          // User said: "which shall include... the name of the product (the api provides that)".
+          // Usually this means we are creating a custom product.
+
+          // Let's try to prepare product again if missing
+          await api.prepareProduct();
+        }
+
+        if (state.generatedProductUrl) {
+          ui.setPillState('work', 'In den Warenkorb...');
+          const res = await api.addToCartFromProductUrl(
+            state.generatedProductUrl,
+          );
+          if (res.ok) {
+            ui.setPillState('ok', 'Im Warenkorb');
+            window.location.href = '/checkout'; // Or open cart drawer?
+          } else {
+            ui.setPillState('bad', 'Fehler');
+          }
+        } else {
+          ui.setPillState('bad', 'Produkt nicht bereit');
+        }
+      } catch (error) {
+        logger.error('Error handling ATC click', error);
       }
     });
   }
@@ -1973,11 +1947,31 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
+  if (elements.note) {
+    elements.note.addEventListener(
+      'input',
+      () => {
+        try {
+          if (state.locked) return;
+          formData.updateProps();
+          storageManager.saveFormData();
+        } catch (error) {
+          logger.error('Error handling note input', error);
+        }
+      },
+      { passive: true },
+    );
+  }
+
   if (elements.finish) {
     elements.finish.addEventListener('change', () => {
       if (state.locked) return;
       formData.updateProps();
       storageManager.saveFormData();
+      // Calculate and update price immediately when material changes
+      const material = elements.finish.value || '';
+      const size = elements.size?.value || '';
+      priceManager.calculate(material, size);
     });
   }
 
@@ -1986,25 +1980,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (state.locked) return;
       formData.updateProps();
       storageManager.saveFormData();
-    });
-  }
-
-  if (elements.previewArea) {
-    elements.previewArea.addEventListener('click', () => {
-      try {
-        if (!state.lastMockUrl) {
-          logger.debug('Preview area clicked but no mock URL available');
-          return;
-        }
-        if (elements.previewArea.getAttribute('data-clickable') !== '1') {
-          logger.debug('Preview area clicked but not clickable');
-          return;
-        }
-        logger.debug('Opening preview viewer', { mockUrl: state.lastMockUrl });
-        modalManager.openViewer('Vorschau', state.lastMockUrl);
-      } catch (error) {
-        logger.error('Error handling preview area click', error);
-      }
+      // Calculate and update price immediately when size changes
+      const material = elements.finish?.value || '';
+      const size = elements.size.value || '';
+      priceManager.calculate(material, size);
     });
   }
 
@@ -2014,9 +1993,8 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.debug('CTA button clicked', { currentState: state.current });
         if (state.current === 'init') {
           api.startRunCreator();
-        } else if (state.current === 'ready') {
-          modalManager.startProductModal();
         }
+        // No other states handled by this button anymore, as it's on Page 1
       } catch (error) {
         logger.error('Error handling CTA button click', error, {
           currentState: state.current,
@@ -2025,8 +2003,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Download button (Page 2)
+  if (elements.previewDownload) {
+    elements.previewDownload.addEventListener('click', async () => {
+      try {
+        const url = state.lastMockUrl || state.lastEntUrl;
+        if (!url) {
+          logger.warn('No preview URL available for download');
+          return;
+        }
+        logger.debug('Download button clicked', { url });
+        await downloadHelper.downloadUrl(
+          url,
+          `steelmonks-vorschau-${state.generatorId || 'download'}.png`,
+        );
+      } catch (error) {
+        logger.error('Error handling download button click', error);
+      }
+    });
+  }
+
+  // Share button (Page 2)
+  if (elements.previewShare) {
+    elements.previewShare.addEventListener('click', async () => {
+      try {
+        const url = state.lastMockUrl || state.lastEntUrl;
+        if (!url) {
+          logger.warn('No preview URL available for sharing');
+          return;
+        }
+        logger.debug('Share button clicked', { url });
+        await shareHelper.shareUrl(url, 'Mein personalisiertes Schild');
+      } catch (error) {
+        logger.error('Error handling share button click', error);
+      }
+    });
+  }
+
   // ============================================================================
-  // Animations (Closing, Opening)
+  // ! Animations (Closing, Opening)
   // ============================================================================
   if (elements.smc && elements.openBtn && elements.closeBtn) {
     // Open Button (scales up the whole container: #sm-sign-creator then #smc)
@@ -2078,7 +2093,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================================
-  // Initialization
+  // ! Initialization
   // ============================================================================
   logger.info('Steelmonks Sign Creator initializing...');
 
@@ -2100,6 +2115,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pendingPriceValue: savedState.pendingPriceValue || '',
         previewDone: savedState.previewDone || false,
         runStartedAt: savedState.runStartedAt || 0,
+        generatedProductUrl: savedState.generatedProductUrl || '',
+        generatedProductName: savedState.generatedProductName || '',
       });
 
       // Restore form data if available
@@ -2110,33 +2127,29 @@ document.addEventListener('DOMContentLoaded', () => {
       // Restore preview if we have a mock URL
       if (state.lastMockUrl) {
         ui.showPreview(state.lastMockUrl);
-        ui.setClickable(true);
         if (state.current === 'ready') {
           ui.setPillState('ok', 'Entwurf ist fertig');
-          // If product is ready and checkout is ready, show modal
-          if (state.checkoutReady && modalManager) {
-            // Don't auto-open modal, let user click preview to open it
-            // But ensure the preview is visible and clickable
-          }
         } else {
           ui.setPillState('work', 'Wird erstellt');
         }
       } else if (state.lastEntUrl) {
         ui.showPreview(state.lastEntUrl);
-        ui.setSoftBlur(true);
         ui.setPillState('work', 'Wird erstellt');
       }
 
-      // Restore price if available
+      // Restore price if available, or calculate if material and size are set
       if (state.priceReady && state.pendingPriceValue) {
         ui.applyPriceDisplay();
+      } else if (elements.finish?.value && elements.size?.value) {
+        // Calculate price if we have material and size but no saved price
+        priceManager.calculate(elements.finish.value, elements.size.value);
       }
 
       // Restore timer if available
       timerManager.restoreEta();
 
       // Update UI based on restored state
-      ui.setCtaFromState();
+      ui.updateUIFromState();
       formData.updateProps();
     } else {
       // No saved state, initialize normally
@@ -2150,15 +2163,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       ui.setPillState('idle', 'Bereit');
 
-      if (elements.previewKicker)
-        elements.previewKicker.textContent = 'Vorschau';
       ui.showPlaceholder('Starte zuerst den Entwurf');
       ui.setPreviewLoading(false);
-      ui.setSoftBlur(false);
-      ui.setPreviewOverlay(false);
-      ui.setFade(false);
       ui.lockInputs(false);
-      ui.setCtaFromState();
+      ui.updateUIFromState(); // Should go to page 1
+
+      // Calculate price if material and size are available
+      if (elements.finish?.value && elements.size?.value) {
+        priceManager.calculate(elements.finish.value, elements.size.value);
+      }
     }
 
     logger.info('Steelmonks Sign Creator initialized successfully');

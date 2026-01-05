@@ -7,6 +7,15 @@
   --focused-base-outline-offset: 0.3rem;
   --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)),
     0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
+
+  --werkstatt-gradient-shadow: linear-gradient(
+    45deg,
+    #ff9800,
+    #0044cc,
+    #ff9800,
+    #0044cc,
+    #ff9800
+  );
 }
 
 .product-card-wrapper .card,
