@@ -49,18 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ! Logger Utility
   // ============================================================================
   const logger = {
-    // Return no logs unless on http://127.0.0.1:9292/
-    shouldLog() {
-      return window.location.href === 'http://127.0.0.1:9292/pages/werkstatt';
-    },
-
     styles: {
       smc: 'font-weight: bold; color: #87CEEB;', // Light blue (sky blue)
       reset: '',
     },
 
     log(message, ...args) {
-      if (this.shouldLog() && typeof console !== 'undefined' && console.log) {
+      if (typeof console !== 'undefined' && console.log) {
         console.log(
           `%cSMC%c: ${message}`,
           this.styles.smc,
@@ -71,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     error(message, error, ...args) {
-      if (this.shouldLog() && typeof console !== 'undefined') {
+      if (typeof console !== 'undefined') {
         if (console.error) {
           console.error(
             `%cSMC%c: ${message}`,
@@ -87,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     warn(message, ...args) {
-      if (this.shouldLog() && typeof console !== 'undefined') {
+      if (typeof console !== 'undefined') {
         if (console.warn) {
           console.warn(
             `%cSMC%c: ${message}`,
@@ -102,9 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     info(message, ...args) {
-      if (this.shouldLog()) {
-        this.log(`INFO - ${message}`, ...args);
-      }
+      this.log(`INFO - ${message}`, ...args);
     },
 
     debug(message, ...args) {
