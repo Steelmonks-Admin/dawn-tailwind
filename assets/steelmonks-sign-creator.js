@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const DEFAULT_ENDPOINTS = {
     run: '/apps/creator/run-creator',
-    preview: '/apps/creator/run-creator-preview',
-    price: '/apps/creator/get-creator-price',
     sign: '/apps/creator/get-creator-sign',
     product: '/apps/creator/get-creator-product',
   };
@@ -51,13 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // ! Logger Utility
   // ============================================================================
   const logger = {
+    // Return no logs unless on http://127.0.0.1:9292/
+    shouldLog() {
+      return window.location.href === 'http://127.0.0.1:9292/pages/werkstatt';
+    },
+
     styles: {
       smc: 'font-weight: bold; color: #87CEEB;', // Light blue (sky blue)
       reset: '',
     },
 
     log(message, ...args) {
-      if (typeof console !== 'undefined' && console.log) {
+      if (this.shouldLog() && typeof console !== 'undefined' && console.log) {
         console.log(
           `%cSMC%c: ${message}`,
           this.styles.smc,
@@ -68,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     error(message, error, ...args) {
-      if (typeof console !== 'undefined') {
+      if (this.shouldLog() && typeof console !== 'undefined') {
         if (console.error) {
           console.error(
             `%cSMC%c: ${message}`,
@@ -84,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     warn(message, ...args) {
-      if (typeof console !== 'undefined') {
+      if (this.shouldLog() && typeof console !== 'undefined') {
         if (console.warn) {
           console.warn(
             `%cSMC%c: ${message}`,
@@ -99,7 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
     },
 
     info(message, ...args) {
-      this.log(`INFO - ${message}`, ...args);
+      if (this.shouldLog()) {
+        this.log(`INFO - ${message}`, ...args);
+      }
     },
 
     debug(message, ...args) {
@@ -239,11 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
     previewImg: el('smc-preview-img'),
     previewDownload: el('smc-preview-download'),
     previewShare: el('smc-preview-share'),
+    previewActions: el('smc-preview-actions'),
 
     // Result (Page 3)
     resultImg: el('smc-result-img'),
     productName: el('smc-product-name'),
-    atcTrigger: el('smc-atc-trigger'),
+    // atcTrigger: el('smc-atc-trigger'),
+    confirmBtn: el('smc-confirm-btn'),
+    confirmBtnWrap: el('smc-confirm-btn-wrap'),
     backBtn: el('smc-back-btn'),
 
     // ETA
@@ -298,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
     generatorId: '',
     lastMockUrl: '',
     lastEntUrl: '',
-    checkoutReady: false,
     priceReady: false,
     priceRequested: false,
     pendingPriceValue: '',
@@ -309,7 +316,10 @@ document.addEventListener('DOMContentLoaded', () => {
     pollInFlight: false,
     generatedProductUrl: '',
     generatedProductName: '',
+    generatedProductId: '',
+    generatedVariantId: '',
     hasGeneratedDesign: false,
+    designConfirmed: false,
     cooldown: null, // Timestamp when cooldown expires (current time + 5 minutes)
   };
 
@@ -328,14 +338,16 @@ document.addEventListener('DOMContentLoaded', () => {
           generatorId: state.generatorId,
           lastMockUrl: state.lastMockUrl,
           lastEntUrl: state.lastEntUrl,
-          checkoutReady: state.checkoutReady,
           priceReady: state.priceReady,
           pendingPriceValue: state.pendingPriceValue,
           previewDone: state.previewDone,
           runStartedAt: state.runStartedAt,
           generatedProductUrl: state.generatedProductUrl,
           generatedProductName: state.generatedProductName,
+          generatedProductId: state.generatedProductId,
+          generatedVariantId: state.generatedVariantId,
           hasGeneratedDesign: state.hasGeneratedDesign,
+          designConfirmed: state.designConfirmed,
           cooldown: state.cooldown,
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
@@ -703,6 +715,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Update page 2 preview
       if (elements.previewImg) {
+        // Reset src to force reload if needed, though usually not needed if URL is different
+        // elements.previewImg.src = '';
+
         elements.previewImg.onload = () => {
           // Hide loading and empty states when image loads
           this.setPreviewLoading(false);
@@ -711,6 +726,8 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           // Show image and enable download, share, and continue buttons
           elements.previewImg.classList.remove('twcss-hidden');
+          if (elements.previewActions)
+            elements.previewActions.classList.remove('twcss-hidden');
           if (elements.previewDownload)
             elements.previewDownload.disabled = false;
           if (elements.previewShare) elements.previewShare.disabled = false;
@@ -718,6 +735,10 @@ document.addEventListener('DOMContentLoaded', () => {
           if (elements.continueBtn && state.current === 'creating') {
             elements.continueBtn.disabled = false;
           }
+
+          // Ensure Confirm button is visible and ATC hidden when navigating to page 3
+          // This will be handled in updateUIFromState, but here we just update state readiness
+
           logger.debug('Preview image loaded successfully', { url });
         };
         elements.previewImg.onerror = () => {
@@ -728,17 +749,22 @@ document.addEventListener('DOMContentLoaded', () => {
               'Fehler beim Laden der Vorschau';
             elements.previewEmpty.style.display = 'block';
           }
-          // Keep buttons disabled on error
+          // Keep buttons disabled on error and hide container
+          if (elements.previewActions)
+            elements.previewActions.classList.add('twcss-hidden');
           if (elements.previewDownload)
             elements.previewDownload.disabled = true;
           if (elements.previewShare) elements.previewShare.disabled = true;
         };
+
+        // Force update the src attribute
         elements.previewImg.src = url;
       }
 
-      // Update page 3 preview
+      // Update page 3 preview immediately as well
       if (elements.resultImg) {
         elements.resultImg.src = url;
+        elements.resultImg.classList.remove('twcss-hidden');
       }
     },
 
@@ -750,19 +776,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (elements.previewImg) {
         elements.previewImg.classList.add('twcss-hidden');
       }
-      // Disable buttons when showing placeholder
+      // Disable buttons when showing placeholder and hide container
+      if (elements.previewActions)
+        elements.previewActions.classList.add('twcss-hidden');
       if (elements.previewDownload) elements.previewDownload.disabled = true;
       if (elements.previewShare) elements.previewShare.disabled = true;
       this.setPreviewLoading(false);
     },
 
     lockInputs(on) {
+      // Input locking is currently disabled based on user feedback.
+      // inputs on page 3 need to be editable, and locking them on page 1 prevents corrections if navigated back.
+      // If we need to re-enable, we can uncomment this logic or selectively apply it.
+      /*
       const inputs = [
         elements.upload,
         elements.desc,
         elements.finish,
         elements.size,
-        elements.note,
       ];
       if (inputs.some((el) => !el)) return;
 
@@ -770,6 +801,12 @@ document.addEventListener('DOMContentLoaded', () => {
       inputs.forEach((input) => {
         if (input) input.disabled = state.locked;
       });
+      */
+
+      state.locked = !!on; // Still track state, but don't disable elements
+
+      // If we really want to prevent editing during generation, we should overlay a spinner or similar.
+      // But for now, user requested removing the lock.
 
       if (elements.resetBtn) {
         // Only show reset button on page 1 if not locked, or if state is not init?
@@ -798,6 +835,11 @@ document.addEventListener('DOMContentLoaded', () => {
       switch (state.current) {
         case 'init': {
           // If a design has been generated and we're back on page 1, show "Weiter →"
+          if (state.generatedVariantId || state.generatedProductUrl) {
+            this.setCta('Weiter →', true);
+            return;
+          }
+
           if (
             state.hasGeneratedDesign &&
             (state.lastMockUrl || state.lastEntUrl)
@@ -919,12 +961,83 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.continueBtn.disabled =
               !state.lastMockUrl && !state.lastEntUrl;
           }
+
+          // If we manually navigate to page 3 while in 'creating', show Confirm button
+          // Actually updateUIFromState is usually called with a reason or implicitly by state change.
+          // But navigation between pages can be manual.
+          // If the user clicks "Continue", navigateTo(3) is called directly.
+          // But updateUIFromState is NOT called.
+          // We need to handle page 3 UI elements.
+          // The navigateTo function handles opacity.
+          // The visibility of buttons on page 3 depends on state.
+          // Since "creating" + mock means we are ready to confirm.
+          // We should update buttons whenever we are on page 3 or about to go there.
+          // But updateUIFromState switches on state.current.
+
+          // If we manually navigate to page 3 while in 'creating', show Confirm button
+          // Actually updateUIFromState is usually called with a reason or implicitly by state change.
+          // But navigation between pages can be manual.
+          // If the user clicks "Continue", navigateTo(3) is called directly.
+          // But updateUIFromState is NOT called.
+          // We need to handle page 3 UI elements.
+          // The navigateTo function handles opacity.
+          // The visibility of buttons on page 3 depends on state.
+          // Since "creating" + mock means we are ready to confirm.
+          // We should update buttons whenever we are on page 3 or about to go there.
+          // But updateUIFromState switches on state.current.
+
+          // If state is creating, we expect to be on page 1 or 2.
+          // But user can click continue to go to 3.
+          // We should handle the buttons visibility:
+          if (elements.confirmBtn && elements.confirmBtnWrap)
+            elements.confirmBtn.classList.remove('twcss-hidden');
+          elements.confirmBtnWrap.classList.remove('hidden');
+          // ATC trigger is removed, so we don't need to hide it
+
+          // CRITICAL FIX: If product is already generated (e.g. state reset but data persists, or late mockup arrival handled weirdly),
+          // don't show confirm button again.
+          if (
+            state.generatedVariantId ||
+            state.generatedProductUrl ||
+            state.designConfirmed
+          ) {
+            if (elements.confirmBtn && elements.confirmBtnWrap)
+              elements.confirmBtn.classList.add('twcss-hidden');
+            elements.confirmBtnWrap.classList.add('hidden');
+            // Automatically add to cart if we arrive here and product is ready?
+            // Or just show ATC?
+            // If we are navigating to page 3 and product is ready, show ATC.
+            // ATC trigger is removed.
+          }
+
           break;
         case 'ready':
           this.navigateTo(3);
           if (state.generatedProductName && elements.productName) {
             elements.productName.textContent = state.generatedProductName;
           }
+
+          // Show ATC button, Hide Confirm button
+          // ATC trigger is removed
+          if (elements.confirmBtn && elements.confirmBtnWrap)
+            elements.confirmBtn.classList.add('twcss-hidden');
+          elements.confirmBtnWrap.classList.add('hidden');
+
+          // If we have a variant ID, assume product is already created and hide Confirm button forever to prevent duplicates
+          // Actually, if we are in 'ready' state, Confirm button is already hidden by above lines.
+          // But if we are in 'creating' state and mockup arrives late, we might need to check if product is already created.
+
+          if (
+            state.generatedVariantId ||
+            state.generatedProductUrl ||
+            state.designConfirmed
+          ) {
+            if (elements.confirmBtn && elements.confirmBtnWrap)
+              elements.confirmBtn.classList.add('twcss-hidden');
+            elements.confirmBtnWrap.classList.add('hidden');
+            // ATC trigger is removed
+          }
+
           // Enable continue button when ready
           if (elements.continueBtn) {
             elements.continueBtn.disabled = false;
@@ -933,6 +1046,17 @@ document.addEventListener('DOMContentLoaded', () => {
           if (typeof updateBackBtnState === 'function') {
             updateBackBtnState();
           }
+
+          // Unhide back button if product is ready
+          if (
+            state.generatedVariantId ||
+            state.generatedProductUrl ||
+            state.designConfirmed
+          ) {
+            if (elements.backBtn)
+              elements.backBtn.classList.remove('twcss-hidden');
+          }
+
           break;
         default:
           logger.warn('Unknown state in updateUIFromState', {
@@ -991,6 +1115,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const fd = new FormData();
       const file = elements.upload?.files?.[0];
 
+      // Ensure price is calculated and current before sending
+      const material = elements.finish?.value || '';
+      const size = elements.size?.value || '';
+      if (material && size) {
+        priceManager.calculate(material, size);
+      }
+
       fd.append('Bild', file || '');
       fd.append('Beschreibung', elements.desc?.value || '');
       fd.append('Oberfläche', elements.finish?.value || '');
@@ -998,6 +1129,16 @@ document.addEventListener('DOMContentLoaded', () => {
       fd.append('Route', this.routeValue());
       fd.append('generator_id', state.generatorId || '');
       fd.append('section_id', sid);
+
+      // Pass the calculated price to the API
+      if (state.pendingPriceValue) {
+        fd.append(
+          'Preis',
+          Number(
+            state.pendingPriceValue.replace('€', '').trim().replace(',', '.'),
+          ),
+        );
+      }
 
       try {
         Object.keys(extra).forEach((k) => {
@@ -1284,52 +1425,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
 
-    runPriceOnce() {
-      // Calculate price locally based on material and size
-      const material = elements.finish?.value || '';
-      const size = elements.size?.value || '';
-
-      if (!material || !size) {
-        logger.warn('Cannot calculate price: missing material or size', {
-          hasMaterial: !!material,
-          hasSize: !!size,
-        });
-        return;
-      }
-
-      const calculatedPrice = priceManager.calculate(material, size);
-      if (calculatedPrice) {
-        logger.info('Price calculated locally', {
-          material,
-          size,
-          price: calculatedPrice,
-        });
-      } else {
-        logger.debug('Price calculation returned null (custom pricing)', {
-          material,
-          size,
-        });
-      }
-    },
-
-    async runCreatorPreviewOnce(reason = '') {
-      if (!state.generatorId || state.previewDone || state.previewInFlight)
-        return;
-
-      state.previewInFlight = true;
-      try {
-        const fd = formData.createPayload({ reason });
-        logger.debug('Triggering preview generation', { reason });
-        await this.postText(ENDPOINTS.preview, fd);
-        state.previewDone = true;
-        logger.info('Preview generation triggered successfully', { reason });
-      } catch (error) {
-        logger.error('Failed to trigger preview generation', error, { reason });
-      } finally {
-        state.previewInFlight = false;
-      }
-    },
-
     async fetchSignOnce(mode) {
       if (!state.generatorId || state.pollInFlight) return null;
 
@@ -1380,16 +1475,24 @@ document.addEventListener('DOMContentLoaded', () => {
             state.forceMockLoading = false;
 
             // Start preparing product info immediately
-            this.prepareProduct();
+            // this.prepareProduct();
 
             timerManager.stopEta();
             timerManager.clearAll();
 
             ui.setPreviewLoading(false);
             ui.applyPriceDisplay();
+
+            // Explicitly update preview elements with the new URL
             ui.showPreview(mockUrl);
 
-            state.current = 'ready';
+            // Also update result image if on page 3 or preparing for it
+            if (elements.resultImg) {
+              elements.resultImg.src = mockUrl;
+              elements.resultImg.classList.remove('twcss-hidden');
+            }
+
+            // state.current = 'ready';
 
             // ! RATE LIMIT
             // Mark that a design has been generated and set cooldown (5 minutes)
@@ -1400,13 +1503,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ui.setPillState('ok', 'Fertig!');
 
-            // Wait 3 seconds then move to page 3
-            logger.info(
-              'Mock received, waiting 3s before switching to result page',
-            );
-            setTimeout(() => {
-              ui.updateUIFromState();
-            }, 3000);
+            // Enable continue button to allow user to proceed to confirmation
+            if (elements.continueBtn) {
+              elements.continueBtn.disabled = false;
+            }
+
+            // Update UI to ensure buttons are correct
+            ui.updateUIFromState();
 
             logger.info('Mock-up received, workflow complete', {
               mockUrl,
@@ -1433,21 +1536,104 @@ document.addEventListener('DOMContentLoaded', () => {
           ENDPOINTS.product,
           formData.createPayload(),
         );
+        logger.info('Product API Raw Response:', {
+          raw: raw.substring(0, 500),
+        }); // Log first 500 chars to avoid huge logs if too big
         const j = tryParseJson(raw);
+        logger.info('Product API Parsed JSON:', { json: j });
 
-        const productUrl = (
-          extractField(j, 'Product URL') ||
-          extractField(j, 'product_url') ||
-          extractField(j, 'url') ||
-          ''
-        ).trim();
+        // Check if we received only a URL (string or object with just url)
+        // Case 1: Simple object { "Product URL": "..." }
+        // Case 2: Array [{ product: ... }]
 
-        const productName = (
-          extractField(j, 'Product Name') ||
-          extractField(j, 'product_name') ||
-          extractField(j, 'name') ||
-          ''
-        ).trim();
+        let productUrl = '';
+        let productId = '';
+        let variantId = '';
+        let productName = '';
+
+        // Helper to extract from various possible keys
+        const getVal = (obj, keys) => {
+          if (!obj) return '';
+          for (const k of keys) {
+            if (obj[k] != null) return obj[k];
+          }
+          return '';
+        };
+
+        const urlKeys = ['Product URL', 'product_url', 'url'];
+        const idKeys = ['Product ID', 'product_id', 'id'];
+        const varIdKeys = ['Variant ID', 'variant_id', 'variant'];
+        const nameKeys = ['Product Name', 'product_name', 'name', 'title'];
+
+        // Normalize input to work with
+        // If j is array, use first element. If object, use it directly.
+        const data = Array.isArray(j) && j[0] ? j[0] : j;
+
+        // 1. Try to extract from top level or data.product
+        // In the new webhook format: { "Product URL": "...", "product_id": "...", "variant_id": "..." }
+        // These are at the top level of 'data'.
+        // We also support the old format: { product: { ... } } via rootProduct check.
+        const rootProduct = data?.product || data;
+
+        productUrl =
+          getVal(data, urlKeys) || getVal(rootProduct, urlKeys) || '';
+        if (!productUrl && rootProduct?.handle) {
+          productUrl = `/products/${rootProduct.handle}`;
+        }
+        productUrl = String(productUrl).trim();
+
+        productId = getVal(data, idKeys) || getVal(rootProduct, idKeys) || '';
+        if (!productId && rootProduct?.id) productId = rootProduct.id;
+        productId = String(productId).trim();
+
+        variantId =
+          getVal(data, varIdKeys) || getVal(rootProduct, varIdKeys) || '';
+        // If no variant ID found, look inside variants array
+        if (
+          !variantId &&
+          rootProduct?.variants &&
+          Array.isArray(rootProduct.variants) &&
+          rootProduct.variants.length > 0
+        ) {
+          variantId = rootProduct.variants[0].id;
+        }
+        variantId = String(variantId).trim();
+
+        productName =
+          getVal(data, nameKeys) || getVal(rootProduct, nameKeys) || '';
+        productName = String(productName).trim();
+
+        // Fallback: If we only have URL but no IDs, fetch product JSON
+        if (productUrl && (!productId || !variantId)) {
+          logger.info('Only URL found, fetching product JSON details', {
+            productUrl,
+          });
+          try {
+            const jsonUrl = safeProductJsonUrl(productUrl);
+            if (jsonUrl) {
+              const res = await fetch(jsonUrl);
+              if (res.ok) {
+                const pJson = await res.json();
+                const pData = pJson.product || pJson;
+
+                if (!productId) productId = String(pData.id || '').trim();
+                if (!productName)
+                  productName = String(pData.title || '').trim();
+
+                if (!variantId && pData.variants && pData.variants.length > 0) {
+                  variantId = String(pData.variants[0].id).trim();
+                }
+                logger.info('Fetched details from product JSON', {
+                  productId,
+                  variantId,
+                  productName,
+                });
+              }
+            }
+          } catch (e) {
+            logger.error('Failed to fetch details from product URL', e);
+          }
+        }
 
         if (productName) {
           state.generatedProductName = productName;
@@ -1459,9 +1645,21 @@ document.addEventListener('DOMContentLoaded', () => {
           state.generatedProductUrl = productUrl;
         }
 
-        state.checkoutReady = true;
+        if (productId) {
+          state.generatedProductId = productId;
+        }
+
+        if (variantId) {
+          state.generatedVariantId = variantId;
+        }
+
         storageManager.saveState();
-        logger.info('Product info prepared', { productName, productUrl });
+        logger.info('Product info prepared', {
+          productName,
+          productUrl,
+          productId,
+          variantId,
+        });
       } catch (error) {
         logger.error('Failed to prepare product info', error);
       }
@@ -1542,7 +1740,6 @@ document.addEventListener('DOMContentLoaded', () => {
         generatorId: '',
         lastMockUrl: '',
         lastEntUrl: '',
-        checkoutReady: false,
         priceReady: false,
         priceRequested: false,
         pendingPriceValue: '',
@@ -1725,18 +1922,6 @@ document.addEventListener('DOMContentLoaded', () => {
           current: state.current,
           generatorId: state.generatorId,
         });
-
-        this.runCreatorPreviewOnce('Sofort nach run-creator');
-
-        // Calculate price immediately (no API call needed)
-        timers.priceA = setTimeout(() => {
-          try {
-            ui.setPillState('work', 'Preis wird berechnet');
-            this.runPriceOnce();
-          } catch (error) {
-            logger.error('Error in price calculation callback', error);
-          }
-        }, TIMING.TIME_PRICE_MS);
 
         timers.entwurf = setTimeout(async () => {
           try {
@@ -1933,7 +2118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         generatorId: '',
         lastMockUrl: '',
         lastEntUrl: '',
-        checkoutReady: false,
         priceReady: false,
         priceRequested: false,
         pendingPriceValue: '',
@@ -1944,6 +2128,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pollInFlight: false,
         generatedProductUrl: '',
         generatedProductName: '',
+        generatedProductId: '',
+        generatedVariantId: '',
       });
 
       ui.lockInputs(false);
@@ -2045,13 +2231,15 @@ document.addEventListener('DOMContentLoaded', () => {
           generatorId: '',
           lastMockUrl: '',
           lastEntUrl: '',
-          checkoutReady: false,
           priceReady: false,
           previewDone: false,
           runStartedAt: 0,
           generatedProductUrl: '',
           generatedProductName: '',
+          generatedProductId: '',
+          generatedVariantId: '',
           hasGeneratedDesign: false, // Reset so CTA button shows "Entwurf erstellen"
+          designConfirmed: false,
           // Keep cooldown - rate limit persists across resets
         });
         storageManager.saveState();
@@ -2060,6 +2248,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.setPillState('idle', 'Bereit');
         ui.showPlaceholder('Starte zuerst den Entwurf');
         ui.setPreviewLoading(false);
+
+        // Hide back button again
+        if (elements.backBtn) elements.backBtn.classList.add('twcss-hidden');
+
         ui.updateUIFromState(); // Navigate to page 1
         ui.setCtaFromState(); // Update button text back to "Entwurf erstellen"
       } catch (error) {
@@ -2072,6 +2264,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateBackBtnState = () => {
     if (!elements.backBtn) return;
 
+    // First ensure button visibility based on product state
+    // We only show it if the product is generated
+    // BUT updateBackBtnState might be called repeatedly for timer updates
+    // The visibility logic is mainly in updateUIFromState, but we can reinforce it here?
+    // Actually, updateUIFromState handles the visibility on state change/nav.
+    // This function handles the *content* and *disabled state*.
+
+    // Check for cooldown
     const cooldownInfo = ui.checkCooldown();
     if (cooldownInfo.isOnCooldown) {
       elements.backBtn.disabled = true;
@@ -2079,6 +2279,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const countdownMatch =
         cooldownInfo.countdownText.match(/\((\d{2}:\d{2})\)/);
       const countdownTime = countdownMatch ? countdownMatch[1] : '';
+
       // Update button text with countdown
       if (!elements.backBtn.hasAttribute('data-original-text')) {
         elements.backBtn.setAttribute('data-original-text', 'Neu anfangen');
@@ -2093,6 +2294,110 @@ document.addEventListener('DOMContentLoaded', () => {
       elements.backBtn.removeAttribute('data-original-text');
     }
   };
+
+  // Start a regular interval to update the cooldown timer on the button
+  // This ensures the timer ticks down even if no state changes happen
+  setInterval(() => {
+    // Only update if we are on page 3 (ready state) or wherever the button is visible
+    // Actually backBtn is on page 3.
+    if (
+      state.current === 'ready' &&
+      (state.generatedVariantId || state.generatedProductUrl)
+    ) {
+      updateBackBtnState();
+    }
+  }, 1000);
+
+  // Confirm button (Page 3)
+  if (elements.confirmBtn) {
+    elements.confirmBtn.addEventListener('click', async () => {
+      try {
+        logger.debug('Confirm button clicked', {
+          designConfirmed: state.designConfirmed,
+          generatedVariantId: state.generatedVariantId,
+        });
+
+        // Show loading state on button
+        const originalText = elements.confirmBtn.textContent;
+        elements.confirmBtn.textContent = 'Produkt wird erstellt...';
+        elements.confirmBtn.disabled = true;
+
+        ui.setPillState('work', 'Produkt wird erstellt');
+
+        // Check if product is already created to avoid duplication
+        if (state.generatedVariantId) {
+          logger.info('Product already exists, skipping creation', {
+            variantId: state.generatedVariantId,
+          });
+        } else {
+          // Call prepareProduct only if needed
+          await api.prepareProduct();
+        }
+
+        // Check if product was created successfully (or already existed)
+        if (state.generatedVariantId || state.generatedProductUrl) {
+          // Transition to ready state and confirm design
+          state.current = 'ready';
+          state.designConfirmed = true;
+          storageManager.saveState();
+
+          ui.setPillState('ok', 'Fertig!');
+
+          // Update UI to show/hide buttons based on new state
+          ui.updateUIFromState();
+
+          // Automatically add to cart using the helper function
+          logger.info('Auto-triggering add to cart flow');
+
+          ui.setPillState('work', 'In den Warenkorb...');
+
+          const formData = {
+            id: state.generatedVariantId,
+            quantity: 1,
+          };
+
+          try {
+            const res = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              logger.info('Product added to cart:', data);
+              ui.setPillState('ok', 'Im Warenkorb');
+
+              // Redirect to checkout
+              logger.info('Redirecting to checkout...');
+              window.location.href = '/checkout';
+            } else {
+              throw new Error('Failed to add to cart');
+            }
+          } catch (err) {
+            logger.error('Error adding product to cart:', err);
+            ui.setPillState('bad', 'Fehler');
+            // If add to cart fails, we might want to re-enable the button?
+            // But design is confirmed. Maybe refresh page or contact support?
+            // For now, let's leave it disabled as per "should not be visible anymore"
+          }
+        } else {
+          // Handle failure
+          ui.setPillState('bad', 'Fehler bei Erstellung');
+          elements.confirmBtn.textContent = 'Erneut versuchen';
+          elements.confirmBtn.disabled = false;
+        }
+      } catch (error) {
+        logger.error('Error handling confirm button click', error);
+        ui.setPillState('bad', 'Fehler');
+        elements.confirmBtn.textContent = 'Erneut versuchen';
+        elements.confirmBtn.disabled = false;
+      }
+    });
+  }
 
   if (elements.atcTrigger) {
     elements.atcTrigger.addEventListener('click', async () => {
@@ -2117,20 +2422,51 @@ document.addEventListener('DOMContentLoaded', () => {
           // Usually this means we are creating a custom product.
 
           // Let's try to prepare product again if missing
-          await api.prepareProduct();
+          // await api.prepareProduct();
         }
 
-        if (state.generatedProductUrl) {
+        // Use the generated variant ID if available
+        if (state.generatedVariantId) {
           ui.setPillState('work', 'In den Warenkorb...');
-          const res = await api.addToCartFromProductUrl(
-            state.generatedProductUrl,
-          );
-          if (res.ok) {
-            ui.setPillState('ok', 'Im Warenkorb');
-            window.location.href = '/checkout'; // Or open cart drawer?
-          } else {
+
+          const formData = {
+            id: state.generatedVariantId,
+            quantity: 1,
+          };
+
+          try {
+            const res = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              logger.info('Product added to cart:', data);
+              ui.setPillState('ok', 'Im Warenkorb');
+
+              // Redirect to checkout
+              logger.info('Redirecting to checkout...');
+              window.location.href = '/checkout';
+            } else {
+              throw new Error('Failed to add to cart');
+            }
+          } catch (err) {
+            logger.error('Error adding product to cart:', err);
             ui.setPillState('bad', 'Fehler');
           }
+        } else if (state.generatedProductUrl) {
+          // Fallback if we only have URL (maybe redirect?)
+          // For now, let's just log warning as we need variant ID for direct add
+          logger.warn(
+            'Only product URL available, cannot add directly to cart without variant ID',
+            { url: state.generatedProductUrl },
+          );
+          ui.setPillState('bad', 'Produkt nicht bereit');
         } else {
           ui.setPillState('bad', 'Produkt nicht bereit');
         }
@@ -2204,13 +2540,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (elements.size) {
     elements.size.addEventListener('change', () => {
-      if (state.locked) return;
-      formData.updateProps();
-      storageManager.saveFormData();
-      // Calculate and update price immediately when size changes
-      const material = elements.finish?.value || '';
-      const size = elements.size.value || '';
-      priceManager.calculate(material, size);
+      try {
+        if (state.locked) return;
+
+        // Update form data and props immediately
+        formData.updateProps();
+        storageManager.saveFormData();
+
+        // Calculate and update price immediately when size changes
+        const material = elements.finish?.value || '';
+        const size = elements.size.value || '';
+
+        logger.debug('Size changed, recalculating price', { material, size });
+        priceManager.calculate(material, size);
+      } catch (error) {
+        logger.error('Error handling size change', error);
+      }
     });
   }
 
@@ -2223,6 +2568,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // If button says "Weiter →", navigate to page 2 (preview)
         if (buttonText === 'Weiter →' || buttonText.includes('Weiter')) {
           logger.debug('Continue button clicked, navigating to page 2');
+
+          // If we have a product ready, maybe we should check if we should go to page 3 directly?
+          // If the user clicks "Continue" on page 1, they expect to see the preview.
+          // From page 2 they can go to page 3.
+          // But if they have a product ready, we could allow them to skip.
+          // For now, consistent flow: Page 1 -> Page 2 -> Page 3.
+
           // Always navigate to page 2 when "Weiter →" is clicked
           // If state is creating or ready, we can navigate directly
           if (state.current === 'creating' || state.current === 'ready') {
@@ -2377,14 +2729,16 @@ document.addEventListener('DOMContentLoaded', () => {
         generatorId: savedState.generatorId || '',
         lastMockUrl: savedState.lastMockUrl || '',
         lastEntUrl: savedState.lastEntUrl || '',
-        checkoutReady: savedState.checkoutReady || false,
         priceReady: savedState.priceReady || false,
         pendingPriceValue: savedState.pendingPriceValue || '',
         previewDone: savedState.previewDone || false,
         runStartedAt: savedState.runStartedAt || 0,
         generatedProductUrl: savedState.generatedProductUrl || '',
         generatedProductName: savedState.generatedProductName || '',
+        generatedProductId: savedState.generatedProductId || '',
+        generatedVariantId: savedState.generatedVariantId || '',
         hasGeneratedDesign: savedState.hasGeneratedDesign || false,
+        designConfirmed: savedState.designConfirmed || false,
         cooldown: savedState.cooldown || null,
       });
 

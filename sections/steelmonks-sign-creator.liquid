@@ -245,7 +245,7 @@
             {% comment %} ! Action Buttons {% endcomment %}
             <div class='twcss-flex twcss-flex-col twcss-gap-4 twcss-w-full twcss-max-w-md'>
               {% comment %} Social Buttons {% endcomment %}
-              <div class='twcss-flex twcss-gap-4 twcss-justify-center '>
+              <div id='smc-preview-actions' class='twcss-flex twcss-gap-4 twcss-justify-center twcss-hidden'>
                 <button
                   type='button'
                   id='smc-preview-share'
@@ -276,7 +276,7 @@
                   ← Konfiguration
                 </button>
 
-                {% comment %} Continnue button {% endcomment %}
+                {% comment %} Continue button {% endcomment %}
                 <div class='werkstatt-shadow-wrap twcss-flex-1'>
                   <button
                     type='button'
@@ -351,7 +351,7 @@
               </label>
               <textarea
                 id='smc-note'
-                class='smc__textarea twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-gray-300'
+                class='smc__textarea twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-gray-300 twcss-min-h-[120px] twcss-max-h-[260px]'
                 rows='3'
                 placeholder='Hast du noch Wünsche oder Anmerkungen?'
               ></textarea>
@@ -365,19 +365,21 @@
 
             {% comment %} ! Actions buttons {% endcomment %}
             <div class='smc__actions twcss-flex twcss-flex-col twcss-gap-4'>
-              {% if base_product != blank %}
+              {% comment %} Confirm button {% endcomment %}
+              <div class='werkstatt-shadow-wrap twcss-flex-1' id='smc-confirm-btn-wrap'>
                 <button
                   type='button'
-                  class='smc__btn smc__btn--primary smc__btn--full twcss-w-full twcss-py-4 twcss-bg-brandblack twcss-text-white twcss-rounded-xl twcss-font-bold twcss-text-lg'
-                  id='smc-atc-trigger'
+                  class='werkstatt-btn twcss-py-3 twcss-w-full twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+                  id='smc-confirm-btn'
+                  disabled
                 >
-                  In den Warenkorb
+                  <span class='smc__btn-label' id='smc-continue-label'>Design bestätigen</span>
                 </button>
-              {% endif %}
+              </div>
 
               <button
                 type='button'
-                class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
+                class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600 twcss-hidden'
                 id='smc-back-btn'
               >
                 Neu anfangen

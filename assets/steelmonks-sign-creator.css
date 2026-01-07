@@ -51,6 +51,11 @@
   z-index: 2;
 }
 
+.werkstatt-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @keyframes werkstatt-animate {
   0% {
     background-position: 0 0;
@@ -481,16 +486,13 @@
   position: relative;
 }
 
-.smc__btn {
+/* .smc__btn {
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 12px 20px;
   font-weight: 950;
   font-size: 0.98rem;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease,
     border-color 150ms ease, opacity 150ms ease;
   white-space: nowrap;
@@ -520,7 +522,7 @@
   transform: none;
   box-shadow: none;
   filter: saturate(0.9);
-}
+} */
 
 @keyframes smcSpin {
   to {
