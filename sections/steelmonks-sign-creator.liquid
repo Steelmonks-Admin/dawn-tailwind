@@ -27,6 +27,14 @@
   style='opacity: 0; visibility: hidden;'
   aria-hidden='true'
 >
+  {% comment %} ! CLOSE BUTTON {% endcomment %}
+  <button
+    data-close-button
+    class='twcss-absolute twcss-top-8 twcss-right-8 twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-z-10 twcss-transition-all hover:twcss-bg-brandwhite twcss-duration-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
+  >
+    <div class='twcss-leading-3 twcss-w-3'>&times;</div>
+  </button>
+
   {% comment %} ! Navigation & Status Pill {% endcomment %}
   <div class='twcss-flex twcss-gap-4 twcss-justify-center twcss-relative twcss-z-20'>
     {% comment %} ! STATUS PILL {% endcomment %}
@@ -166,7 +174,7 @@
             </div>
           </div>
 
-          {% comment %} ! CTAs/buttons {% endcomment %}
+          {% comment %} ! CTA {% endcomment %}
           <div class='smc__actions twcss-flex twcss-gap-4 twcss-mt-2 md:twcss-mt-6 md:twcss-flex-row-reverse twcss-flex-col'>
             <div class='werkstatt-shadow-wrap twcss-flex-1'>
               <button
@@ -178,14 +186,6 @@
                 <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
               </button>
             </div>
-
-            {% comment %} ! CLOSE BUTTON {% endcomment %}
-            <button
-              data-close-button
-              class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
-            >
-              Ausgang Werkstatt
-            </button>
           </div>
 
           {% comment %} Hidden inputs for cart {% endcomment %}

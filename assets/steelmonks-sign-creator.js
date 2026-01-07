@@ -709,7 +709,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update page 2 preview
       if (elements.previewImg) {
         // Reset src to force reload if needed, though usually not needed if URL is different
-        // elements.previewImg.src = '';
+        elements.previewImg.src = '';
 
         elements.previewImg.onload = () => {
           // Hide loading and empty states when image loads
@@ -717,21 +717,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (elements.previewEmpty) {
             elements.previewEmpty.style.display = 'none';
           }
-          // Show image and enable download, share, and continue buttons
-          elements.previewImg.classList.remove('twcss-hidden');
-          if (elements.previewActions)
-            elements.previewActions.classList.remove('twcss-hidden');
-          if (elements.previewDownload)
-            elements.previewDownload.disabled = false;
-          if (elements.previewShare) elements.previewShare.disabled = false;
-          // Enable continue button when preview is available
-          if (elements.continueBtn && state.current === 'creating') {
-            elements.continueBtn.disabled = false;
-          }
-
-          // Ensure Confirm button is visible and ATC hidden when navigating to page 3
-          // This will be handled in updateUIFromState, but here we just update state readiness
-
           logger.debug('Preview image loaded successfully', { url });
         };
         elements.previewImg.onerror = () => {
@@ -752,6 +737,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Force update the src attribute
         elements.previewImg.src = url;
+
+        // Show image and enable buttons immediately (don't wait for onload)
+        elements.previewImg.classList.remove('twcss-hidden');
+
+        if (elements.previewActions)
+          elements.previewActions.classList.remove('twcss-hidden');
+        if (elements.previewDownload) elements.previewDownload.disabled = false;
+        if (elements.previewShare) elements.previewShare.disabled = false;
+
+        // Enable continue button when preview is available
+        if (elements.continueBtn && state.current === 'creating') {
+          elements.continueBtn.disabled = false;
+        }
       }
 
       // Update page 3 preview immediately as well
@@ -982,10 +980,13 @@ document.addEventListener('DOMContentLoaded', () => {
           // If state is creating, we expect to be on page 1 or 2.
           // But user can click continue to go to 3.
           // We should handle the buttons visibility:
-          if (elements.confirmBtn && elements.confirmBtnWrap)
-            elements.confirmBtn.classList.remove('twcss-hidden');
-          elements.confirmBtnWrap.classList.remove('hidden');
-          // ATC trigger is removed, so we don't need to hide it
+          if (elements.confirmBtnWrap)
+            elements.confirmBtnWrap.classList.remove('hidden');
+
+          // Re-enable confirm button explicitly if not confirmed yet
+          if (elements.confirmBtn && !state.designConfirmed) {
+            elements.confirmBtn.disabled = false;
+          }
 
           // CRITICAL FIX: If product is already generated (e.g. state reset but data persists, or late mockup arrival handled weirdly),
           // don't show confirm button again.
@@ -994,9 +995,8 @@ document.addEventListener('DOMContentLoaded', () => {
             state.generatedProductUrl ||
             state.designConfirmed
           ) {
-            if (elements.confirmBtn && elements.confirmBtnWrap)
-              elements.confirmBtn.classList.add('twcss-hidden');
-            elements.confirmBtnWrap.classList.add('hidden');
+            if (elements.confirmBtnWrap)
+              elements.confirmBtnWrap.classList.add('hidden');
             // Automatically add to cart if we arrive here and product is ready?
             // Or just show ATC?
             // If we are navigating to page 3 and product is ready, show ATC.
@@ -1012,9 +1012,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Show ATC button, Hide Confirm button
           // ATC trigger is removed
-          if (elements.confirmBtn && elements.confirmBtnWrap)
-            elements.confirmBtn.classList.add('twcss-hidden');
-          elements.confirmBtnWrap.classList.add('hidden');
+          if (elements.confirmBtnWrap)
+            elements.confirmBtnWrap.classList.add('hidden');
 
           // If we have a variant ID, assume product is already created and hide Confirm button forever to prevent duplicates
           // Actually, if we are in 'ready' state, Confirm button is already hidden by above lines.
@@ -1025,9 +1024,8 @@ document.addEventListener('DOMContentLoaded', () => {
             state.generatedProductUrl ||
             state.designConfirmed
           ) {
-            if (elements.confirmBtn && elements.confirmBtnWrap)
-              elements.confirmBtn.classList.add('twcss-hidden');
-            elements.confirmBtnWrap.classList.add('hidden');
+            if (elements.confirmBtnWrap)
+              elements.confirmBtnWrap.classList.add('hidden');
             // ATC trigger is removed
           }
 
@@ -1467,9 +1465,6 @@ document.addEventListener('DOMContentLoaded', () => {
             state.lastMockUrl = mockUrl;
             state.forceMockLoading = false;
 
-            // Start preparing product info immediately
-            // this.prepareProduct();
-
             timerManager.stopEta();
             timerManager.clearAll();
 
@@ -1508,7 +1503,6 @@ document.addEventListener('DOMContentLoaded', () => {
               mockUrl,
               generatorId: state.generatorId,
             });
-
             return { ok: true, mock: true, json: j };
           }
         }
