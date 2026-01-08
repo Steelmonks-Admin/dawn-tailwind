@@ -1,6 +1,238 @@
+{% doc %}
+  @prompt
+    create me a thin block i can enter 3 usps next to each other on mobile, containing a layout like this: 
+    ✔ Für draußen geeignet · ✔ Wetterfest · ✔ Individuell gefertigt, der hintergrund soll weiß sein
+    
+    They should be on one line on mobile and desktop
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-usp-bar-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_vertical }}px 20px;
+  }
+
+  .ai-usp-bar-container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: {{ block.settings.spacing }}px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ai-usp-bar-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ai-usp-bar-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    flex-shrink: 0;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-usp-bar-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.2;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-usp-bar-container-{{ ai_gen_id }} {
+      gap: {{ block.settings.spacing_mobile }}px;
+    }
+
+    .ai-usp-bar-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size_mobile }}px;
+    }
+
+    .ai-usp-bar-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size_mobile }}px;
+      height: {{ block.settings.icon_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<usp-bar-{{ ai_gen_id }} class="ai-usp-bar-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-usp-bar-container-{{ ai_gen_id }}">
+    {% if block.settings.usp_1 != blank %}
+      <div class="ai-usp-bar-item-{{ ai_gen_id }}">
+        <svg class="ai-usp-bar-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="ai-usp-bar-text-{{ ai_gen_id }}">{{ block.settings.usp_1 }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.usp_2 != blank %}
+      <div class="ai-usp-bar-item-{{ ai_gen_id }}">
+        <svg class="ai-usp-bar-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="ai-usp-bar-text-{{ ai_gen_id }}">{{ block.settings.usp_2 }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.usp_3 != blank %}
+      <div class="ai-usp-bar-item-{{ ai_gen_id }}">
+        <svg class="ai-usp-bar-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="ai-usp-bar-text-{{ ai_gen_id }}">{{ block.settings.usp_3 }}</span>
+      </div>
+    {% endif %}
+  </div>
+</usp-bar-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class UspBar{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+
+    customElements.define('usp-bar-{{ ai_gen_id }}', UspBar{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "USP bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "usp_1",
+      "label": "USP 1",
+      "default": "Für draußen geeignet"
+    },
+    {
+      "type": "text",
+      "id": "usp_2",
+      "label": "USP 2",
+      "default": "Wetterfest"
+    },
+    {
+      "type": "text",
+      "id": "usp_3",
+      "label": "USP 3",
+      "default": "Individuell gefertigt"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#090a0c"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#0044cc"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing between items",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size (desktop)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size (desktop)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "spacing_mobile",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing between items",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "min": 10,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "USP bar"
+    }
+  ]
+}
 {% endschema %}
