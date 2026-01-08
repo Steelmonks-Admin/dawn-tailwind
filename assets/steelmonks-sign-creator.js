@@ -319,9 +319,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================================
   // ! LocalStorage Persistence
   // ============================================================================
-  const STORAGE_KEY = 'steelmonks-sign-creator-state';
-  const STORAGE_TIMER_KEY = 'steelmonks-sign-creator-timer';
-  const STORAGE_FORM_KEY = 'steelmonks-sign-creator-form';
+  const STORAGE_KEY = 'steelmonks-sign-creator-state-123';
+  const STORAGE_TIMER_KEY = 'steelmonks-sign-creator-timer-123';
+  const STORAGE_FORM_KEY = 'steelmonks-sign-creator-form-123';
 
   const storageManager = {
     saveState() {
@@ -342,6 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
           hasGeneratedDesign: state.hasGeneratedDesign,
           designConfirmed: state.designConfirmed,
           cooldown: state.cooldown,
+          // Add timestamp if it doesn't exist (for new state) or preserve existing one
+          createdAt: this.getCreatedAt() || Date.now(),
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
         logger.debug('State saved to localStorage', stateToSave);
@@ -350,11 +352,55 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     },
 
-    loadState() {
+    getCreatedAt() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (!saved) return null;
         const parsed = JSON.parse(saved);
+        return parsed.createdAt || null;
+      } catch (error) {
+        return null;
+      }
+    },
+
+    isStateExpired() {
+      const createdAt = this.getCreatedAt();
+      if (!createdAt) return false; // No timestamp means it's a new state or old format
+
+      const now = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+      const isExpired = now - createdAt > twentyFourHours;
+
+      if (isExpired) {
+        logger.info('State expired (24 hours passed), clearing localStorage', {
+          createdAt: new Date(createdAt).toISOString(),
+          now: new Date(now).toISOString(),
+          hoursPassed: ((now - createdAt) / (60 * 60 * 1000)).toFixed(2),
+        });
+      }
+
+      return isExpired;
+    },
+
+    loadState() {
+      try {
+        // Check if state has expired before loading
+        if (this.isStateExpired()) {
+          this.clearState();
+          return null;
+        }
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+
+        // If loaded state doesn't have createdAt, add it now for future expiration checks
+        if (!parsed.createdAt) {
+          parsed.createdAt = Date.now();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+          logger.debug('Added createdAt timestamp to existing state');
+        }
+
         logger.debug('State loaded from localStorage', parsed);
         return parsed;
       } catch (error) {
