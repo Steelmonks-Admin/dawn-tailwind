@@ -426,7 +426,7 @@
           "type": "heading",
           "settings": {
             "heading": "<em>Sonderanfertigungen aus Metall</em>",
-            "heading_size": "h2"
+            "heading_size": "h1"
           }
         },
         "text_GrYCVA": {
@@ -459,7 +459,7 @@
         "image_overlay_opacity": 0,
         "image_height": "adapt",
         "desktop_content_position": "middle-center",
-        "show_text_box": false,
+        "show_text_box": true,
         "desktop_content_alignment": "center",
         "color_scheme": "scheme-267654d1-14da-4435-b77d-7f20276030f8",
         "image_behavior": "ambient",
