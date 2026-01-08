@@ -15,18 +15,18 @@
         "ai_gen_block_bc38158_rjqXkT": {
           "type": "ai_gen_block_bc38158",
           "settings": {
-            "headline": "Your headline here",
-            "subheadline": "Add a descriptive subheadline to provide more context",
+            "headline": "Dein individuelles Metallschild für Haus & Eingang",
+            "subheadline": "Hausnummern, Namen & Straßenschilder aus Metall\nGröße, Farbe & Text frei wählbar",
             "text_alignment": "center",
-            "content_width": 800,
-            "headline_size": 40,
+            "content_width": 700,
+            "headline_size": 24,
             "headline_color": "#090a0c",
             "subheadline_size": 18,
             "subheadline_color": "#090a0c",
             "spacing_top": 40,
-            "spacing_bottom": 40,
-            "spacing_sides": 20,
-            "spacing_between": 12
+            "spacing_bottom": 0,
+            "spacing_sides": 16,
+            "spacing_between": 4
           },
           "blocks": {}
         }
@@ -73,9 +73,13 @@
     },
     "17678852240e5b61e4": {
       "type": "_blocks",
+      "settings": {}
+    },
+    "1767887385169ffa1f": {
+      "type": "_blocks",
       "blocks": {
-        "ai_gen_block_5aa7cee_fx3Cmm": {
-          "type": "ai_gen_block_5aa7cee",
+        "ai_gen_block_61505c1_prPVj6": {
+          "type": "ai_gen_block_61505c1",
           "settings": {
             "usp_1": "Für draußen geeignet",
             "usp_2": "Wetterfest",
@@ -83,20 +87,19 @@
             "background_color": "#ffffff",
             "text_color": "#090a0c",
             "icon_color": "#0044cc",
-            "font_size": 16,
-            "font_size_mobile": 13,
-            "icon_size": 18,
-            "icon_size_mobile": 16,
-            "spacing": 20,
-            "spacing_mobile": 15,
             "padding_vertical": 10,
-            "padding_horizontal": 20
+            "spacing": 30,
+            "text_size": 14,
+            "icon_size": 16,
+            "spacing_mobile": 15,
+            "text_size_mobile": 8,
+            "icon_size_mobile": 12
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_5aa7cee_fx3Cmm"
+        "ai_gen_block_61505c1_prPVj6"
       ],
       "settings": {}
     },
@@ -290,6 +293,7 @@
     "17678841750b86ae89",
     "17678838077d500cac",
     "17678852240e5b61e4",
+    "1767887385169ffa1f",
     "17678819300548d337",
     "17458178119bf2149e",
     "banner",
