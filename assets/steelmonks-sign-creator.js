@@ -1062,7 +1062,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyPriceDisplay() {
       if (!elements.priceVal) return;
-      if (state.pendingPriceValue && state.priceReady) {
+
+      // If we have a pending price, show it regardless of priceReady flag
+      // because calculate() sets pendingPriceValue but might not always trigger updateUIFromState immediately
+      // Actually priceReady is set by calculate() so it should be fine.
+      // But let's log to see what's happening
+      logger.debug('applyPriceDisplay called', {
+        pendingPriceValue: state.pendingPriceValue,
+        priceReady: state.priceReady,
+        current: state.current,
+      });
+
+      if (state.pendingPriceValue) {
         // Always show the calculated price when available
         elements.priceVal.textContent = state.pendingPriceValue;
       } else {
@@ -2526,9 +2537,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (elements.size) {
+    logger.info('Size selector event listener attached', {
+      elementExists: !!elements.size,
+      elementId: elements.size?.id,
+    });
+
     elements.size.addEventListener('change', () => {
       try {
-        if (state.locked) return;
+        logger.info('Size change event fired', {
+          newSize: elements.size?.value,
+          material: elements.finish?.value,
+        });
 
         // Update form data and props immediately
         formData.updateProps();
@@ -2538,12 +2557,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const material = elements.finish?.value || '';
         const size = elements.size.value || '';
 
-        logger.debug('Size changed, recalculating price', { material, size });
+        if (!material || !size) {
+          logger.warn('Cannot calculate price: missing material or size', {
+            hasMaterial: !!material,
+            hasSize: !!size,
+          });
+          return;
+        }
+
+        logger.info('Calculating price for size change', {
+          material,
+          size,
+        });
+
         priceManager.calculate(material, size);
+
+        logger.info('Price calculation completed after size change', {
+          newPrice: state.pendingPriceValue,
+        });
       } catch (error) {
-        logger.error('Error handling size change', error);
+        logger.error('Error handling size change', error, {
+          sizeValue: elements.size?.value,
+          materialValue: elements.finish?.value,
+          errorStack: error?.stack,
+        });
       }
     });
+  } else {
+    logger.warn('Size selector element not found, event listener not attached');
   }
 
   if (elements.ctaBtn) {
