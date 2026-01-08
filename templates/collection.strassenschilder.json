@@ -9,27 +9,157 @@
  */
 {
   "sections": {
-    "sm_grill_hero_JEyxgB": {
-      "type": "sm-grill-hero",
-      "custom_css": ["div img {padding-top: 500px;}"],
-      "name": "Grill Hero",
-      "settings": {
-        "parallax_image": "shopify://shop_images/strassenschilder.webp",
-        "foreground_image": "shopify://shop_images/white-border.webp",
-        "richtext": "",
-        "text_alignment": "center"
-      }
+    "17678841750b86ae89": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_bc38158_rjqXkT": {
+          "type": "ai_gen_block_bc38158",
+          "settings": {
+            "headline": "Your headline here",
+            "subheadline": "Add a descriptive subheadline to provide more context",
+            "text_alignment": "center",
+            "content_width": 800,
+            "headline_size": 40,
+            "headline_color": "#090a0c",
+            "subheadline_size": 18,
+            "subheadline_color": "#090a0c",
+            "spacing_top": 40,
+            "spacing_bottom": 40,
+            "spacing_sides": 20,
+            "spacing_between": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_bc38158_rjqXkT"
+      ],
+      "settings": {}
     },
-    "custom_header_Mp9HKW": {
-      "type": "custom-header",
-      "custom_css": ["div {margin-top: -80px;}"],
-      "name": "Custom Header",
-      "settings": {
-        "richtext": "<p><strong>Dein Hausschild,</strong></p><p><strong>mehr als bloß</strong></p><h1><strong>eine Adresse.</strong></h1>",
-        "button_text": "",
-        "button_link": "",
-        "image": "shopify://shop_images/strassenschilder-sign.webp"
-      }
+    "17678838077d500cac": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_b5331c5_zxJXh4": {
+          "type": "ai_gen_block_b5331c5",
+          "settings": {
+            "icon_1": "shopify://shop_images/461f6e77-d4de-4c09-81cd-e6483a180c49_clipped_rev_1.png",
+            "text_1": "Wetterfest & langlebig",
+            "icon_2": "shopify://shop_images/bf139964-1b70-4ff1-bf8b-f10e8a3db6f0_clipped_rev_1.png",
+            "text_2": "Jedes Schild ein Unikat",
+            "icon_3": "shopify://shop_images/ae50845a-089a-4c71-8e99-50610412f49f_clipped_rev_1.png",
+            "text_3": "10.000+  5 Sterne Bewertungen",
+            "icon_4": "shopify://shop_images/8f808c0d-6f77-49c6-8a1a-b1113946e5c9_clipped_rev_1_1.png",
+            "text_4": "Größe, Farbe & Text nach Wunsch",
+            "desktop_columns": "4",
+            "mobile_columns": "2",
+            "desktop_width_percent": 100,
+            "gap": 24,
+            "icon_text_gap": 12,
+            "icon_size": 44,
+            "text_size": 13,
+            "text_color": "#090a0c",
+            "background_color": "#ffffff",
+            "border_radius": 0,
+            "padding_vertical": 20,
+            "padding_horizontal": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_b5331c5_zxJXh4"
+      ],
+      "settings": {}
+    },
+    "17678852240e5b61e4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_5aa7cee_fx3Cmm": {
+          "type": "ai_gen_block_5aa7cee",
+          "settings": {
+            "usp_1": "Für draußen geeignet",
+            "usp_2": "Wetterfest",
+            "usp_3": "Individuell gefertigt",
+            "background_color": "#ffffff",
+            "text_color": "#090a0c",
+            "icon_color": "#0044cc",
+            "font_size": 16,
+            "font_size_mobile": 13,
+            "icon_size": 18,
+            "icon_size_mobile": 16,
+            "spacing": 20,
+            "spacing_mobile": 15,
+            "padding_vertical": 10,
+            "padding_horizontal": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_5aa7cee_fx3Cmm"
+      ],
+      "settings": {}
+    },
+    "17678819300548d337": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_783efe5_qT4FtA": {
+          "type": "ai_gen_block_783efe5",
+          "settings": {
+            "number_of_slides": 3,
+            "image_1": "shopify://shop_images/5eecb48f-f71c-4f9c-a72f-4513ac8d1cb4.png",
+            "heading_1": "<p>Hausnummer mit Straßennamen</p>",
+            "subheading_1": "<p>Klar, modern & perfekt sichtbar<br/>Ideal für Einfamilienhäuser</p>",
+            "image_2": "shopify://shop_images/6b5b1f97-c50b-47e6-af92-8d8360e5eb79.png",
+            "heading_2": "<p>Hausschild mit Familiennamen</p>",
+            "subheading_2": "<p>Persönlich & stilvoll<br/>Dein Name als Metallschild</p>",
+            "image_3": "shopify://shop_images/875f8b49-6a73-4734-be1c-94f1de7f2181.png",
+            "heading_3": "<p>Hausnummer nach Wunsch</p>",
+            "subheading_3": "<p>Minimalistisch oder auffällig<br/>Du bestimmst das Design</p>",
+            "heading_4": "",
+            "subheading_4": "",
+            "heading_5": "",
+            "subheading_5": "",
+            "heading_6": "",
+            "subheading_6": "",
+            "heading_7": "",
+            "subheading_7": "",
+            "heading_8": "",
+            "subheading_8": "",
+            "heading_9": "",
+            "subheading_9": "",
+            "heading_10": "",
+            "subheading_10": "",
+            "enable_autoplay": false,
+            "autoplay_speed": 5,
+            "slider_padding_top": 0,
+            "slider_padding_bottom": 0,
+            "slider_padding_horizontal": 0,
+            "image_height": 300,
+            "image_border_radius": 6,
+            "text_position": "bottom",
+            "text_spacing": 8,
+            "text_padding_top": 8,
+            "text_padding_bottom": 8,
+            "text_padding_horizontal": 0,
+            "heading_size": 24,
+            "heading_color": "#090a0c",
+            "heading_spacing": 8,
+            "subheading_size": 18,
+            "subheading_color": "#090a0c",
+            "arrow_size": 32,
+            "arrow_offset": 20,
+            "arrow_background": "#090a0c",
+            "arrow_hover_background": "#0044cc",
+            "arrow_color": "#fafaff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_783efe5_qT4FtA"
+      ],
+      "settings": {}
     },
     "17458178119bf2149e": {
       "type": "apps",
@@ -39,8 +169,13 @@
           "settings": {}
         }
       },
-      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
-      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "disabled": true,
+      "custom_css": [
+        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
+      ],
       "settings": {
         "include_margins": true
       }
@@ -63,7 +198,7 @@
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "strassenschilder",
+        "collection": "hausschilder",
         "products_to_show": 20,
         "columns_desktop": 4,
         "full_width": false,
@@ -113,7 +248,9 @@
           "settings": {}
         }
       },
-      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_qbXqpk"],
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_qbXqpk"
+      ],
       "settings": {
         "include_margins": true
       }
@@ -135,7 +272,9 @@
           }
         }
       },
-      "block_order": ["accordion_aiPqBR"],
+      "block_order": [
+        "accordion_aiPqBR"
+      ],
       "name": "Accordions",
       "settings": {
         "heading": "",
@@ -148,8 +287,10 @@
     }
   },
   "order": [
-    "sm_grill_hero_JEyxgB",
-    "custom_header_Mp9HKW",
+    "17678841750b86ae89",
+    "17678838077d500cac",
+    "17678852240e5b61e4",
+    "17678819300548d337",
     "17458178119bf2149e",
     "banner",
     "featured_collection_NUC336",
