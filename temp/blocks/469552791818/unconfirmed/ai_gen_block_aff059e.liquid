@@ -1,6 +1,721 @@
+{% doc %}
+  @prompt
+    create me an image slider with short text underneath for each image, Remove the navigation dots, move the arrows to the middle and add a setting for automatic scolling after a set time. Make the image space horizontal., center the text on mobile and desktop. Give me editable padding around the text. Make sure the image is fully contained in the frame., make sure that the slide hight is consistent with the first slide. the images should be fully contained within the frame of the slider and each arrow click should move an entire slide. The images should not be cut off. Currently the mobile text is still not center. try again and make sure it is perfectly aligned. Make it pixel perfect and mobile optimized., Make sure that there is no added background color under the images or text. Rest is good , Make the amount of slides editable, so i can choose myself how many slides there are
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-slider-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: {{ block.settings.slider_padding_top }}px {{ block.settings.slider_padding_horizontal }}px {{ block.settings.slider_padding_bottom }}px {{ block.settings.slider_padding_horizontal }}px;
+  }
+
+  .ai-image-slider-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-image-slider-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .ai-image-slider-slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    max-width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.text_spacing }}px;
+  }
+
+  .ai-image-slider-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-image-slider-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .ai-image-slider-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-image-slider-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-image-slider-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .ai-image-slider-text-{{ ai_gen_id }} {
+    text-align: center;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.5;
+    padding: {{ block.settings.text_padding_top }}px {{ block.settings.text_padding_horizontal }}px {{ block.settings.text_padding_bottom }}px {{ block.settings.text_padding_horizontal }}px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .ai-image-slider-arrow-{{ ai_gen_id }} {
+    position: absolute;
+    top: calc({{ block.settings.image_height }}px / 2);
+    transform: translateY(-50%);
+    width: {{ block.settings.arrow_size }}px;
+    height: {{ block.settings.arrow_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.arrow_background }};
+    color: {{ block.settings.arrow_color }};
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    z-index: 10;
+    flex-shrink: 0;
+  }
+
+  .ai-image-slider-arrow-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.arrow_hover_background }};
+  }
+
+  .ai-image-slider-prev-{{ ai_gen_id }} {
+    left: {{ block.settings.arrow_offset }}px;
+  }
+
+  .ai-image-slider-next-{{ ai_gen_id }} {
+    right: {{ block.settings.arrow_offset }}px;
+  }
+
+  .ai-image-slider-arrow-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.arrow_size }}px * 0.5);
+    height: calc({{ block.settings.arrow_size }}px * 0.5);
+  }
+
+  .ai-image-slider-hidden-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-image-slider-{{ ai_gen_id }} {
+      padding: {{ block.settings.slider_padding_top | times: 0.7 | round }}px {{ block.settings.slider_padding_horizontal | times: 0.7 | round }}px {{ block.settings.slider_padding_bottom | times: 0.7 | round }}px {{ block.settings.slider_padding_horizontal | times: 0.7 | round }}px;
+    }
+
+    .ai-image-slider-image-wrapper-{{ ai_gen_id }} {
+      height: {{ block.settings.image_height | times: 0.7 | round }}px;
+    }
+
+    .ai-image-slider-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 | round }}px;
+      padding: {{ block.settings.text_padding_top | times: 0.7 | round }}px {{ block.settings.text_padding_horizontal | times: 0.7 | round }}px {{ block.settings.text_padding_bottom | times: 0.7 | round }}px {{ block.settings.text_padding_horizontal | times: 0.7 | round }}px;
+      text-align: center;
+    }
+
+    .ai-image-slider-arrow-{{ ai_gen_id }} {
+      width: {{ block.settings.arrow_size | times: 0.8 | round }}px;
+      height: {{ block.settings.arrow_size | times: 0.8 | round }}px;
+      top: calc({{ block.settings.image_height | times: 0.7 | round }}px / 2);
+    }
+
+    .ai-image-slider-arrow-{{ ai_gen_id }} svg {
+      width: calc({{ block.settings.arrow_size | times: 0.8 | round }}px * 0.5);
+      height: calc({{ block.settings.arrow_size | times: 0.8 | round }}px * 0.5);
+    }
+
+    .ai-image-slider-prev-{{ ai_gen_id }} {
+      left: {{ block.settings.arrow_offset | times: 0.5 | round }}px;
+    }
+
+    .ai-image-slider-next-{{ ai_gen_id }} {
+      right: {{ block.settings.arrow_offset | times: 0.5 | round }}px;
+    }
+
+    .ai-image-slider-slide-{{ ai_gen_id }} {
+      gap: {{ block.settings.text_spacing | times: 0.7 | round }}px;
+    }
+  }
+{% endstyle %}
+
+<image-slider-{{ ai_gen_id }}
+  class="ai-image-slider-{{ ai_gen_id }}"
+  data-autoplay="{{ block.settings.enable_autoplay }}"
+  data-autoplay-speed="{{ block.settings.autoplay_speed }}"
+  data-total-slides="{{ block.settings.number_of_slides }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-image-slider-container-{{ ai_gen_id }}">
+    <div class="ai-image-slider-wrapper-{{ ai_gen_id }}">
+      {% for i in (1..10) %}
+        {% liquid
+          assign image_key = 'image_' | append: i
+          assign text_key = 'text_' | append: i
+          assign image = block.settings[image_key]
+          assign text = block.settings[text_key]
+        %}
+
+        <div class="ai-image-slider-slide-{{ ai_gen_id }} {% if i > block.settings.number_of_slides %}ai-image-slider-hidden-{{ ai_gen_id }}{% endif %}" data-slide="{{ forloop.index0 }}">
+          <div class="ai-image-slider-image-wrapper-{{ ai_gen_id }}">
+            {% if image %}
+              <img
+                src="{{ image | image_url: width: 1600 }}"
+                alt="{{ image.alt | escape }}"
+                loading="lazy"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+                class="ai-image-slider-image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-image-slider-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+                {% if forloop.first %}
+                  <div class="ai-image-slider-empty-state-{{ ai_gen_id }}">
+                    Add images to create your slider
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if text != blank %}
+            <div class="ai-image-slider-text-{{ ai_gen_id }}">
+              {{ text }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if block.settings.number_of_slides > 1 %}
+      <button
+        class="ai-image-slider-arrow-{{ ai_gen_id }} ai-image-slider-prev-{{ ai_gen_id }}"
+        aria-label="Previous slide"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button
+        class="ai-image-slider-arrow-{{ ai_gen_id }} ai-image-slider-next-{{ ai_gen_id }}"
+        aria-label="Next slide"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    {% endif %}
+  </div>
+</image-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.totalSlides = 0;
+        this.autoplayInterval = null;
+        this.isTransitioning = false;
+      }
+
+      connectedCallback() {
+        this.wrapper = this.querySelector('.ai-image-slider-wrapper-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-image-slider-prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-image-slider-next-{{ ai_gen_id }}');
+        this.totalSlides = parseInt(this.dataset.totalSlides) || 0;
+        this.autoplayEnabled = this.dataset.autoplay === 'true';
+        this.autoplaySpeed = parseInt(this.dataset.autoplaySpeed) * 1000;
+
+        if (this.totalSlides <= 1) {
+          return;
+        }
+
+        this.prevButton.addEventListener('click', () => {
+          if (!this.isTransitioning) {
+            this.stopAutoplay();
+            this.goToPrevSlide();
+          }
+        });
+
+        this.nextButton.addEventListener('click', () => {
+          if (!this.isTransitioning) {
+            this.stopAutoplay();
+            this.goToNextSlide();
+          }
+        });
+
+        let startX = 0;
+        let endX = 0;
+
+        this.wrapper.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+          this.stopAutoplay();
+        });
+
+        this.wrapper.addEventListener('touchend', (e) => {
+          if (!this.isTransitioning) {
+            endX = e.changedTouches[0].clientX;
+            if (startX - endX > 50) {
+              this.goToNextSlide();
+            } else if (endX - startX > 50) {
+              this.goToPrevSlide();
+            }
+          }
+        });
+
+        this.wrapper.addEventListener('transitionend', () => {
+          this.isTransitioning = false;
+        });
+
+        if (this.autoplayEnabled) {
+          this.startAutoplay();
+
+          this.addEventListener('mouseenter', () => this.stopAutoplay());
+          this.addEventListener('mouseleave', () => {
+            if (this.autoplayEnabled) {
+              this.startAutoplay();
+            }
+          });
+        }
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+
+      startAutoplay() {
+        this.stopAutoplay();
+        this.autoplayInterval = setInterval(() => {
+          if (!this.isTransitioning) {
+            if (this.currentSlide < this.totalSlides - 1) {
+              this.goToNextSlide();
+            } else {
+              this.goToSlide(0);
+            }
+          }
+        }, this.autoplaySpeed);
+      }
+
+      stopAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.autoplayInterval = null;
+        }
+      }
+
+      goToSlide(index) {
+        this.isTransitioning = true;
+        this.currentSlide = index;
+        this.wrapper.style.transform = `translateX(-${this.currentSlide * 100}%)`;
+      }
+
+      goToNextSlide() {
+        if (this.currentSlide < this.totalSlides - 1) {
+          this.currentSlide++;
+        } else {
+          this.currentSlide = 0;
+        }
+        this.goToSlide(this.currentSlide);
+      }
+
+      goToPrevSlide() {
+        if (this.currentSlide > 0) {
+          this.currentSlide--;
+        } else {
+          this.currentSlide = this.totalSlides - 1;
+        }
+        this.goToSlide(this.currentSlide);
+      }
+    }
+
+    customElements.define('image-slider-{{ ai_gen_id }}', ImageSlider{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Image slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slides"
+    },
+    {
+      "type": "range",
+      "id": "number_of_slides",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Number of slides",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_1",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_2",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_3",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_4",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_5",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_6",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_7",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_8",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_9",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_9",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Slide 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_10",
+      "label": "Image"
+    },
+    {
+      "type": "textarea",
+      "id": "text_10",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Slider padding"
+    },
+    {
+      "type": "range",
+      "id": "slider_padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "slider_padding_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "slider_padding_horizontal",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Image style"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Image height",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#090a0c"
+    },
+    {
+      "type": "range",
+      "id": "text_spacing",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing above text",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_padding_top",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_padding_bottom",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Navigation arrows"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 32,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "label": "Arrow size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "arrow_offset",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Arrow offset from edge",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "arrow_background",
+      "label": "Arrow background",
+      "default": "#090a0c"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_background",
+      "label": "Arrow hover background",
+      "default": "#0044cc"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#fafaff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image slider"
+    }
+  ]
+}
 {% endschema %}
