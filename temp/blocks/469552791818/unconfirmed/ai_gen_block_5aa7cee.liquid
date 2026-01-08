@@ -1,6 +1,231 @@
+{% doc %}
+  @prompt
+    create me a thin block i can enter 3 usps next to each other on mobile, containing a layout like this: 
+    ✔ Für draußen geeignet · ✔ Wetterfest · ✔ Individuell gefertigt, der hintergrund soll weiß sein
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-usp-bar-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-usp-bar-container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: {{ block.settings.spacing }}px;
+    flex-wrap: wrap;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.font_size }}px;
+    white-space: nowrap;
+  }
+
+  .ai-usp-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-usp-text-{{ ai_gen_id }} {
+    line-height: 1.2;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-usp-bar-container-{{ ai_gen_id }} {
+      gap: {{ block.settings.spacing_mobile }}px;
+    }
+
+    .ai-usp-item-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size_mobile }}px;
+    }
+
+    .ai-usp-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size_mobile }}px;
+      height: {{ block.settings.icon_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-usp-bar-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-usp-bar-container-{{ ai_gen_id }}">
+    {% if block.settings.usp_1 != blank %}
+      <div class="ai-usp-item-{{ ai_gen_id }}">
+        <svg class="ai-usp-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="ai-usp-text-{{ ai_gen_id }}">{{ block.settings.usp_1 }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.usp_2 != blank %}
+      <div class="ai-usp-item-{{ ai_gen_id }}">
+        <svg class="ai-usp-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="ai-usp-text-{{ ai_gen_id }}">{{ block.settings.usp_2 }}</span>
+      </div>
+    {% endif %}
+
+    {% if block.settings.usp_3 != blank %}
+      <div class="ai-usp-item-{{ ai_gen_id }}">
+        <svg class="ai-usp-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="ai-usp-text-{{ ai_gen_id }}">{{ block.settings.usp_3 }}</span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "USP bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "usp_1",
+      "label": "USP 1",
+      "default": "Für draußen geeignet"
+    },
+    {
+      "type": "text",
+      "id": "usp_2",
+      "label": "USP 2",
+      "default": "Wetterfest"
+    },
+    {
+      "type": "text",
+      "id": "usp_3",
+      "label": "USP 3",
+      "default": "Individuell gefertigt"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#090a0c"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#0044cc"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font size on mobile",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Icon size on mobile",
+      "min": 10,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Space between items",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "spacing_mobile",
+      "label": "Space between items on mobile",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "USP bar"
+    }
+  ]
+}
 {% endschema %}
