@@ -149,7 +149,7 @@
       "name": "Werkstatt Hero Section",
       "settings": {
         "top_spacing": 18,
-        "bottom_spacing": 18,
+        "bottom_spacing": 24,
         "desc_heading": "Beschreibung",
         "autoplay": true,
         "autoplay_seconds": 6
