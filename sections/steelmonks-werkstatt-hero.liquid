@@ -1,16 +1,21 @@
 {% comment %}
-  Steelmonks Werkstatt Glass Carousel (standalone section)
-  - Multiple cards visible, center card highlighted (scaled)
+  Steelmonks Floating Glass Carousel (standalone, no big frame)
+  - Each card is its own floating glass element (no overall background panel)
+  - Multiple cards visible, center card highlighted
   - Square images always
-  - Minimal UI: arrows top right, "In Schild verwandeln" button top center on active card only
-  - Bottom prompt bar (desktop: appears on hover/focus, mobile: always visible)
-  - Overlay image covers the full card, same size as base, fades in over 2s
-  - Blue + yellow are only glowing outlines on cards (no big blue background wash)
+  - No heading, no dots
+  - Arrows aligned inside carousel, right side
+  - Active card shows top-center button: "Verwandeln"
+  - Bottom prompt bar (desktop hover/focus, mobile always)
+  - Overlay image full size (same as base), 2s slow fade in
+  - Includes 2 default example slides using theme assets:
+    Werkstatt-Hero-1 + Werkstatt-Hero-1-Overlay
+    Werkstatt-Hero-2-First + Werkstatt-Hero-2-Overlay
 {% endcomment %}
 
 {% schema %}
 {
-  "name": "Werkstatt Glass Carousel",
+  "name": "Werkstatt Carousel",
   "tag": "section",
   "settings": [
     { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
@@ -23,240 +28,217 @@
       "settings": [
         { "type": "image_picker", "id": "base_image", "label": "Basisbild" },
         { "type": "image_picker", "id": "overlay_image", "label": "Overlay Bild (Schild)" },
-        { "type": "textarea", "id": "prompt", "label": "Prompt unten", "default": "Beispiel Prompt: Modernes Hausschild, klare Konturen, minimalistisch, Familienname und Hausnummer" },
-        { "type": "text", "id": "btn_off", "label": "Button Text vorher", "default": "In Schild verwandeln" },
-        { "type": "text", "id": "btn_on", "label": "Button Text nachher", "default": "Zurück" }
+        { "type": "textarea", "id": "prompt", "label": "Prompt unten", "default": "Beispiel Prompt" }
       ]
     }
   ],
   "presets": [
-    { "name": "Werkstatt Glass Carousel", "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }, { "type": "slide" }] }
+    {
+      "name": "Werkstatt Carousel",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
+          }
+        }
+      ]
+    }
   ]
 }
 {% endschema %}
 
-<section id="smgc-{{ section.id }}" class="smgc" aria-label="Werkstatt Beispiele">
+<section id="smfc-{{ section.id }}" class="smfc" aria-label="Werkstatt Carousel">
   <style>
-    #smgc-{{ section.id }}{
-      --a1: #ff9800;
-      --a2: #0044CC;
+    #smfc-{{ section.id }}{
+      --a1:#ff9800;
+      --a2:#0044CC;
 
       --ink: rgba(9,10,12,0.92);
-      --muted: rgba(9,10,12,0.66);
 
+      --stroke: rgba(255,255,255,0.18);
       --glass: rgba(255,255,255,0.10);
-      --glass2: rgba(255,255,255,0.06);
-      --stroke: rgba(255,255,255,0.16);
 
-      --rOuter: 34px;
+      --shadow: 0 18px 48px rgba(15,23,42,0.14);
+      --shadow2: 0 12px 30px rgba(15,23,42,0.12);
+
       --rCard: 26px;
+      --gap: 14px;
 
-      --shadow: 0 26px 80px rgba(15,23,42,0.18);
-      --shadow2: 0 16px 44px rgba(15,23,42,0.12);
-
+      --cardW: clamp(200px, 58vw, 320px);
       --fade: 2000ms;
       --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      --cardW: clamp(200px, 58vw, 320px);
-      --gap: 14px;
-
-      padding: clamp(14px, 3vw, 22px);
+      padding: clamp(10px, 2.8vw, 18px);
     }
 
-    /* As element on page, not fullscreen overlay */
-    #smgc-{{ section.id }} .smgc__wrap{
+    #smfc-{{ section.id }} .smfc__wrap{
       width: min(1200px, 100%);
       margin: 0 auto;
       position: relative;
-      border-radius: var(--rOuter);
-      padding: 16px 14px 16px;
-      min-height: clamp(520px, 72vh, 760px);
     }
 
-    /* Glass panel background as pseudo, so content can overflow (no cut-off) */
-    #smgc-{{ section.id }} .smgc__wrap:before{
-      content:"";
-      position:absolute;
-      inset: 0;
-      border-radius: var(--rOuter);
-      background:
-        radial-gradient(120% 90% at 18% 0%, rgba(255,152,0,0.10), rgba(255,255,255,0) 62%),
-        radial-gradient(120% 90% at 82% 0%, rgba(0,68,204,0.10), rgba(255,255,255,0) 62%),
-        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      pointer-events:none;
-      z-index: 0;
-    }
-
-    #smgc-{{ section.id }} .smgc__wrap > *{ position: relative; z-index: 1; }
-
-    /* Header row minimal */
-    #smgc-{{ section.id }} .smgc__top{
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 4px 6px 10px;
-    }
-
-    #smgc-{{ section.id }} .smgc__title{
-      margin: 0;
-      font-weight: 950;
-      letter-spacing: -0.02em;
-      font-size: 14px;
-      color: rgba(9,10,12,0.76);
-      user-select:none;
-    }
-
-    #smgc-{{ section.id }} .smgc__nav{
-      display:flex;
+    /* Arrows, aligned inside carousel area (right side) */
+    #smfc-{{ section.id }} .smfc__nav{
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      display: inline-flex;
       gap: 10px;
-      align-items:center;
+      z-index: 5;
+      pointer-events: none; /* allow track dragging */
     }
 
-    #smgc-{{ section.id }} .smgc__navbtn{
-      width: 42px;
-      height: 42px;
+    #smfc-{{ section.id }} .smfc__navbtn{
+      pointer-events: auto;
+      width: 44px;
+      height: 44px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.20);
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 14px 32px rgba(15,23,42,0.12);
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      color: rgba(9,10,12,0.74);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      color: rgba(9,10,12,0.78);
       transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
-    #smgc-{{ section.id }} .smgc__navbtn:hover{
+    #smfc-{{ section.id }} .smfc__navbtn:hover{
       transform: translateY(-1px);
       filter: brightness(1.03);
       background: rgba(255,255,255,0.12);
     }
-    #smgc-{{ section.id }} .smgc__navbtn:active{ transform: translateY(0) scale(0.98); }
-    #smgc-{{ section.id }} .smgc__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
+    #smfc-{{ section.id }} .smfc__navbtn:active{ transform: translateY(0) scale(0.98); }
+    #smfc-{{ section.id }} .smfc__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
 
-    /* Carousel */
-    #smgc-{{ section.id }} .smgc__viewport{
-      padding: 10px 0 10px;
-      overflow: visible; /* avoid cut off when active card scales */
+    /* Track */
+    #smfc-{{ section.id }} .smfc__viewport{
+      overflow: visible;
+      padding-top: 2px;
     }
 
-    #smgc-{{ section.id }} .smgc__track{
-      display:flex;
+    #smfc-{{ section.id }} .smfc__track{
+      display: flex;
       gap: var(--gap);
-      overflow-x:auto;
+      overflow-x: auto;
       overflow-y: visible;
       scroll-snap-type: x mandatory;
       scroll-padding: 22px;
-      padding: 14px 22px 20px;
+      padding: 10px 22px 12px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
-    #smgc-{{ section.id }} .smgc__track::-webkit-scrollbar{ display:none; }
+    #smfc-{{ section.id }} .smfc__track::-webkit-scrollbar{ display:none; }
 
-    #smgc-{{ section.id }} .smgc__card{
+    /* Floating card (own background), no shared container */
+    #smfc-{{ section.id }} .smfc__card{
       flex: 0 0 var(--cardW);
       scroll-snap-align: center;
-      border-radius: var(--rCard);
       position: relative;
+      border-radius: var(--rCard);
       transform: translateZ(0);
       opacity: 0.78;
       transform: scale(0.92);
       transition: transform 520ms var(--ease), opacity 520ms ease, filter 520ms ease;
       will-change: transform, opacity, filter;
+      isolation: isolate;
     }
 
-    /* Glowing outline only, no heavy backgrounds */
-    #smgc-{{ section.id }} .smgc__card:before{
+    /* Glow outline only */
+    #smfc-{{ section.id }} .smfc__card:before{
       content:"";
       position:absolute;
-      inset: -1px;
+      inset:-1px;
       border-radius: calc(var(--rCard) + 1px);
       padding: 1.5px;
-      background: linear-gradient(135deg, rgba(255,152,0,0.65), rgba(0,68,204,0.55));
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
+      background: linear-gradient(135deg, rgba(255,152,0,0.70), rgba(0,68,204,0.60));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      opacity: 0.35;
-      filter: blur(0.0px);
-      pointer-events:none;
+      opacity: 0.34;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    #smgc-{{ section.id }} .smgc__card:after{
+    #smfc-{{ section.id }} .smfc__card:after{
       content:"";
       position:absolute;
-      inset: -8px;
-      border-radius: calc(var(--rCard) + 10px);
-      background: radial-gradient(60% 60% at 20% 10%, rgba(255,152,0,0.22), rgba(255,255,255,0) 60%),
-                  radial-gradient(60% 60% at 85% 10%, rgba(0,68,204,0.20), rgba(255,255,255,0) 60%);
+      inset:-10px;
+      border-radius: calc(var(--rCard) + 14px);
+      background:
+        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.20), rgba(255,255,255,0) 62%),
+        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.18), rgba(255,255,255,0) 62%);
       opacity: 0.22;
-      filter: blur(10px);
-      pointer-events:none;
+      filter: blur(12px);
+      pointer-events: none;
       z-index: -1;
     }
 
-    #smgc-{{ section.id }} .smgc__card.is-active{
+    #smfc-{{ section.id }} .smfc__card.is-active{
       opacity: 1;
       transform: scale(1.06);
       filter: saturate(1.02) contrast(1.02);
     }
-    #smgc-{{ section.id }} .smgc__card.is-active:before{ opacity: 0.75; }
-    #smgc-{{ section.id }} .smgc__card.is-active:after{ opacity: 0.45; }
+    #smfc-{{ section.id }} .smfc__card.is-active:before{ opacity: 0.78; }
+    #smfc-{{ section.id }} .smfc__card.is-active:after{ opacity: 0.46; }
 
-    /* Square frame */
-    #smgc-{{ section.id }} .smgc__frame{
+    /* Card glass body */
+    #smfc-{{ section.id }} .smfc__frame{
       border-radius: var(--rCard);
       overflow: hidden;
       aspect-ratio: 1 / 1;
-      background: rgba(255,255,255,0.03);
-      box-shadow: var(--shadow2);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       position: relative;
+      z-index: 1;
     }
 
-    #smgc-{{ section.id }} .smgc__img,
-    #smgc-{{ section.id }} .smgc__overlay{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
+    #smfc-{{ section.id }} .smfc__img,
+    #smfc-{{ section.id }} .smfc__overlay{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
 
-    #smgc-{{ section.id }} .smgc__img{
+    #smfc-{{ section.id }} .smfc__img{
       transform: scale(1.02);
       transition: transform 720ms var(--ease), filter 520ms ease;
       will-change: transform, filter;
     }
+    #smfc-{{ section.id }} .smfc__card.is-active .smfc__img{ transform: scale(1.06); }
 
-    #smgc-{{ section.id }} .smgc__card.is-active .smgc__img{
-      transform: scale(1.06);
-    }
-
-    /* Overlay full size, slow fade in 2s */
-    #smgc-{{ section.id }} .smgc__overlay{
+    /* Overlay: same size full card, slow fade */
+    #smfc-{{ section.id }} .smfc__overlay{
       opacity: 0;
       transition: opacity var(--fade) ease;
       will-change: opacity;
     }
-    #smgc-{{ section.id }} .smgc__card.is-on .smgc__overlay{ opacity: 1; }
-    #smgc-{{ section.id }} .smgc__card.is-on .smgc__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
+    #smfc-{{ section.id }} .smfc__card.is-on .smfc__overlay{ opacity: 1; }
+    #smfc-{{ section.id }} .smfc__card.is-on .smfc__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
 
-    /* Minimal "Schild" button, top center, only on active card */
-    #smgc-{{ section.id }} .smgc__toggle{
-      position:absolute;
+    /* Top-center button only on active */
+    #smfc-{{ section.id }} .smfc__toggle{
+      position: absolute;
       top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      display:inline-flex;
-      align-items:center;
+      display: inline-flex;
+      align-items: center;
       gap: 10px;
       padding: 10px 14px;
       border-radius: 999px;
@@ -276,19 +258,19 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 220ms ease, transform 220ms var(--ease), filter 180ms ease, background 180ms ease;
+      z-index: 2;
     }
 
-    #smgc-{{ section.id }} .smgc__card.is-active .smgc__toggle{
+    #smfc-{{ section.id }} .smfc__card.is-active .smfc__toggle{
       opacity: 1;
       pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
     }
 
-    #smgc-{{ section.id }} .smgc__toggle:hover{ filter: brightness(1.04); }
-    #smgc-{{ section.id }} .smgc__toggle:active{ transform: translateX(-50%) scale(0.99); }
-    #smgc-{{ section.id }} .smgc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
+    #smfc-{{ section.id }} .smfc__toggle:hover{ filter: brightness(1.04); }
+    #smfc-{{ section.id }} .smfc__toggle:active{ transform: translateX(-50%) scale(0.99); }
+    #smfc-{{ section.id }} .smfc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
 
-    #smgc-{{ section.id }} .smgc__pillDot{
+    #smfc-{{ section.id }} .smfc__pillDot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -296,26 +278,25 @@
       box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
     }
 
-    #smgc-{{ section.id }} .smgc__card.is-on .smgc__toggle{
+    #smfc-{{ section.id }} .smfc__card.is-on .smfc__toggle{
       background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       border-color: rgba(255,255,255,0.16);
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
     }
 
     /* Bottom prompt bar */
-    #smgc-{{ section.id }} .smgc__promptWrap{
-      padding: 6px 22px 14px;
+    #smfc-{{ section.id }} .smfc__promptWrap{
+      padding: 10px 22px 6px;
       display: grid;
-      gap: 10px;
     }
 
-    #smgc-{{ section.id }} .smgc__prompt{
+    #smfc-{{ section.id }} .smfc__prompt{
       border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 18px 46px rgba(15,23,42,0.12);
+      box-shadow: var(--shadow2);
       padding: 14px 14px;
       color: rgba(9,10,12,0.80);
       font-weight: 900;
@@ -332,56 +313,28 @@
       transition: opacity 240ms ease, transform 240ms var(--ease);
     }
 
-    /* Desktop: show prompt on hover/focus within */
     @media (hover:hover){
-      #smgc-{{ section.id }} .smgc__wrap:hover .smgc__prompt,
-      #smgc-{{ section.id }} .smgc__wrap:focus-within .smgc__prompt{
+      #smfc-{{ section.id }} .smfc__wrap:hover .smfc__prompt,
+      #smfc-{{ section.id }} .smfc__wrap:focus-within .smfc__prompt{
         opacity: 1;
         transform: translateY(0);
       }
     }
 
-    /* Mobile: always visible */
     @media (hover:none){
-      #smgc-{{ section.id }} .smgc__prompt{
+      #smfc-{{ section.id }} .smfc__prompt{
         opacity: 1;
         transform: translateY(0);
       }
-    }
-
-    /* Dots */
-    #smgc-{{ section.id }} .smgc__dots{
-      display:flex;
-      gap: 8px;
-      justify-content: center;
-      padding: 0 0 14px;
-    }
-
-    #smgc-{{ section.id }} .smgc__dot{
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      cursor:pointer;
-      transition: width 220ms var(--ease), transform 220ms var(--ease), background 220ms ease, opacity 220ms ease;
-      opacity: 0.75;
-    }
-    #smgc-{{ section.id }} .smgc__dot.is-active{
-      width: 26px;
-      background: linear-gradient(90deg, rgba(255,152,0,0.85), rgba(0,68,204,0.85));
-      transform: translateY(-1px);
-      opacity: 1;
     }
 
     @media (min-width: 920px){
-      #smgc-{{ section.id }}{
-        --cardW: 280px;
-      }
+      #smfc-{{ section.id }}{ --cardW: 280px; }
+      #smfc-{{ section.id }} .smfc__nav{ top: 10px; right: 10px; }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smgc-{{ section.id }} *{
+      #smfc-{{ section.id }} *{
         transition: none !important;
         animation: none !important;
         scroll-behavior: auto !important;
@@ -389,43 +342,63 @@
     }
   </style>
 
-  <div class="smgc__wrap">
-    <div class="smgc__top">
-      <p class="smgc__title">Werkstatt Beispiele</p>
-      <div class="smgc__nav" aria-label="Navigation">
-        <button class="smgc__navbtn" type="button" data-smgc-prev aria-label="Vorheriges">‹</button>
-        <button class="smgc__navbtn" type="button" data-smgc-next aria-label="Nächstes">›</button>
-      </div>
+  <div class="smfc__wrap">
+    <div class="smfc__nav" aria-label="Navigation">
+      <button class="smfc__navbtn" type="button" data-smfc-prev aria-label="Vorheriges">‹</button>
+      <button class="smfc__navbtn" type="button" data-smfc-next aria-label="Nächstes">›</button>
     </div>
 
-    <div class="smgc__viewport">
-      <div class="smgc__track" data-smgc-track>
+    <div class="smfc__viewport">
+      <div class="smfc__track" data-smfc-track>
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
-            <article class="smgc__card" data-smgc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
-              <div class="smgc__frame">
+            <article class="smfc__card" data-smfc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              <div class="smfc__frame">
+                {% liquid
+                  assign base = block.settings.base_image
+                  assign over = block.settings.overlay_image
+
+                  if base == blank
+                    if forloop.index0 == 0
+                      assign base = 'Werkstatt-Hero-1' | file_url
+                    elsif forloop.index0 == 1
+                      assign base = 'Werkstatt-Hero-2-First' | file_url
+                    endif
+                  endif
+
+                  if over == blank
+                    if forloop.index0 == 0
+                      assign over = 'Werkstatt-Hero-1-Overlay' | file_url
+                    elsif forloop.index0 == 1
+                      assign over = 'Werkstatt-Hero-2-Overlay' | file_url
+                    endif
+                  endif
+                %}
+
                 {% if block.settings.base_image != blank %}
-                  <img class="smgc__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                  <img class="smfc__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                {% elsif base != blank %}
+                  <img class="smfc__img" src="{{ base }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <div class="smgc__img" aria-hidden="true"></div>
+                  <img class="smfc__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
                 {% if block.settings.overlay_image != blank %}
-                  <img class="smgc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smfc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                {% elsif over != blank %}
+                  <img class="smfc__overlay" src="{{ over }}" alt="" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <div class="smgc__overlay" aria-hidden="true"></div>
+                  <img class="smfc__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
                 <button
                   type="button"
-                  class="smgc__toggle"
-                  data-smgc-toggle
-                  data-label-off="{{ block.settings.btn_off | escape }}"
-                  data-label-on="{{ block.settings.btn_on | escape }}"
+                  class="smfc__toggle"
+                  data-smfc-toggle
                   aria-pressed="false"
                 >
-                  <span class="smgc__pillDot" aria-hidden="true"></span>
-                  <span class="smgc__toggleText">{{ block.settings.btn_off | escape }}</span>
+                  <span class="smfc__pillDot" aria-hidden="true"></span>
+                  <span class="smfc__toggleText">Verwandeln</span>
                 </button>
               </div>
             </article>
@@ -434,25 +407,22 @@
       </div>
     </div>
 
-    <div class="smgc__promptWrap" aria-label="Prompt">
-      <div class="smgc__prompt" data-smgc-prompt></div>
+    <div class="smfc__promptWrap" aria-label="Prompt">
+      <div class="smfc__prompt" data-smfc-prompt></div>
     </div>
-
-    <div class="smgc__dots" data-smgc-dots aria-label="Punkte"></div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var root = document.getElementById("smgc-" + SECTION_ID);
+      var root = document.getElementById("smfc-" + SECTION_ID);
       if(!root) return;
 
-      var track = root.querySelector("[data-smgc-track]");
-      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smgc-card]"));
-      var prev = root.querySelector("[data-smgc-prev]");
-      var next = root.querySelector("[data-smgc-next]");
-      var promptEl = root.querySelector("[data-smgc-prompt]");
-      var dotsWrap = root.querySelector("[data-smgc-dots]");
+      var track = root.querySelector("[data-smfc-track]");
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smfc-card]"));
+      var prev = root.querySelector("[data-smfc-prev]");
+      var next = root.querySelector("[data-smfc-next]");
+      var promptEl = root.querySelector("[data-smfc-prompt]");
 
       if(!track || !cards.length) return;
 
@@ -485,8 +455,7 @@
       function setPromptFromIndex(idx){
         if(!promptEl) return;
         idx = clamp(idx, 0, cards.length - 1);
-        var p = cards[idx].getAttribute("data-prompt") || "";
-        promptEl.textContent = p;
+        promptEl.textContent = cards[idx].getAttribute("data-prompt") || "";
       }
 
       function setActive(idx){
@@ -498,14 +467,6 @@
 
         var showIdx = (hoverIdx !== null) ? hoverIdx : idx;
         setPromptFromIndex(showIdx);
-
-        if(dotsWrap){
-          var dots = dotsWrap.querySelectorAll(".smgc__dot");
-          for(var j=0;j<dots.length;j++){
-            if(j === idx) dots[j].classList.add("is-active");
-            else dots[j].classList.remove("is-active");
-          }
-        }
       }
 
       function scrollToIndex(idx){
@@ -517,24 +478,6 @@
       function step(dir){
         var idx = getActiveIndex();
         scrollToIndex(idx + dir);
-      }
-
-      function buildDots(){
-        if(!dotsWrap) return;
-        dotsWrap.innerHTML = "";
-        for(var i=0;i<cards.length;i++){
-          var b = document.createElement("button");
-          b.type = "button";
-          b.className = "smgc__dot" + (i === 0 ? " is-active" : "");
-          b.setAttribute("aria-label", "Gehe zu Slide " + (i + 1));
-          (function(index){
-            b.addEventListener("click", function(){
-              stopAutoplay();
-              scrollToIndex(index);
-            });
-          })(i);
-          dotsWrap.appendChild(b);
-        }
       }
 
       function startAutoplay(){
@@ -563,7 +506,6 @@
         track.addEventListener("pointerdown", function(){ isPointerDown = true; stopAutoplay(); }, { passive: true });
         window.addEventListener("pointerup", function(){ isPointerDown = false; startAutoplay(); }, { passive: true });
 
-        // Hover to preview prompt without changing active slide
         cards.forEach(function(card, idx){
           card.addEventListener("mouseenter", function(){
             hoverIdx = idx;
@@ -574,25 +516,24 @@
             setPromptFromIndex(getActiveIndex());
           });
 
-          // Tap card to center it on mobile
+          // Tap card to center it
           card.addEventListener("click", function(e){
             var target = e.target;
-            if(target && target.closest && target.closest("[data-smgc-toggle]")) return;
+            if(target && target.closest && target.closest("[data-smfc-toggle]")) return;
             stopAutoplay();
             scrollToIndex(idx);
           });
         });
 
-        // Toggle only affects that card, overlay fades by CSS (2s)
-        root.querySelectorAll("[data-smgc-toggle]").forEach(function(btn){
+        // Toggle overlay with 2s fade (CSS), only changes that card
+        root.querySelectorAll("[data-smfc-toggle]").forEach(function(btn){
           btn.addEventListener("click", function(e){
             e.preventDefault();
             e.stopPropagation();
 
-            var card = btn.closest("[data-smgc-card]");
+            var card = btn.closest("[data-smfc-card]");
             if(!card) return;
 
-            // If user clicks toggle on a non-active card, center it first for "focus selected" feel
             var idx = parseInt(card.getAttribute("data-index") || "0", 10);
             if(!card.classList.contains("is-active")){
               stopAutoplay();
@@ -601,16 +542,12 @@
 
             var isOn = card.classList.toggle("is-on");
             btn.setAttribute("aria-pressed", isOn ? "true" : "false");
-
-            var off = btn.getAttribute("data-label-off") || "In Schild verwandeln";
-            var on = btn.getAttribute("data-label-on") || "Zurück";
-            var t = btn.querySelector(".smgc__toggleText");
-            if(t) t.textContent = isOn ? on : off;
+            var t = btn.querySelector(".smfc__toggleText");
+            if(t) t.textContent = isOn ? "Zurück" : "Verwandeln";
           });
         });
       }
 
-      buildDots();
       bind();
       setActive(0);
       startAutoplay();
