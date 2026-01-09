@@ -52,6 +52,14 @@
             "prompt": "Beispiel Prompt"
           }
         },
+        "slide_RWQfby": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/download_02089dc5-227a-4851-8559-3f42fe437f45.jpg",
+            "overlay_image": "shopify://shop_images/download_d3dd76e9-e62e-4d09-8d3b-6f44c98339ee.jpg",
+            "prompt": "Beispiel Prompt"
+          }
+        },
         "slide_9DaD7j": {
           "type": "slide",
           "settings": {
@@ -67,6 +75,7 @@
         "slide_xeKJbk",
         "slide_xpwLCB",
         "slide_fAmNE9",
+        "slide_RWQfby",
         "slide_9DaD7j"
       ],
       "name": "Werkstatt Hero Section",
