@@ -80,20 +80,20 @@
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
       "blocks": {
-        "slide_bCMMg3": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
-            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
-          }
-        },
         "slide_V4mdEE": {
           "type": "slide",
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
             "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
+          }
+        },
+        "slide_bCMMg3": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
+            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
           }
         },
         "slide_xeKJbk": {
@@ -138,8 +138,8 @@
         }
       },
       "block_order": [
-        "slide_bCMMg3",
         "slide_V4mdEE",
+        "slide_bCMMg3",
         "slide_xeKJbk",
         "slide_xpwLCB",
         "slide_fAmNE9",
