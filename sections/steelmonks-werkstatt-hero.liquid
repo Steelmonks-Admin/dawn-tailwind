@@ -1,9 +1,10 @@
 {% comment %}
   Werkstatt Carousel (FINAL)
-  - Mobile layout kept (original card sizing)
-  - FIX: left arrow navigation now works (capture-phase handlers + no preventDefault + proper :active transforms)
-  - No layout shift from Beschreibung: min-height is set to tallest prompt across slides (measured on load + resize)
-  - Schema: padding top/bottom + editable Beschreibung heading
+  FIX:
+  - Arrows were skipping because multiple events fired per tap (pointerup + touchend + click).
+  - Now we de-dupe navigation and block the synthetic click after touch/pointer navigation.
+  - Beschreibung keeps a fixed min-height equal to the tallest prompt across slides (no layout shift).
+  - Mobile layout unchanged.
 {% endcomment %}
 
 {% schema %}
@@ -68,7 +69,6 @@
       --fade: 2000ms;
       --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      /* keep mobile sizing from the “good” version */
       --cardSize: clamp(240px, 62vw, 460px);
       --stageH: clamp(330px, 72vw, 560px);
 
@@ -95,7 +95,6 @@
       user-select: none;
     }
 
-    /* Cards layer */
     #smwc-final-{{ section.id }} .smwc2__cards{
       position: absolute;
       inset: 0;
@@ -105,7 +104,6 @@
       z-index: 1;
     }
 
-    /* Arrows */
     #smwc-final-{{ section.id }} .smwc2__navbtn{
       position: absolute;
       top: 50%;
@@ -120,7 +118,6 @@
       cursor: pointer;
       display: grid;
       place-items: center;
-      color: rgba(9,10,12,0.78);
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       z-index: 9999;
@@ -155,7 +152,6 @@
       transform: translate(0, -50%);
     }
 
-    /* keep correct transform on press (don’t override translate) */
     #smwc-final-{{ section.id }} .smwc2__navbtn--prev:active{ transform: translate(-100%, -50%) scale(0.98); }
     #smwc-final-{{ section.id }} .smwc2__navbtn--next:active{ transform: translate(0, -50%) scale(0.98); }
 
@@ -246,7 +242,6 @@
     #smwc-final-{{ section.id }} .smwc2__card.is-on .smwc2__overlay{ opacity: 1; }
     #smwc-final-{{ section.id }} .smwc2__card.is-on .smwc2__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
 
-    /* Button bottom center */
     #smwc-final-{{ section.id }} .smwc2__toggle{
       position: absolute;
       left: 50%;
@@ -283,9 +278,6 @@
       pointer-events: auto;
     }
 
-    #smwc-final-{{ section.id }} .smwc2__toggle:active{ transform: translateX(-50%) scale(0.99); }
-    #smwc-final-{{ section.id }} .smwc2__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
-
     #smwc-final-{{ section.id }} .smwc2__pillDot{
       width: 10px;
       height: 10px;
@@ -301,7 +293,6 @@
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
     }
 
-    /* Beschreibung */
     #smwc-final-{{ section.id }} .smwc2__desc{
       margin-top: 10px;
       display: grid;
@@ -336,14 +327,11 @@
       font-size: clamp(13px, 3.6vw, 16px);
       line-height: 1.35;
 
-      display: block;
-      overflow: visible;
       white-space: normal;
       overflow-wrap: anywhere;
       word-break: break-word;
       hyphens: auto;
 
-      /* no shift: JS sets min-height to max prompt height */
       min-height: var(--promptMinH, auto);
 
       transform: translateY(8px);
@@ -351,7 +339,6 @@
       transition: opacity 240ms ease, transform 240ms var(--ease);
     }
 
-    /* Hidden measurer (same typography + padding) */
     #smwc-final-{{ section.id }} .smwc2__measure{
       position: absolute !important;
       left: -9999px !important;
@@ -378,13 +365,8 @@
     }
 
     @media (max-width: 520px){
-      #smwc-final-{{ section.id }}{
-        --navOffset: 230px;
-      }
-      #smwc-final-{{ section.id }} .smwc2__navbtn{
-        width: 44px;
-        height: 44px;
-      }
+      #smwc-final-{{ section.id }}{ --navOffset: 230px; }
+      #smwc-final-{{ section.id }} .smwc2__navbtn{ width: 44px; height: 44px; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -516,7 +498,6 @@
       function computeMaxPromptHeight(){
         if(!promptEl || !measureEl) return;
 
-        // match width to the real prompt box
         var w = Math.max(240, Math.floor(promptEl.getBoundingClientRect().width || 0));
         measureEl.style.width = w + "px";
 
@@ -524,7 +505,6 @@
         for(var i=0;i<cards.length;i++){
           var txt = cards[i].getAttribute("data-prompt") || "";
           measureEl.textContent = txt;
-          // force reflow read
           var h = Math.ceil(measureEl.scrollHeight || 0);
           if(h > maxH) maxH = h;
         }
@@ -604,27 +584,52 @@
       function bindNav(btn, dir){
         if(!btn) return;
 
-        // Capture-phase to beat any theme handlers
-        var fire = function(e){
+        var lastNavAt = 0;
+
+        function navOnce(e){
+          var now = Date.now();
+
+          if(e && e.type === "click" && btn.__blockClickUntil && now < btn.__blockClickUntil){
+            if(e.preventDefault) e.preventDefault();
+            if(e.stopPropagation) e.stopPropagation();
+            return;
+          }
+
+          if(now - lastNavAt < 240) {
+            if(e && e.stopPropagation) e.stopPropagation();
+            return;
+          }
+          lastNavAt = now;
+
+          if(e && e.type !== "click"){
+            btn.__blockClickUntil = now + 500;
+          }
+
           if(e && e.stopPropagation) e.stopPropagation();
+
           isInteracting = false;
           stopAutoplay();
           go(dir);
           startAutoplay();
-        };
+        }
 
-        // Important: do NOT preventDefault (can suppress click on iOS in some cases)
-        btn.addEventListener("pointerdown", function(e){ if(e && e.stopPropagation) e.stopPropagation(); }, true);
-        btn.addEventListener("click", fire, true);
-        btn.addEventListener("pointerup", fire, true);
-        btn.addEventListener("touchend", fire, true);
+        btn.addEventListener("pointerdown", function(e){
+          if(e && e.stopPropagation) e.stopPropagation();
+        }, true);
+
+        btn.addEventListener("pointerup", navOnce, true);
+        btn.addEventListener("click", navOnce, true);
+
+        btn.addEventListener("touchend", function(e){
+          if(e && e.preventDefault) e.preventDefault();
+          navOnce(e);
+        }, { passive: false, capture: true });
       }
 
       function bind(){
         bindNav(prev, -1);
         bindNav(next,  1);
 
-        // swipe (ignore arrow taps)
         var startX = 0;
         var dx = 0;
 
@@ -650,7 +655,6 @@
           startAutoplay();
         }, { passive: true });
 
-        // toggle overlay
         root.querySelectorAll("[data-smwc-toggle]").forEach(function(btn){
           btn.addEventListener("click", function(e){
             e.preventDefault();
@@ -674,7 +678,6 @@
           });
         });
 
-        // keyboard
         root.addEventListener("keydown", function(e){
           if(e.key === "ArrowLeft"){ stopAutoplay(); go(-1); startAutoplay(); }
           if(e.key === "ArrowRight"){ stopAutoplay(); go(1); startAutoplay(); }
@@ -690,7 +693,6 @@
       bind();
       render();
 
-      // compute prompt max height after first paint + fonts
       requestAnimationFrame(function(){
         computeMaxPromptHeight();
       });
