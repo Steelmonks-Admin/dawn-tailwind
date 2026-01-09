@@ -9,6 +9,42 @@
  */
 {
   "sections": {
+    "blocks_nMQt6z": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_b5331c5_JkHywU": {
+          "type": "ai_gen_block_b5331c5",
+          "settings": {
+            "icon_1": "shopify://shop_images/461f6e77-d4de-4c09-81cd-e6483a180c49_clipped_rev_1.png",
+            "text_1": "Wetterfest & langlebig",
+            "icon_2": "shopify://shop_images/bf139964-1b70-4ff1-bf8b-f10e8a3db6f0_clipped_rev_1.png",
+            "text_2": "Jedes Schild ein Unikat",
+            "icon_3": "shopify://shop_images/ae50845a-089a-4c71-8e99-50610412f49f_clipped_rev_1.png",
+            "text_3": "10.000+ 5 Sterne Bewertungen",
+            "icon_4": "shopify://shop_images/8f808c0d-6f77-49c6-8a1a-b1113946e5c9_clipped_rev_1_1.png",
+            "text_4": "Größe, Farbe & Design nach Wunsch",
+            "desktop_columns": "4",
+            "mobile_columns": "2",
+            "desktop_width_percent": 100,
+            "gap": 24,
+            "icon_text_gap": 12,
+            "icon_size": 40,
+            "text_size": 14,
+            "text_color": "#090a0c",
+            "background_color": "#fafaff",
+            "border_radius": 6,
+            "padding_vertical": 24,
+            "padding_horizontal": 24
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_b5331c5_JkHywU"
+      ],
+      "name": "Icon USPs",
+      "settings": {}
+    },
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
       "blocks": {
@@ -80,6 +116,9 @@
       ],
       "name": "Werkstatt Hero Section",
       "settings": {
+        "top_spacing": 18,
+        "bottom_spacing": 18,
+        "desc_heading": "Beschreibung",
         "autoplay": true,
         "autoplay_seconds": 6
       }
@@ -88,6 +127,26 @@
       "type": "steelmonks-sign-creator",
       "name": "Werkstatt (Sign Creator)",
       "settings": {}
+    },
+    "steelmonks_announcement_9wcjnF": {
+      "type": "steelmonks-announcement",
+      "blocks": {
+        "announcement_PeCt8F": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>📯 100% Glücksgarantie</p>",
+            "font_weight": 600
+          }
+        }
+      },
+      "block_order": [
+        "announcement_PeCt8F"
+      ],
+      "name": "Custom Announcement Bar",
+      "settings": {
+        "background_color": "#0044cc",
+        "text_color": "#fafaff"
+      }
     },
     "steelmonks_horizontal_dropdowns_mFUgm3": {
       "type": "steelmonks-horizontal-dropdowns",
@@ -401,29 +460,10 @@
         "padding_left": 24,
         "padding_right": 24
       }
-    },
-    "steelmonks_announcement_9wcjnF": {
-      "type": "steelmonks-announcement",
-      "blocks": {
-        "announcement_PeCt8F": {
-          "type": "announcement",
-          "settings": {
-            "text": "<p>📯 100% Glücksgarantie</p>",
-            "font_weight": 600
-          }
-        }
-      },
-      "block_order": [
-        "announcement_PeCt8F"
-      ],
-      "name": "Custom Announcement Bar",
-      "settings": {
-        "background_color": "#0044cc",
-        "text_color": "#fafaff"
-      }
     }
   },
   "order": [
+    "blocks_nMQt6z",
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "steelmonks_sign_creator_FKYF46",
     "steelmonks_announcement_9wcjnF",
