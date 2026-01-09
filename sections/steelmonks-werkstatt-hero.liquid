@@ -1,9 +1,9 @@
 {% comment %}
-  Werkstatt Carousel
-  Mobile layout reverted (cardSize + stageH like the previous good version)
-  Added schema: padding top/bottom + editable Beschreibung heading
-  Fixed: left arrow navigation (selectors consistent, higher z-index, stops pointer bubbling, swipe ignores arrow taps)
-  Beschreibung text never cut off (no clamp, wraps fully)
+  Werkstatt Carousel (FINAL)
+  - Mobile layout kept (original card sizing)
+  - FIX: left arrow navigation now works (capture-phase handlers + no preventDefault + proper :active transforms)
+  - No layout shift from Beschreibung: min-height is set to tallest prompt across slides (measured on load + resize)
+  - Schema: padding top/bottom + editable Beschreibung heading
 {% endcomment %}
 
 {% schema %}
@@ -13,9 +13,7 @@
   "settings": [
     { "type": "range", "id": "top_spacing", "label": "Abstand oben", "default": 18, "min": 0, "max": 160, "step": 2 },
     { "type": "range", "id": "bottom_spacing", "label": "Abstand unten", "default": 18, "min": 0, "max": 160, "step": 2 },
-
     { "type": "text", "id": "desc_heading", "label": "Beschreibung Überschrift", "default": "Beschreibung" },
-
     { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
     { "type": "range", "id": "autoplay_seconds", "label": "Autoplay Sekunden", "default": 6, "min": 3, "max": 12, "step": 1 }
   ],
@@ -70,7 +68,7 @@
       --fade: 2000ms;
       --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      /* reverted sizing (previous version) */
+      /* keep mobile sizing from the “good” version */
       --cardSize: clamp(240px, 62vw, 460px);
       --stageH: clamp(330px, 72vw, 560px);
 
@@ -97,6 +95,16 @@
       user-select: none;
     }
 
+    /* Cards layer */
+    #smwc-final-{{ section.id }} .smwc2__cards{
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      pointer-events: none;
+      perspective: 1100px;
+      z-index: 1;
+    }
+
     /* Arrows */
     #smwc-final-{{ section.id }} .smwc2__navbtn{
       position: absolute;
@@ -115,10 +123,10 @@
       color: rgba(9,10,12,0.78);
       -webkit-tap-highlight-color: transparent;
       user-select: none;
-      z-index: 9999; /* always above the active card */
+      z-index: 9999;
       pointer-events: auto;
       touch-action: manipulation;
-      transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
+      transition: filter 180ms ease, background 180ms ease, transform 180ms var(--ease);
     }
 
     #smwc-final-{{ section.id }} .smwc2__navbtn svg{
@@ -132,8 +140,11 @@
       filter: brightness(1.03);
       background: rgba(255,255,255,0.14);
     }
-    #smwc-final-{{ section.id }} .smwc2__navbtn:active{ transform: translateY(-50%) scale(0.98); }
-    #smwc-final-{{ section.id }} .smwc2__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
+
+    #smwc-final-{{ section.id }} .smwc2__navbtn:focus-visible{
+      outline: 3px solid rgba(0,68,204,0.35);
+      outline-offset: 2px;
+    }
 
     #smwc-final-{{ section.id }} .smwc2__navbtn--prev{
       left: calc(50% - var(--navOffset));
@@ -144,15 +155,9 @@
       transform: translate(0, -50%);
     }
 
-    /* Cards layer */
-    #smwc-final-{{ section.id }} .smwc2__cards{
-      position: absolute;
-      inset: 0;
-      overflow: visible;
-      pointer-events: none;
-      perspective: 1100px;
-      z-index: 1;
-    }
+    /* keep correct transform on press (don’t override translate) */
+    #smwc-final-{{ section.id }} .smwc2__navbtn--prev:active{ transform: translate(-100%, -50%) scale(0.98); }
+    #smwc-final-{{ section.id }} .smwc2__navbtn--next:active{ transform: translate(0, -50%) scale(0.98); }
 
     #smwc-final-{{ section.id }} .smwc2__card{
       position: absolute;
@@ -165,7 +170,6 @@
       opacity: 0;
       pointer-events: none;
       isolation: isolate;
-
       will-change: transform, opacity, filter;
       transition:
         transform 760ms var(--ease),
@@ -173,7 +177,6 @@
         filter 620ms ease;
     }
 
-    /* Outline glow */
     #smwc-final-{{ section.id }} .smwc2__card:before{
       content:"";
       position:absolute;
@@ -333,7 +336,6 @@
       font-size: clamp(13px, 3.6vw, 16px);
       line-height: 1.35;
 
-      /* never cut off */
       display: block;
       overflow: visible;
       white-space: normal;
@@ -341,9 +343,24 @@
       word-break: break-word;
       hyphens: auto;
 
+      /* no shift: JS sets min-height to max prompt height */
+      min-height: var(--promptMinH, auto);
+
       transform: translateY(8px);
       opacity: 0;
       transition: opacity 240ms ease, transform 240ms var(--ease);
+    }
+
+    /* Hidden measurer (same typography + padding) */
+    #smwc-final-{{ section.id }} .smwc2__measure{
+      position: absolute !important;
+      left: -9999px !important;
+      top: 0 !important;
+      visibility: hidden !important;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: none !important;
+      height: auto !important;
     }
 
     @media (hover:hover){
@@ -353,7 +370,6 @@
         transform: translateY(0);
       }
     }
-
     @media (hover:none){
       #smwc-final-{{ section.id }} .smwc2__descText{
         opacity: 1;
@@ -446,6 +462,7 @@
     <div class="smwc2__desc" aria-label="Beschreibung">
       <p class="smwc2__descHead">{{ section.settings.desc_heading | default: "Beschreibung" | escape }}</p>
       <div class="smwc2__descText" data-smwc-prompt></div>
+      <div class="smwc2__descText smwc2__measure" data-smwc-measure aria-hidden="true"></div>
     </div>
   </div>
 
@@ -459,6 +476,7 @@
       var prev = root.querySelector("[data-smwc-prev]");
       var next = root.querySelector("[data-smwc-next]");
       var promptEl = root.querySelector("[data-smwc-prompt]");
+      var measureEl = root.querySelector("[data-smwc-measure]");
       if(!cards.length) return;
 
       var autoplay = {{ section.settings.autoplay | json }};
@@ -492,7 +510,29 @@
         var navOffset = (cs / 2) + Math.min(190, Math.max(120, w * 0.11));
         root.style.setProperty("--navOffset", navOffset + "px");
 
-        return { cs: cs, rx: rx, ry: ry };
+        return { rx: rx, ry: ry };
+      }
+
+      function computeMaxPromptHeight(){
+        if(!promptEl || !measureEl) return;
+
+        // match width to the real prompt box
+        var w = Math.max(240, Math.floor(promptEl.getBoundingClientRect().width || 0));
+        measureEl.style.width = w + "px";
+
+        var maxH = 0;
+        for(var i=0;i<cards.length;i++){
+          var txt = cards[i].getAttribute("data-prompt") || "";
+          measureEl.textContent = txt;
+          // force reflow read
+          var h = Math.ceil(measureEl.scrollHeight || 0);
+          if(h > maxH) maxH = h;
+        }
+
+        if(maxH > 0){
+          promptEl.style.minHeight = maxH + "px";
+          root.style.setProperty("--promptMinH", maxH + "px");
+        }
       }
 
       function render(){
@@ -561,36 +601,30 @@
         }, autoplayMs);
       }
 
-      function stopPointer(e){
-        if(!e) return;
-        e.preventDefault();
-        e.stopPropagation();
+      function bindNav(btn, dir){
+        if(!btn) return;
+
+        // Capture-phase to beat any theme handlers
+        var fire = function(e){
+          if(e && e.stopPropagation) e.stopPropagation();
+          isInteracting = false;
+          stopAutoplay();
+          go(dir);
+          startAutoplay();
+        };
+
+        // Important: do NOT preventDefault (can suppress click on iOS in some cases)
+        btn.addEventListener("pointerdown", function(e){ if(e && e.stopPropagation) e.stopPropagation(); }, true);
+        btn.addEventListener("click", fire, true);
+        btn.addEventListener("pointerup", fire, true);
+        btn.addEventListener("touchend", fire, true);
       }
 
       function bind(){
-        if(prev){
-          prev.addEventListener("pointerdown", stopPointer, { passive: false });
-          prev.addEventListener("click", function(e){
-            stopPointer(e);
-            isInteracting = false;
-            stopAutoplay();
-            go(-1);
-            startAutoplay();
-          }, { passive: false });
-        }
+        bindNav(prev, -1);
+        bindNav(next,  1);
 
-        if(next){
-          next.addEventListener("pointerdown", stopPointer, { passive: false });
-          next.addEventListener("click", function(e){
-            stopPointer(e);
-            isInteracting = false;
-            stopAutoplay();
-            go(1);
-            startAutoplay();
-          }, { passive: false });
-        }
-
-        // swipe (ignore arrow taps completely)
+        // swipe (ignore arrow taps)
         var startX = 0;
         var dx = 0;
 
@@ -646,12 +680,24 @@
           if(e.key === "ArrowRight"){ stopAutoplay(); go(1); startAutoplay(); }
         });
 
-        var ro = new ResizeObserver(function(){ render(); });
+        var ro = new ResizeObserver(function(){
+          render();
+          computeMaxPromptHeight();
+        });
         ro.observe(root);
       }
 
       bind();
       render();
+
+      // compute prompt max height after first paint + fonts
+      requestAnimationFrame(function(){
+        computeMaxPromptHeight();
+      });
+      if(document.fonts && document.fonts.ready){
+        document.fonts.ready.then(function(){ computeMaxPromptHeight(); });
+      }
+
       startAutoplay();
 
       document.addEventListener("shopify:section:load", function(e){
@@ -659,6 +705,7 @@
         if(String(e.detail.sectionId) !== String(SECTION_ID)) return;
         stopAutoplay();
         render();
+        computeMaxPromptHeight();
         startAutoplay();
       });
     })();
