@@ -1,6 +1,1007 @@
+{% doc %}
+  @prompt
+    Creat me an image slider with headline and subheadline text underneath for each image. Add an editable Arrow on the sides to moves images. Place the arrows at the middle of the image and add a setting for automatic scolling after a set time. Make the images fill the screen width. I want to be able to upload seperate images for Desktop and Mobile. It should fill out the screen on desktop and mobile.  Center the text on mobile and desktop. Give me editable padding around the text. Make sure the image is fully contained in the frame., make sure that the slide hight is consistent with the first slide. the images should be fully contained within the frame of the slider and each arrow click should move an entire slide. Make it pixel perfect. Make sure that there is no added background color under the images or text. Make the amount of slides editable, so i can choose myself how many slides there are, Make the text editable as in Titel text or heading with all settings. Make all spaces between the text editable. For mobile and separately for desktop. Only show the slide options for the amount of slides, selecting in the amount setting , Each click on the arrows should move one slide on both formats. The slide height should be adapted to the image on both mobile and desktop., align the arrows in the horizontal center of the image.., the image height should always be adapted to the selected image on both formats. The image should never be cut off. The arrows should always be centered on the image. I want to be able to upload different formats for desktop and mobile, the slide height should be adapted to the format of the first image on both mobile and desktop. This is very important , the Formating works correctly. There is an issue when uploading one image for mobile and desktop. The desktop image gets used on mobile as well. This should not be the case, the formating should be the same for all slides. The size should be adapted to the first image uploaded for both mobile and desktop seperately. Right now it seems to be working for desktop but not for mobile. The images are getting cut off on mobile, the formatting does not work yet for mobile. Please fix the issue so that the format on mobile also gets adapted by the first image uploaded to the mobile placeholder, on mobile, it uses the image from the desktop section and does not make it fit. Please fix this issue, the formatting does not work correctly on mobile. it used the desktop image for mobile which should not happen. fix this issue
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-slider-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-slider-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-slider-track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .ai-slider-slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-slider-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-slider-image-wrapper-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .ai-slider-image-desktop-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-slider-image-mobile-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-slider-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-slider-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-slider-text-container-{{ ai_gen_id }} {
+    text-align: center;
+    padding-top: {{ block.settings.text_padding_top_desktop }}px;
+    padding-bottom: {{ block.settings.text_padding_bottom_desktop }}px;
+    padding-left: {{ block.settings.text_padding_horizontal_desktop }}px;
+    padding-right: {{ block.settings.text_padding_horizontal_desktop }}px;
+  }
+
+  .ai-slider-heading-{{ ai_gen_id }} {
+    margin: 0 0 {{ block.settings.heading_subheading_gap_desktop }}px 0;
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    color: {{ block.settings.heading_color }};
+    line-height: 1.2;
+  }
+
+  .ai-slider-subheading-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.subheading_size_desktop }}px;
+    font-weight: {{ block.settings.subheading_weight }};
+    color: {{ block.settings.subheading_color }};
+    line-height: 1.4;
+  }
+
+  .ai-slider-arrow-{{ ai_gen_id }} {
+    position: absolute;
+    background-color: {{ block.settings.arrow_background_color }};
+    color: {{ block.settings.arrow_icon_color }};
+    border: none;
+    width: {{ block.settings.arrow_size }}px;
+    height: {{ block.settings.arrow_size }}px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+    top: 0;
+    transform: translateY(0);
+  }
+
+  .ai-slider-arrow-{{ ai_gen_id }}:hover {
+    opacity: 0.8;
+  }
+
+  .ai-slider-arrow-prev-{{ ai_gen_id }} {
+    left: {{ block.settings.arrow_offset }}px;
+  }
+
+  .ai-slider-arrow-next-{{ ai_gen_id }} {
+    right: {{ block.settings.arrow_offset }}px;
+  }
+
+  .ai-slider-arrow-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.arrow_size }}px * 0.5);
+    height: calc({{ block.settings.arrow_size }}px * 0.5);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-slider-image-desktop-{{ ai_gen_id }} {
+      display: none !important;
+    }
+
+    .ai-slider-image-mobile-{{ ai_gen_id }} {
+      display: block !important;
+    }
+
+    .ai-slider-text-container-{{ ai_gen_id }} {
+      padding-top: {{ block.settings.text_padding_top_mobile }}px;
+      padding-bottom: {{ block.settings.text_padding_bottom_mobile }}px;
+      padding-left: {{ block.settings.text_padding_horizontal_mobile }}px;
+      padding-right: {{ block.settings.text_padding_horizontal_mobile }}px;
+    }
+
+    .ai-slider-heading-{{ ai_gen_id }} {
+      margin-bottom: {{ block.settings.heading_subheading_gap_mobile }}px;
+      font-size: {{ block.settings.heading_size_mobile }}px;
+    }
+
+    .ai-slider-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size_mobile }}px;
+    }
+
+    .ai-slider-arrow-{{ ai_gen_id }} {
+      width: {{ block.settings.arrow_size_mobile }}px;
+      height: {{ block.settings.arrow_size_mobile }}px;
+    }
+
+    .ai-slider-arrow-{{ ai_gen_id }} svg {
+      width: calc({{ block.settings.arrow_size_mobile }}px * 0.5);
+      height: calc({{ block.settings.arrow_size_mobile }}px * 0.5);
+    }
+
+    .ai-slider-arrow-prev-{{ ai_gen_id }} {
+      left: {{ block.settings.arrow_offset_mobile }}px;
+    }
+
+    .ai-slider-arrow-next-{{ ai_gen_id }} {
+      right: {{ block.settings.arrow_offset_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<image-slider-{{ ai_gen_id }}
+  class="ai-slider-{{ ai_gen_id }}"
+  data-autoplay="{{ block.settings.autoplay_enabled }}"
+  data-autoplay-speed="{{ block.settings.autoplay_speed }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-slider-container-{{ ai_gen_id }}">
+    <div class="ai-slider-track-{{ ai_gen_id }}">
+      {% for i in (1..block.settings.slide_count) %}
+        {% liquid
+          assign desktop_image_key = 'slide_' | append: i | append: '_image_desktop'
+          assign mobile_image_key = 'slide_' | append: i | append: '_image_mobile'
+          assign heading_key = 'slide_' | append: i | append: '_heading'
+          assign subheading_key = 'slide_' | append: i | append: '_subheading'
+
+          assign desktop_image = block.settings[desktop_image_key]
+          assign mobile_image = block.settings[mobile_image_key]
+          assign heading = block.settings[heading_key]
+          assign subheading = block.settings[subheading_key]
+        %}
+
+        <div class="ai-slider-slide-{{ ai_gen_id }}" data-slide-index="{{ forloop.index0 }}">
+          <div class="ai-slider-image-wrapper-{{ ai_gen_id }}">
+            {% if desktop_image or mobile_image %}
+              {% if desktop_image %}
+                <img
+                  class="ai-slider-image-desktop-{{ ai_gen_id }}"
+                  src="{{ desktop_image | image_url: width: 3000 }}"
+                  alt="{{ desktop_image.alt | escape }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  width="{{ desktop_image.width }}"
+                  height="{{ desktop_image.height }}"
+                  data-desktop-width="{{ desktop_image.width }}"
+                  data-desktop-height="{{ desktop_image.height }}"
+                  {% if forloop.first %}
+                    data-first-desktop="true"
+                  {% endif %}
+                >
+              {% endif %}
+              
+              {% if mobile_image %}
+                <img
+                  class="ai-slider-image-mobile-{{ ai_gen_id }}"
+                  src="{{ mobile_image | image_url: width: 1500 }}"
+                  alt="{{ mobile_image.alt | escape }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  width="{{ mobile_image.width }}"
+                  height="{{ mobile_image.height }}"
+                  data-mobile-width="{{ mobile_image.width }}"
+                  data-mobile-height="{{ mobile_image.height }}"
+                  {% if forloop.first %}
+                    data-first-mobile="true"
+                  {% endif %}
+                >
+              {% elsif desktop_image %}
+                <img
+                  class="ai-slider-image-mobile-{{ ai_gen_id }}"
+                  src="{{ desktop_image | image_url: width: 1500 }}"
+                  alt="{{ desktop_image.alt | escape }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  width="{{ desktop_image.width }}"
+                  height="{{ desktop_image.height }}"
+                  data-mobile-width="{{ desktop_image.width }}"
+                  data-mobile-height="{{ desktop_image.height }}"
+                  {% if forloop.first %}
+                    data-first-mobile-fallback="true"
+                  {% endif %}
+                >
+              {% endif %}
+            {% else %}
+              <div class="ai-slider-image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-slider-text-container-{{ ai_gen_id }}">
+            {% if heading != blank %}
+              <h2 class="ai-slider-heading-{{ ai_gen_id }}">{{ heading }}</h2>
+            {% endif %}
+            {% if subheading != blank %}
+              <p class="ai-slider-subheading-{{ ai_gen_id }}">{{ subheading }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button
+      class="ai-slider-arrow-{{ ai_gen_id }} ai-slider-arrow-prev-{{ ai_gen_id }}"
+      aria-label="Previous slide"
+      type="button"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <button
+      class="ai-slider-arrow-{{ ai_gen_id }} ai-slider-arrow-next-{{ ai_gen_id }}"
+      aria-label="Next slide"
+      type="button"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+</image-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+        this.isInitialized = false;
+        this.resizeTimeout = null;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-slider-track-{{ ai_gen_id }}');
+        this.slides = this.querySelectorAll('.ai-slider-slide-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-slider-arrow-prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-slider-arrow-next-{{ ai_gen_id }}');
+        this.totalSlides = this.slides.length;
+
+        this.autoplayEnabled = this.dataset.autoplay === 'true';
+        this.autoplaySpeed = parseInt(this.dataset.autoplaySpeed) * 1000;
+
+        this.setupEventListeners();
+        this.initializeSlider();
+
+        window.addEventListener('resize', () => {
+          clearTimeout(this.resizeTimeout);
+          this.resizeTimeout = setTimeout(() => {
+            this.setSlideHeights();
+            this.positionArrows();
+          }, 100);
+        });
+      }
+
+      initializeSlider() {
+        const firstSlide = this.slides[0];
+        if (!firstSlide) return;
+
+        const isMobile = window.innerWidth <= 749;
+        let firstImage;
+
+        if (isMobile) {
+          firstImage = firstSlide.querySelector('[data-first-mobile="true"]');
+          if (!firstImage) {
+            firstImage = firstSlide.querySelector('[data-first-mobile-fallback="true"]');
+          }
+        } else {
+          firstImage = firstSlide.querySelector('[data-first-desktop="true"]');
+        }
+
+        if (firstImage) {
+          if (firstImage.complete && firstImage.naturalWidth > 0) {
+            this.setSlideHeights();
+            this.updateSlidePosition();
+            this.positionArrows();
+            this.isInitialized = true;
+            
+            if (this.autoplayEnabled && this.totalSlides > 1) {
+              this.startAutoplay();
+            }
+          } else {
+            firstImage.addEventListener('load', () => {
+              this.setSlideHeights();
+              this.updateSlidePosition();
+              this.positionArrows();
+              this.isInitialized = true;
+              
+              if (this.autoplayEnabled && this.totalSlides > 1) {
+                this.startAutoplay();
+              }
+            });
+          }
+        } else {
+          this.setSlideHeights();
+          this.updateSlidePosition();
+          this.positionArrows();
+          this.isInitialized = true;
+          
+          if (this.autoplayEnabled && this.totalSlides > 1) {
+            this.startAutoplay();
+          }
+        }
+      }
+
+      setSlideHeights() {
+        const firstSlide = this.slides[0];
+        if (!firstSlide) return;
+
+        const isMobile = window.innerWidth <= 749;
+        let firstImage;
+
+        if (isMobile) {
+          firstImage = firstSlide.querySelector('[data-first-mobile="true"]');
+          if (!firstImage) {
+            firstImage = firstSlide.querySelector('[data-first-mobile-fallback="true"]');
+          }
+        } else {
+          firstImage = firstSlide.querySelector('[data-first-desktop="true"]');
+        }
+        
+        if (!firstImage) return;
+
+        let aspectRatio;
+        
+        if (isMobile) {
+          const mobileWidth = parseInt(firstImage.getAttribute('data-mobile-width'));
+          const mobileHeight = parseInt(firstImage.getAttribute('data-mobile-height'));
+          
+          if (mobileWidth && mobileHeight && mobileWidth > 0 && mobileHeight > 0) {
+            aspectRatio = mobileHeight / mobileWidth;
+          } else if (firstImage.naturalWidth > 0 && firstImage.naturalHeight > 0) {
+            aspectRatio = firstImage.naturalHeight / firstImage.naturalWidth;
+          } else {
+            return;
+          }
+        } else {
+          const desktopWidth = parseInt(firstImage.getAttribute('data-desktop-width'));
+          const desktopHeight = parseInt(firstImage.getAttribute('data-desktop-height'));
+          
+          if (desktopWidth && desktopHeight && desktopWidth > 0 && desktopHeight > 0) {
+            aspectRatio = desktopHeight / desktopWidth;
+          } else if (firstImage.naturalWidth > 0 && firstImage.naturalHeight > 0) {
+            aspectRatio = firstImage.naturalHeight / firstImage.naturalWidth;
+          } else {
+            return;
+          }
+        }
+
+        const containerWidth = this.offsetWidth;
+        const calculatedHeight = containerWidth * aspectRatio;
+
+        this.slides.forEach((slide) => {
+          const imageWrapper = slide.querySelector('.ai-slider-image-wrapper-{{ ai_gen_id }}');
+          if (imageWrapper) {
+            imageWrapper.style.height = calculatedHeight + 'px';
+          }
+        });
+      }
+
+      setupEventListeners() {
+        this.prevButton.addEventListener('click', () => {
+          this.goToPrevSlide();
+          if (this.autoplayEnabled) {
+            this.resetAutoplay();
+          }
+        });
+
+        this.nextButton.addEventListener('click', () => {
+          this.goToNextSlide();
+          if (this.autoplayEnabled) {
+            this.resetAutoplay();
+          }
+        });
+      }
+
+      goToPrevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.updateSlidePosition();
+        this.positionArrows();
+      }
+
+      goToNextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateSlidePosition();
+        this.positionArrows();
+      }
+
+      updateSlidePosition() {
+        const offset = -this.currentSlide * 100;
+        this.track.style.transform = 'translateX(' + offset + '%)';
+      }
+
+      positionArrows() {
+        const currentSlideElement = this.slides[this.currentSlide];
+        if (!currentSlideElement) return;
+
+        const imageWrapper = currentSlideElement.querySelector('.ai-slider-image-wrapper-{{ ai_gen_id }}');
+        if (!imageWrapper) return;
+
+        const imageHeight = imageWrapper.offsetHeight;
+        const arrowHeight = this.prevButton.offsetHeight;
+        const centerPosition = (imageHeight - arrowHeight) / 2;
+
+        this.prevButton.style.top = centerPosition + 'px';
+        this.nextButton.style.top = centerPosition + 'px';
+      }
+
+      startAutoplay() {
+        this.autoplayInterval = setInterval(() => {
+          this.goToNextSlide();
+        }, this.autoplaySpeed);
+      }
+
+      resetAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.startAutoplay();
+        }
+      }
+
+      disconnectedCallback() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+        }
+        if (this.resizeTimeout) {
+          clearTimeout(this.resizeTimeout);
+        }
+      }
+    }
+
+    customElements.define('image-slider-{{ ai_gen_id }}', ImageSlider{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Image slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "range",
+      "id": "slide_count",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Number of slides",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Arrow settings"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow size (desktop)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "arrow_size_mobile",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow size (mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "arrow_offset",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow offset from edge (desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "arrow_offset_mobile",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow offset from edge (mobile)",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "arrow_background_color",
+      "label": "Arrow background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow icon",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Text settings - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_desktop",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "heading_subheading_gap_desktop",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between heading and subheading",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "text_padding_top_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_padding_bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding left and right",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Text settings - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 14,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "heading_subheading_gap_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between heading and subheading",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "text_padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding left and right",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_heading",
+      "label": "Heading",
+      "default": "Slide 1 Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_subheading",
+      "label": "Subheading",
+      "default": "Slide 1 Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_heading",
+      "label": "Heading",
+      "default": "Slide 2 Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_subheading",
+      "label": "Subheading",
+      "default": "Slide 2 Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_heading",
+      "label": "Heading",
+      "default": "Slide 3 Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_subheading",
+      "label": "Subheading",
+      "default": "Slide 3 Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_4_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_4_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_4_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_4_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_5_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_5_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_5_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_5_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_6_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_6_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_6_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_6_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_7_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_7_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_7_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_7_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_8_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_8_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_8_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_8_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_9_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_9_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_9_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_9_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_10_image_desktop",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_10_image_mobile",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_10_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "slide_10_subheading",
+      "label": "Subheading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image slider"
+    }
+  ]
+}
 {% endschema %}
