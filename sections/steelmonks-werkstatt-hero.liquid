@@ -1,9 +1,8 @@
 {% comment %}
-  Werkstatt Carousel (final polish)
-  - Arrows pushed further out so they sit above the unselected stack, not on top of the main card
-  - Unselected cards: smaller, more spread, more blurred + lower opacity to reduce chaos
-  - Main card stays crisp, bigger, with button + prompt
-  - No hover transforms (overlay remains pixel-perfect)
+  Werkstatt Carousel
+  - Fix: left arrow always works (buttons stop pointer bubbling + higher z-index)
+  - Mobile: Beschreibung text never cut off (no line-clamp, auto height, safe wrapping)
+  - Editable: padding top/bottom + Beschreibung heading text
 {% endcomment %}
 
 {% schema %}
@@ -11,6 +10,30 @@
   "name": "Werkstatt Carousel",
   "tag": "section",
   "settings": [
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Abstand oben",
+      "default": 18,
+      "min": 0,
+      "max": 160,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Abstand unten",
+      "default": 18,
+      "min": 0,
+      "max": 160,
+      "step": 2
+    },
+    {
+      "type": "text",
+      "id": "desc_heading",
+      "label": "Beschreibung Überschrift",
+      "default": "Beschreibung"
+    },
     { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
     { "type": "range", "id": "autoplay_seconds", "label": "Autoplay Sekunden", "default": 6, "min": 3, "max": 12, "step": 1 }
   ],
@@ -47,9 +70,14 @@
 }
 {% endschema %}
 
-<section id="smwc2-{{ section.id }}" class="smwc2" aria-label="Werkstatt Carousel">
+<section
+  id="smwc-final-{{ section.id }}"
+  class="smwcFinal"
+  aria-label="Werkstatt Carousel"
+  style="padding-top: {{ section.settings.top_spacing | default: 18 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 18 }}px;"
+>
   <style>
-    #smwc2-{{ section.id }}{
+    #smwc-final-{{ section.id }}{
       --a1:#ff9800;
       --a2:#0044CC;
 
@@ -60,34 +88,44 @@
       --fade: 2000ms;
       --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      --cardSize: clamp(240px, 62vw, 460px);
-      --stageH: clamp(330px, 72vw, 560px);
+      --cardSize: clamp(240px, 74vw, 460px);
+      --stageH: clamp(320px, 94vw, 560px);
 
-      --navOffset: 420px; /* further out (JS refines) */
+      --navOffset: 420px;
 
-      padding: clamp(10px, 2.6vw, 18px);
+      padding-left: clamp(12px, 3vw, 18px);
+      padding-right: clamp(12px, 3vw, 18px);
       overflow: visible;
     }
 
-    #smwc2-{{ section.id }} .smwc2__wrap{
+    #smwc-final-{{ section.id }} .smwcFinal__wrap{
       width: min(1440px, 100%);
       margin: 0 auto;
       overflow: visible;
       position: relative;
     }
 
-    #smwc2-{{ section.id }} .smwc2__stage{
+    #smwc-final-{{ section.id }} .smwcFinal__stage{
       position: relative;
       height: var(--stageH);
       overflow: visible;
       display: grid;
       place-items: center;
-      padding: 8px 0 10px;
+      padding: 10px 0 8px;
       touch-action: pan-y;
     }
 
-    /* Arrows (further outside, above background stack visually) */
-    #smwc2-{{ section.id }} .smwc2__navbtn{
+    /* Ensure nav is always above cards */
+    #smwc-final-{{ section.id }} .smwcFinal__cards{
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      pointer-events: none;
+      perspective: 1100px;
+      z-index: 1;
+    }
+
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn{
       position: absolute;
       top: 50%;
       width: 46px;
@@ -104,43 +142,42 @@
       color: rgba(9,10,12,0.78);
       -webkit-tap-highlight-color: transparent;
       user-select: none;
-      z-index: 120;
+      z-index: 9999;
       transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
     }
 
-    #smwc2-{{ section.id }} .smwc2__navbtn svg{
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn svg{
       width: 18px;
       height: 18px;
       display: block;
       color: rgba(9,10,12,0.78);
     }
 
-    #smwc2-{{ section.id }} .smwc2__navbtn:hover{
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn:hover{
       filter: brightness(1.03);
       background: rgba(255,255,255,0.14);
     }
-    #smwc2-{{ section.id }} .smwc2__navbtn:active{ transform: translateY(-50%) scale(0.98); }
-    #smwc2-{{ section.id }} .smwc2__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
 
-    #smwc2-{{ section.id }} .smwc2__navbtn--prev{
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn:active{
+      transform: translateY(-50%) scale(0.98);
+    }
+
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn:focus-visible{
+      outline: 3px solid rgba(0,68,204,0.35);
+      outline-offset: 2px;
+    }
+
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn--prev{
       left: calc(50% - var(--navOffset));
       transform: translate(-100%, -50%);
     }
-    #smwc2-{{ section.id }} .smwc2__navbtn--next{
+
+    #smwc-final-{{ section.id }} .smwcFinal__navbtn--next{
       left: calc(50% + var(--navOffset));
       transform: translate(0, -50%);
     }
 
-    /* Cards layer */
-    #smwc2-{{ section.id }} .smwc2__cards{
-      position: absolute;
-      inset: 0;
-      overflow: visible;
-      pointer-events: none;
-      perspective: 1100px;
-    }
-
-    #smwc2-{{ section.id }} .smwc2__card{
+    #smwc-final-{{ section.id }} .smwcFinal__card{
       position: absolute;
       left: 50%;
       top: 50%;
@@ -159,8 +196,7 @@
         filter 620ms ease;
     }
 
-    /* Outline glow */
-    #smwc2-{{ section.id }} .smwc2__card:before{
+    #smwc-final-{{ section.id }} .smwcFinal__card:before{
       content:"";
       position:absolute;
       inset:-1px;
@@ -170,31 +206,31 @@
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      opacity: 0.14;
+      opacity: 0.12;
       pointer-events:none;
       z-index: 0;
       transition: opacity 260ms ease;
     }
 
-    #smwc2-{{ section.id }} .smwc2__card:after{
+    #smwc-final-{{ section.id }} .smwcFinal__card:after{
       content:"";
       position:absolute;
       inset:-18px;
       border-radius: calc(var(--rCard) + 22px);
       background:
-        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.18), rgba(255,255,255,0) 62%),
-        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.16), rgba(255,255,255,0) 62%);
-      opacity: 0.12;
+        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.16), rgba(255,255,255,0) 62%),
+        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.14), rgba(255,255,255,0) 62%);
+      opacity: 0.10;
       filter: blur(16px);
       pointer-events:none;
       z-index: -1;
       transition: opacity 260ms ease;
     }
 
-    #smwc2-{{ section.id }} .smwc2__card.is-active:before{ opacity: 0.92; }
-    #smwc2-{{ section.id }} .smwc2__card.is-active:after{ opacity: 0.54; }
+    #smwc-final-{{ section.id }} .smwcFinal__card.is-active:before{ opacity: 0.92; }
+    #smwc-final-{{ section.id }} .smwcFinal__card.is-active:after{ opacity: 0.54; }
 
-    #smwc2-{{ section.id }} .smwc2__frame{
+    #smwc-final-{{ section.id }} .smwcFinal__frame{
       width: 100%;
       height: 100%;
       border-radius: var(--rCard);
@@ -211,8 +247,8 @@
       transform: translateZ(0);
     }
 
-    #smwc2-{{ section.id }} .smwc2__img,
-    #smwc2-{{ section.id }} .smwc2__overlay{
+    #smwc-final-{{ section.id }} .smwcFinal__img,
+    #smwc-final-{{ section.id }} .smwcFinal__overlay{
       position:absolute;
       inset:0;
       width:100%;
@@ -221,16 +257,16 @@
       transform: none;
     }
 
-    #smwc2-{{ section.id }} .smwc2__overlay{
+    #smwc-final-{{ section.id }} .smwcFinal__overlay{
       opacity: 0;
       transition: opacity var(--fade) ease;
       will-change: opacity;
     }
-    #smwc2-{{ section.id }} .smwc2__card.is-on .smwc2__overlay{ opacity: 1; }
-    #smwc2-{{ section.id }} .smwc2__card.is-on .smwc2__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
 
-    /* Button bottom center */
-    #smwc2-{{ section.id }} .smwc2__toggle{
+    #smwc-final-{{ section.id }} .smwcFinal__card.is-on .smwcFinal__overlay{ opacity: 1; }
+    #smwc-final-{{ section.id }} .smwcFinal__card.is-on .smwcFinal__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
+
+    #smwc-final-{{ section.id }} .smwcFinal__toggle{
       position: absolute;
       left: 50%;
       bottom: 12px;
@@ -257,42 +293,45 @@
       pointer-events: none;
       transition: opacity 220ms ease, filter 180ms ease, background 180ms ease, transform 180ms var(--ease);
       z-index: 2;
+      max-width: calc(100% - 22px);
+      white-space: nowrap;
     }
 
-    #smwc2-{{ section.id }} .smwc2__card.is-active .smwc2__toggle{
+    #smwc-final-{{ section.id }} .smwcFinal__card.is-active .smwcFinal__toggle{
       opacity: 1;
       pointer-events: auto;
     }
 
-    #smwc2-{{ section.id }} .smwc2__toggle:hover{ filter: brightness(1.04); }
-    #smwc2-{{ section.id }} .smwc2__toggle:active{ transform: translateX(-50%) scale(0.99); }
-    #smwc2-{{ section.id }} .smwc2__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
+    #smwc-final-{{ section.id }} .smwcFinal__toggle:hover{ filter: brightness(1.04); }
+    #smwc-final-{{ section.id }} .smwcFinal__toggle:active{ transform: translateX(-50%) scale(0.99); }
+    #smwc-final-{{ section.id }} .smwcFinal__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
 
-    #smwc2-{{ section.id }} .smwc2__pillDot{
+    #smwc-final-{{ section.id }} .smwcFinal__pillDot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
       background: linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
       box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
+      flex: 0 0 auto;
     }
 
-    #smwc2-{{ section.id }} .smwc2__card.is-on .smwc2__toggle{
+    #smwc-final-{{ section.id }} .smwcFinal__card.is-on .smwcFinal__toggle{
       background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       border-color: rgba(255,255,255,0.16);
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
     }
 
-    /* Description centered */
-    #smwc2-{{ section.id }} .smwc2__desc{
-      margin-top: 10px;
+    /* Beschreibung block, never cut off */
+    #smwc-final-{{ section.id }} .smwcFinal__desc{
+      margin-top: 12px;
       display: grid;
       justify-items: center;
-      gap: 8px;
+      gap: 10px;
       text-align: center;
       padding: 0 8px;
     }
 
-    #smwc2-{{ section.id }} .smwc2__descHead{
+    #smwc-final-{{ section.id }} .smwcFinal__descHead{
       font-weight: 950;
       font-size: 12px;
       letter-spacing: 0.10em;
@@ -302,7 +341,7 @@
       user-select:none;
     }
 
-    #smwc2-{{ section.id }} .smwc2__descText{
+    #smwc-final-{{ section.id }} .smwcFinal__descText{
       width: min(920px, 100%);
       border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.16);
@@ -310,50 +349,47 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       box-shadow: var(--shadow2);
-      padding: 14px 14px;
-      color: rgba(9,10,12,0.82);
+      padding: 16px 16px;
+
+      color: rgba(9,10,12,0.84);
       font-weight: 900;
-      font-size: 13px;
+      font-size: clamp(13px, 3.6vw, 16px);
       line-height: 1.35;
 
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
 
-      transform: translateY(8px);
-      opacity: 0;
-      transition: opacity 240ms ease, transform 240ms var(--ease);
+      opacity: 1;
+      transform: none;
     }
 
-    @media (hover:hover){
-      #smwc2-{{ section.id }} .smwc2__wrap:hover .smwc2__descText,
-      #smwc2-{{ section.id }} .smwc2__wrap:focus-within .smwc2__descText{
-        opacity: 1;
-        transform: translateY(0);
+    @media (max-width: 520px){
+      #smwc-final-{{ section.id }}{
+        --cardSize: min(92vw, 420px);
+        --stageH: calc(var(--cardSize) + 70px);
       }
-    }
-    @media (hover:none){
-      #smwc2-{{ section.id }} .smwc2__descText{
-        opacity: 1;
-        transform: translateY(0);
+      #smwc-final-{{ section.id }} .smwcFinal__navbtn{
+        width: 44px;
+        height: 44px;
       }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smwc2-{{ section.id }} *{ transition: none !important; animation: none !important; }
+      #smwc-final-{{ section.id }} *{ transition: none !important; animation: none !important; }
     }
   </style>
 
-  <div class="smwc2__wrap">
-    <div class="smwc2__stage">
-      <button class="smwc2__navbtn smwc2__navbtn--prev" type="button" data-smwc2-prev aria-label="Vorheriges">
+  <div class="smwcFinal__wrap">
+    <div class="smwcFinal__stage">
+      <button class="smwcFinal__navbtn smwcFinal__navbtn--prev" type="button" data-smwc-prev aria-label="Vorheriges">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M14.5 5.5L8.5 12l6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
 
-      <div class="smwc2__cards" data-smwc2-cards>
+      <div class="smwcFinal__cards" data-smwc-cards>
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
             {% liquid
@@ -377,27 +413,27 @@
               endif
             %}
 
-            <article class="smwc2__card" data-smwc2-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
-              <div class="smwc2__frame" data-smwc2-frame role="button" tabindex="0" aria-label="Slide auswählen">
+            <article class="smwcFinal__card" data-smwc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              <div class="smwcFinal__frame" data-smwc-frame role="button" tabindex="0" aria-label="Slide auswählen">
                 {% if block.settings.base_image != blank %}
-                  <img class="smwc2__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                  <img class="smwcFinal__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
                 {% elsif base_fallback != blank %}
-                  <img class="smwc2__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
+                  <img class="smwcFinal__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <img class="smwc2__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
+                  <img class="smwcFinal__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
                 {% if block.settings.overlay_image != blank %}
-                  <img class="smwc2__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smwcFinal__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
                 {% elsif over_fallback != blank %}
-                  <img class="smwc2__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smwcFinal__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <img class="smwc2__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smwcFinal__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
-                <button type="button" class="smwc2__toggle" data-smwc2-toggle aria-pressed="false">
-                  <span class="smwc2__pillDot" aria-hidden="true"></span>
-                  <span class="smwc2__toggleText">Verwandeln</span>
+                <button type="button" class="smwcFinal__toggle" data-smwc-toggle aria-pressed="false">
+                  <span class="smwcFinal__pillDot" aria-hidden="true"></span>
+                  <span class="smwcFinal__toggleText">Verwandeln</span>
                 </button>
               </div>
             </article>
@@ -405,30 +441,29 @@
         {% endfor %}
       </div>
 
-      <button class="smwc2__navbtn smwc2__navbtn--next" type="button" data-smwc2-next aria-label="Nächstes">
+      <button class="smwcFinal__navbtn smwcFinal__navbtn--next" type="button" data-smwc-next aria-label="Nächstes">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9.5 5.5L15.5 12l-6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </div>
 
-    <div class="smwc2__desc" aria-label="Beschreibung">
-      <p class="smwc2__descHead">Beschreibung</p>
-      <div class="smwc2__descText" data-smwc2-prompt></div>
+    <div class="smwcFinal__desc" aria-label="Beschreibung">
+      <p class="smwcFinal__descHead">{{ section.settings.desc_heading | default: "Beschreibung" | escape }}</p>
+      <div class="smwcFinal__descText" data-smwc-prompt></div>
     </div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var root = document.getElementById("smwc2-" + SECTION_ID);
+      var root = document.getElementById("smwc-final-" + SECTION_ID);
       if(!root) return;
 
-      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smwc2-card]"));
-      var prev = root.querySelector("[data-smwc2-prev]");
-      var next = root.querySelector("[data-smwc2-next]");
-      var promptEl = root.querySelector("[data-smwc2-prompt]");
-
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smwc-card]"));
+      var prev = root.querySelector("[data-smwc-prev]");
+      var next = root.querySelector("[data-smwc-next]");
+      var promptEl = root.querySelector("[data-smwc-prompt]");
       if(!cards.length) return;
 
       var autoplay = {{ section.settings.autoplay | json }};
@@ -456,25 +491,24 @@
         var cs = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
         var w = root.getBoundingClientRect().width || 1200;
 
-        // wider horizontal spread, keep cards from overlapping too much
-        var rx = Math.min(Math.max(460, (w * 0.48)), 860);
-        var ry = Math.min(Math.max(70, cs * 0.22), 120);
+        var rx = Math.min(Math.max(420, (w * 0.48)), 860);
+        var ry = Math.min(Math.max(64, cs * 0.22), 120);
 
-        // push arrows further out
-        var navOffset = (cs / 2) + Math.min(190, Math.max(120, w * 0.11));
+        // Keep arrows visible on small screens, push them out on desktop
+        var desired = (cs / 2) + Math.min(190, Math.max(110, w * 0.11));
+        var maxInside = (w / 2) - 26; // keep inside viewport
+        var navOffset = Math.max(110, Math.min(desired, maxInside));
         root.style.setProperty("--navOffset", navOffset + "px");
 
-        return { cs: cs, rx: rx, ry: ry };
+        return { rx: rx, ry: ry, w: w, cs: cs };
       }
 
       function render(){
         var n = cards.length;
         var layout = computeLayout();
-
         var rx = layout.rx;
         var ry = layout.ry;
 
-        // smaller step with more cards
         var stepDeg = (n <= 6) ? 22 : (n <= 9 ? 16 : 12);
         var maxShow = (n <= 6) ? 3 : 4;
 
@@ -484,28 +518,25 @@
           var show = abs <= maxShow;
 
           var el = cards[i];
-          el.style.pointerEvents = show ? "auto" : "none";
 
           var ang = (d * stepDeg) * (Math.PI / 180);
           var x = Math.sin(ang) * rx;
           var y = (1 - Math.cos(ang)) * ry;
 
-          // Non-selected: much smaller (reduces chaos)
           var s = (abs === 0) ? 1.10 : Math.max(0.48, 0.80 - abs * 0.10);
-
-          // Non-selected: much less visible + more blur
           var op = show ? Math.max(0.10, 0.55 - abs * 0.18) : 0;
           var blur = (abs === 0) ? 0 : Math.min(10, 5 + abs * 1.6);
 
           if(d === 0){
             el.classList.add("is-active");
-            x = 0;
-            y = 0;
-            op = 1;
-            blur = 0;
+            x = 0; y = 0;
+            op = 1; blur = 0;
           } else {
             el.classList.remove("is-active");
           }
+
+          // Reduce chaos: only active card is truly interactive
+          el.style.pointerEvents = (d === 0) ? "auto" : "none";
 
           el.style.opacity = String(op);
           el.style.filter = "blur(" + blur.toFixed(2) + "px)";
@@ -539,15 +570,42 @@
         }, autoplayMs);
       }
 
+      function stopPointer(e){
+        if(!e) return;
+        if(e.preventDefault) e.preventDefault();
+        if(e.stopPropagation) e.stopPropagation();
+      }
+
       function bind(){
-        if(prev) prev.addEventListener("click", function(){ stopAutoplay(); go(-1); startAutoplay(); });
-        if(next) next.addEventListener("click", function(){ stopAutoplay(); go(1); startAutoplay(); });
+        if(prev){
+          prev.addEventListener("pointerdown", stopPointer);
+          prev.addEventListener("pointerup", stopPointer);
+          prev.addEventListener("click", function(e){
+            stopPointer(e);
+            stopAutoplay();
+            go(-1);
+            startAutoplay();
+          });
+        }
+
+        if(next){
+          next.addEventListener("pointerdown", stopPointer);
+          next.addEventListener("pointerup", stopPointer);
+          next.addEventListener("click", function(e){
+            stopPointer(e);
+            stopAutoplay();
+            go(1);
+            startAutoplay();
+          });
+        }
 
         // swipe
         var startX = 0;
         var dx = 0;
 
         root.addEventListener("pointerdown", function(e){
+          // ignore pointer gestures when user presses nav buttons
+          if(e.target && e.target.closest && e.target.closest("[data-smwc-prev],[data-smwc-next]")) return;
           isInteracting = true;
           stopAutoplay();
           startX = e.clientX;
@@ -568,46 +626,23 @@
           startAutoplay();
         }, { passive: true });
 
-        // select card
-        cards.forEach(function(card, idx){
-          var frame = card.querySelector("[data-smwc2-frame]");
-          if(!frame) return;
-
-          frame.addEventListener("click", function(e){
-            var t = e.target;
-            if(t && t.closest && t.closest("[data-smwc2-toggle]")) return;
-            active = idx;
-            render();
-          });
-
-          frame.addEventListener("keydown", function(e){
-            if(e.key === "Enter" || e.key === " "){
-              e.preventDefault();
-              active = idx;
-              render();
-            }
-          });
-        });
-
-        // toggle overlay (active or select)
-        root.querySelectorAll("[data-smwc2-toggle]").forEach(function(btn){
+        // toggle overlay on active card
+        root.querySelectorAll("[data-smwc-toggle]").forEach(function(btn){
           btn.addEventListener("click", function(e){
             e.preventDefault();
             e.stopPropagation();
             stopAutoplay();
 
-            var card = btn.closest("[data-smwc2-card]");
+            var card = btn.closest("[data-smwc-card]");
             if(!card) return;
 
             var idx = parseInt(card.getAttribute("data-index") || "0", 10);
-            if(idx !== active){
-              active = idx;
-            }
+            if(idx !== active) active = idx;
 
             onState[active] = !onState[active];
             btn.setAttribute("aria-pressed", onState[active] ? "true" : "false");
 
-            var t = btn.querySelector(".smwc2__toggleText");
+            var t = btn.querySelector(".smwcFinal__toggleText");
             if(t) t.textContent = onState[active] ? "Zurück" : "Verwandeln";
 
             render();
