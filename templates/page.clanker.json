@@ -200,6 +200,7 @@
     },
     "steelmonks_werkstatt_steps_bk7jyj": {
       "type": "steelmonks-werkstatt-steps",
+      "disabled": true,
       "name": "Werkstatt Steps",
       "settings": {
         "top_spacing": 34,
