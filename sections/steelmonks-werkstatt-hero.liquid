@@ -1,13 +1,12 @@
 {% comment %}
-  Werkstatt Floating Carousel V3
-  - Center card always centered
-  - Smooth circular motion for all cards when navigating (animated via CSS transition)
-  - Side cards more visible + slightly blurry
-  - Hover: subtle lift + image zoom (desktop), also clearer selection feel
-  - Arrows with SVG icons, positioned left/right of center card
-  - "Verwandeln" bottom center inside image
-  - Description heading + text centered under carousel
-  - Mobile optimized (touch friendly, no hover dependencies)
+  Werkstatt Carousel
+  - Name fits 25 char limit
+  - No hover transforms (keeps overlay pixel-perfect)
+  - Arrows sit next to the main (active) card, not on top
+  - Non-selected cards smaller + more spaced out on desktop (wider spread)
+  - Square cards, smooth circular slide animation, mobile optimized
+  - "Verwandeln" bottom center
+  - Description centered below with heading "Beschreibung"
 {% endcomment %}
 
 {% schema %}
@@ -51,58 +50,61 @@
 }
 {% endschema %}
 
-<section id="smc3-{{ section.id }}" class="smc3" aria-label="Werkstatt Carousel">
+<section id="smwc-{{ section.id }}" class="smwc" aria-label="Werkstatt Carousel">
   <style>
-    #smc3-{{ section.id }}{
+    #smwc-{{ section.id }}{
       --a1:#ff9800;
       --a2:#0044CC;
 
       --ink: rgba(9,10,12,0.92);
-      --muted: rgba(9,10,12,0.62);
 
       --stroke: rgba(255,255,255,0.18);
-
       --shadow: 0 22px 70px rgba(15,23,42,0.18);
-      --shadow2: 0 20px 60px rgba(15,23,42,0.16);
+      --shadow2: 0 18px 54px rgba(15,23,42,0.16);
 
       --rCard: 26px;
       --fade: 2000ms;
       --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      --cardSize: clamp(240px, 66vw, 460px);
-      --stageH: clamp(330px, 74vw, 560px);
-      --navOffset: 280px; /* set by JS */
+      --cardSize: clamp(240px, 62vw, 460px);
+      --stageH: clamp(330px, 72vw, 560px);
+
+      /* desktop spread defaults (JS will refine) */
+      --navOffset: 310px;
+      --rx: 560px;
+      --ry: 128px;
+      --stepDeg: 18deg;
 
       padding: clamp(10px, 2.6vw, 18px);
       overflow: visible;
     }
 
-    #smc3-{{ section.id }} .smc3__wrap{
-      width: min(1240px, 100%);
+    #smwc-{{ section.id }} .smwc__wrap{
+      width: min(1380px, 100%);
       margin: 0 auto;
       overflow: visible;
       position: relative;
     }
 
-    #smc3-{{ section.id }} .smc3__stage{
+    #smwc-{{ section.id }} .smwc__stage{
       position: relative;
       height: var(--stageH);
       overflow: visible;
       display: grid;
       place-items: center;
-      padding: 6px 0 10px;
+      padding: 8px 0 10px;
       touch-action: pan-y;
     }
 
-    /* Nav */
-    #smc3-{{ section.id }} .smc3__navbtn{
+    /* Arrows next to main card (outside), not overlaying */
+    #smwc-{{ section.id }} .smwc__navbtn{
       position: absolute;
       top: 50%;
       width: 46px;
       height: 46px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.10);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 16px 40px rgba(15,23,42,0.12);
@@ -112,43 +114,43 @@
       color: rgba(9,10,12,0.78);
       -webkit-tap-highlight-color: transparent;
       user-select: none;
-      z-index: 50;
+      z-index: 60;
       transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
     }
 
-    #smc3-{{ section.id }} .smc3__navbtn svg{
+    #smwc-{{ section.id }} .smwc__navbtn svg{
       width: 18px;
       height: 18px;
       display: block;
       color: rgba(9,10,12,0.78);
     }
 
-    #smc3-{{ section.id }} .smc3__navbtn:hover{
+    #smwc-{{ section.id }} .smwc__navbtn:hover{
       filter: brightness(1.03);
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.14);
     }
-    #smc3-{{ section.id }} .smc3__navbtn:active{ transform: translateY(-50%) scale(0.98); }
-    #smc3-{{ section.id }} .smc3__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
+    #smwc-{{ section.id }} .smwc__navbtn:active{ transform: translateY(-50%) scale(0.98); }
+    #smwc-{{ section.id }} .smwc__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
 
-    #smc3-{{ section.id }} .smc3__navbtn--prev{
+    #smwc-{{ section.id }} .smwc__navbtn--prev{
       left: calc(50% - var(--navOffset));
       transform: translate(-100%, -50%);
     }
-    #smc3-{{ section.id }} .smc3__navbtn--next{
+    #smwc-{{ section.id }} .smwc__navbtn--next{
       left: calc(50% + var(--navOffset));
       transform: translate(0, -50%);
     }
 
     /* Cards layer */
-    #smc3-{{ section.id }} .smc3__cards{
+    #smwc-{{ section.id }} .smwc__cards{
       position: absolute;
       inset: 0;
       overflow: visible;
       pointer-events: none;
-      perspective: 1000px;
+      perspective: 1100px;
     }
 
-    #smc3-{{ section.id }} .smc3__card{
+    #smwc-{{ section.id }} .smwc__card{
       position: absolute;
       left: 50%;
       top: 50%;
@@ -162,13 +164,13 @@
 
       will-change: transform, opacity, filter;
       transition:
-        transform 640ms var(--ease),
-        opacity 520ms ease,
-        filter 520ms ease;
+        transform 720ms var(--ease),
+        opacity 560ms ease,
+        filter 560ms ease;
     }
 
-    /* Glow outline only */
-    #smc3-{{ section.id }} .smc3__card:before{
+    /* glow outline + shadow not clipped */
+    #smwc-{{ section.id }} .smwc__card:before{
       content:"";
       position:absolute;
       inset:-1px;
@@ -178,32 +180,31 @@
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      opacity: 0.28;
+      opacity: 0.26;
       pointer-events:none;
       z-index: 0;
       transition: opacity 260ms ease;
     }
 
-    #smc3-{{ section.id }} .smc3__card:after{
+    #smwc-{{ section.id }} .smwc__card:after{
       content:"";
       position:absolute;
-      inset:-16px;
-      border-radius: calc(var(--rCard) + 20px);
+      inset:-18px;
+      border-radius: calc(var(--rCard) + 22px);
       background:
         radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.22), rgba(255,255,255,0) 62%),
         radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.20), rgba(255,255,255,0) 62%);
-      opacity: 0.22;
-      filter: blur(14px);
+      opacity: 0.18;
+      filter: blur(16px);
       pointer-events:none;
       z-index: -1;
       transition: opacity 260ms ease;
     }
 
-    #smc3-{{ section.id }} .smc3__card.is-active:before{ opacity: 0.90; }
-    #smc3-{{ section.id }} .smc3__card.is-active:after{ opacity: 0.52; }
+    #smwc-{{ section.id }} .smwc__card.is-active:before{ opacity: 0.92; }
+    #smwc-{{ section.id }} .smwc__card.is-active:after{ opacity: 0.54; }
 
-    /* Frame */
-    #smc3-{{ section.id }} .smc3__frame{
+    #smwc-{{ section.id }} .smwc__frame{
       width: 100%;
       height: 100%;
       border-radius: var(--rCard);
@@ -218,45 +219,28 @@
       pointer-events: auto;
       cursor: pointer;
       transform: translateZ(0);
-      transition: transform 220ms var(--ease);
     }
 
-    #smc3-{{ section.id }} .smc3__img,
-    #smc3-{{ section.id }} .smc3__overlay{
+    #smwc-{{ section.id }} .smwc__img,
+    #smwc-{{ section.id }} .smwc__overlay{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       object-fit: cover;
+      transform: none; /* ensures overlay stays perfect */
     }
 
-    #smc3-{{ section.id }} .smc3__img{
-      transform: scale(1.02);
-      transition: transform 720ms var(--ease), filter 520ms ease;
-      will-change: transform, filter;
-    }
-
-    /* Hover animation */
-    @media (hover:hover){
-      #smc3-{{ section.id }} .smc3__frame:hover{
-        transform: translateY(-2px);
-      }
-      #smc3-{{ section.id }} .smc3__frame:hover .smc3__img{
-        transform: scale(1.06);
-      }
-    }
-
-    /* Overlay fade */
-    #smc3-{{ section.id }} .smc3__overlay{
+    #smwc-{{ section.id }} .smwc__overlay{
       opacity: 0;
       transition: opacity var(--fade) ease;
       will-change: opacity;
     }
-    #smc3-{{ section.id }} .smc3__card.is-on .smc3__overlay{ opacity: 1; }
-    #smc3-{{ section.id }} .smc3__card.is-on .smc3__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
+    #smwc-{{ section.id }} .smwc__card.is-on .smwc__overlay{ opacity: 1; }
+    #smwc-{{ section.id }} .smwc__card.is-on .smwc__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
 
     /* Button bottom center */
-    #smc3-{{ section.id }} .smc3__toggle{
+    #smwc-{{ section.id }} .smwc__toggle{
       position: absolute;
       left: 50%;
       bottom: 12px;
@@ -285,16 +269,16 @@
       z-index: 2;
     }
 
-    #smc3-{{ section.id }} .smc3__card.is-active .smc3__toggle{
+    #smwc-{{ section.id }} .smwc__card.is-active .smwc__toggle{
       opacity: 1;
       pointer-events: auto;
     }
 
-    #smc3-{{ section.id }} .smc3__toggle:hover{ filter: brightness(1.04); }
-    #smc3-{{ section.id }} .smc3__toggle:active{ transform: translateX(-50%) scale(0.99); }
-    #smc3-{{ section.id }} .smc3__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
+    #smwc-{{ section.id }} .smwc__toggle:hover{ filter: brightness(1.04); }
+    #smwc-{{ section.id }} .smwc__toggle:active{ transform: translateX(-50%) scale(0.99); }
+    #smwc-{{ section.id }} .smwc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
 
-    #smc3-{{ section.id }} .smc3__pillDot{
+    #smwc-{{ section.id }} .smwc__pillDot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -302,55 +286,14 @@
       box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
     }
 
-    #smc3-{{ section.id }} .smc3__card.is-on .smc3__toggle{
+    #smwc-{{ section.id }} .smwc__card.is-on .smwc__toggle{
       background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       border-color: rgba(255,255,255,0.16);
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
     }
 
-    /* Hover selection indicator: subtle top-left pill appears on hovered card */
-    #smc3-{{ section.id }} .smc3__hint{
-      position:absolute;
-      left: 14px;
-      top: 14px;
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 14px 34px rgba(15,23,42,0.10);
-      color: rgba(255,255,255,0.92);
-      font-weight: 900;
-      font-size: 12px;
-      opacity: 0;
-      transform: translateY(-4px);
-      transition: opacity 180ms ease, transform 180ms var(--ease);
-      pointer-events:none;
-      z-index: 3;
-    }
-
-    #smc3-{{ section.id }} .smc3__hintDot{
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
-      box-shadow: 0 0 0 6px rgba(0,68,204,0.14);
-    }
-
-    @media (hover:hover){
-      #smc3-{{ section.id }} .smc3__card.is-hover .smc3__hint{
-        opacity: 1;
-        transform: translateY(0);
-      }
-      #smc3-{{ section.id }} .smc3__card.is-hover:before{ opacity: 0.62; }
-    }
-
     /* Description centered */
-    #smc3-{{ section.id }} .smc3__desc{
+    #smwc-{{ section.id }} .smwc__desc{
       margin-top: 10px;
       display: grid;
       justify-items: center;
@@ -359,7 +302,7 @@
       padding: 0 8px;
     }
 
-    #smc3-{{ section.id }} .smc3__descHead{
+    #smwc-{{ section.id }} .smwc__descHead{
       font-weight: 950;
       font-size: 12px;
       letter-spacing: 0.10em;
@@ -369,8 +312,8 @@
       user-select:none;
     }
 
-    #smc3-{{ section.id }} .smc3__descText{
-      width: min(860px, 100%);
+    #smwc-{{ section.id }} .smwc__descText{
+      width: min(920px, 100%);
       border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.08);
@@ -394,33 +337,40 @@
     }
 
     @media (hover:hover){
-      #smc3-{{ section.id }} .smc3__wrap:hover .smc3__descText,
-      #smc3-{{ section.id }} .smc3__wrap:focus-within .smc3__descText{
+      #smwc-{{ section.id }} .smwc__wrap:hover .smwc__descText,
+      #smwc-{{ section.id }} .smwc__wrap:focus-within .smwc__descText{
         opacity: 1;
         transform: translateY(0);
       }
     }
     @media (hover:none){
-      #smc3-{{ section.id }} .smc3__descText{
+      #smwc-{{ section.id }} .smwc__descText{
         opacity: 1;
         transform: translateY(0);
       }
     }
 
+    @media (max-width: 520px){
+      #smwc-{{ section.id }} .smwc__navbtn{
+        width: 44px;
+        height: 44px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce){
-      #smc3-{{ section.id }} *{ transition: none !important; animation: none !important; }
+      #smwc-{{ section.id }} *{ transition: none !important; animation: none !important; }
     }
   </style>
 
-  <div class="smc3__wrap">
-    <div class="smc3__stage">
-      <button class="smc3__navbtn smc3__navbtn--prev" type="button" data-smc3-prev aria-label="Vorheriges">
+  <div class="smwc__wrap">
+    <div class="smwc__stage">
+      <button class="smwc__navbtn smwc__navbtn--prev" type="button" data-smwc-prev aria-label="Vorheriges">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M14.5 5.5L8.5 12l6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
 
-      <div class="smc3__cards" data-smc3-cards>
+      <div class="smwc__cards" data-smwc-cards>
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
             {% liquid
@@ -444,32 +394,27 @@
               endif
             %}
 
-            <article class="smc3__card" data-smc3-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
-              <div class="smc3__frame" data-smc3-frame role="button" tabindex="0" aria-label="Slide auswählen">
+            <article class="smwc__card" data-smwc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              <div class="smwc__frame" data-smwc-frame role="button" tabindex="0" aria-label="Slide auswählen">
                 {% if block.settings.base_image != blank %}
-                  <img class="smc3__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                  <img class="smwc__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
                 {% elsif base_fallback != blank %}
-                  <img class="smc3__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
+                  <img class="smwc__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <img class="smc3__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
+                  <img class="smwc__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
                 {% if block.settings.overlay_image != blank %}
-                  <img class="smc3__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smwc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
                 {% elsif over_fallback != blank %}
-                  <img class="smc3__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smwc__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <img class="smc3__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smwc__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
-                <div class="smc3__hint" aria-hidden="true">
-                  <span class="smc3__hintDot"></span>
-                  <span>Auswählen</span>
-                </div>
-
-                <button type="button" class="smc3__toggle" data-smc3-toggle aria-pressed="false">
-                  <span class="smc3__pillDot" aria-hidden="true"></span>
-                  <span class="smc3__toggleText">Verwandeln</span>
+                <button type="button" class="smwc__toggle" data-smwc-toggle aria-pressed="false">
+                  <span class="smwc__pillDot" aria-hidden="true"></span>
+                  <span class="smwc__toggleText">Verwandeln</span>
                 </button>
               </div>
             </article>
@@ -477,29 +422,29 @@
         {% endfor %}
       </div>
 
-      <button class="smc3__navbtn smc3__navbtn--next" type="button" data-smc3-next aria-label="Nächstes">
+      <button class="smwc__navbtn smwc__navbtn--next" type="button" data-smwc-next aria-label="Nächstes">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9.5 5.5L15.5 12l-6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
     </div>
 
-    <div class="smc3__desc" aria-label="Beschreibung">
-      <p class="smc3__descHead">Beschreibung</p>
-      <div class="smc3__descText" data-smc3-prompt></div>
+    <div class="smwc__desc" aria-label="Beschreibung">
+      <p class="smwc__descHead">Beschreibung</p>
+      <div class="smwc__descText" data-smwc-prompt></div>
     </div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var root = document.getElementById("smc3-" + SECTION_ID);
+      var root = document.getElementById("smwc-" + SECTION_ID);
       if(!root) return;
 
-      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smc3-card]"));
-      var prev = root.querySelector("[data-smc3-prev]");
-      var next = root.querySelector("[data-smc3-next]");
-      var promptEl = root.querySelector("[data-smc3-prompt]");
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smwc-card]"));
+      var prev = root.querySelector("[data-smwc-prev]");
+      var next = root.querySelector("[data-smwc-next]");
+      var promptEl = root.querySelector("[data-smwc-prompt]");
 
       if(!cards.length) return;
 
@@ -507,7 +452,6 @@
       var autoplayMs = ({{ section.settings.autoplay_seconds | default: 6 }} * 1000) || 6000;
 
       var active = 0;
-      var hoverIdx = null;
       var timer = null;
       var onState = cards.map(function(){ return false; });
       var isInteracting = false;
@@ -525,21 +469,30 @@
         promptEl.textContent = cards[idx].getAttribute("data-prompt") || "";
       }
 
-      function computeNavOffset(){
+      function computeLayout(){
         var cs = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
-        root.style.setProperty("--navOffset", ((cs / 2) + 34) + "px");
+        var w = root.getBoundingClientRect().width || 1200;
+
+        // wider spread on desktop, safer on mobile
+        var rx = Math.min(Math.max(360, (w * 0.42)), 720);
+        var ry = Math.min(Math.max(88, cs * 0.28), 150);
+
+        var navOffset = (cs / 2) + Math.min(86, Math.max(46, w * 0.045));
+        root.style.setProperty("--navOffset", navOffset + "px");
+
+        return { cs: cs, rx: rx, ry: ry };
       }
 
       function render(){
         var n = cards.length;
+        var layout = computeLayout();
 
-        var cs = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
+        var rx = layout.rx;
+        var ry = layout.ry;
 
-        // circle geometry (responsive)
-        var radiusX = Math.min(520, cs * 1.22);
-        var radiusY = Math.min(120, cs * 0.30);
-        var angleStep = 20; // deg per step
-        var maxShow = 4;    // show more background cards
+        // slightly smaller step when many cards
+        var stepDeg = (n <= 6) ? 20 : (n <= 9 ? 16 : 13);
+        var maxShow = (n <= 6) ? 4 : 5;
 
         for(var i=0;i<n;i++){
           var d = diff(i, active, n);
@@ -549,25 +502,22 @@
           var el = cards[i];
           el.style.pointerEvents = show ? "auto" : "none";
 
-          // circular motion
-          var ang = (d * angleStep) * (Math.PI / 180);
-          var x = Math.sin(ang) * radiusX;
-          var y = (1 - Math.cos(ang)) * radiusY;
+          var ang = (d * stepDeg) * (Math.PI / 180);
+          var x = Math.sin(ang) * rx;
+          var y = (1 - Math.cos(ang)) * ry;
 
-          // depth
-          var s = Math.max(0.76, 1 - abs * 0.09);
-          var z = 200 - abs * 20;
+          // make non-selected cards smaller to reduce crowding
+          var s = (abs === 0) ? 1.08 : Math.max(0.62, 0.92 - abs * 0.10);
 
-          // visibility + blur for background
-          var op = show ? Math.max(0.22, 1 - abs * 0.18) : 0;
-          var blur = (abs === 0) ? 0 : Math.min(3.5, abs * 1.2);
+          // more visible but blurry
+          var op = show ? Math.max(0.26, 1 - abs * 0.16) : 0;
+          var blur = (abs === 0) ? 0 : Math.min(6.5, 2.2 + abs * 1.1);
 
+          // keep vertical center aligned
           if(d === 0){
             el.classList.add("is-active");
-            s = 1.08;
             x = 0;
             y = 0;
-            z = 400;
             op = 1;
             blur = 0;
           } else {
@@ -575,8 +525,8 @@
           }
 
           el.style.opacity = String(op);
-          el.style.zIndex = String(z);
           el.style.filter = "blur(" + blur.toFixed(2) + "px)";
+          el.style.zIndex = String(400 - abs * 30);
 
           el.style.transform =
             "translate(-50%, -50%) translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + s.toFixed(3) + ")";
@@ -585,19 +535,11 @@
           else el.classList.remove("is-on");
         }
 
-        // hover selection
-        cards.forEach(function(c, idx){
-          if(hoverIdx !== null && idx === hoverIdx && idx !== active) c.classList.add("is-hover");
-          else c.classList.remove("is-hover");
-        });
-
-        setPrompt((hoverIdx !== null) ? hoverIdx : active);
-        computeNavOffset();
+        setPrompt(active);
       }
 
       function go(dir){
         active = mod(active + dir, cards.length);
-        hoverIdx = null;
         render();
       }
 
@@ -618,7 +560,7 @@
         if(prev) prev.addEventListener("click", function(){ stopAutoplay(); go(-1); startAutoplay(); });
         if(next) next.addEventListener("click", function(){ stopAutoplay(); go(1); startAutoplay(); });
 
-        // swipe support on mobile
+        // swipe support
         var startX = 0;
         var dx = 0;
 
@@ -643,16 +585,15 @@
           startAutoplay();
         }, { passive: true });
 
-        // Card select + hover preview
+        // select card
         cards.forEach(function(card, idx){
-          var frame = card.querySelector("[data-smc3-frame]");
+          var frame = card.querySelector("[data-smwc-frame]");
           if(!frame) return;
 
           frame.addEventListener("click", function(e){
             var t = e.target;
-            if(t && t.closest && t.closest("[data-smc3-toggle]")) return;
+            if(t && t.closest && t.closest("[data-smwc-toggle]")) return;
             active = idx;
-            hoverIdx = null;
             render();
           });
 
@@ -660,40 +601,30 @@
             if(e.key === "Enter" || e.key === " "){
               e.preventDefault();
               active = idx;
-              hoverIdx = null;
               render();
             }
           });
-
-          frame.addEventListener("mouseenter", function(){
-            hoverIdx = idx;
-            render();
-          });
-          frame.addEventListener("mouseleave", function(){
-            hoverIdx = null;
-            render();
-          });
         });
 
-        // Toggle overlay
-        root.querySelectorAll("[data-smc3-toggle]").forEach(function(btn){
+        // toggle overlay on active (or select first)
+        root.querySelectorAll("[data-smwc-toggle]").forEach(function(btn){
           btn.addEventListener("click", function(e){
             e.preventDefault();
             e.stopPropagation();
             stopAutoplay();
 
-            var card = btn.closest("[data-smc3-card]");
+            var card = btn.closest("[data-smwc-card]");
             if(!card) return;
 
             var idx = parseInt(card.getAttribute("data-index") || "0", 10);
             if(idx !== active){
               active = idx;
-              hoverIdx = null;
             }
 
             onState[active] = !onState[active];
             btn.setAttribute("aria-pressed", onState[active] ? "true" : "false");
-            var t = btn.querySelector(".smc3__toggleText");
+
+            var t = btn.querySelector(".smwc__toggleText");
             if(t) t.textContent = onState[active] ? "Zurück" : "Verwandeln";
 
             render();
@@ -701,13 +632,12 @@
           });
         });
 
-        // Keyboard
+        // keyboard
         root.addEventListener("keydown", function(e){
           if(e.key === "ArrowLeft"){ stopAutoplay(); go(-1); startAutoplay(); }
           if(e.key === "ArrowRight"){ stopAutoplay(); go(1); startAutoplay(); }
         });
 
-        // Resize
         var ro = new ResizeObserver(function(){ render(); });
         ro.observe(root);
       }
