@@ -1,13 +1,13 @@
 {% comment %}
-  Werkstatt Floating Carousel V2 (circular rotate, no big background frame)
-  - Center card always middle
-  - Left/Right arrows sit left/right of highlighted card
-  - Cards rotate around a circle (JS positions via sin/cos)
-  - Square images, floating shadows not clipped (all wrappers overflow: visible)
-  - "Verwandeln" button bottom-center inside image (not covering top)
-  - Desktop hover shows subtle selection ring on hovered card
-  - Prompt bar with small heading "Beschreibung"
-  - Overlay is full card, same size, fades in 2s
+  Werkstatt Floating Carousel V3
+  - Center card always centered
+  - Smooth circular motion for all cards when navigating (animated via CSS transition)
+  - Side cards more visible + slightly blurry
+  - Hover: subtle lift + image zoom (desktop), also clearer selection feel
+  - Arrows with SVG icons, positioned left/right of center card
+  - "Verwandeln" bottom center inside image
+  - Description heading + text centered under carousel
+  - Mobile optimized (touch friendly, no hover dependencies)
 {% endcomment %}
 
 {% schema %}
@@ -25,7 +25,7 @@
       "settings": [
         { "type": "image_picker", "id": "base_image", "label": "Basisbild" },
         { "type": "image_picker", "id": "overlay_image", "label": "Overlay Bild (Schild)" },
-        { "type": "textarea", "id": "prompt", "label": "Beschreibung (Prompt)", "default": "Beispiel Prompt" }
+        { "type": "textarea", "id": "prompt", "label": "Beschreibung", "default": "Beispiel Prompt" }
       ]
     }
   ],
@@ -51,52 +51,51 @@
 }
 {% endschema %}
 
-<section id="smcc-{{ section.id }}" class="smcc" aria-label="Werkstatt Carousel">
+<section id="smc3-{{ section.id }}" class="smc3" aria-label="Werkstatt Carousel">
   <style>
-    #smcc-{{ section.id }}{
+    #smc3-{{ section.id }}{
       --a1:#ff9800;
       --a2:#0044CC;
 
       --ink: rgba(9,10,12,0.92);
-      --muted: rgba(9,10,12,0.68);
+      --muted: rgba(9,10,12,0.62);
 
       --stroke: rgba(255,255,255,0.18);
-      --glass: rgba(255,255,255,0.10);
 
       --shadow: 0 22px 70px rgba(15,23,42,0.18);
-      --shadow2: 0 18px 54px rgba(15,23,42,0.16);
+      --shadow2: 0 20px 60px rgba(15,23,42,0.16);
 
       --rCard: 26px;
       --fade: 2000ms;
       --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      --cardSize: clamp(240px, 58vw, 420px);
-      --stageH: clamp(320px, 68vw, 520px);
-      --navOffset: 260px; /* will be overwritten by JS */
+      --cardSize: clamp(240px, 66vw, 460px);
+      --stageH: clamp(330px, 74vw, 560px);
+      --navOffset: 280px; /* set by JS */
 
-      overflow: visible;
       padding: clamp(10px, 2.6vw, 18px);
+      overflow: visible;
     }
 
-    #smcc-{{ section.id }} .smcc__wrap{
+    #smc3-{{ section.id }} .smc3__wrap{
       width: min(1240px, 100%);
       margin: 0 auto;
       overflow: visible;
       position: relative;
     }
 
-    /* Stage (no background panel) */
-    #smcc-{{ section.id }} .smcc__stage{
+    #smc3-{{ section.id }} .smc3__stage{
       position: relative;
       height: var(--stageH);
       overflow: visible;
       display: grid;
       place-items: center;
-      padding: 10px 0 6px;
+      padding: 6px 0 10px;
+      touch-action: pan-y;
     }
 
-    /* Nav buttons left/right of active card */
-    #smcc-{{ section.id }} .smcc__navbtn{
+    /* Nav */
+    #smc3-{{ section.id }} .smc3__navbtn{
       position: absolute;
       top: 50%;
       width: 46px;
@@ -111,43 +110,45 @@
       display: grid;
       place-items: center;
       color: rgba(9,10,12,0.78);
-      transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       z-index: 50;
+      transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
     }
 
-    #smcc-{{ section.id }} .smcc__navbtn:hover{
-      transform: translateY(-50%) scale(1.02);
+    #smc3-{{ section.id }} .smc3__navbtn svg{
+      width: 18px;
+      height: 18px;
+      display: block;
+      color: rgba(9,10,12,0.78);
+    }
+
+    #smc3-{{ section.id }} .smc3__navbtn:hover{
       filter: brightness(1.03);
       background: rgba(255,255,255,0.12);
     }
-    #smcc-{{ section.id }} .smcc__navbtn:active{
-      transform: translateY(-50%) scale(0.98);
-    }
-    #smcc-{{ section.id }} .smcc__navbtn:focus-visible{
-      outline: 3px solid rgba(0,68,204,0.35);
-      outline-offset: 2px;
-    }
+    #smc3-{{ section.id }} .smc3__navbtn:active{ transform: translateY(-50%) scale(0.98); }
+    #smc3-{{ section.id }} .smc3__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
 
-    #smcc-{{ section.id }} .smcc__navbtn--prev{
+    #smc3-{{ section.id }} .smc3__navbtn--prev{
       left: calc(50% - var(--navOffset));
       transform: translate(-100%, -50%);
     }
-    #smcc-{{ section.id }} .smcc__navbtn--next{
+    #smc3-{{ section.id }} .smc3__navbtn--next{
       left: calc(50% + var(--navOffset));
       transform: translate(0, -50%);
     }
 
     /* Cards layer */
-    #smcc-{{ section.id }} .smcc__cards{
+    #smc3-{{ section.id }} .smc3__cards{
       position: absolute;
       inset: 0;
       overflow: visible;
-      pointer-events: none; /* cards enable via inner button */
+      pointer-events: none;
+      perspective: 1000px;
     }
 
-    #smcc-{{ section.id }} .smcc__card{
+    #smc3-{{ section.id }} .smc3__card{
       position: absolute;
       left: 50%;
       top: 50%;
@@ -157,55 +158,52 @@
       border-radius: var(--rCard);
       opacity: 0;
       pointer-events: none;
-      will-change: transform, opacity;
       isolation: isolate;
+
+      will-change: transform, opacity, filter;
+      transition:
+        transform 640ms var(--ease),
+        opacity 520ms ease,
+        filter 520ms ease;
     }
 
-    /* Floating glow outline */
-    #smcc-{{ section.id }} .smcc__card:before{
+    /* Glow outline only */
+    #smc3-{{ section.id }} .smc3__card:before{
       content:"";
       position:absolute;
       inset:-1px;
       border-radius: calc(var(--rCard) + 1px);
       padding: 1.5px;
-      background: linear-gradient(135deg, rgba(255,152,0,0.70), rgba(0,68,204,0.60));
+      background: linear-gradient(135deg, rgba(255,152,0,0.75), rgba(0,68,204,0.62));
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       opacity: 0.28;
       pointer-events:none;
       z-index: 0;
-      transition: opacity 220ms ease;
+      transition: opacity 260ms ease;
     }
 
-    #smcc-{{ section.id }} .smcc__card:after{
+    #smc3-{{ section.id }} .smc3__card:after{
       content:"";
       position:absolute;
-      inset:-14px;
-      border-radius: calc(var(--rCard) + 18px);
+      inset:-16px;
+      border-radius: calc(var(--rCard) + 20px);
       background:
-        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.20), rgba(255,255,255,0) 62%),
-        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.18), rgba(255,255,255,0) 62%);
-      opacity: 0.20;
+        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.22), rgba(255,255,255,0) 62%),
+        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.20), rgba(255,255,255,0) 62%);
+      opacity: 0.22;
       filter: blur(14px);
       pointer-events:none;
       z-index: -1;
-      transition: opacity 220ms ease;
+      transition: opacity 260ms ease;
     }
 
-    #smcc-{{ section.id }} .smcc__card.is-active:before{ opacity: 0.85; }
-    #smcc-{{ section.id }} .smcc__card.is-active:after{ opacity: 0.46; }
+    #smc3-{{ section.id }} .smc3__card.is-active:before{ opacity: 0.90; }
+    #smc3-{{ section.id }} .smc3__card.is-active:after{ opacity: 0.52; }
 
-    /* Hover selection hint (desktop) */
-    @media (hover:hover){
-      #smcc-{{ section.id }} .smcc__card.is-hover:before{ opacity: 0.62; }
-      #smcc-{{ section.id }} .smcc__card.is-hover .smcc__hint{
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    #smcc-{{ section.id }} .smcc__frame{
+    /* Frame */
+    #smc3-{{ section.id }} .smc3__frame{
       width: 100%;
       height: 100%;
       border-radius: var(--rCard);
@@ -217,12 +215,14 @@
       -webkit-backdrop-filter: blur(10px);
       position: relative;
       z-index: 1;
-      pointer-events: auto; /* enable clicking */
+      pointer-events: auto;
       cursor: pointer;
+      transform: translateZ(0);
+      transition: transform 220ms var(--ease);
     }
 
-    #smcc-{{ section.id }} .smcc__img,
-    #smcc-{{ section.id }} .smcc__overlay{
+    #smc3-{{ section.id }} .smc3__img,
+    #smc3-{{ section.id }} .smc3__overlay{
       position:absolute;
       inset:0;
       width:100%;
@@ -230,23 +230,33 @@
       object-fit: cover;
     }
 
-    #smcc-{{ section.id }} .smcc__img{
+    #smc3-{{ section.id }} .smc3__img{
       transform: scale(1.02);
       transition: transform 720ms var(--ease), filter 520ms ease;
       will-change: transform, filter;
     }
 
-    #smcc-{{ section.id }} .smcc__overlay{
+    /* Hover animation */
+    @media (hover:hover){
+      #smc3-{{ section.id }} .smc3__frame:hover{
+        transform: translateY(-2px);
+      }
+      #smc3-{{ section.id }} .smc3__frame:hover .smc3__img{
+        transform: scale(1.06);
+      }
+    }
+
+    /* Overlay fade */
+    #smc3-{{ section.id }} .smc3__overlay{
       opacity: 0;
       transition: opacity var(--fade) ease;
       will-change: opacity;
     }
+    #smc3-{{ section.id }} .smc3__card.is-on .smc3__overlay{ opacity: 1; }
+    #smc3-{{ section.id }} .smc3__card.is-on .smc3__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
 
-    #smcc-{{ section.id }} .smcc__card.is-on .smcc__overlay{ opacity: 1; }
-    #smcc-{{ section.id }} .smcc__card.is-on .smcc__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
-
-    /* bottom-center button */
-    #smcc-{{ section.id }} .smcc__toggle{
+    /* Button bottom center */
+    #smc3-{{ section.id }} .smc3__toggle{
       position: absolute;
       left: 50%;
       bottom: 12px;
@@ -275,16 +285,16 @@
       z-index: 2;
     }
 
-    #smcc-{{ section.id }} .smcc__card.is-active .smcc__toggle{
+    #smc3-{{ section.id }} .smc3__card.is-active .smc3__toggle{
       opacity: 1;
       pointer-events: auto;
     }
 
-    #smcc-{{ section.id }} .smcc__toggle:hover{ filter: brightness(1.04); }
-    #smcc-{{ section.id }} .smcc__toggle:active{ transform: translateX(-50%) scale(0.99); }
-    #smcc-{{ section.id }} .smcc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
+    #smc3-{{ section.id }} .smc3__toggle:hover{ filter: brightness(1.04); }
+    #smc3-{{ section.id }} .smc3__toggle:active{ transform: translateX(-50%) scale(0.99); }
+    #smc3-{{ section.id }} .smc3__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
 
-    #smcc-{{ section.id }} .smcc__pillDot{
+    #smc3-{{ section.id }} .smc3__pillDot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -292,14 +302,14 @@
       box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
     }
 
-    #smcc-{{ section.id }} .smcc__card.is-on .smcc__toggle{
+    #smc3-{{ section.id }} .smc3__card.is-on .smc3__toggle{
       background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       border-color: rgba(255,255,255,0.16);
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
     }
 
-    /* Tiny hover hint ring dot (desktop only) */
-    #smcc-{{ section.id }} .smcc__hint{
+    /* Hover selection indicator: subtle top-left pill appears on hovered card */
+    #smc3-{{ section.id }} .smc3__hint{
       position:absolute;
       left: 14px;
       top: 14px;
@@ -316,7 +326,6 @@
       color: rgba(255,255,255,0.92);
       font-weight: 900;
       font-size: 12px;
-
       opacity: 0;
       transform: translateY(-4px);
       transition: opacity 180ms ease, transform 180ms var(--ease);
@@ -324,7 +333,7 @@
       z-index: 3;
     }
 
-    #smcc-{{ section.id }} .smcc__hintDot{
+    #smc3-{{ section.id }} .smc3__hintDot{
       width: 9px;
       height: 9px;
       border-radius: 999px;
@@ -332,23 +341,36 @@
       box-shadow: 0 0 0 6px rgba(0,68,204,0.14);
     }
 
-    /* Prompt bar */
-    #smcc-{{ section.id }} .smcc__promptWrap{
-      padding: 8px 6px 0;
-      overflow: visible;
+    @media (hover:hover){
+      #smc3-{{ section.id }} .smc3__card.is-hover .smc3__hint{
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #smc3-{{ section.id }} .smc3__card.is-hover:before{ opacity: 0.62; }
     }
 
-    #smcc-{{ section.id }} .smcc__promptHead{
+    /* Description centered */
+    #smc3-{{ section.id }} .smc3__desc{
+      margin-top: 10px;
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      text-align: center;
+      padding: 0 8px;
+    }
+
+    #smc3-{{ section.id }} .smc3__descHead{
       font-weight: 950;
       font-size: 12px;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
       color: rgba(9,10,12,0.58);
-      margin: 0 0 8px 10px;
+      margin: 0;
       user-select:none;
     }
 
-    #smcc-{{ section.id }} .smcc__prompt{
+    #smc3-{{ section.id }} .smc3__descText{
+      width: min(860px, 100%);
       border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.08);
@@ -372,33 +394,33 @@
     }
 
     @media (hover:hover){
-      #smcc-{{ section.id }} .smcc__wrap:hover .smcc__prompt,
-      #smcc-{{ section.id }} .smcc__wrap:focus-within .smcc__prompt{
+      #smc3-{{ section.id }} .smc3__wrap:hover .smc3__descText,
+      #smc3-{{ section.id }} .smc3__wrap:focus-within .smc3__descText{
         opacity: 1;
         transform: translateY(0);
       }
     }
-
     @media (hover:none){
-      #smcc-{{ section.id }} .smcc__prompt{
+      #smc3-{{ section.id }} .smc3__descText{
         opacity: 1;
         transform: translateY(0);
       }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smcc-{{ section.id }} *{
-        transition: none !important;
-        animation: none !important;
-      }
+      #smc3-{{ section.id }} *{ transition: none !important; animation: none !important; }
     }
   </style>
 
-  <div class="smcc__wrap">
-    <div class="smcc__stage">
-      <button class="smcc__navbtn smcc__navbtn--prev" type="button" data-smcc-prev aria-label="Vorheriges">‹</button>
+  <div class="smc3__wrap">
+    <div class="smc3__stage">
+      <button class="smc3__navbtn smc3__navbtn--prev" type="button" data-smc3-prev aria-label="Vorheriges">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M14.5 5.5L8.5 12l6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
 
-      <div class="smcc__cards" data-smcc-cards>
+      <div class="smc3__cards" data-smc3-cards>
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
             {% liquid
@@ -422,38 +444,32 @@
               endif
             %}
 
-            <article
-              class="smcc__card"
-              data-smcc-card
-              data-index="{{ forloop.index0 }}"
-              data-prompt="{{ block.settings.prompt | escape }}"
-              {{ block.shopify_attributes }}
-            >
-              <div class="smcc__frame" data-smcc-frame role="button" tabindex="0" aria-label="Slide auswählen">
+            <article class="smc3__card" data-smc3-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              <div class="smc3__frame" data-smc3-frame role="button" tabindex="0" aria-label="Slide auswählen">
                 {% if block.settings.base_image != blank %}
-                  <img class="smcc__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                  <img class="smc3__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
                 {% elsif base_fallback != blank %}
-                  <img class="smcc__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
+                  <img class="smc3__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <img class="smcc__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
+                  <img class="smc3__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
                 {% if block.settings.overlay_image != blank %}
-                  <img class="smcc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smc3__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
                 {% elsif over_fallback != blank %}
-                  <img class="smcc__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smc3__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <img class="smcc__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
+                  <img class="smc3__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
                 {% endif %}
 
-                <div class="smcc__hint" aria-hidden="true">
-                  <span class="smcc__hintDot"></span>
+                <div class="smc3__hint" aria-hidden="true">
+                  <span class="smc3__hintDot"></span>
                   <span>Auswählen</span>
                 </div>
 
-                <button type="button" class="smcc__toggle" data-smcc-toggle aria-pressed="false">
-                  <span class="smcc__pillDot" aria-hidden="true"></span>
-                  <span class="smcc__toggleText">Verwandeln</span>
+                <button type="button" class="smc3__toggle" data-smc3-toggle aria-pressed="false">
+                  <span class="smc3__pillDot" aria-hidden="true"></span>
+                  <span class="smc3__toggleText">Verwandeln</span>
                 </button>
               </div>
             </article>
@@ -461,28 +477,31 @@
         {% endfor %}
       </div>
 
-      <button class="smcc__navbtn smcc__navbtn--next" type="button" data-smcc-next aria-label="Nächstes">›</button>
+      <button class="smc3__navbtn smc3__navbtn--next" type="button" data-smc3-next aria-label="Nächstes">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9.5 5.5L15.5 12l-6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="smcc__promptWrap" aria-label="Beschreibung">
-      <div class="smcc__promptHead">Beschreibung</div>
-      <div class="smcc__prompt" data-smcc-prompt></div>
+    <div class="smc3__desc" aria-label="Beschreibung">
+      <p class="smc3__descHead">Beschreibung</p>
+      <div class="smc3__descText" data-smc3-prompt></div>
     </div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var root = document.getElementById("smcc-" + SECTION_ID);
+      var root = document.getElementById("smc3-" + SECTION_ID);
       if(!root) return;
 
-      var cardsWrap = root.querySelector("[data-smcc-cards]");
-      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smcc-card]"));
-      var prev = root.querySelector("[data-smcc-prev]");
-      var next = root.querySelector("[data-smcc-next]");
-      var promptEl = root.querySelector("[data-smcc-prompt]");
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smc3-card]"));
+      var prev = root.querySelector("[data-smc3-prev]");
+      var next = root.querySelector("[data-smc3-next]");
+      var promptEl = root.querySelector("[data-smc3-prompt]");
 
-      if(!cardsWrap || !cards.length) return;
+      if(!cards.length) return;
 
       var autoplay = {{ section.settings.autoplay | json }};
       var autoplayMs = ({{ section.settings.autoplay_seconds | default: 6 }} * 1000) || 6000;
@@ -490,13 +509,10 @@
       var active = 0;
       var hoverIdx = null;
       var timer = null;
-
-      // overlay state per card
       var onState = cards.map(function(){ return false; });
+      var isInteracting = false;
 
       function mod(n,m){ return ((n % m) + m) % m; }
-
-      // shortest circular diff
       function diff(i, a, n){
         var d = mod(i - a, n);
         if(d > n/2) d -= n;
@@ -510,62 +526,66 @@
       }
 
       function computeNavOffset(){
-        // place arrows left/right of active card
-        var cardSize = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
-        var offset = (cardSize / 2) + 26;
-        root.style.setProperty("--navOffset", offset + "px");
+        var cs = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
+        root.style.setProperty("--navOffset", ((cs / 2) + 34) + "px");
       }
 
       function render(){
         var n = cards.length;
 
-        // geometry
-        var cardSize = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
-        var radiusX = Math.min(460, cardSize * 1.15);
-        var radiusY = Math.min(90, cardSize * 0.22);
-        var angleStep = 18; // degrees per step
+        var cs = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
+
+        // circle geometry (responsive)
+        var radiusX = Math.min(520, cs * 1.22);
+        var radiusY = Math.min(120, cs * 0.30);
+        var angleStep = 20; // deg per step
+        var maxShow = 4;    // show more background cards
 
         for(var i=0;i<n;i++){
           var d = diff(i, active, n);
-
-          // show a few around center for performance
           var abs = Math.abs(d);
-          var maxShow = 3;
           var show = abs <= maxShow;
 
           var el = cards[i];
           el.style.pointerEvents = show ? "auto" : "none";
-          el.style.opacity = show ? String(Math.max(0, 1 - abs * 0.18)) : "0";
 
-          // circle-ish rotation
+          // circular motion
           var ang = (d * angleStep) * (Math.PI / 180);
           var x = Math.sin(ang) * radiusX;
           var y = (1 - Math.cos(ang)) * radiusY;
 
-          var s = Math.max(0.78, 1 - abs * 0.10);
-          var z = 100 - abs * 10;
+          // depth
+          var s = Math.max(0.76, 1 - abs * 0.09);
+          var z = 200 - abs * 20;
 
-          // center is always crisp
+          // visibility + blur for background
+          var op = show ? Math.max(0.22, 1 - abs * 0.18) : 0;
+          var blur = (abs === 0) ? 0 : Math.min(3.5, abs * 1.2);
+
           if(d === 0){
             el.classList.add("is-active");
             s = 1.08;
-            z = 200;
-            y = 0;
             x = 0;
+            y = 0;
+            z = 400;
+            op = 1;
+            blur = 0;
           } else {
             el.classList.remove("is-active");
           }
 
+          el.style.opacity = String(op);
           el.style.zIndex = String(z);
-          el.style.transform = "translate(-50%, -50%) translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + s.toFixed(3) + ")";
-          el.style.filter = (d === 0) ? "none" : "saturate(0.98)";
+          el.style.filter = "blur(" + blur.toFixed(2) + "px)";
 
-          // overlay class
+          el.style.transform =
+            "translate(-50%, -50%) translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + s.toFixed(3) + ")";
+
           if(onState[i]) el.classList.add("is-on");
           else el.classList.remove("is-on");
         }
 
-        // hover selection visuals
+        // hover selection
         cards.forEach(function(c, idx){
           if(hoverIdx !== null && idx === hoverIdx && idx !== active) c.classList.add("is-hover");
           else c.classList.remove("is-hover");
@@ -581,29 +601,56 @@
         render();
       }
 
-      function startAutoplay(){
-        if(!autoplay) return;
-        stopAutoplay();
-        timer = setInterval(function(){ go(1); }, autoplayMs);
-      }
-
       function stopAutoplay(){
         if(timer){ clearInterval(timer); timer = null; }
       }
 
-      function bind(){
-        if(prev) prev.addEventListener("click", function(){ stopAutoplay(); go(-1); });
-        if(next) next.addEventListener("click", function(){ stopAutoplay(); go(1); });
+      function startAutoplay(){
+        if(!autoplay) return;
+        stopAutoplay();
+        timer = setInterval(function(){
+          if(isInteracting) return;
+          go(1);
+        }, autoplayMs);
+      }
 
-        // Card click selects
+      function bind(){
+        if(prev) prev.addEventListener("click", function(){ stopAutoplay(); go(-1); startAutoplay(); });
+        if(next) next.addEventListener("click", function(){ stopAutoplay(); go(1); startAutoplay(); });
+
+        // swipe support on mobile
+        var startX = 0;
+        var dx = 0;
+
+        root.addEventListener("pointerdown", function(e){
+          isInteracting = true;
+          stopAutoplay();
+          startX = e.clientX;
+          dx = 0;
+        }, { passive: true });
+
+        root.addEventListener("pointermove", function(e){
+          if(!isInteracting) return;
+          dx = e.clientX - startX;
+        }, { passive: true });
+
+        root.addEventListener("pointerup", function(){
+          if(!isInteracting) return;
+          isInteracting = false;
+          if(Math.abs(dx) > 40){
+            go(dx > 0 ? -1 : 1);
+          }
+          startAutoplay();
+        }, { passive: true });
+
+        // Card select + hover preview
         cards.forEach(function(card, idx){
-          var frame = card.querySelector("[data-smcc-frame]");
+          var frame = card.querySelector("[data-smc3-frame]");
           if(!frame) return;
 
           frame.addEventListener("click", function(e){
             var t = e.target;
-            if(t && t.closest && t.closest("[data-smcc-toggle]")) return;
-            stopAutoplay();
+            if(t && t.closest && t.closest("[data-smc3-toggle]")) return;
             active = idx;
             hoverIdx = null;
             render();
@@ -612,14 +659,12 @@
           frame.addEventListener("keydown", function(e){
             if(e.key === "Enter" || e.key === " "){
               e.preventDefault();
-              stopAutoplay();
               active = idx;
               hoverIdx = null;
               render();
             }
           });
 
-          // Hover selection hint + prompt preview
           frame.addEventListener("mouseenter", function(){
             hoverIdx = idx;
             render();
@@ -630,39 +675,36 @@
           });
         });
 
-        // Toggle only on active card, otherwise selects first
-        root.querySelectorAll("[data-smcc-toggle]").forEach(function(btn){
+        // Toggle overlay
+        root.querySelectorAll("[data-smc3-toggle]").forEach(function(btn){
           btn.addEventListener("click", function(e){
             e.preventDefault();
             e.stopPropagation();
             stopAutoplay();
 
-            var card = btn.closest("[data-smcc-card]");
+            var card = btn.closest("[data-smc3-card]");
             if(!card) return;
 
             var idx = parseInt(card.getAttribute("data-index") || "0", 10);
-
             if(idx !== active){
               active = idx;
               hoverIdx = null;
-              render();
-              // keep click intent, toggle after selecting
             }
 
             onState[active] = !onState[active];
             btn.setAttribute("aria-pressed", onState[active] ? "true" : "false");
-
-            var t = btn.querySelector(".smcc__toggleText");
+            var t = btn.querySelector(".smc3__toggleText");
             if(t) t.textContent = onState[active] ? "Zurück" : "Verwandeln";
 
             render();
+            startAutoplay();
           });
         });
 
-        // Keyboard arrows
+        // Keyboard
         root.addEventListener("keydown", function(e){
-          if(e.key === "ArrowLeft"){ stopAutoplay(); go(-1); }
-          if(e.key === "ArrowRight"){ stopAutoplay(); go(1); }
+          if(e.key === "ArrowLeft"){ stopAutoplay(); go(-1); startAutoplay(); }
+          if(e.key === "ArrowRight"){ stopAutoplay(); go(1); startAutoplay(); }
         });
 
         // Resize
