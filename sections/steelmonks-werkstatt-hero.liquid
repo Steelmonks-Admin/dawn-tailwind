@@ -1,624 +1,738 @@
 {% comment %}
-  Werkstatt From-To (Final + Black Pill + 3 Trust Features)
-  - Keeps exact From-To layout as approved
-  - Adds Black pill + 3 features row above (same style language as your hero)
+  Steelmonks Werkstatt Hero V3
+  - Clear headline + features + process speed
+  - Mobile first carousel with floating rounded cards
+  - Each slide can toggle "turns into sign" by overlaying a second image
+  - Optional text overlay per slide
 {% endcomment %}
 
 {% schema %}
 {
-  "name": "Werkstatt From-To",
+  "name": "Werkstatt Hero V3",
   "tag": "section",
   "settings": [
-    {
-      "type": "range",
-      "id": "top_spacing",
-      "label": "Abstand oben",
-      "default": 34,
-      "min": 0,
-      "max": 180,
-      "step": 2
-    },
-    {
-      "type": "range",
-      "id": "bottom_spacing",
-      "label": "Abstand unten",
-      "default": 40,
-      "min": 0,
-      "max": 200,
-      "step": 2
-    },
+    { "type": "range", "id": "top_spacing", "label": "Abstand oben", "default": 26, "min": 0, "max": 180, "step": 2 },
+    { "type": "range", "id": "bottom_spacing", "label": "Abstand unten", "default": 28, "min": 0, "max": 200, "step": 2 },
 
-    {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Black Pill Text",
-      "default": "Die Steelmonks Werkstatt"
-    },
+    { "type": "text", "id": "eyebrow", "label": "Kleine Headline", "default": "Die Steelmonks Werkstatt" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Dein Metallschild aus Text oder Foto" },
+    { "type": "textarea", "id": "subheadline", "label": "Subheadline", "default": "Gib einen Prompt ein oder lade ein Bild hoch. In ca. 2 Minuten bekommst du einen sauberen Entwurf, den du direkt bestellen kannst." },
 
-    {
-      "type": "text",
-      "id": "trust_1_icon",
-      "label": "Trust 1 Icon",
-      "default": "🇩🇪"
-    },
-    {
-      "type": "text",
-      "id": "trust_1_text",
-      "label": "Trust 1 Text",
-      "default": "Schneller Versand."
-    },
-    {
-      "type": "text",
-      "id": "trust_2_icon",
-      "label": "Trust 2 Icon",
-      "default": "🏅"
-    },
-    {
-      "type": "text",
-      "id": "trust_2_text",
-      "label": "Trust 2 Text",
-      "default": "Über 100.000+ Bestellungen."
-    },
-    {
-      "type": "text",
-      "id": "trust_3_icon",
-      "label": "Trust 3 Icon",
-      "default": "⭐⭐⭐⭐⭐"
-    },
-    {
-      "type": "text",
-      "id": "trust_3_text",
-      "label": "Trust 3 Text",
-      "default": "10.000+ Bewertungen."
-    },
+    { "type": "text", "id": "speed_badge", "label": "Speed Badge", "default": "Entwurf in 2 Minuten" },
 
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading (left)",
-      "default": "Von einem Foto"
-    },
-    {
-      "type": "text",
-      "id": "heading_2",
-      "label": "Heading (right)",
-      "default": "zu deinem Metallschild"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "in 2 Minuten"
-    },
+    { "type": "text", "id": "feature_1_icon", "label": "Feature 1 Icon", "default": "⚡" },
+    { "type": "text", "id": "feature_1_text", "label": "Feature 1 Text", "default": "Schnell, klar, ohne Designkenntnisse" },
 
-    {
-      "type": "image_picker",
-      "id": "from_image",
-      "label": "From image (photo reference)"
-    },
-    {
-      "type": "textarea",
-      "id": "from_label",
-      "label": "Label unter linkem Bild",
-      "default": "Lade ein Foto oder eine Skizze hoch"
-    },
-    {
-      "type": "image_picker",
-      "id": "to_image",
-      "label": "To image (metal sign)"
-    },
-    {
-      "type": "textarea",
-      "id": "to_label",
-      "label": "Label unter rechtem Bild",
-      "default": "Wir verwandeln es in ein sauberes, schnittfähiges Schild"
-    },
+    { "type": "text", "id": "feature_2_icon", "label": "Feature 2 Icon", "default": "🧠" },
+    { "type": "text", "id": "feature_2_text", "label": "Feature 2 Text", "default": "Aus Text oder Bild Prompt" },
 
+    { "type": "text", "id": "feature_3_icon", "label": "Feature 3 Icon", "default": "🛠️" },
+    { "type": "text", "id": "feature_3_text", "label": "Feature 3 Text", "default": "Konturen sauber, schnittfähig optimiert" },
+
+    { "type": "text", "id": "feature_4_icon", "label": "Feature 4 Icon", "default": "☔" },
+    { "type": "text", "id": "feature_4_text", "label": "Feature 4 Text", "default": "Wetterfestes Metall, langlebig" },
+
+    { "type": "text", "id": "step_1", "label": "Step 1", "default": "1. Prompt eingeben oder Foto hochladen" },
+    { "type": "text", "id": "step_2", "label": "Step 2", "default": "2. Entwurf ansehen, Text und Stil anpassen" },
+    { "type": "text", "id": "step_3", "label": "Step 3", "default": "3. Bestellen, wir fertigen dein Unikat" },
+
+    { "type": "text", "id": "cta_label", "label": "Button Text", "default": "Jetzt in der Werkstatt starten" },
+    { "type": "url", "id": "cta_url", "label": "Button Link" },
+
+    { "type": "checkbox", "id": "autoplay", "label": "Carousel Autoplay", "default": true },
+    { "type": "range", "id": "autoplay_seconds", "label": "Autoplay Sekunden", "default": 6, "min": 3, "max": 12, "step": 1 }
+  ],
+  "blocks": [
     {
-      "type": "checkbox",
-      "id": "autoplay",
-      "label": "Autoplay animation",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "duration_seconds",
-      "min": 6,
-      "max": 20,
-      "step": 1,
-      "unit": "s",
-      "label": "Animation loop duration (visual)",
-      "default": 10
+      "type": "slide",
+      "name": "Carousel Slide",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Von Idee zu Schild" },
+        { "type": "image_picker", "id": "base_image", "label": "Basisbild" },
+        { "type": "image_picker", "id": "sign_overlay_image", "label": "Overlay Bild (Schild Ergebnis)" },
+        { "type": "text", "id": "overlay_text", "label": "Overlay Text (optional)", "default": "Familie Müller" },
+        { "type": "text", "id": "toggle_label_off", "label": "Button Text (vorher)", "default": "In Schild verwandeln" },
+        { "type": "text", "id": "toggle_label_on", "label": "Button Text (nachher)", "default": "Zurück zur Vorlage" }
+      ]
     }
   ],
   "presets": [
-    { "name": "Werkstatt From-To" }
+    { "name": "Werkstatt Hero V3", "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }] }
   ]
 }
 {% endschema %}
 
 <section
-  id="smwh-fromto-{{ section.id }}"
-  class="smwft"
-  aria-label="Von Foto zu Schild"
-  style="padding-top: {{ section.settings.top_spacing | default: 34 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 40 }}px;"
+  id="smw-hero-v3-{{ section.id }}"
+  class="smwv3"
+  style="padding-top: {{ section.settings.top_spacing | default: 26 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 28 }}px;"
+  aria-label="Steelmonks Werkstatt"
 >
   <style>
-    #smwh-fromto-{{ section.id }}{
+    #smw-hero-v3-{{ section.id }}{
+      --bg: transparent;
+      --card: rgba(255,255,255,0.72);
+      --card2: rgba(255,255,255,0.55);
       --ink: rgba(9,10,12,0.92);
       --muted: rgba(9,10,12,0.68);
       --stroke: rgba(9,10,12,0.10);
-      --shadow2: 0 16px 34px rgba(15,23,42,0.10);
 
-      --radius: 32px;
-      --img-radius: 30px;
-
-      /* Steelmonks accents */
       --a1: #ff9800;
       --a2: #0044CC;
       --a3: #00235e;
 
-      --loop: {{ section.settings.duration_seconds | default: 10 }}s;
+      --r1: 28px;
+      --r2: 22px;
 
-      --gap: 38px;
-      --midw: 248px;
+      --shadow: 0 18px 48px rgba(15,23,42,0.12);
+      --shadow2: 0 10px 26px rgba(15,23,42,0.10);
+      --ease: cubic-bezier(0.2,0.8,0.2,1);
     }
 
-    #smwh-fromto-{{ section.id }}{
-      background: transparent;
+    #smw-hero-v3-{{ section.id }}{
+      background: var(--bg);
       color: var(--ink);
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__wrap{
+    #smw-hero-v3-{{ section.id }} .smwv3__wrap{
       max-width: 1240px;
       margin: 0 auto;
       padding: 0 16px;
     }
 
-    /* ===== Top (Black pill + Trust row) ===== */
-    #smwh-fromto-{{ section.id }} .smwft__top{
+    #smw-hero-v3-{{ section.id }} .smwv3__grid{
       display: grid;
-      justify-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__pill-black{
+    @media (min-width: 980px){
+      #smw-hero-v3-{{ section.id }} .smwv3__grid{
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 34px;
+        align-items: center;
+      }
+    }
+
+    /* Copy */
+    #smw-hero-v3-{{ section.id }} .smwv3__copy{
+      border-radius: var(--r1);
+      padding: 18px 16px;
+      background:
+        radial-gradient(120% 90% at 10% 0%, rgba(255,152,0,0.14), rgba(255,255,255,0) 55%),
+        radial-gradient(120% 90% at 90% 0%, rgba(0,68,204,0.12), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.68), rgba(255,255,255,0.46));
+      border: 1px solid rgba(9,10,12,0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__copy:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: var(--r1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+      pointer-events:none;
+      z-index:0;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__copy > *{
+      position: relative;
+      z-index: 1;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__eyebrow{
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 20px;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: #090A0C;
-      color: rgba(255,255,255,0.96);
-      font-size: 1.05rem;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(9,10,12,0.10);
+      box-shadow: var(--shadow2);
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+      font-size: 12px;
+      color: rgba(9,10,12,0.86);
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__pill-black::before{
-      content: "";
+    #smw-hero-v3-{{ section.id }} .smwv3__eyebrow:before{
+      content:"";
       width: 10px;
       height: 10px;
       border-radius: 999px;
       background: var(--a1);
-      box-shadow: 0 0 0 4px rgba(255,152,0,0.35);
+      box-shadow: 0 0 0 5px rgba(255,152,0,0.25);
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__trust{
-      width: 100%;
-      max-width: 980px;
+    #smw-hero-v3-{{ section.id }} .smwv3__h{
+      margin: 12px 0 0;
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      font-size: clamp(26px, 3.2vw, 44px);
+      color: rgba(9,10,12,0.94);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__sub{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 56ch;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__meta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(9,10,12,0.10);
+      background: rgba(255,255,255,0.72);
+      box-shadow: var(--shadow2);
+      font-weight: 900;
+      font-size: 13px;
+      color: rgba(9,10,12,0.86);
+      white-space: nowrap;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__badge i{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--a1), var(--a2));
+      display: inline-block;
+      box-shadow: 0 0 0 5px rgba(0,68,204,0.12);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__cta{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      font-weight: 950;
+      letter-spacing: 0.2px;
+      text-decoration: none;
+      color: rgba(255,255,255,0.98);
+      background: linear-gradient(90deg, var(--a3), var(--a2));
+      box-shadow: 0 16px 40px rgba(0,35,94,0.22);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 180ms var(--ease), filter 180ms ease;
+      will-change: transform;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__cta:hover{
+      transform: translateY(-1px) scale(1.01);
+      filter: brightness(1.03);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__cta:active{
+      transform: translateY(0) scale(0.99);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__cta:focus-visible{
+      outline: 3px solid rgba(255,152,0,0.45);
+      outline-offset: 2px;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__features{
+      margin-top: 14px;
       display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__trust-item{
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    @media (min-width: 620px){
+      #smw-hero-v3-{{ section.id }} .smwv3__features{
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__f{
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.56);
+      border: 1px solid rgba(9,10,12,0.08);
+      box-shadow: 0 10px 22px rgba(15,23,42,0.08);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__f b{
+      display: block;
+      font-weight: 900;
+      color: rgba(9,10,12,0.86);
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__fico{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(9,10,12,0.10);
+      box-shadow: 0 10px 18px rgba(15,23,42,0.08);
+      font-size: 16px;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__steps{
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(9,10,12,0.08);
+      display: grid;
       gap: 8px;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__trust-ico{
-      font-size: 1.2rem;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__trust-txt{
-      font-size: 1.05rem;
-      color: rgba(9,10,12,0.68);
-      font-weight: 700;
-    }
-
-    @media (min-width: 768px){
-      #smwh-fromto-{{ section.id }} .smwft__trust{
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-      #smwh-fromto-{{ section.id }} .smwft__pill-black{
-        padding: 12px 28px;
-        font-size: 1.18rem;
-      }
-    }
-
-    /* ===== Headline ===== */
-    #smwh-fromto-{{ section.id }} .smwft__head{
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__title{
-      margin: 0;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      font-size: clamp(22px, 2.9vw, 38px);
-      line-height: 1.12;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__sub{
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.2px;
-    }
-
-    /* ===== Layout: image | timer | image ===== */
-    #smwh-fromto-{{ section.id }} .smwft__grid{
+    #smw-hero-v3-{{ section.id }} .smwv3__step{
       display: grid;
-      grid-template-columns: 1fr var(--midw) 1fr;
-      gap: var(--gap);
-      align-items: center;
+      grid-template-columns: 12px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: rgba(9,10,12,0.78);
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.35;
     }
 
-    /* Image cards */
-    #smwh-fromto-{{ section.id }} .smwft__img-card{
-      border-radius: var(--img-radius);
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      background: rgba(9,10,12,0.05);
+    #smw-hero-v3-{{ section.id }} .smwv3__step:before{
+      content:"";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-top: 3px;
+      background: linear-gradient(90deg, var(--a1), var(--a2));
+      box-shadow: 0 0 0 5px rgba(255,152,0,0.14);
+    }
+
+    /* Carousel */
+    #smw-hero-v3-{{ section.id }} .smwv3__car{
+      border-radius: var(--r1);
+      padding: 14px 12px;
+      background:
+        radial-gradient(120% 90% at 20% 0%, rgba(255,152,0,0.14), rgba(255,255,255,0) 55%),
+        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.14), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.40));
       border: 1px solid rgba(9,10,12,0.08);
-      box-shadow: var(--shadow2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__car:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: var(--r1);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      pointer-events:none;
+      z-index:0;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__car > *{
+      position: relative;
+      z-index: 1;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__car-top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__car-title{
+      margin: 0;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+      font-size: 14px;
+      color: rgba(9,10,12,0.86);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__nav{
+      display: inline-flex;
+      gap: 8px;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__btn{
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(9,10,12,0.10);
+      background: rgba(255,255,255,0.70);
+      box-shadow: 0 10px 22px rgba(15,23,42,0.08);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 180ms var(--ease), filter 180ms ease;
+      color: rgba(9,10,12,0.86);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+    #smw-hero-v3-{{ section.id }} .smwv3__btn:active{ transform: translateY(0) scale(0.98); }
+    #smw-hero-v3-{{ section.id }} .smwv3__btn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__viewport{
+      overflow: hidden;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__track{
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 10px;
+      padding: 8px 6px 12px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    #smw-hero-v3-{{ section.id }} .smwv3__track::-webkit-scrollbar{ display:none; }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__slide{
+      flex: 0 0 86%;
+      scroll-snap-align: center;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(9,10,12,0.10);
+      box-shadow: 0 18px 46px rgba(15,23,42,0.12);
+      overflow: hidden;
       position: relative;
       transform: translateZ(0);
-      will-change: transform;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__img{
+    @media (min-width: 520px){
+      #smw-hero-v3-{{ section.id }} .smwv3__slide{ flex-basis: 72%; }
+    }
+    @media (min-width: 980px){
+      #smw-hero-v3-{{ section.id }} .smwv3__slide{ flex-basis: 78%; }
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__media{
+      position: relative;
+      aspect-ratio: 4 / 5;
+      border-radius: 24px;
+      margin: 10px;
+      overflow: hidden;
+      background:
+        radial-gradient(120% 90% at 25% 0%, rgba(255,152,0,0.18), rgba(255,255,255,0) 60%),
+        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.16), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, rgba(10,10,12,0.04), rgba(10,10,12,0.02));
+      border: 1px solid rgba(9,10,12,0.08);
+      box-shadow: 0 14px 34px rgba(15,23,42,0.10);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__base,
+    #smw-hero-v3-{{ section.id }} .smwv3__sign{
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scale(1);
-      transition: transform 560ms cubic-bezier(0.2,0.8,0.2,1), filter 320ms ease;
-      will-change: transform, filter;
+      transform: scale(1.01);
+      transition: transform 520ms var(--ease), filter 320ms ease, opacity 320ms ease;
+      will-change: transform, filter, opacity;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__img-card:hover .smwft__img{
+    #smw-hero-v3-{{ section.id }} .smwv3__slide:hover .smwv3__base{
       transform: scale(1.04);
-      filter: saturate(0.96);
+      filter: saturate(0.98);
     }
 
-    /* Single labels */
-    #smwh-fromto-{{ section.id }} .smwft__label{
-      margin-top: 12px;
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid rgba(9,10,12,0.10);
-      background: rgba(255,255,255,0.62);
-      box-shadow: var(--shadow2);
-      padding: 11px 14px;
-      text-align: center;
-      color: rgba(9,10,12,0.82);
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.1px;
-      line-height: 1.25;
-      min-height: 46px;
-      white-space: pre-wrap;
-    }
-
-    /* Timer block */
-    #smwh-fromto-{{ section.id }} .smwft__mid{
-      position: relative;
-      display: grid;
-      gap: 10px;
-      justify-items: center;
-      padding: 14px 12px 12px;
-      border-radius: 24px;
-      background: rgba(9,10,12,0.28);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: 0 22px 60px rgba(0,0,0,0.22);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transform: translateZ(0);
-      isolation: isolate;
-      overflow: hidden;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__mid:before{
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: 26px;
-      background:
-        radial-gradient(90% 70% at 20% 10%, rgba(255,152,0,0.40), rgba(255,255,255,0) 55%),
-        radial-gradient(90% 70% at 80% 10%, rgba(0,68,204,0.35), rgba(255,255,255,0) 55%);
-      filter: blur(2px);
-      opacity: 0.85;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__mid:after{
-      content: "";
+    /* Sign overlay layer */
+    #smw-hero-v3-{{ section.id }} .smwv3__signWrap{
       position: absolute;
       inset: 0;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
-      z-index: 0;
+      display: grid;
+      place-items: center;
       pointer-events: none;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__pill{
-      position: relative;
-      z-index: 1;
+    #smw-hero-v3-{{ section.id }} .smwv3__sign{
+      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      padding: 8%;
+      opacity: 0;
+      transform: scale(0.985);
+      filter: drop-shadow(0 18px 38px rgba(0,0,0,0.22));
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__sign{
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__base{
+      filter: blur(1.2px) saturate(0.92) brightness(0.92);
+      transform: scale(1.03);
+    }
+
+    /* Text overlay */
+    #smw-hero-v3-{{ section.id }} .smwv3__text{
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(9,10,12,0.10);
+      box-shadow: 0 14px 30px rgba(15,23,42,0.10);
+      font-weight: 950;
+      letter-spacing: -0.01em;
+      color: rgba(9,10,12,0.88);
+      font-size: 14px;
+      line-height: 1.2;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__text{
+      background: rgba(9,10,12,0.50);
+      color: rgba(255,255,255,0.96);
+      border-color: rgba(255,255,255,0.16);
+      box-shadow: 0 22px 54px rgba(0,0,0,0.22);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__footer{
+      padding: 2px 10px 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__slideTitle{
+      margin: 0;
+      font-weight: 950;
+      color: rgba(9,10,12,0.88);
+      letter-spacing: -0.02em;
+      font-size: 13px;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__toggle{
+      width: 100%;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      padding: 9px 11px;
+      padding: 12px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.92);
-      font-size: 12px;
-      line-height: 1;
+      cursor: pointer;
+      border: 1px solid rgba(9,10,12,0.10);
+      background: linear-gradient(90deg, rgba(255,255,255,0.78), rgba(255,255,255,0.60));
+      box-shadow: 0 12px 26px rgba(15,23,42,0.10);
+      color: rgba(9,10,12,0.86);
+      font-weight: 950;
+      letter-spacing: 0.2px;
+      transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
+      -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__pill-dot{
+    #smw-hero-v3-{{ section.id }} .smwv3__toggle:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+    #smw-hero-v3-{{ section.id }} .smwv3__toggle:active{ transform: translateY(0) scale(0.99); }
+    #smw-hero-v3-{{ section.id }} .smwv3__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.45); outline-offset: 2px; }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__toggleDot{
       width: 10px;
       height: 10px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.84);
-      box-shadow: 0 0 0 6px rgba(255,255,255,0.10);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__ring{
-      position: relative;
-      z-index: 1;
-      width: 86px;
-      height: 86px;
       border-radius: 999px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
-      overflow: hidden;
+      background: linear-gradient(90deg, var(--a1), var(--a2));
+      box-shadow: 0 0 0 6px rgba(255,152,0,0.14);
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__ring:before{
-      content: "";
-      position: absolute;
-      inset: 9px;
+    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__toggle{
+      background: linear-gradient(90deg, rgba(0,35,94,0.92), rgba(0,68,204,0.92));
+      color: rgba(255,255,255,0.98);
+      border-color: rgba(255,255,255,0.16);
+      box-shadow: 0 18px 46px rgba(0,35,94,0.24);
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__dots{
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding: 4px 0 0;
+    }
+
+    #smw-hero-v3-{{ section.id }} .smwv3__dot{
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(9,10,12,0.14);
+      background: rgba(255,255,255,0.70);
+      cursor: pointer;
+      transition: transform 180ms var(--ease), width 180ms var(--ease), background 180ms ease;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__ring svg{
-      position: absolute;
-      inset: 0;
-      transform: rotate(-90deg);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__ring circle{
-      fill: none;
-      stroke-width: 8;
-      stroke-linecap: round;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__track{
-      stroke: rgba(255,255,255,0.16);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__prog{
-      stroke: url(#smwft-grad-{{ section.id }});
-      stroke-dasharray: 251.2;
-      stroke-dashoffset: 251.2;
-      animation: smwftRing var(--loop) linear infinite;
-    }
-
-    #smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwft__prog{
-      animation: none !important;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__time{
-      position: relative;
-      z-index: 1;
-      color: rgba(255,255,255,0.95);
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      font-size: 14px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__scan{
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.10);
-      overflow: hidden;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__scan:before{
-      content: "";
-      position: absolute;
-      top: -40%;
-      left: -30%;
-      width: 40%;
-      height: 180%;
-      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 45%, rgba(255,255,255,0) 100%);
-      transform: skewX(-18deg);
-      animation: smwftScan var(--loop) cubic-bezier(0.2,0.8,0.2,1) infinite;
-      opacity: 0.95;
-    }
-
-    #smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwft__scan:before{
-      animation: none !important;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__status{
-      position: relative;
-      z-index: 1;
-      font-size: 12px;
-      color: rgba(255,255,255,0.84);
-      letter-spacing: 0.2px;
-      text-align: center;
-      min-height: 18px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__status b{
-      color: rgba(255,255,255,0.96);
-      font-weight: 900;
-    }
-
-    @keyframes smwftFloat{
-      0%{ transform: translateY(0); }
-      50%{ transform: translateY(-6px); }
-      100%{ transform: translateY(0); }
-    }
-
-    #smwh-fromto-{{ section.id }}[data-autoplay="1"] .smwft__mid{
-      animation: smwftFloat 7.5s ease-in-out infinite;
-    }
-
-    @keyframes smwftRing{
-      0%{ stroke-dashoffset: 251.2; }
-      100%{ stroke-dashoffset: 0; }
-    }
-
-    @keyframes smwftScan{
-      0%{ left: -45%; opacity: 0.0; }
-      8%{ opacity: 0.95; }
-      40%{ left: 110%; opacity: 0.95; }
-      55%{ opacity: 0.0; }
-      100%{ left: 110%; opacity: 0.0; }
-    }
-
-    /* Mobile */
-    @media (max-width: 900px){
-      #smwh-fromto-{{ section.id }}{
-        --gap: 16px;
-        --midw: 1fr;
-      }
-
-      #smwh-fromto-{{ section.id }} .smwft__grid{
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-
-      #smwh-fromto-{{ section.id }} .smwft__mid{
-        max-width: 400px;
-        margin: 0 auto;
-        animation: none;
-      }
+    #smw-hero-v3-{{ section.id }} .smwv3__dot.is-active{
+      width: 22px;
+      background: linear-gradient(90deg, var(--a1), var(--a2));
+      border-color: rgba(0,0,0,0.10);
+      transform: translateY(-1px);
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smwh-fromto-{{ section.id }} .smwft__prog,
-      #smwh-fromto-{{ section.id }} .smwft__scan:before,
-      #smwh-fromto-{{ section.id }} .smwft__mid,
-      #smwh-fromto-{{ section.id }} .smwft__img{
+      #smw-hero-v3-{{ section.id }} *{
         animation: none !important;
         transition: none !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 
-  <div class="smwft__wrap">
-    <div class="smwft__top">
-      {% if section.settings.badge_text != blank %}
-        <div class="smwft__pill-black">{{ section.settings.badge_text }}</div>
-      {% endif %}
+  <div class="smwv3__wrap">
+    <div class="smwv3__grid">
+      <div class="smwv3__copy">
+        {% if section.settings.eyebrow != blank %}
+          <div class="smwv3__eyebrow">{{ section.settings.eyebrow | escape }}</div>
+        {% endif %}
 
-      <div class="smwft__trust" aria-label="Trust Row">
-        <div class="smwft__trust-item">
-          <div class="smwft__trust-ico">{{ section.settings.trust_1_icon }}</div>
-          <div class="smwft__trust-txt">{{ section.settings.trust_1_text }}</div>
-        </div>
-        <div class="smwft__trust-item">
-          <div class="smwft__trust-ico">{{ section.settings.trust_2_icon }}</div>
-          <div class="smwft__trust-txt">{{ section.settings.trust_2_text }}</div>
-        </div>
-        <div class="smwft__trust-item">
-          <div class="smwft__trust-ico">{{ section.settings.trust_3_icon }}</div>
-          <div class="smwft__trust-txt">{{ section.settings.trust_3_text }}</div>
-        </div>
-      </div>
-    </div>
+        {% if section.settings.headline != blank %}
+          <h2 class="smwv3__h">{{ section.settings.headline | escape }}</h2>
+        {% endif %}
 
-    <div class="smwft__head">
-      <h2 class="smwft__title">
-        <span>{{ section.settings.heading }}</span>
-        <span> {{ section.settings.heading_2 }}</span>
-      </h2>
-      <p class="smwft__sub">{{ section.settings.subheading }}</p>
-    </div>
+        {% if section.settings.subheadline != blank %}
+          <div class="smwv3__sub">{{ section.settings.subheadline }}</div>
+        {% endif %}
 
-    <div class="smwft__grid">
-      <div>
-        <div class="smwft__img-card">
-          {% if section.settings.from_image != blank %}
-            <img class="smwft__img" src="{{ section.settings.from_image | image_url: width: 1800 }}" alt="{{ section.settings.from_image.alt | escape }}" loading="lazy" width="1800" height="1800">
-          {% else %}
-            <img class="smwft__img" src="https://placehold.co/1800x1800" alt="Placeholder" loading="lazy" width="1800" height="1800">
+        <div class="smwv3__meta">
+          {% if section.settings.speed_badge != blank %}
+            <div class="smwv3__badge"><i aria-hidden="true"></i><span>{{ section.settings.speed_badge | escape }}</span></div>
+          {% endif %}
+
+          {% if section.settings.cta_url != blank and section.settings.cta_label != blank %}
+            <a class="smwv3__cta" href="{{ section.settings.cta_url }}">
+              <span>{{ section.settings.cta_label | escape }}</span>
+              <span aria-hidden="true">→</span>
+            </a>
           {% endif %}
         </div>
-        <div class="smwft__label">{{ section.settings.from_label | escape }}</div>
-      </div>
 
-      <div class="smwft__mid" aria-hidden="false">
-        <div class="smwft__pill" aria-label="in 2 Minuten">
-          <span class="smwft__pill-dot" aria-hidden="true"></span>
-          <span><b>in 2 Minuten</b></span>
-        </div>
-
-        <div class="smwft__ring" aria-label="Processing indicator">
-          <svg viewBox="0 0 100 100" aria-hidden="true">
-            <defs>
-              <linearGradient id="smwft-grad-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="var(--a1)"/>
-                <stop offset="55%" stop-color="var(--a2)"/>
-                <stop offset="100%" stop-color="var(--a3)"/>
-              </linearGradient>
-            </defs>
-            <circle class="smwft__track" cx="50" cy="50" r="40"></circle>
-            <circle class="smwft__prog" cx="50" cy="50" r="40"></circle>
-          </svg>
-          <div class="smwft__time" id="smwft-time-{{ section.id }}">02:00</div>
-        </div>
-
-        <div class="smwft__scan" aria-hidden="true"></div>
-        <div class="smwft__status" id="smwft-status-{{ section.id }}">Wir bauen deinen <b>Entwurf</b> …</div>
-      </div>
-
-      <div>
-        <div class="smwft__img-card">
-          {% if section.settings.to_image != blank %}
-            <img class="smwft__img" src="{{ section.settings.to_image | image_url: width: 1800 }}" alt="{{ section.settings.to_image.alt | escape }}" loading="lazy" width="1800" height="1800">
-          {% else %}
-            <img class="smwft__img" src="https://placehold.co/1800x1800" alt="Placeholder" loading="lazy" width="1800" height="1800">
+        <div class="smwv3__features" aria-label="Key Features">
+          {% if section.settings.feature_1_text != blank %}
+            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_1_icon }}</div><b>{{ section.settings.feature_1_text | escape }}</b></div>
+          {% endif %}
+          {% if section.settings.feature_2_text != blank %}
+            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_2_icon }}</div><b>{{ section.settings.feature_2_text | escape }}</b></div>
+          {% endif %}
+          {% if section.settings.feature_3_text != blank %}
+            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_3_icon }}</div><b>{{ section.settings.feature_3_text | escape }}</b></div>
+          {% endif %}
+          {% if section.settings.feature_4_text != blank %}
+            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_4_icon }}</div><b>{{ section.settings.feature_4_text | escape }}</b></div>
           {% endif %}
         </div>
-        <div class="smwft__label">{{ section.settings.to_label | escape }}</div>
+
+        <div class="smwv3__steps" aria-label="Ablauf">
+          {% if section.settings.step_1 != blank %}<div class="smwv3__step">{{ section.settings.step_1 | escape }}</div>{% endif %}
+          {% if section.settings.step_2 != blank %}<div class="smwv3__step">{{ section.settings.step_2 | escape }}</div>{% endif %}
+          {% if section.settings.step_3 != blank %}<div class="smwv3__step">{{ section.settings.step_3 | escape }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="smwv3__car" aria-label="Werkstatt Carousel">
+        <div class="smwv3__car-top">
+          <p class="smwv3__car-title">Beispiele</p>
+          <div class="smwv3__nav" aria-label="Carousel Navigation">
+            <button class="smwv3__btn" type="button" data-swv3-prev aria-label="Vorheriges Beispiel">‹</button>
+            <button class="smwv3__btn" type="button" data-swv3-next aria-label="Nächstes Beispiel">›</button>
+          </div>
+        </div>
+
+        <div class="smwv3__viewport">
+          <div class="smwv3__track" data-swv3-track>
+            {% for block in section.blocks %}
+              {% if block.type == 'slide' %}
+                <div class="smwv3__slide" data-swv3-slide data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                  <div class="smwv3__media" aria-label="Vorher Nachher">
+                    {% if block.settings.base_image != blank %}
+                      <img
+                        class="smwv3__base"
+                        src="{{ block.settings.base_image | image_url: width: 1600 }}"
+                        alt="{{ block.settings.base_image.alt | escape }}"
+                        loading="lazy"
+                        width="1600"
+                        height="2000"
+                      >
+                    {% else %}
+                      <div class="smwv3__base" aria-hidden="true"></div>
+                    {% endif %}
+
+                    <div class="smwv3__signWrap" aria-hidden="true">
+                      {% if block.settings.sign_overlay_image != blank %}
+                        <img
+                          class="smwv3__sign"
+                          src="{{ block.settings.sign_overlay_image | image_url: width: 1600 }}"
+                          alt=""
+                          loading="lazy"
+                          width="1600"
+                          height="2000"
+                        >
+                      {% else %}
+                        <div class="smwv3__sign" aria-hidden="true"></div>
+                      {% endif %}
+                    </div>
+
+                    {% if block.settings.overlay_text != blank %}
+                      <div class="smwv3__text">{{ block.settings.overlay_text | escape }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="smwv3__footer">
+                    {% if block.settings.title != blank %}
+                      <p class="smwv3__slideTitle">{{ block.settings.title | escape }}</p>
+                    {% endif %}
+
+                    <button
+                      type="button"
+                      class="smwv3__toggle"
+                      data-swv3-toggle
+                      data-label-off="{{ block.settings.toggle_label_off | escape }}"
+                      data-label-on="{{ block.settings.toggle_label_on | escape }}"
+                      aria-pressed="false"
+                    >
+                      <span class="smwv3__toggleDot" aria-hidden="true"></span>
+                      <span class="smwv3__toggleText">{{ block.settings.toggle_label_off | escape }}</span>
+                    </button>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="smwv3__dots" data-swv3-dots aria-label="Carousel Punkte"></div>
       </div>
     </div>
   </div>
@@ -626,77 +740,136 @@
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var rootId = "smwh-fromto-" + SECTION_ID;
+      var root = document.getElementById("smw-hero-v3-" + SECTION_ID);
+      if(!root) return;
 
-      function init(){
-        var root = document.getElementById(rootId);
-        if(!root) return false;
+      var track = root.querySelector("[data-swv3-track]");
+      var slides = Array.prototype.slice.call(root.querySelectorAll("[data-swv3-slide]"));
+      var prevBtn = root.querySelector("[data-swv3-prev]");
+      var nextBtn = root.querySelector("[data-swv3-next]");
+      var dotsWrap = root.querySelector("[data-swv3-dots]");
 
-        root.setAttribute('data-autoplay', {{ section.settings.autoplay | json }} ? '1' : '0');
+      if(!track || !slides.length) return;
 
-        var timeEl = document.getElementById("smwft-time-" + SECTION_ID);
-        var statusEl = document.getElementById("smwft-status-" + SECTION_ID);
-        if(!timeEl) return true;
+      var autoplay = {{ section.settings.autoplay | json }};
+      var autoplayMs = ({{ section.settings.autoplay_seconds | default: 6 }} * 1000) || 6000;
+      var timer = null;
+      var isPointerDown = false;
 
-        var loopMs = ({{ section.settings.duration_seconds | default: 10 }} * 1000) || 10000;
-        var labels = [
-          'Wir prüfen dein <b>Motiv</b> …',
-          'Wir bauen deinen <b>Entwurf</b> …',
-          'Wir optimieren die <b>Konturen</b> …',
-          'Wir finalisieren das <b>Schild</b> …'
-        ];
+      function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-        function pad(n){ return (n < 10 ? '0' : '') + n; }
+      function getActiveIndex(){
+        var trackRect = track.getBoundingClientRect();
+        var centerX = trackRect.left + trackRect.width / 2;
 
-        if(root.__smwftRAF) cancelAnimationFrame(root.__smwftRAF);
+        var bestIdx = 0;
+        var bestDist = Infinity;
 
-        function tick(){
-          if(root.getAttribute('data-autoplay') !== '1') return;
-
-          var now = Date.now();
-          var phase = (now % loopMs) / loopMs;
-
-          var seconds = Math.max(0, Math.round(120 * (1 - phase)));
-          var mm = Math.floor(seconds / 60);
-          var ss = seconds % 60;
-          timeEl.textContent = pad(mm) + ':' + pad(ss);
-
-          if(statusEl){
-            var idx = Math.min(labels.length - 1, Math.floor(phase * labels.length));
-            statusEl.innerHTML = labels[idx];
+        for(var i=0;i<slides.length;i++){
+          var r = slides[i].getBoundingClientRect();
+          var slideCenter = r.left + r.width / 2;
+          var d = Math.abs(slideCenter - centerX);
+          if(d < bestDist){
+            bestDist = d;
+            bestIdx = i;
           }
-
-          root.__smwftRAF = requestAnimationFrame(tick);
         }
-
-        root.__smwftRAF = requestAnimationFrame(tick);
-        return true;
+        return bestIdx;
       }
 
-      function boot(){
-        if(init()) return;
-        var tries = 0;
-        (function retry(){
-          tries += 1;
-          if(init()) return;
-          if(tries > 80) return;
-          requestAnimationFrame(retry);
-        })();
+      function scrollToIndex(idx){
+        idx = clamp(idx, 0, slides.length - 1);
+        var el = slides[idx];
+        if(!el) return;
+        el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        setDots(idx);
       }
 
-      if(document.readyState === "loading"){
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
+      function buildDots(){
+        if(!dotsWrap) return;
+        dotsWrap.innerHTML = "";
+        for(var i=0;i<slides.length;i++){
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "smwv3__dot" + (i === 0 ? " is-active" : "");
+          b.setAttribute("aria-label", "Gehe zu Beispiel " + (i + 1));
+          (function(index){
+            b.addEventListener("click", function(){
+              stopAutoplay();
+              scrollToIndex(index);
+            });
+          })(i);
+          dotsWrap.appendChild(b);
+        }
       }
+
+      function setDots(activeIdx){
+        if(!dotsWrap) return;
+        var dots = dotsWrap.querySelectorAll(".smwv3__dot");
+        for(var i=0;i<dots.length;i++){
+          if(i === activeIdx) dots[i].classList.add("is-active");
+          else dots[i].classList.remove("is-active");
+        }
+      }
+
+      function step(dir){
+        var idx = getActiveIndex();
+        scrollToIndex(idx + dir);
+      }
+
+      function startAutoplay(){
+        if(!autoplay) return;
+        stopAutoplay();
+        timer = setInterval(function(){
+          if(isPointerDown) return;
+          var idx = getActiveIndex();
+          var next = (idx + 1) % slides.length;
+          scrollToIndex(next);
+        }, autoplayMs);
+      }
+
+      function stopAutoplay(){
+        if(timer){ clearInterval(timer); timer = null; }
+      }
+
+      function bind(){
+        if(prevBtn) prevBtn.addEventListener("click", function(){ stopAutoplay(); step(-1); });
+        if(nextBtn) nextBtn.addEventListener("click", function(){ stopAutoplay(); step(1); });
+
+        track.addEventListener("scroll", function(){
+          setDots(getActiveIndex());
+        }, { passive: true });
+
+        track.addEventListener("pointerdown", function(){ isPointerDown = true; stopAutoplay(); }, { passive: true });
+        window.addEventListener("pointerup", function(){ isPointerDown = false; startAutoplay(); }, { passive: true });
+
+        var toggles = root.querySelectorAll("[data-swv3-toggle]");
+        toggles.forEach(function(btn){
+          btn.addEventListener("click", function(){
+            var slide = btn.closest("[data-swv3-slide]");
+            if(!slide) return;
+
+            var isSigned = slide.classList.toggle("is-signed");
+            btn.setAttribute("aria-pressed", isSigned ? "true" : "false");
+
+            var off = btn.getAttribute("data-label-off") || "In Schild verwandeln";
+            var on = btn.getAttribute("data-label-on") || "Zurück zur Vorlage";
+            var t = btn.querySelector(".smwv3__toggleText");
+            if(t) t.textContent = isSigned ? on : off;
+          });
+        });
+      }
+
+      buildDots();
+      bind();
+      startAutoplay();
 
       document.addEventListener("shopify:section:load", function(e){
         if(!e || !e.detail || !e.detail.sectionId) return;
-        if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
-      });
-      document.addEventListener("shopify:section:select", function(e){
-        if(!e || !e.detail || !e.detail.sectionId) return;
-        if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
+        if(String(e.detail.sectionId) !== String(SECTION_ID)) return;
+        stopAutoplay();
+        root = document.getElementById("smw-hero-v3-" + SECTION_ID);
+        if(!root) return;
       });
     })();
   </script>
