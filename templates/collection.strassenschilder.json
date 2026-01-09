@@ -108,7 +108,7 @@
             "subheading_size_mobile": 14,
             "heading_subheading_gap_mobile": 10,
             "text_padding_top_mobile": 15,
-            "text_padding_bottom_mobile": 15,
+            "text_padding_bottom_mobile": 0,
             "text_padding_horizontal_mobile": 15,
             "heading_weight": "700",
             "subheading_weight": "400",
