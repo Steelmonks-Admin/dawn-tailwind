@@ -1,8 +1,11 @@
 {% comment %}
-  Steelmonks Glass Carousel, standalone
-  Multiple cards visible, center card highlighted
-  Per card: base image + full screen overlay image (same size, 2s fade in)
-  Prompt bar at bottom shows active slide prompt
+  Steelmonks Werkstatt Glass Carousel (standalone section)
+  - Multiple cards visible, center card highlighted (scaled)
+  - Square images always
+  - Minimal UI: arrows top right, "In Schild verwandeln" button top center on active card only
+  - Bottom prompt bar (desktop: appears on hover/focus, mobile: always visible)
+  - Overlay image covers the full card, same size as base, fades in over 2s
+  - Blue + yellow are only glowing outlines on cards (no big blue background wash)
 {% endcomment %}
 
 {% schema %}
@@ -32,327 +35,353 @@
 }
 {% endschema %}
 
-<section id="smc-{{ section.id }}" class="smc" aria-label="Werkstatt Carousel">
+<section id="smgc-{{ section.id }}" class="smgc" aria-label="Werkstatt Beispiele">
   <style>
-    #smc-{{ section.id }}{
+    #smgc-{{ section.id }}{
+      --a1: #ff9800;
+      --a2: #0044CC;
+
       --ink: rgba(9,10,12,0.92);
       --muted: rgba(9,10,12,0.66);
 
-      --a1: #ff9800;
-      --a2: #0044CC;
-      --a3: #00235e;
-
-      --stroke: rgba(255,255,255,0.18);
-      --stroke2: rgba(9,10,12,0.10);
-
-      --shadow: 0 22px 70px rgba(15,23,42,0.18);
-      --shadow2: 0 14px 34px rgba(15,23,42,0.12);
+      --glass: rgba(255,255,255,0.10);
+      --glass2: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.16);
 
       --rOuter: 34px;
-      --rInner: 26px;
+      --rCard: 26px;
 
-      --cardW: clamp(230px, 62vw, 340px);
-      --cardH: clamp(360px, 72svh, 560px);
-      --gap: 14px;
+      --shadow: 0 26px 80px rgba(15,23,42,0.18);
+      --shadow2: 0 16px 44px rgba(15,23,42,0.12);
 
       --fade: 2000ms;
+      --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      min-height: 100svh;
-      display: grid;
-      place-items: center;
-      padding: 18px 14px;
-      color: var(--ink);
-      background:
-        radial-gradient(120% 90% at 20% 0%, rgba(255,152,0,0.20), rgba(255,255,255,0) 58%),
-        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.20), rgba(255,255,255,0) 60%),
-        radial-gradient(120% 120% at 50% 120%, rgba(0,35,94,0.14), rgba(255,255,255,0) 55%),
-        linear-gradient(180deg, rgba(255,255,255,0.30), rgba(255,255,255,0.06));
+      --cardW: clamp(200px, 58vw, 320px);
+      --gap: 14px;
+
+      padding: clamp(14px, 3vw, 22px);
     }
 
-    #smc-{{ section.id }} .smc__wrap{
-      width: min(1220px, 100%);
-      border-radius: var(--rOuter);
-      border: 1px solid rgba(255,255,255,0.16);
-      background:
-        radial-gradient(100% 80% at 20% 0%, rgba(255,255,255,0.40), rgba(255,255,255,0.16) 55%),
-        linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      overflow: hidden;
+    /* As element on page, not fullscreen overlay */
+    #smgc-{{ section.id }} .smgc__wrap{
+      width: min(1200px, 100%);
+      margin: 0 auto;
       position: relative;
-      isolation: isolate;
+      border-radius: var(--rOuter);
+      padding: 16px 14px 16px;
+      min-height: clamp(520px, 72vh, 760px);
     }
 
-    #smc-{{ section.id }} .smc__wrap:before{
+    /* Glass panel background as pseudo, so content can overflow (no cut-off) */
+    #smgc-{{ section.id }} .smgc__wrap:before{
       content:"";
       position:absolute;
-      inset:-2px;
-      border-radius: calc(var(--rOuter) + 2px);
+      inset: 0;
+      border-radius: var(--rOuter);
       background:
-        radial-gradient(90% 70% at 15% 10%, rgba(255,152,0,0.38), rgba(255,255,255,0) 60%),
-        radial-gradient(90% 70% at 85% 10%, rgba(0,68,204,0.32), rgba(255,255,255,0) 60%);
-      filter: blur(10px);
-      opacity: 0.55;
+        radial-gradient(120% 90% at 18% 0%, rgba(255,152,0,0.10), rgba(255,255,255,0) 62%),
+        radial-gradient(120% 90% at 82% 0%, rgba(0,68,204,0.10), rgba(255,255,255,0) 62%),
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       pointer-events:none;
-      z-index:0;
+      z-index: 0;
     }
 
-    #smc-{{ section.id }} .smc__wrap > *{ position: relative; z-index: 1; }
+    #smgc-{{ section.id }} .smgc__wrap > *{ position: relative; z-index: 1; }
 
-    #smc-{{ section.id }} .smc__top{
-      display: flex;
-      align-items: center;
+    /* Header row minimal */
+    #smgc-{{ section.id }} .smgc__top{
+      display:flex;
+      align-items:center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 14px 14px 10px;
+      gap: 12px;
+      padding: 4px 6px 10px;
     }
 
-    #smc-{{ section.id }} .smc__title{
+    #smgc-{{ section.id }} .smgc__title{
       margin: 0;
       font-weight: 950;
       letter-spacing: -0.02em;
-      font-size: 13px;
-      color: rgba(9,10,12,0.78);
-      user-select: none;
+      font-size: 14px;
+      color: rgba(9,10,12,0.76);
+      user-select:none;
     }
 
-    #smc-{{ section.id }} .smc__nav{
-      display: inline-flex;
+    #smgc-{{ section.id }} .smgc__nav{
+      display:flex;
       gap: 10px;
-      align-items: center;
+      align-items:center;
     }
 
-    #smc-{{ section.id }} .smc__btn{
-      width: 38px;
-      height: 38px;
+    #smgc-{{ section.id }} .smgc__navbtn{
+      width: 42px;
+      height: 42px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.24);
-      background: rgba(255,255,255,0.14);
-      box-shadow: 0 14px 28px rgba(15,23,42,0.10);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      color: rgba(9,10,12,0.78);
-      transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 14px 32px rgba(15,23,42,0.12);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      color: rgba(9,10,12,0.74);
+      transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
       -webkit-tap-highlight-color: transparent;
     }
-
-    #smc-{{ section.id }} .smc__btn:hover{
+    #smgc-{{ section.id }} .smgc__navbtn:hover{
       transform: translateY(-1px);
       filter: brightness(1.03);
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.12);
     }
-    #smc-{{ section.id }} .smc__btn:active{ transform: translateY(0) scale(0.98); }
-    #smc-{{ section.id }} .smc__btn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
+    #smgc-{{ section.id }} .smgc__navbtn:active{ transform: translateY(0) scale(0.98); }
+    #smgc-{{ section.id }} .smgc__navbtn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
 
-    #smc-{{ section.id }} .smc__viewport{
-      padding: 8px 6px 4px;
+    /* Carousel */
+    #smgc-{{ section.id }} .smgc__viewport{
+      padding: 10px 0 10px;
+      overflow: visible; /* avoid cut off when active card scales */
     }
 
-    #smc-{{ section.id }} .smc__track{
-      display: flex;
+    #smgc-{{ section.id }} .smgc__track{
+      display:flex;
       gap: var(--gap);
-      overflow-x: auto;
+      overflow-x:auto;
+      overflow-y: visible;
       scroll-snap-type: x mandatory;
-      scroll-padding: 18px;
-      padding: 10px 16px 14px;
+      scroll-padding: 22px;
+      padding: 14px 22px 20px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
-    #smc-{{ section.id }} .smc__track::-webkit-scrollbar{ display:none; }
+    #smgc-{{ section.id }} .smgc__track::-webkit-scrollbar{ display:none; }
 
-    #smc-{{ section.id }} .smc__card{
+    #smgc-{{ section.id }} .smgc__card{
       flex: 0 0 var(--cardW);
-      height: var(--cardH);
       scroll-snap-align: center;
-      border-radius: var(--rInner);
+      border-radius: var(--rCard);
       position: relative;
-      overflow: hidden;
       transform: translateZ(0);
-      background:
-        radial-gradient(120% 90% at 25% 0%, rgba(255,152,0,0.12), rgba(255,255,255,0) 58%),
-        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.10), rgba(255,255,255,0) 58%),
-        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: var(--shadow2);
-      opacity: 0.72;
+      opacity: 0.78;
       transform: scale(0.92);
-      transition: transform 520ms cubic-bezier(0.2,0.8,0.2,1), opacity 520ms ease, filter 520ms ease;
+      transition: transform 520ms var(--ease), opacity 520ms ease, filter 520ms ease;
       will-change: transform, opacity, filter;
     }
 
-    #smc-{{ section.id }} .smc__card.is-active{
-      opacity: 1;
-      transform: scale(1);
-      filter: saturate(1.03) contrast(1.02);
-      border-color: rgba(255,255,255,0.26);
+    /* Glowing outline only, no heavy backgrounds */
+    #smgc-{{ section.id }} .smgc__card:before{
+      content:"";
+      position:absolute;
+      inset: -1px;
+      border-radius: calc(var(--rCard) + 1px);
+      padding: 1.5px;
+      background: linear-gradient(135deg, rgba(255,152,0,0.65), rgba(0,68,204,0.55));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.35;
+      filter: blur(0.0px);
+      pointer-events:none;
     }
 
-    #smc-{{ section.id }} .smc__img,
-    #smc-{{ section.id }} .smc__overlay{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+    #smgc-{{ section.id }} .smgc__card:after{
+      content:"";
+      position:absolute;
+      inset: -8px;
+      border-radius: calc(var(--rCard) + 10px);
+      background: radial-gradient(60% 60% at 20% 10%, rgba(255,152,0,0.22), rgba(255,255,255,0) 60%),
+                  radial-gradient(60% 60% at 85% 10%, rgba(0,68,204,0.20), rgba(255,255,255,0) 60%);
+      opacity: 0.22;
+      filter: blur(10px);
+      pointer-events:none;
+      z-index: -1;
+    }
+
+    #smgc-{{ section.id }} .smgc__card.is-active{
+      opacity: 1;
+      transform: scale(1.06);
+      filter: saturate(1.02) contrast(1.02);
+    }
+    #smgc-{{ section.id }} .smgc__card.is-active:before{ opacity: 0.75; }
+    #smgc-{{ section.id }} .smgc__card.is-active:after{ opacity: 0.45; }
+
+    /* Square frame */
+    #smgc-{{ section.id }} .smgc__frame{
+      border-radius: var(--rCard);
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background: rgba(255,255,255,0.03);
+      box-shadow: var(--shadow2);
+      position: relative;
+    }
+
+    #smgc-{{ section.id }} .smgc__img,
+    #smgc-{{ section.id }} .smgc__overlay{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
       object-fit: cover;
     }
 
-    #smc-{{ section.id }} .smc__img{
+    #smgc-{{ section.id }} .smgc__img{
       transform: scale(1.02);
-      transition: transform 700ms cubic-bezier(0.2,0.8,0.2,1), filter 520ms ease;
+      transition: transform 720ms var(--ease), filter 520ms ease;
       will-change: transform, filter;
     }
 
-    #smc-{{ section.id }} .smc__card.is-active .smc__img{
+    #smgc-{{ section.id }} .smgc__card.is-active .smgc__img{
       transform: scale(1.06);
-      filter: saturate(0.98);
     }
 
-    #smc-{{ section.id }} .smc__overlayWrap{
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    #smc-{{ section.id }} .smc__overlay{
+    /* Overlay full size, slow fade in 2s */
+    #smgc-{{ section.id }} .smgc__overlay{
       opacity: 0;
       transition: opacity var(--fade) ease;
       will-change: opacity;
     }
+    #smgc-{{ section.id }} .smgc__card.is-on .smgc__overlay{ opacity: 1; }
+    #smgc-{{ section.id }} .smgc__card.is-on .smgc__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
 
-    #smc-{{ section.id }} .smc__card.is-on .smc__overlay{
-      opacity: 1;
-    }
-
-    #smc-{{ section.id }} .smc__card.is-on .smc__img{
-      filter: blur(1.2px) brightness(0.88) saturate(0.90);
-    }
-
-    #smc-{{ section.id }} .smc__edge{
+    /* Minimal "Schild" button, top center, only on active card */
+    #smgc-{{ section.id }} .smgc__toggle{
       position:absolute;
-      inset: 0;
-      pointer-events:none;
-      background:
-        radial-gradient(130% 90% at 50% 0%, rgba(255,255,255,0.14), rgba(255,255,255,0) 56%),
-        radial-gradient(120% 120% at 50% 120%, rgba(0,0,0,0.22), rgba(0,0,0,0) 58%);
-      opacity: 0.70;
-    }
-
-    #smc-{{ section.id }} .smc__toggle{
-      position: absolute;
       top: 12px;
-      right: 12px;
-      display: inline-flex;
-      align-items: center;
+      left: 50%;
+      transform: translateX(-50%);
+      display:inline-flex;
+      align-items:center;
       gap: 10px;
-      padding: 10px 12px;
+      padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.16);
-      box-shadow: 0 18px 42px rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(9,10,12,0.18);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       color: rgba(255,255,255,0.96);
-      font-weight: 950;
-      font-size: 12px;
-      letter-spacing: 0.2px;
+      box-shadow: 0 18px 46px rgba(0,0,0,0.18);
       cursor: pointer;
-      user-select: none;
+      font-weight: 950;
+      font-size: 12.5px;
+      letter-spacing: 0.2px;
       -webkit-tap-highlight-color: transparent;
-      transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
+      user-select:none;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms var(--ease), filter 180ms ease, background 180ms ease;
     }
 
-    #smc-{{ section.id }} .smc__toggle:hover{
-      transform: translateY(-1px);
-      filter: brightness(1.04);
-      background: rgba(255,255,255,0.20);
-    }
-    #smc-{{ section.id }} .smc__toggle:active{ transform: translateY(0) scale(0.99); }
-    #smc-{{ section.id }} .smc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
-
-    #smc-{{ section.id }} .smc__toggleIcon{
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.26));
+    #smgc-{{ section.id }} .smgc__card.is-active .smgc__toggle{
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
     }
 
-    #smc-{{ section.id }} .smc__toggleDot{
+    #smgc-{{ section.id }} .smgc__toggle:hover{ filter: brightness(1.04); }
+    #smgc-{{ section.id }} .smgc__toggle:active{ transform: translateX(-50%) scale(0.99); }
+    #smgc-{{ section.id }} .smgc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
+
+    #smgc-{{ section.id }} .smgc__pillDot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--a1), var(--a2));
+      background: linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
       box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
     }
 
-    #smc-{{ section.id }} .smc__card.is-on .smc__toggle{
-      background: linear-gradient(90deg, rgba(0,35,94,0.88), rgba(0,68,204,0.88));
-      border-color: rgba(255,255,255,0.20);
-      box-shadow: 0 20px 54px rgba(0,35,94,0.26);
+    #smgc-{{ section.id }} .smgc__card.is-on .smgc__toggle{
+      background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
+      border-color: rgba(255,255,255,0.16);
+      box-shadow: 0 20px 56px rgba(0,35,94,0.22);
     }
 
-    /* Prompt bar bottom */
-    #smc-{{ section.id }} .smc__promptWrap{
-      padding: 10px 14px 16px;
+    /* Bottom prompt bar */
+    #smgc-{{ section.id }} .smgc__promptWrap{
+      padding: 6px 22px 14px;
       display: grid;
       gap: 10px;
     }
 
-    #smc-{{ section.id }} .smc__prompt{
-      width: 100%;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(255,255,255,0.14);
-      box-shadow: 0 18px 42px rgba(15,23,42,0.10);
+    #smgc-{{ section.id }} .smgc__prompt{
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      padding: 12px 12px;
-      color: rgba(9,10,12,0.82);
-      font-weight: 850;
-      font-size: 12.5px;
+      box-shadow: 0 18px 46px rgba(15,23,42,0.12);
+      padding: 14px 14px;
+      color: rgba(9,10,12,0.80);
+      font-weight: 900;
+      font-size: 13px;
       line-height: 1.35;
-      letter-spacing: 0.1px;
-      overflow: hidden;
+
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
-      min-height: 52px;
+      overflow: hidden;
+
+      transform: translateY(8px);
+      opacity: 0;
+      transition: opacity 240ms ease, transform 240ms var(--ease);
     }
 
-    #smc-{{ section.id }} .smc__dots{
-      display: flex;
+    /* Desktop: show prompt on hover/focus within */
+    @media (hover:hover){
+      #smgc-{{ section.id }} .smgc__wrap:hover .smgc__prompt,
+      #smgc-{{ section.id }} .smgc__wrap:focus-within .smgc__prompt{
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mobile: always visible */
+    @media (hover:none){
+      #smgc-{{ section.id }} .smgc__prompt{
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Dots */
+    #smgc-{{ section.id }} .smgc__dots{
+      display:flex;
       gap: 8px;
       justify-content: center;
-      padding-bottom: 12px;
+      padding: 0 0 14px;
     }
 
-    #smc-{{ section.id }} .smc__dot{
+    #smgc-{{ section.id }} .smgc__dot{
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.12);
-      cursor: pointer;
-      transition: width 220ms cubic-bezier(0.2,0.8,0.2,1), transform 220ms cubic-bezier(0.2,0.8,0.2,1), background 220ms ease;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      cursor:pointer;
+      transition: width 220ms var(--ease), transform 220ms var(--ease), background 220ms ease, opacity 220ms ease;
+      opacity: 0.75;
     }
-
-    #smc-{{ section.id }} .smc__dot.is-active{
-      width: 24px;
+    #smgc-{{ section.id }} .smgc__dot.is-active{
+      width: 26px;
       background: linear-gradient(90deg, rgba(255,152,0,0.85), rgba(0,68,204,0.85));
       transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.10);
+      opacity: 1;
     }
 
-    @media (min-width: 900px){
-      #smc-{{ section.id }}{
-        --cardW: 320px;
-        --cardH: 540px;
+    @media (min-width: 920px){
+      #smgc-{{ section.id }}{
+        --cardW: 280px;
       }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smc-{{ section.id }} *{
+      #smgc-{{ section.id }} *{
         transition: none !important;
         animation: none !important;
         scroll-behavior: auto !important;
@@ -360,78 +389,70 @@
     }
   </style>
 
-  <div class="smc__wrap">
-    <div class="smc__top">
-      <p class="smc__title">Werkstatt Beispiele</p>
-      <div class="smc__nav" aria-label="Navigation">
-        <button class="smc__btn" type="button" data-smc-prev aria-label="Vorheriges">‹</button>
-        <button class="smc__btn" type="button" data-smc-next aria-label="Nächstes">›</button>
+  <div class="smgc__wrap">
+    <div class="smgc__top">
+      <p class="smgc__title">Werkstatt Beispiele</p>
+      <div class="smgc__nav" aria-label="Navigation">
+        <button class="smgc__navbtn" type="button" data-smgc-prev aria-label="Vorheriges">‹</button>
+        <button class="smgc__navbtn" type="button" data-smgc-next aria-label="Nächstes">›</button>
       </div>
     </div>
 
-    <div class="smc__viewport">
-      <div class="smc__track" data-smc-track>
+    <div class="smgc__viewport">
+      <div class="smgc__track" data-smgc-track>
         {% for block in section.blocks %}
           {% if block.type == 'slide' %}
-            <div class="smc__card" data-smc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
-              {% if block.settings.base_image != blank %}
-                <img class="smc__img" src="{{ block.settings.base_image | image_url: width: 1800 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1800" height="2400">
-              {% else %}
-                <div class="smc__img" aria-hidden="true"></div>
-              {% endif %}
-
-              <div class="smc__overlayWrap" aria-hidden="true">
-                {% if block.settings.overlay_image != blank %}
-                  <img class="smc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1800 }}" alt="" loading="lazy" width="1800" height="2400">
+            <article class="smgc__card" data-smgc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              <div class="smgc__frame">
+                {% if block.settings.base_image != blank %}
+                  <img class="smgc__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
                 {% else %}
-                  <div class="smc__overlay" aria-hidden="true"></div>
+                  <div class="smgc__img" aria-hidden="true"></div>
                 {% endif %}
+
+                {% if block.settings.overlay_image != blank %}
+                  <img class="smgc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                {% else %}
+                  <div class="smgc__overlay" aria-hidden="true"></div>
+                {% endif %}
+
+                <button
+                  type="button"
+                  class="smgc__toggle"
+                  data-smgc-toggle
+                  data-label-off="{{ block.settings.btn_off | escape }}"
+                  data-label-on="{{ block.settings.btn_on | escape }}"
+                  aria-pressed="false"
+                >
+                  <span class="smgc__pillDot" aria-hidden="true"></span>
+                  <span class="smgc__toggleText">{{ block.settings.btn_off | escape }}</span>
+                </button>
               </div>
-
-              <div class="smc__edge" aria-hidden="true"></div>
-
-              <button
-                type="button"
-                class="smc__toggle"
-                data-smc-toggle
-                data-label-off="{{ block.settings.btn_off | escape }}"
-                data-label-on="{{ block.settings.btn_on | escape }}"
-                aria-pressed="false"
-                aria-label="{{ block.settings.btn_off | escape }}"
-              >
-                <span class="smc__toggleDot" aria-hidden="true"></span>
-                <svg class="smc__toggleIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 2l1.2 4.2L17.4 7.4 13.2 8.6 12 13 10.8 8.6 6.6 7.4l4.2-1.2L12 2Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.6" stroke-linejoin="round"/>
-                  <path d="M19 11l.9 3.1 3.1.9-3.1.9L19 19l-.9-3.1L15 15l3.1-.9L19 11Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.6" stroke-linejoin="round"/>
-                  <path d="M5 13l.8 2.7 2.7.8-2.7.8L5 20l-.8-2.7L1.5 16.5l2.7-.8L5 13Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.6" stroke-linejoin="round"/>
-                </svg>
-                <span class="smc__toggleText">{{ block.settings.btn_off | escape }}</span>
-              </button>
-            </div>
+            </article>
           {% endif %}
         {% endfor %}
       </div>
     </div>
 
-    <div class="smc__promptWrap" aria-label="Prompt">
-      <div class="smc__prompt" data-smc-prompt> </div>
+    <div class="smgc__promptWrap" aria-label="Prompt">
+      <div class="smgc__prompt" data-smgc-prompt></div>
     </div>
 
-    <div class="smc__dots" data-smc-dots aria-label="Punkte"></div>
+    <div class="smgc__dots" data-smgc-dots aria-label="Punkte"></div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var root = document.getElementById("smc-" + SECTION_ID);
+      var root = document.getElementById("smgc-" + SECTION_ID);
       if(!root) return;
 
-      var track = root.querySelector("[data-smc-track]");
-      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smc-card]"));
-      var prev = root.querySelector("[data-smc-prev]");
-      var next = root.querySelector("[data-smc-next]");
-      var promptEl = root.querySelector("[data-smc-prompt]");
-      var dotsWrap = root.querySelector("[data-smc-dots]");
+      var track = root.querySelector("[data-smgc-track]");
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smgc-card]"));
+      var prev = root.querySelector("[data-smgc-prev]");
+      var next = root.querySelector("[data-smgc-next]");
+      var promptEl = root.querySelector("[data-smgc-prompt]");
+      var dotsWrap = root.querySelector("[data-smgc-dots]");
 
       if(!track || !cards.length) return;
 
@@ -439,6 +460,7 @@
       var autoplayMs = ({{ section.settings.autoplay_seconds | default: 6 }} * 1000) || 6000;
       var timer = null;
       var isPointerDown = false;
+      var hoverIdx = null;
 
       function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
@@ -460,19 +482,25 @@
         return best;
       }
 
+      function setPromptFromIndex(idx){
+        if(!promptEl) return;
+        idx = clamp(idx, 0, cards.length - 1);
+        var p = cards[idx].getAttribute("data-prompt") || "";
+        promptEl.textContent = p;
+      }
+
       function setActive(idx){
+        idx = clamp(idx, 0, cards.length - 1);
         for(var i=0;i<cards.length;i++){
           if(i === idx) cards[i].classList.add("is-active");
           else cards[i].classList.remove("is-active");
         }
 
-        if(promptEl){
-          var p = cards[idx].getAttribute("data-prompt") || "";
-          promptEl.textContent = p;
-        }
+        var showIdx = (hoverIdx !== null) ? hoverIdx : idx;
+        setPromptFromIndex(showIdx);
 
         if(dotsWrap){
-          var dots = dotsWrap.querySelectorAll(".smc__dot");
+          var dots = dotsWrap.querySelectorAll(".smgc__dot");
           for(var j=0;j<dots.length;j++){
             if(j === idx) dots[j].classList.add("is-active");
             else dots[j].classList.remove("is-active");
@@ -497,7 +525,7 @@
         for(var i=0;i<cards.length;i++){
           var b = document.createElement("button");
           b.type = "button";
-          b.className = "smc__dot" + (i === 0 ? " is-active" : "");
+          b.className = "smgc__dot" + (i === 0 ? " is-active" : "");
           b.setAttribute("aria-label", "Gehe zu Slide " + (i + 1));
           (function(index){
             b.addEventListener("click", function(){
@@ -535,28 +563,55 @@
         track.addEventListener("pointerdown", function(){ isPointerDown = true; stopAutoplay(); }, { passive: true });
         window.addEventListener("pointerup", function(){ isPointerDown = false; startAutoplay(); }, { passive: true });
 
-        root.querySelectorAll("[data-smc-toggle]").forEach(function(btn){
-          btn.addEventListener("click", function(){
-            var card = btn.closest("[data-smc-card]");
+        // Hover to preview prompt without changing active slide
+        cards.forEach(function(card, idx){
+          card.addEventListener("mouseenter", function(){
+            hoverIdx = idx;
+            setPromptFromIndex(idx);
+          });
+          card.addEventListener("mouseleave", function(){
+            hoverIdx = null;
+            setPromptFromIndex(getActiveIndex());
+          });
+
+          // Tap card to center it on mobile
+          card.addEventListener("click", function(e){
+            var target = e.target;
+            if(target && target.closest && target.closest("[data-smgc-toggle]")) return;
+            stopAutoplay();
+            scrollToIndex(idx);
+          });
+        });
+
+        // Toggle only affects that card, overlay fades by CSS (2s)
+        root.querySelectorAll("[data-smgc-toggle]").forEach(function(btn){
+          btn.addEventListener("click", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+
+            var card = btn.closest("[data-smgc-card]");
             if(!card) return;
+
+            // If user clicks toggle on a non-active card, center it first for "focus selected" feel
+            var idx = parseInt(card.getAttribute("data-index") || "0", 10);
+            if(!card.classList.contains("is-active")){
+              stopAutoplay();
+              scrollToIndex(idx);
+            }
 
             var isOn = card.classList.toggle("is-on");
             btn.setAttribute("aria-pressed", isOn ? "true" : "false");
 
             var off = btn.getAttribute("data-label-off") || "In Schild verwandeln";
             var on = btn.getAttribute("data-label-on") || "Zurück";
-            var label = isOn ? on : off;
-
-            var t = btn.querySelector(".smc__toggleText");
-            if(t) t.textContent = label;
-            btn.setAttribute("aria-label", label);
+            var t = btn.querySelector(".smgc__toggleText");
+            if(t) t.textContent = isOn ? on : off;
           });
         });
       }
 
       buildDots();
       bind();
-
       setActive(0);
       startAutoplay();
 
