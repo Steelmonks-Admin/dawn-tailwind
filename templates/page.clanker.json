@@ -401,11 +401,32 @@
         "padding_left": 24,
         "padding_right": 24
       }
+    },
+    "steelmonks_announcement_9wcjnF": {
+      "type": "steelmonks-announcement",
+      "blocks": {
+        "announcement_PeCt8F": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>📯 100% Glücksgarantie</p>",
+            "font_weight": 600
+          }
+        }
+      },
+      "block_order": [
+        "announcement_PeCt8F"
+      ],
+      "name": "Custom Announcement Bar",
+      "settings": {
+        "background_color": "#0044cc",
+        "text_color": "#fafaff"
+      }
     }
   },
   "order": [
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "steelmonks_sign_creator_FKYF46",
+    "steelmonks_announcement_9wcjnF",
     "steelmonks_horizontal_dropdowns_mFUgm3",
     "custom_liquid_EFXxGX",
     "steelmonks_werkstatt_steps_bk7jyj",
