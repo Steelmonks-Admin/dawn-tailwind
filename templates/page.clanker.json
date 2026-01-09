@@ -15,21 +15,17 @@
         "slide_bCMMg3": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/Steelmonks-Werkstatt-1.jpg",
-            "overlay_image": "shopify://shop_images/Steelmonks-Werkstatt-3.jpg",
-            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.",
-            "btn_off": "Verwandeln",
-            "btn_on": "Zurück"
+            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
+            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
           }
         },
         "slide_V4mdEE": {
           "type": "slide",
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2_b01f300c-2845-482b-9ca4-08774101e84c.jpg",
-            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.",
-            "btn_off": "Verwandeln",
-            "btn_on": "Zurück"
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
+            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
           }
         }
       },
@@ -66,11 +62,9 @@
         "bottom_spacing": 46,
         "heading": "So entsteht dein Schild",
         "subheading": "Upload → Entwurf → Fertiges Schild",
-        "image_1": "shopify://shop_images/Steelmonks-Werkstatt-1.jpg",
         "caption_1": "Motiv hochladen",
         "image_2": "shopify://shop_images/Steelmonks-Werkstatt-2.jpg",
         "caption_2": "Entwurf generieren",
-        "image_3": "shopify://shop_images/Steelmonks-Werkstatt-3.jpg",
         "caption_3": "Fertiges Schild",
         "show_numbers": true,
         "enable_animations": true
