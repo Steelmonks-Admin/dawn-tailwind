@@ -301,6 +301,7 @@
     },
     "masonry_gallery_yMJgLM": {
       "type": "masonry-gallery",
+      "disabled": true,
       "name": "Masonry Gallery",
       "settings": {
         "heading": "Galerie",
