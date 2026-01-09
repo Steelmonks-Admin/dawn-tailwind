@@ -1,10 +1,8 @@
 {% comment %}
   Werkstatt Carousel (FINAL)
-  FIX:
-  - Arrows were skipping because multiple events fired per tap (pointerup + touchend + click).
-  - Now we de-dupe navigation and block the synthetic click after touch/pointer navigation.
-  - Beschreibung keeps a fixed min-height equal to the tallest prompt across slides (no layout shift).
-  - Mobile layout unchanged.
+  FIX (mobile overflow):
+  - Prevent unselected/offscreen cards from creating horizontal page scroll on mobile
+  - We clip ONLY the horizontal overflow at the section level (no visual layout changes)
 {% endcomment %}
 
 {% schema %}
@@ -73,7 +71,13 @@
       --stageH: clamp(330px, 72vw, 560px);
 
       --navOffset: 420px;
-      overflow: visible;
+
+      /* ✅ prevents mobile page from being pushed wider by offscreen cards */
+      overflow-x: hidden;
+      overflow-x: clip;
+      overflow-y: visible;
+      position: relative;
+      max-width: 100%;
     }
 
     #smwc-final-{{ section.id }} .smwc2__wrap{
@@ -82,6 +86,7 @@
       overflow: visible;
       position: relative;
       padding: 0 12px;
+      max-width: 100%;
     }
 
     #smwc-final-{{ section.id }} .smwc2__stage{
@@ -300,6 +305,7 @@
       gap: 8px;
       text-align: center;
       padding: 0 8px;
+      max-width: 100%;
     }
 
     #smwc-final-{{ section.id }} .smwc2__descHead{
