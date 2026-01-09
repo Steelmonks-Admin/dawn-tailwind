@@ -11,26 +11,36 @@
   "sections": {
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
+      "blocks": {
+        "slide_bCMMg3": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Steelmonks-Werkstatt-1.jpg",
+            "overlay_image": "shopify://shop_images/Steelmonks-Werkstatt-3.jpg",
+            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.",
+            "btn_off": "Verwandeln",
+            "btn_on": "Zurück"
+          }
+        },
+        "slide_V4mdEE": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2_b01f300c-2845-482b-9ca4-08774101e84c.jpg",
+            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.",
+            "btn_off": "Verwandeln",
+            "btn_on": "Zurück"
+          }
+        }
+      },
+      "block_order": [
+        "slide_bCMMg3",
+        "slide_V4mdEE"
+      ],
       "name": "Werkstatt Hero Section",
       "settings": {
-        "top_spacing": 40,
-        "bottom_spacing": 40,
-        "badge_text": "Die Steelmonks Werkstatt",
-        "trust_1_icon": "🇩🇪",
-        "trust_1_text": "Schneller Versand.",
-        "trust_2_icon": "🏅",
-        "trust_2_text": "Über 100.000+ Bestellungen.",
-        "trust_3_icon": "⭐⭐⭐⭐⭐",
-        "trust_3_text": "10.000+ Bewertungen.",
-        "heading": "Von einem Satz oder Foto",
-        "heading_2": "einzigartigen Wandkunst",
-        "subheading": "Las Deiner Vorstellungskraft, freien Lauf.",
-        "from_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
-        "from_label": "Lade ein Foto oder eine Skizze hoch",
-        "to_image": "shopify://shop_images/Werkstatt-Hero-2_b01f300c-2845-482b-9ca4-08774101e84c.jpg",
-        "to_label": "Wir verwandeln es in ein sauberes, schnittfähiges Schild",
         "autoplay": true,
-        "duration_seconds": 10
+        "autoplay_seconds": 6
       }
     },
     "steelmonks_sign_creator_FKYF46": {
