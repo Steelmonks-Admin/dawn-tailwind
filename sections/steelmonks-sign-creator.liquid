@@ -8,9 +8,253 @@
 </script>
 <script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
 
+{% comment %} Tooltip styles and tiny helper logic, self contained {% endcomment %}
+<style>
+  /* Floating open button */
+  #smc-open-wrap {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: auto;
+  }
+
+  /* Help tooltip */
+  .smc__help {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 30;
+  }
+  .smc__help summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .smc__help summary::-webkit-details-marker {
+    display: none;
+  }
+  .smc__help-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    background: rgba(250,250,255,0.92);
+    border: 2px solid rgba(0,0,0,0.22);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.12);
+    color: #111;
+  }
+  .smc__help-panel {
+    margin-top: 10px;
+    width: min(92vw, 420px);
+    border-radius: 16px;
+    background: rgba(250,250,255,0.97);
+    border: 2px solid rgba(0,0,0,0.12);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+    padding: 14px;
+  }
+  .smc__help-media {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .smc__help-media img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.10);
+    display: block;
+  }
+  .smc__help-text {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: #111;
+  }
+
+  /* Type swatches */
+  .smc__type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  @media (min-width: 768px) {
+    .smc__type-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .smc__type-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .smc__type-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 10px;
+    border-radius: 9999px;
+    border: 2px solid rgba(0,0,0,0.14);
+    background: #fff;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    user-select: none;
+    text-align: center;
+    min-height: 44px;
+  }
+  .smc__type-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.10);
+    border-color: rgba(0,0,0,0.22);
+  }
+  .smc__type-radio:checked + .smc__type-chip {
+    border-color: rgba(0,0,0,0.45);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.14);
+  }
+
+  /* Mounting selector */
+  .smc__mounting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 2px solid rgba(0,0,0,0.12);
+    background: #fff;
+  }
+  .smc__mounting input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+  .smc__mounting-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+  .smc__mounting-title {
+    font-weight: 900;
+    color: #111;
+  }
+  .smc__mounting-sub {
+    font-size: 0.92rem;
+    color: rgba(17,17,17,0.65);
+  }
+  .smc__mounting-price {
+    font-weight: 900;
+    color: #111;
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  (function () {
+    function parseEUR(text) {
+      if (!text) return 0;
+      var cleaned = String(text)
+        .replace(/\s/g, '')
+        .replace(/[^\d,.-]/g, '')
+        .replace(/\.(?=\d{3}(\D|$))/g, '');
+      cleaned = cleaned.replace(',', '.');
+      var n = parseFloat(cleaned);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function formatEUR(value) {
+      try {
+        return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+      } catch (e) {
+        return (Math.round(value * 100) / 100).toFixed(2).replace('.', ',') + ' €';
+      }
+    }
+
+    function getSelectedType() {
+      var el = document.querySelector('input[name="smc-type"]:checked');
+      return el ? el.value : 'Frei';
+    }
+
+    function applyType() {
+      var v = getSelectedType();
+      var prop = document.getElementById('smc-prop-type');
+      if (prop) prop.value = v;
+      var smc = document.getElementById('smc');
+      if (smc) smc.setAttribute('data-type', v);
+    }
+
+    function getMountingChecked() {
+      var cb = document.getElementById('smc-mounting');
+      return cb ? !!cb.checked : false;
+    }
+
+    function applyMounting() {
+      var checked = getMountingChecked();
+      var prop = document.getElementById('smc-prop-mounting');
+      if (prop) prop.value = checked ? 'true' : 'false';
+      var smc = document.getElementById('smc');
+      if (smc) smc.setAttribute('data-mounting', checked ? 'true' : 'false');
+    }
+
+    function applyPriceAddon() {
+      var priceEl = document.getElementById('smc-price');
+      if (!priceEl) return;
+
+      var base = parseEUR(priceEl.getAttribute('data-base-price') || priceEl.textContent);
+      if (!priceEl.getAttribute('data-base-price') && base > 0) {
+        priceEl.setAttribute('data-base-price', String(base));
+      }
+
+      var mountingAddon = 9.45;
+      var finalVal = base + (getMountingChecked() ? mountingAddon : 0);
+
+      if (base > 0) {
+        priceEl.textContent = formatEUR(finalVal);
+      }
+    }
+
+    function wireUp() {
+      document.addEventListener('change', function (e) {
+        if (e.target && e.target.name === 'smc-type') {
+          applyType();
+        }
+        if (e.target && e.target.id === 'smc-mounting') {
+          applyMounting();
+          applyPriceAddon();
+        }
+      });
+
+      var priceEl = document.getElementById('smc-price');
+      if (priceEl) {
+        var obs = new MutationObserver(function () {
+          var current = parseEUR(priceEl.textContent);
+          if (current > 0) {
+            priceEl.setAttribute('data-base-price', String(current));
+          }
+          applyPriceAddon();
+        });
+        obs.observe(priceEl, { childList: true, characterData: true, subtree: true });
+      }
+
+      applyType();
+      applyMounting();
+      applyPriceAddon();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', wireUp);
+    } else {
+      wireUp();
+    }
+  })();
+</script>
+
 {% comment %} * HTML Markup {% endcomment %}
 {% comment %} ! Open button {% endcomment %}
-<div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
+<div id='smc-open-wrap' class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
   <button
     id='smc-open-btn'
     class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
@@ -67,10 +311,63 @@
         id='smc-page-1'
         class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
       >
-        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+        <div class='smc__wrap twcss-relative twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+          {% comment %} Tooltip Page 1 {% endcomment %}
+          <details class='smc__help'>
+            <summary class='smc__help-btn' aria-label='Info'>i</summary>
+            <div class='smc__help-panel'>
+              {% if section.settings.help_1_image_1 != blank or section.settings.help_1_image_2 != blank %}
+                <div class='smc__help-media'>
+                  {% if section.settings.help_1_image_1 != blank %}
+                    <img src='{{ section.settings.help_1_image_1 | image_url: width: 900 }}' alt='' loading='lazy'>
+                  {% endif %}
+                  {% if section.settings.help_1_image_2 != blank %}
+                    <img src='{{ section.settings.help_1_image_2 | image_url: width: 900 }}' alt='' loading='lazy'>
+                  {% endif %}
+                </div>
+              {% endif %}
+              <div class='smc__help-text'>
+                {{ section.settings.help_1_text }}
+              </div>
+            </div>
+          </details>
+
           <h2 class='twcss-text-3xl twcss-font-bold twcss-mb-8 twcss-text-center twcss-text-brandblack'>
             Design konfigurieren
           </h2>
+
+          {% comment %} Type selector {% endcomment %}
+          <div class='smc__field twcss-mb-6'>
+            <label class='smc__label twcss-block twcss-font-bold'>
+              Type
+            </label>
+            <div class='smc__type-grid'>
+              <label>
+                <input class='smc__type-radio' type='radio' name='smc-type' value='Frei' checked>
+                <span class='smc__type-chip'>Frei</span>
+              </label>
+              <label>
+                <input class='smc__type-radio' type='radio' name='smc-type' value='Personen &amp; Tiere'>
+                <span class='smc__type-chip'>Personen &amp; Tiere</span>
+              </label>
+              <label>
+                <input class='smc__type-radio' type='radio' name='smc-type' value='Fahrzeuge'>
+                <span class='smc__type-chip'>Fahrzeuge</span>
+              </label>
+              <label>
+                <input class='smc__type-radio' type='radio' name='smc-type' value='Hausschilder'>
+                <span class='smc__type-chip'>Hausschilder</span>
+              </label>
+              <label>
+                <input class='smc__type-radio' type='radio' name='smc-type' value='Wappen'>
+                <span class='smc__type-chip'>Wappen</span>
+              </label>
+              <label>
+                <input class='smc__type-radio' type='radio' name='smc-type' value='Logos'>
+                <span class='smc__type-chip'>Logos</span>
+              </label>
+            </div>
+          </div>
 
           {%- assign base_product = section.settings.product -%}
 
@@ -197,6 +494,10 @@
           <input type='hidden' name='properties[Preis]' id='smc-prop-price'>
           <input type='hidden' name='properties[Anmerkung]' id='smc-prop-note'>
 
+          {% comment %} New hidden values {% endcomment %}
+          <input type='hidden' name='properties[Type]' id='smc-prop-type' value='Frei'>
+          <input type='hidden' name='properties[Befestigung]' id='smc-prop-mounting' value='false'>
+
           {% if base_product != blank %}
             {% comment %} Submit button is on page 3 {% endcomment %}
             </form>
@@ -211,7 +512,27 @@
         id='smc-page-2'
         class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
       >
-        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+        <div class='smc__wrap twcss-relative twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+          {% comment %} Tooltip Page 2 {% endcomment %}
+          <details class='smc__help'>
+            <summary class='smc__help-btn' aria-label='Info'>i</summary>
+            <div class='smc__help-panel'>
+              {% if section.settings.help_2_image_1 != blank or section.settings.help_2_image_2 != blank %}
+                <div class='smc__help-media'>
+                  {% if section.settings.help_2_image_1 != blank %}
+                    <img src='{{ section.settings.help_2_image_1 | image_url: width: 900 }}' alt='' loading='lazy'>
+                  {% endif %}
+                  {% if section.settings.help_2_image_2 != blank %}
+                    <img src='{{ section.settings.help_2_image_2 | image_url: width: 900 }}' alt='' loading='lazy'>
+                  {% endif %}
+                </div>
+              {% endif %}
+              <div class='smc__help-text'>
+                {{ section.settings.help_2_text }}
+              </div>
+            </div>
+          </details>
+
           <div class='twcss-flex twcss-flex-col twcss-items-center twcss-gap-6'>
             {% comment %} ! Preview Image Container {% endcomment %}
             <div class='twcss-w-full twcss-aspect-square twcss-max-w-md twcss-bg-white twcss-rounded-xl twcss-shadow-lg twcss-overflow-hidden twcss-flex twcss-items-center twcss-justify-center twcss-relative'>
@@ -297,7 +618,27 @@
         id='smc-page-3'
         class='twcss-w-full twcss-flex twcss-items-center twcss-justify-center twcss-flex-shrink-0 twcss-px-4'
       >
-        <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+        <div class='smc__wrap twcss-relative twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+          {% comment %} Tooltip Page 3 {% endcomment %}
+          <details class='smc__help'>
+            <summary class='smc__help-btn' aria-label='Info'>i</summary>
+            <div class='smc__help-panel'>
+              {% if section.settings.help_3_image_1 != blank or section.settings.help_3_image_2 != blank %}
+                <div class='smc__help-media'>
+                  {% if section.settings.help_3_image_1 != blank %}
+                    <img src='{{ section.settings.help_3_image_1 | image_url: width: 900 }}' alt='' loading='lazy'>
+                  {% endif %}
+                  {% if section.settings.help_3_image_2 != blank %}
+                    <img src='{{ section.settings.help_3_image_2 | image_url: width: 900 }}' alt='' loading='lazy'>
+                  {% endif %}
+                </div>
+              {% endif %}
+              <div class='smc__help-text'>
+                {{ section.settings.help_3_text }}
+              </div>
+            </div>
+          </details>
+
           {% comment %} ! Result container {% endcomment %}
           <div class='twcss-flex twcss-justify-center twcss-flex-col twcss-gap-8'>
             {% comment %} ! Small Preview + nanme, price and size columns {% endcomment %}
@@ -339,6 +680,18 @@
                     >
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {% comment %} Mounting option {% endcomment %}
+            <div class='smc__field'>
+              <div class='smc__mounting'>
+                <input id='smc-mounting' type='checkbox'>
+                <div class='smc__mounting-meta'>
+                  <div class='smc__mounting-title'>Unsichtbare Befestigung</div>
+                  <div class='smc__mounting-sub'>Optional, wird zum Preis addiert</div>
+                </div>
+                <div class='smc__mounting-price'>+ 9,45 €</div>
               </div>
             </div>
 
@@ -396,3 +749,84 @@
   <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
   <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
 </div>
+
+{% schema %}
+{
+  "name": "Steelmonks Sign Creator",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Base product"
+    },
+
+    {
+      "type": "header",
+      "content": "Tooltip Seite 1"
+    },
+    {
+      "type": "richtext",
+      "id": "help_1_text",
+      "label": "Tooltip Seite 1 Text",
+      "default": "<p>Hier kannst du Motiv, Upload und Oberfläche wählen.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "help_1_image_1",
+      "label": "Tooltip Seite 1 Screenshot 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "help_1_image_2",
+      "label": "Tooltip Seite 1 Screenshot 2"
+    },
+
+    {
+      "type": "header",
+      "content": "Tooltip Seite 2"
+    },
+    {
+      "type": "richtext",
+      "id": "help_2_text",
+      "label": "Tooltip Seite 2 Text",
+      "default": "<p>Hier siehst du die Vorschau, danach geht es weiter.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "help_2_image_1",
+      "label": "Tooltip Seite 2 Screenshot 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "help_2_image_2",
+      "label": "Tooltip Seite 2 Screenshot 2"
+    },
+
+    {
+      "type": "header",
+      "content": "Tooltip Seite 3"
+    },
+    {
+      "type": "richtext",
+      "id": "help_3_text",
+      "label": "Tooltip Seite 3 Text",
+      "default": "<p>Größe wählen, optional Befestigung aktivieren, dann bestätigen.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "help_3_image_1",
+      "label": "Tooltip Seite 3 Screenshot 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "help_3_image_2",
+      "label": "Tooltip Seite 3 Screenshot 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Steelmonks Sign Creator"
+    }
+  ]
+}
+{% endschema %}
