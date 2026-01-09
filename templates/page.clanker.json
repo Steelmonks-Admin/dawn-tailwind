@@ -27,11 +27,47 @@
             "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
             "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
           }
+        },
+        "slide_xeKJbk": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/download_e400eb97-8dca-4b3f-a9c5-97cddbf2221e.jpg",
+            "overlay_image": "shopify://shop_images/download_342d819c-0546-4b89-9b10-d62b7bda28f3.jpg",
+            "prompt": "Beispiel Prompt"
+          }
+        },
+        "slide_xpwLCB": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/download_ecb89219-692c-4063-9c4e-d51c5245b12c.jpg",
+            "overlay_image": "shopify://shop_images/download_0521f1ff-900a-4054-a423-d178241dc083.jpg",
+            "prompt": "Beispiel Prompt"
+          }
+        },
+        "slide_fAmNE9": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/download_c7a12765-f1da-42dc-a63d-71800596b5e7.jpg",
+            "overlay_image": "shopify://shop_images/download_f746be23-bf8e-4133-a6c5-87cbe137face.jpg",
+            "prompt": "Beispiel Prompt"
+          }
+        },
+        "slide_9DaD7j": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58.jpg",
+            "overlay_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58_1.jpg",
+            "prompt": "Beispiel Prompt"
+          }
         }
       },
       "block_order": [
         "slide_bCMMg3",
-        "slide_V4mdEE"
+        "slide_V4mdEE",
+        "slide_xeKJbk",
+        "slide_xpwLCB",
+        "slide_fAmNE9",
+        "slide_9DaD7j"
       ],
       "name": "Werkstatt Hero Section",
       "settings": {
@@ -42,6 +78,11 @@
     "steelmonks_sign_creator_FKYF46": {
       "type": "steelmonks-sign-creator",
       "name": "Werkstatt (Sign Creator)",
+      "settings": {}
+    },
+    "steelmonks_horizontal_dropdowns_mFUgm3": {
+      "type": "steelmonks-horizontal-dropdowns",
+      "name": "Horizontal Dropdowns",
       "settings": {}
     },
     "custom_liquid_EFXxGX": {
@@ -351,11 +392,6 @@
         "padding_left": 24,
         "padding_right": 24
       }
-    },
-    "steelmonks_horizontal_dropdowns_mFUgm3": {
-      "type": "steelmonks-horizontal-dropdowns",
-      "name": "Horizontal Dropdowns",
-      "settings": {}
     }
   },
   "order": [
