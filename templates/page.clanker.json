@@ -351,11 +351,17 @@
         "padding_left": 24,
         "padding_right": 24
       }
+    },
+    "steelmonks_horizontal_dropdowns_mFUgm3": {
+      "type": "steelmonks-horizontal-dropdowns",
+      "name": "Horizontal Dropdowns",
+      "settings": {}
     }
   },
   "order": [
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "steelmonks_sign_creator_FKYF46",
+    "steelmonks_horizontal_dropdowns_mFUgm3",
     "custom_liquid_EFXxGX",
     "steelmonks_werkstatt_steps_bk7jyj",
     "rich_text_rMFFNh",
