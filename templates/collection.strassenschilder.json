@@ -148,33 +148,39 @@
       ],
       "settings": {}
     },
-    "17679489623f9a57f0": {
+    "1767957390bd96ece4": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_e2ef111_R8dUDy": {
-          "type": "ai_gen_block_e2ef111",
+        "ai_gen_block_6fecc59_LCkRHh": {
+          "type": "ai_gen_block_6fecc59",
           "settings": {
             "product_1": "hausnummer-mit-namen-einweihungsgeschenk",
             "product_2": "moderne-zahl-hausnummer-einweihungsgeschenk",
             "product_3": "modernes-strassenschild-einweihungsgeschenk",
             "badge_text": "Bestseller",
-            "badge_background_color": "#0044cc",
+            "badge_background": "#0044cc",
             "badge_text_color": "#ffffff",
-            "badge_corner_radius": 4,
-            "corner_radius": 8,
-            "image_height": 400,
-            "desktop_spacing_top": 40,
-            "desktop_spacing_bottom": 40,
-            "desktop_spacing_sides": 20,
-            "mobile_spacing_top": 8,
-            "mobile_spacing_bottom": 0,
-            "mobile_spacing_sides": 20
+            "corner_radius": 12,
+            "container_height": 500,
+            "background_color": "#fafaff",
+            "card_background": "#ffffff",
+            "text_color": "#090a0c",
+            "price_color": "#0044cc",
+            "desktop_padding_top": 0,
+            "desktop_padding_bottom": 0,
+            "desktop_padding_sides": 40,
+            "desktop_gap": 24,
+            "mobile_padding_top": 0,
+            "mobile_padding_bottom": 8,
+            "mobile_padding_sides": 20,
+            "mobile_gap": 16,
+            "dot_color": "#0044cc"
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_e2ef111_R8dUDy"
+        "ai_gen_block_6fecc59_LCkRHh"
       ],
       "settings": {}
     },
@@ -336,7 +342,7 @@
     "17678838077d500cac",
     "17678852240e5b61e4",
     "1767946133ecfc6a22",
-    "17679489623f9a57f0",
+    "1767957390bd96ece4",
     "17458178119bf2149e",
     "banner",
     "1767887385169ffa1f",
