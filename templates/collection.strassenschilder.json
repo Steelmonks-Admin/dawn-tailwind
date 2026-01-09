@@ -9,30 +9,38 @@
  */
 {
   "sections": {
-    "17678841750b86ae89": {
+    "176794548922873341": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_bc38158_rjqXkT": {
-          "type": "ai_gen_block_bc38158",
+        "ai_gen_block_4706151_r9wEXg": {
+          "type": "ai_gen_block_4706151",
           "settings": {
             "headline": "Dein individuelles Metallschild für Haus & Eingang",
-            "subheadline": "Hausnummern, Namen & Straßenschilder aus Metall\nGröße, Farbe & Text frei wählbar",
-            "text_alignment": "center",
-            "content_width": 400,
-            "headline_size": 24,
+            "headline_font": "poppins_n6",
+            "headline_bold": true,
             "headline_color": "#090a0c",
-            "subheadline_size": 18,
+            "headline_size_desktop": 48,
+            "headline_size_mobile": 16,
+            "subheadline": "<p>Hausnummern, Namen & Straßenschilder <br/><strong>Größe</strong>, <strong>Farbe</strong> & <strong>Text</strong> frei wählbar</p>",
+            "subheadline_font": "poppins_n4",
+            "subheadline_bold": false,
             "subheadline_color": "#090a0c",
-            "spacing_top": 44,
-            "spacing_bottom": 0,
-            "spacing_sides": 0,
-            "spacing_between": 4
+            "subheadline_size_desktop": 22,
+            "subheadline_size_mobile": 14,
+            "spacing_between_desktop": 16,
+            "padding_top": 40,
+            "padding_bottom": 4,
+            "padding_sides": 20,
+            "spacing_between_mobile": 12,
+            "padding_top_mobile": 40,
+            "padding_bottom_mobile": 4,
+            "padding_sides_mobile": 16
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_bc38158_rjqXkT"
+        "ai_gen_block_4706151_r9wEXg"
       ],
       "settings": {}
     },
@@ -58,7 +66,7 @@
             "icon_size": 44,
             "text_size": 13,
             "text_color": "#090a0c",
-            "background_color": "#ffffff",
+            "background_color": "#fafaff",
             "border_radius": 0,
             "padding_vertical": 20,
             "padding_horizontal": 12
@@ -75,64 +83,98 @@
       "type": "_blocks",
       "settings": {}
     },
-    "17678819300548d337": {
+    "1767946133ecfc6a22": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_783efe5_qT4FtA": {
-          "type": "ai_gen_block_783efe5",
+        "ai_gen_block_122d70f_b4FhVz": {
+          "type": "ai_gen_block_122d70f",
           "settings": {
-            "number_of_slides": 3,
-            "image_1": "shopify://shop_images/5eecb48f-f71c-4f9c-a72f-4513ac8d1cb4.png",
-            "heading_1": "<p>Hausnummer mit Straßennamen</p>",
-            "subheading_1": "<p>Klar, modern & perfekt sichtbar<br/>Ideal für Einfamilienhäuser</p>",
-            "image_2": "shopify://shop_images/6b5b1f97-c50b-47e6-af92-8d8360e5eb79.png",
-            "heading_2": "<p>Hausschild mit Familiennamen</p>",
-            "subheading_2": "<p>Persönlich & stilvoll<br/>Dein Name als Metallschild</p>",
-            "image_3": "shopify://shop_images/875f8b49-6a73-4734-be1c-94f1de7f2181.png",
-            "heading_3": "<p>Hausnummer nach Wunsch</p>",
-            "subheading_3": "<p>Minimalistisch oder auffällig<br/>Du bestimmst das Design</p>",
-            "heading_4": "",
-            "subheading_4": "",
-            "heading_5": "",
-            "subheading_5": "",
-            "heading_6": "",
-            "subheading_6": "",
-            "heading_7": "",
-            "subheading_7": "",
-            "heading_8": "",
-            "subheading_8": "",
-            "heading_9": "",
-            "subheading_9": "",
-            "heading_10": "",
-            "subheading_10": "",
-            "enable_autoplay": false,
-            "autoplay_speed": 5,
-            "slider_padding_top": 0,
-            "slider_padding_bottom": 0,
-            "slider_padding_horizontal": 0,
-            "image_height": 300,
-            "image_border_radius": 6,
-            "text_position": "bottom",
-            "text_spacing": 8,
-            "text_padding_top": 8,
-            "text_padding_bottom": 8,
-            "text_padding_horizontal": 0,
-            "heading_size": 24,
-            "heading_color": "#090a0c",
-            "heading_spacing": 8,
-            "subheading_size": 18,
-            "subheading_color": "#090a0c",
-            "arrow_size": 32,
-            "arrow_offset": 20,
-            "arrow_background": "#090a0c",
-            "arrow_hover_background": "#0044cc",
-            "arrow_color": "#fafaff"
+            "slide_count": 3,
+            "autoplay_enabled": true,
+            "autoplay_speed": 7,
+            "slide_1_image": "shopify://shop_images/5eecb48f-f71c-4f9c-a72f-4513ac8d1cb4.png",
+            "slide_1_heading": "Hausnummer mit Straßennamen",
+            "slide_1_subheading": "Klar, modern & perfekt sichtbar Ideal für Einfamilienhäuser",
+            "slide_2_image": "shopify://shop_images/6b5b1f97-c50b-47e6-af92-8d8360e5eb79.png",
+            "slide_2_heading": "Hausschild mit Familiennamen",
+            "slide_2_subheading": "Persönlich & stilvoll - Dein Name als Metallschild",
+            "slide_3_image": "shopify://shop_images/875f8b49-6a73-4734-be1c-94f1de7f2181.png",
+            "slide_3_heading": "Hausnummer nach Wunsch",
+            "slide_3_subheading": "Minimalistisch oder auffällig - Du bestimmst das Design",
+            "slide_4_heading": "Slide 4 Heading",
+            "slide_4_subheading": "Slide 4 Subheading",
+            "slide_5_heading": "Slide 5 Heading",
+            "slide_5_subheading": "Slide 5 Subheading",
+            "slide_6_heading": "Slide 6 Heading",
+            "slide_6_subheading": "Slide 6 Subheading",
+            "slide_7_heading": "Slide 7 Heading",
+            "slide_7_subheading": "Slide 7 Subheading",
+            "slide_8_heading": "Slide 8 Heading",
+            "slide_8_subheading": "Slide 8 Subheading",
+            "slide_9_heading": "Slide 9 Heading",
+            "slide_9_subheading": "Slide 9 Subheading",
+            "slide_10_heading": "Slide 10 Heading",
+            "slide_10_subheading": "Slide 10 Subheading",
+            "heading_font": "poppins_n6",
+            "heading_size_mobile": 18,
+            "heading_size_desktop": 44,
+            "heading_color": "#121212",
+            "subheading_font": "poppins_n4",
+            "subheading_size_mobile": 14,
+            "subheading_size_desktop": 22,
+            "subheading_color": "#121212",
+            "text_padding_top_mobile": 8,
+            "text_padding_bottom_mobile": 4,
+            "text_padding_horizontal_mobile": 16,
+            "heading_subheading_gap_mobile": 8,
+            "text_padding_top_desktop": 32,
+            "text_padding_bottom_desktop": 32,
+            "text_padding_horizontal_desktop": 24,
+            "heading_subheading_gap_desktop": 12,
+            "arrow_size_mobile": 30,
+            "arrow_offset_mobile": 10,
+            "arrow_background_mobile": "#090a0c",
+            "arrow_color_mobile": "#fafaff",
+            "arrow_size_desktop": 58,
+            "arrow_offset_desktop": 32,
+            "arrow_background_desktop": "#090a0c",
+            "arrow_color_desktop": "#fafaff"
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_783efe5_qT4FtA"
+        "ai_gen_block_122d70f_b4FhVz"
+      ],
+      "settings": {}
+    },
+    "17679489623f9a57f0": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e2ef111_R8dUDy": {
+          "type": "ai_gen_block_e2ef111",
+          "settings": {
+            "product_1": "hausnummer-mit-namen-einweihungsgeschenk",
+            "product_2": "moderne-zahl-hausnummer-einweihungsgeschenk",
+            "product_3": "modernes-strassenschild-einweihungsgeschenk",
+            "badge_text": "Bestseller",
+            "badge_background_color": "#0044cc",
+            "badge_text_color": "#ffffff",
+            "badge_corner_radius": 4,
+            "corner_radius": 8,
+            "image_height": 400,
+            "desktop_spacing_top": 40,
+            "desktop_spacing_bottom": 40,
+            "desktop_spacing_sides": 20,
+            "mobile_spacing_top": 8,
+            "mobile_spacing_bottom": 0,
+            "mobile_spacing_sides": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e2ef111_R8dUDy"
       ],
       "settings": {}
     },
@@ -173,13 +215,13 @@
             "usp_1": "Für draußen geeignet",
             "usp_2": "Wetterfest",
             "usp_3": "Individuell gefertigt",
-            "background_color": "#ffffff",
+            "background_color": "#fafaff",
             "text_color": "#090a0c",
             "icon_color": "#0044cc",
             "padding_vertical": 10,
             "spacing": 30,
             "text_size": 14,
-            "icon_size": 16,
+            "icon_size": 24,
             "spacing_mobile": 15,
             "text_size_mobile": 8,
             "icon_size_mobile": 12
@@ -287,24 +329,20 @@
         "padding_left": 24,
         "padding_right": 24
       }
-    },
-    "176794482488eb929b": {
-      "type": "_blocks",
-      "settings": {}
     }
   },
   "order": [
-    "17678841750b86ae89",
+    "176794548922873341",
     "17678838077d500cac",
     "17678852240e5b61e4",
-    "17678819300548d337",
+    "1767946133ecfc6a22",
+    "17679489623f9a57f0",
     "17458178119bf2149e",
     "banner",
     "1767887385169ffa1f",
     "featured_collection_NUC336",
     "product-grid",
     "1748939636340fa12c",
-    "accordions_8JABj6",
-    "176794482488eb929b"
+    "accordions_8JABj6"
   ]
 }
