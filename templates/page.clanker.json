@@ -9,6 +9,38 @@
  */
 {
   "sections": {
+    "rich_text_rMFFNh": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_p3qP8D": {
+          "type": "heading",
+          "settings": {
+            "heading": "Zu Deinem Einzelstück mit nur einem Satz.",
+            "heading_size": "h1"
+          }
+        },
+        "text_c6tJGH": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Erstelle Dein eigenes Geschenk, Wandkunst oder Hausschild. Mit einem Bild als Vorlage oder nur Deiner Vorstellungskraft. </p><p>Erstelle ein einzigartiges Schild für Dich oder Deine Liebsten, zu jedem Anlass.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_p3qP8D",
+        "text_c6tJGH"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "enable_smooth_scroll": true
+      }
+    },
     "blocks_nMQt6z": {
       "type": "_blocks",
       "blocks": {
@@ -179,39 +211,6 @@
         "caption_3": "Fertiges Schild",
         "show_numbers": true,
         "enable_animations": true
-      }
-    },
-    "rich_text_rMFFNh": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_p3qP8D": {
-          "type": "heading",
-          "settings": {
-            "heading": "Erstellen Sie Ihr eigenes individuelles Design anhand eines Bildes",
-            "heading_size": "h1"
-          }
-        },
-        "text_c6tJGH": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Laden Sie ein Bild mit Ihrem Wunschmotiv hoch, wählen Sie Material und Größe nach Ihren Vorstellungen und kreieren Sie das perfekte Geschenk für sich selbst oder Ihre Lieben.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "heading_p3qP8D",
-        "text_c6tJGH"
-      ],
-      "disabled": true,
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": true,
-        "padding_top": 52,
-        "padding_bottom": 52,
-        "enable_smooth_scroll": true
       }
     },
     "main": {
@@ -463,6 +462,7 @@
     }
   },
   "order": [
+    "rich_text_rMFFNh",
     "blocks_nMQt6z",
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "steelmonks_sign_creator_FKYF46",
@@ -470,7 +470,6 @@
     "steelmonks_horizontal_dropdowns_mFUgm3",
     "custom_liquid_EFXxGX",
     "steelmonks_werkstatt_steps_bk7jyj",
-    "rich_text_rMFFNh",
     "main",
     "accordions_EeXHEy",
     "masonry_gallery_yMJgLM",
