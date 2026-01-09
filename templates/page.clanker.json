@@ -198,16 +198,17 @@
     },
     "steelmonks_werkstatt_steps_bk7jyj": {
       "type": "steelmonks-werkstatt-steps",
-      "disabled": true,
       "name": "Werkstatt Steps",
       "settings": {
         "top_spacing": 34,
         "bottom_spacing": 46,
-        "heading": "So entsteht dein Schild",
-        "subheading": "Upload → Entwurf → Fertiges Schild",
+        "heading": "So einfach gehts",
+        "subheading": "Erstellen → 2 Minuten → Fertiges Schild",
+        "image_1": "shopify://shop_images/Screenshot_2026-01-09_at_15.33.44.png",
         "caption_1": "Motiv hochladen",
-        "image_2": "shopify://shop_images/Steelmonks-Werkstatt-2.jpg",
+        "image_2": "shopify://shop_images/Screenshot_2026-01-09_at_15.45.48.png",
         "caption_2": "Entwurf generieren",
+        "image_3": "shopify://shop_images/Screenshot_2026-01-09_at_15.46.11.png",
         "caption_3": "Fertiges Schild",
         "show_numbers": true,
         "enable_animations": true
