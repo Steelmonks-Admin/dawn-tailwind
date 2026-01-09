@@ -1,798 +1,504 @@
 {% comment %}
-  Steelmonks Werkstatt Hero V3
-  - Clear headline + features + process speed
-  - Mobile first carousel with floating rounded cards
-  - Each slide can toggle "turns into sign" by overlaying a second image
-  - Optional text overlay per slide
+  Steelmonks Glass Carousel, standalone
+  Multiple cards visible, center card highlighted
+  Per card: base image + full screen overlay image (same size, 2s fade in)
+  Prompt bar at bottom shows active slide prompt
 {% endcomment %}
 
 {% schema %}
 {
-  "name": "Werkstatt Hero V3",
+  "name": "Werkstatt Glass Carousel",
   "tag": "section",
   "settings": [
-    { "type": "range", "id": "top_spacing", "label": "Abstand oben", "default": 26, "min": 0, "max": 180, "step": 2 },
-    { "type": "range", "id": "bottom_spacing", "label": "Abstand unten", "default": 28, "min": 0, "max": 200, "step": 2 },
-
-    { "type": "text", "id": "eyebrow", "label": "Kleine Headline", "default": "Die Steelmonks Werkstatt" },
-    { "type": "text", "id": "headline", "label": "Headline", "default": "Dein Metallschild aus Text oder Foto" },
-    { "type": "textarea", "id": "subheadline", "label": "Subheadline", "default": "Gib einen Prompt ein oder lade ein Bild hoch. In ca. 2 Minuten bekommst du einen sauberen Entwurf, den du direkt bestellen kannst." },
-
-    { "type": "text", "id": "speed_badge", "label": "Speed Badge", "default": "Entwurf in 2 Minuten" },
-
-    { "type": "text", "id": "feature_1_icon", "label": "Feature 1 Icon", "default": "⚡" },
-    { "type": "text", "id": "feature_1_text", "label": "Feature 1 Text", "default": "Schnell, klar, ohne Designkenntnisse" },
-
-    { "type": "text", "id": "feature_2_icon", "label": "Feature 2 Icon", "default": "🧠" },
-    { "type": "text", "id": "feature_2_text", "label": "Feature 2 Text", "default": "Aus Text oder Bild Prompt" },
-
-    { "type": "text", "id": "feature_3_icon", "label": "Feature 3 Icon", "default": "🛠️" },
-    { "type": "text", "id": "feature_3_text", "label": "Feature 3 Text", "default": "Konturen sauber, schnittfähig optimiert" },
-
-    { "type": "text", "id": "feature_4_icon", "label": "Feature 4 Icon", "default": "☔" },
-    { "type": "text", "id": "feature_4_text", "label": "Feature 4 Text", "default": "Wetterfestes Metall, langlebig" },
-
-    { "type": "text", "id": "step_1", "label": "Step 1", "default": "1. Prompt eingeben oder Foto hochladen" },
-    { "type": "text", "id": "step_2", "label": "Step 2", "default": "2. Entwurf ansehen, Text und Stil anpassen" },
-    { "type": "text", "id": "step_3", "label": "Step 3", "default": "3. Bestellen, wir fertigen dein Unikat" },
-
-    { "type": "text", "id": "cta_label", "label": "Button Text", "default": "Jetzt in der Werkstatt starten" },
-    { "type": "url", "id": "cta_url", "label": "Button Link" },
-
-    { "type": "checkbox", "id": "autoplay", "label": "Carousel Autoplay", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
     { "type": "range", "id": "autoplay_seconds", "label": "Autoplay Sekunden", "default": 6, "min": 3, "max": 12, "step": 1 }
   ],
   "blocks": [
     {
       "type": "slide",
-      "name": "Carousel Slide",
+      "name": "Slide",
       "settings": [
-        { "type": "text", "id": "title", "label": "Titel", "default": "Von Idee zu Schild" },
         { "type": "image_picker", "id": "base_image", "label": "Basisbild" },
-        { "type": "image_picker", "id": "sign_overlay_image", "label": "Overlay Bild (Schild Ergebnis)" },
-        { "type": "text", "id": "overlay_text", "label": "Overlay Text (optional)", "default": "Familie Müller" },
-        { "type": "text", "id": "toggle_label_off", "label": "Button Text (vorher)", "default": "In Schild verwandeln" },
-        { "type": "text", "id": "toggle_label_on", "label": "Button Text (nachher)", "default": "Zurück zur Vorlage" }
+        { "type": "image_picker", "id": "overlay_image", "label": "Overlay Bild (Schild)" },
+        { "type": "textarea", "id": "prompt", "label": "Prompt unten", "default": "Beispiel Prompt: Modernes Hausschild, klare Konturen, minimalistisch, Familienname und Hausnummer" },
+        { "type": "text", "id": "btn_off", "label": "Button Text vorher", "default": "In Schild verwandeln" },
+        { "type": "text", "id": "btn_on", "label": "Button Text nachher", "default": "Zurück" }
       ]
     }
   ],
   "presets": [
-    { "name": "Werkstatt Hero V3", "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }] }
+    { "name": "Werkstatt Glass Carousel", "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }, { "type": "slide" }] }
   ]
 }
 {% endschema %}
 
-<section
-  id="smw-hero-v3-{{ section.id }}"
-  class="smwv3"
-  style="padding-top: {{ section.settings.top_spacing | default: 26 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 28 }}px;"
-  aria-label="Steelmonks Werkstatt"
->
+<section id="smc-{{ section.id }}" class="smc" aria-label="Werkstatt Carousel">
   <style>
-    #smw-hero-v3-{{ section.id }}{
-      --bg: transparent;
-      --card: rgba(255,255,255,0.72);
-      --card2: rgba(255,255,255,0.55);
+    #smc-{{ section.id }}{
       --ink: rgba(9,10,12,0.92);
-      --muted: rgba(9,10,12,0.68);
-      --stroke: rgba(9,10,12,0.10);
+      --muted: rgba(9,10,12,0.66);
 
       --a1: #ff9800;
       --a2: #0044CC;
       --a3: #00235e;
 
-      --r1: 28px;
-      --r2: 22px;
+      --stroke: rgba(255,255,255,0.18);
+      --stroke2: rgba(9,10,12,0.10);
 
-      --shadow: 0 18px 48px rgba(15,23,42,0.12);
-      --shadow2: 0 10px 26px rgba(15,23,42,0.10);
-      --ease: cubic-bezier(0.2,0.8,0.2,1);
-    }
+      --shadow: 0 22px 70px rgba(15,23,42,0.18);
+      --shadow2: 0 14px 34px rgba(15,23,42,0.12);
 
-    #smw-hero-v3-{{ section.id }}{
-      background: var(--bg);
-      color: var(--ink);
-    }
+      --rOuter: 34px;
+      --rInner: 26px;
 
-    #smw-hero-v3-{{ section.id }} .smwv3__wrap{
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
+      --cardW: clamp(230px, 62vw, 340px);
+      --cardH: clamp(360px, 72svh, 560px);
+      --gap: 14px;
 
-    #smw-hero-v3-{{ section.id }} .smwv3__grid{
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      align-items: start;
-    }
+      --fade: 2000ms;
 
-    @media (min-width: 980px){
-      #smw-hero-v3-{{ section.id }} .smwv3__grid{
-        grid-template-columns: 1.05fr 0.95fr;
-        gap: 34px;
-        align-items: center;
-      }
-    }
-
-    /* Copy */
-    #smw-hero-v3-{{ section.id }} .smwv3__copy{
-      border-radius: var(--r1);
-      padding: 18px 16px;
-      background:
-        radial-gradient(120% 90% at 10% 0%, rgba(255,152,0,0.14), rgba(255,255,255,0) 55%),
-        radial-gradient(120% 90% at 90% 0%, rgba(0,68,204,0.12), rgba(255,255,255,0) 55%),
-        linear-gradient(180deg, rgba(255,255,255,0.68), rgba(255,255,255,0.46));
-      border: 1px solid rgba(9,10,12,0.08);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      overflow: hidden;
-      position: relative;
-      isolation: isolate;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__copy:after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: var(--r1);
-      background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
-      pointer-events:none;
-      z-index:0;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__copy > *{
-      position: relative;
-      z-index: 1;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__eyebrow{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.62);
-      border: 1px solid rgba(9,10,12,0.10);
-      box-shadow: var(--shadow2);
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: rgba(9,10,12,0.86);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__eyebrow:before{
-      content:"";
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--a1);
-      box-shadow: 0 0 0 5px rgba(255,152,0,0.25);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__h{
-      margin: 12px 0 0;
-      font-weight: 950;
-      letter-spacing: -0.03em;
-      line-height: 1.08;
-      font-size: clamp(26px, 3.2vw, 44px);
-      color: rgba(9,10,12,0.94);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__sub{
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-      max-width: 56ch;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__meta{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-      align-items: center;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__badge{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(9,10,12,0.10);
-      background: rgba(255,255,255,0.72);
-      box-shadow: var(--shadow2);
-      font-weight: 900;
-      font-size: 13px;
-      color: rgba(9,10,12,0.86);
-      white-space: nowrap;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__badge i{
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--a1), var(--a2));
-      display: inline-block;
-      box-shadow: 0 0 0 5px rgba(0,68,204,0.12);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__cta{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 999px;
-      font-weight: 950;
-      letter-spacing: 0.2px;
-      text-decoration: none;
-      color: rgba(255,255,255,0.98);
-      background: linear-gradient(90deg, var(--a3), var(--a2));
-      box-shadow: 0 16px 40px rgba(0,35,94,0.22);
-      border: 1px solid rgba(255,255,255,0.12);
-      transition: transform 180ms var(--ease), filter 180ms ease;
-      will-change: transform;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__cta:hover{
-      transform: translateY(-1px) scale(1.01);
-      filter: brightness(1.03);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__cta:active{
-      transform: translateY(0) scale(0.99);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__cta:focus-visible{
-      outline: 3px solid rgba(255,152,0,0.45);
-      outline-offset: 2px;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__features{
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    @media (min-width: 620px){
-      #smw-hero-v3-{{ section.id }} .smwv3__features{
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__f{
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 10px;
-      align-items: start;
-      padding: 12px 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.56);
-      border: 1px solid rgba(9,10,12,0.08);
-      box-shadow: 0 10px 22px rgba(15,23,42,0.08);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__f b{
-      display: block;
-      font-weight: 900;
-      color: rgba(9,10,12,0.86);
-      font-size: 13px;
-      line-height: 1.25;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__fico{
-      width: 28px;
-      height: 28px;
-      border-radius: 10px;
+      min-height: 100svh;
       display: grid;
       place-items: center;
-      background: rgba(255,255,255,0.72);
-      border: 1px solid rgba(9,10,12,0.10);
-      box-shadow: 0 10px 18px rgba(15,23,42,0.08);
-      font-size: 16px;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__steps{
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(9,10,12,0.08);
-      display: grid;
-      gap: 8px;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__step{
-      display: grid;
-      grid-template-columns: 12px 1fr;
-      gap: 10px;
-      align-items: start;
-      color: rgba(9,10,12,0.78);
-      font-weight: 800;
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__step:before{
-      content:"";
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      margin-top: 3px;
-      background: linear-gradient(90deg, var(--a1), var(--a2));
-      box-shadow: 0 0 0 5px rgba(255,152,0,0.14);
-    }
-
-    /* Carousel */
-    #smw-hero-v3-{{ section.id }} .smwv3__car{
-      border-radius: var(--r1);
-      padding: 14px 12px;
+      padding: 18px 14px;
+      color: var(--ink);
       background:
-        radial-gradient(120% 90% at 20% 0%, rgba(255,152,0,0.14), rgba(255,255,255,0) 55%),
-        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.14), rgba(255,255,255,0) 55%),
-        linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.40));
-      border: 1px solid rgba(9,10,12,0.08);
+        radial-gradient(120% 90% at 20% 0%, rgba(255,152,0,0.20), rgba(255,255,255,0) 58%),
+        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.20), rgba(255,255,255,0) 60%),
+        radial-gradient(120% 120% at 50% 120%, rgba(0,35,94,0.14), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.30), rgba(255,255,255,0.06));
+    }
+
+    #smc-{{ section.id }} .smc__wrap{
+      width: min(1220px, 100%);
+      border-radius: var(--rOuter);
+      border: 1px solid rgba(255,255,255,0.16);
+      background:
+        radial-gradient(100% 80% at 20% 0%, rgba(255,255,255,0.40), rgba(255,255,255,0.16) 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.10));
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       overflow: hidden;
       position: relative;
       isolation: isolate;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__car:after{
+    #smc-{{ section.id }} .smc__wrap:before{
       content:"";
       position:absolute;
-      inset:0;
-      border-radius: var(--r1);
-      border: 1px solid rgba(255,255,255,0.18);
-      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      inset:-2px;
+      border-radius: calc(var(--rOuter) + 2px);
+      background:
+        radial-gradient(90% 70% at 15% 10%, rgba(255,152,0,0.38), rgba(255,255,255,0) 60%),
+        radial-gradient(90% 70% at 85% 10%, rgba(0,68,204,0.32), rgba(255,255,255,0) 60%);
+      filter: blur(10px);
+      opacity: 0.55;
       pointer-events:none;
       z-index:0;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__car > *{
-      position: relative;
-      z-index: 1;
-    }
+    #smc-{{ section.id }} .smc__wrap > *{ position: relative; z-index: 1; }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__car-top{
+    #smc-{{ section.id }} .smc__top{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
+      gap: 10px;
+      padding: 14px 14px 10px;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__car-title{
+    #smc-{{ section.id }} .smc__title{
       margin: 0;
       font-weight: 950;
       letter-spacing: -0.02em;
-      font-size: 14px;
-      color: rgba(9,10,12,0.86);
+      font-size: 13px;
+      color: rgba(9,10,12,0.78);
+      user-select: none;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__nav{
+    #smc-{{ section.id }} .smc__nav{
       display: inline-flex;
-      gap: 8px;
+      gap: 10px;
+      align-items: center;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__btn{
+    #smc-{{ section.id }} .smc__btn{
       width: 38px;
       height: 38px;
       border-radius: 999px;
-      border: 1px solid rgba(9,10,12,0.10);
-      background: rgba(255,255,255,0.70);
-      box-shadow: 0 10px 22px rgba(15,23,42,0.08);
+      border: 1px solid rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.14);
+      box-shadow: 0 14px 28px rgba(15,23,42,0.10);
       display: grid;
       place-items: center;
       cursor: pointer;
-      transition: transform 180ms var(--ease), filter 180ms ease;
-      color: rgba(9,10,12,0.86);
-      user-select: none;
+      color: rgba(9,10,12,0.78);
+      transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
       -webkit-tap-highlight-color: transparent;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
-    #smw-hero-v3-{{ section.id }} .smwv3__btn:active{ transform: translateY(0) scale(0.98); }
-    #smw-hero-v3-{{ section.id }} .smwv3__btn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
+    #smc-{{ section.id }} .smc__btn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      background: rgba(255,255,255,0.18);
+    }
+    #smc-{{ section.id }} .smc__btn:active{ transform: translateY(0) scale(0.98); }
+    #smc-{{ section.id }} .smc__btn:focus-visible{ outline: 3px solid rgba(0,68,204,0.35); outline-offset: 2px; }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__viewport{
-      overflow: hidden;
+    #smc-{{ section.id }} .smc__viewport{
+      padding: 8px 6px 4px;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__track{
+    #smc-{{ section.id }} .smc__track{
       display: flex;
-      gap: 14px;
+      gap: var(--gap);
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      scroll-padding: 10px;
-      padding: 8px 6px 12px;
+      scroll-padding: 18px;
+      padding: 10px 16px 14px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
-    #smw-hero-v3-{{ section.id }} .smwv3__track::-webkit-scrollbar{ display:none; }
+    #smc-{{ section.id }} .smc__track::-webkit-scrollbar{ display:none; }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__slide{
-      flex: 0 0 86%;
+    #smc-{{ section.id }} .smc__card{
+      flex: 0 0 var(--cardW);
+      height: var(--cardH);
       scroll-snap-align: center;
-      border-radius: 26px;
-      background: rgba(255,255,255,0.70);
-      border: 1px solid rgba(9,10,12,0.10);
-      box-shadow: 0 18px 46px rgba(15,23,42,0.12);
-      overflow: hidden;
+      border-radius: var(--rInner);
       position: relative;
+      overflow: hidden;
       transform: translateZ(0);
-    }
-
-    @media (min-width: 520px){
-      #smw-hero-v3-{{ section.id }} .smwv3__slide{ flex-basis: 72%; }
-    }
-    @media (min-width: 980px){
-      #smw-hero-v3-{{ section.id }} .smwv3__slide{ flex-basis: 78%; }
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__media{
-      position: relative;
-      aspect-ratio: 4 / 5;
-      border-radius: 24px;
-      margin: 10px;
-      overflow: hidden;
       background:
-        radial-gradient(120% 90% at 25% 0%, rgba(255,152,0,0.18), rgba(255,255,255,0) 60%),
-        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.16), rgba(255,255,255,0) 60%),
-        linear-gradient(180deg, rgba(10,10,12,0.04), rgba(10,10,12,0.02));
-      border: 1px solid rgba(9,10,12,0.08);
-      box-shadow: 0 14px 34px rgba(15,23,42,0.10);
+        radial-gradient(120% 90% at 25% 0%, rgba(255,152,0,0.12), rgba(255,255,255,0) 58%),
+        radial-gradient(120% 90% at 85% 0%, rgba(0,68,204,0.10), rgba(255,255,255,0) 58%),
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: var(--shadow2);
+      opacity: 0.72;
+      transform: scale(0.92);
+      transition: transform 520ms cubic-bezier(0.2,0.8,0.2,1), opacity 520ms ease, filter 520ms ease;
+      will-change: transform, opacity, filter;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__base,
-    #smw-hero-v3-{{ section.id }} .smwv3__sign{
+    #smc-{{ section.id }} .smc__card.is-active{
+      opacity: 1;
+      transform: scale(1);
+      filter: saturate(1.03) contrast(1.02);
+      border-color: rgba(255,255,255,0.26);
+    }
+
+    #smc-{{ section.id }} .smc__img,
+    #smc-{{ section.id }} .smc__overlay{
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform: scale(1.01);
-      transition: transform 520ms var(--ease), filter 320ms ease, opacity 320ms ease;
-      will-change: transform, filter, opacity;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__slide:hover .smwv3__base{
-      transform: scale(1.04);
+    #smc-{{ section.id }} .smc__img{
+      transform: scale(1.02);
+      transition: transform 700ms cubic-bezier(0.2,0.8,0.2,1), filter 520ms ease;
+      will-change: transform, filter;
+    }
+
+    #smc-{{ section.id }} .smc__card.is-active .smc__img{
+      transform: scale(1.06);
       filter: saturate(0.98);
     }
 
-    /* Sign overlay layer */
-    #smw-hero-v3-{{ section.id }} .smwv3__signWrap{
+    #smc-{{ section.id }} .smc__overlayWrap{
       position: absolute;
       inset: 0;
-      display: grid;
-      place-items: center;
       pointer-events: none;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__sign{
-      object-fit: contain;
-      width: 100%;
-      height: 100%;
-      padding: 8%;
+    #smc-{{ section.id }} .smc__overlay{
       opacity: 0;
-      transform: scale(0.985);
-      filter: drop-shadow(0 18px 38px rgba(0,0,0,0.22));
+      transition: opacity var(--fade) ease;
+      will-change: opacity;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__sign{
+    #smc-{{ section.id }} .smc__card.is-on .smc__overlay{
       opacity: 1;
-      transform: scale(1);
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__base{
-      filter: blur(1.2px) saturate(0.92) brightness(0.92);
-      transform: scale(1.03);
+    #smc-{{ section.id }} .smc__card.is-on .smc__img{
+      filter: blur(1.2px) brightness(0.88) saturate(0.90);
     }
 
-    /* Text overlay */
-    #smw-hero-v3-{{ section.id }} .smwv3__text{
+    #smc-{{ section.id }} .smc__edge{
+      position:absolute;
+      inset: 0;
+      pointer-events:none;
+      background:
+        radial-gradient(130% 90% at 50% 0%, rgba(255,255,255,0.14), rgba(255,255,255,0) 56%),
+        radial-gradient(120% 120% at 50% 120%, rgba(0,0,0,0.22), rgba(0,0,0,0) 58%);
+      opacity: 0.70;
+    }
+
+    #smc-{{ section.id }} .smc__toggle{
       position: absolute;
-      left: 10px;
-      right: 10px;
-      bottom: 12px;
-      padding: 10px 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.70);
-      border: 1px solid rgba(9,10,12,0.10);
-      box-shadow: 0 14px 30px rgba(15,23,42,0.10);
-      font-weight: 950;
-      letter-spacing: -0.01em;
-      color: rgba(9,10,12,0.88);
-      font-size: 14px;
-      line-height: 1.2;
-      text-align: center;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__text{
-      background: rgba(9,10,12,0.50);
-      color: rgba(255,255,255,0.96);
-      border-color: rgba(255,255,255,0.16);
-      box-shadow: 0 22px 54px rgba(0,0,0,0.22);
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__footer{
-      padding: 2px 10px 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__slideTitle{
-      margin: 0;
-      font-weight: 950;
-      color: rgba(9,10,12,0.88);
-      letter-spacing: -0.02em;
-      font-size: 13px;
-    }
-
-    #smw-hero-v3-{{ section.id }} .smwv3__toggle{
-      width: 100%;
+      top: 12px;
+      right: 12px;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 10px;
-      padding: 12px 12px;
+      padding: 10px 12px;
       border-radius: 999px;
-      cursor: pointer;
-      border: 1px solid rgba(9,10,12,0.10);
-      background: linear-gradient(90deg, rgba(255,255,255,0.78), rgba(255,255,255,0.60));
-      box-shadow: 0 12px 26px rgba(15,23,42,0.10);
-      color: rgba(9,10,12,0.86);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.16);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: rgba(255,255,255,0.96);
       font-weight: 950;
+      font-size: 12px;
       letter-spacing: 0.2px;
-      transition: transform 180ms var(--ease), filter 180ms ease, background 180ms ease;
-      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__toggle:hover{ transform: translateY(-1px); filter: brightness(1.02); }
-    #smw-hero-v3-{{ section.id }} .smwv3__toggle:active{ transform: translateY(0) scale(0.99); }
-    #smw-hero-v3-{{ section.id }} .smwv3__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.45); outline-offset: 2px; }
+    #smc-{{ section.id }} .smc__toggle:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      background: rgba(255,255,255,0.20);
+    }
+    #smc-{{ section.id }} .smc__toggle:active{ transform: translateY(0) scale(0.99); }
+    #smc-{{ section.id }} .smc__toggle:focus-visible{ outline: 3px solid rgba(255,152,0,0.50); outline-offset: 2px; }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__toggleDot{
+    #smc-{{ section.id }} .smc__toggleIcon{
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.26));
+    }
+
+    #smc-{{ section.id }} .smc__toggleDot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
       background: linear-gradient(90deg, var(--a1), var(--a2));
-      box-shadow: 0 0 0 6px rgba(255,152,0,0.14);
+      box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__slide.is-signed .smwv3__toggle{
-      background: linear-gradient(90deg, rgba(0,35,94,0.92), rgba(0,68,204,0.92));
-      color: rgba(255,255,255,0.98);
-      border-color: rgba(255,255,255,0.16);
-      box-shadow: 0 18px 46px rgba(0,35,94,0.24);
+    #smc-{{ section.id }} .smc__card.is-on .smc__toggle{
+      background: linear-gradient(90deg, rgba(0,35,94,0.88), rgba(0,68,204,0.88));
+      border-color: rgba(255,255,255,0.20);
+      box-shadow: 0 20px 54px rgba(0,35,94,0.26);
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__dots{
+    /* Prompt bar bottom */
+    #smc-{{ section.id }} .smc__promptWrap{
+      padding: 10px 14px 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    #smc-{{ section.id }} .smc__prompt{
+      width: 100%;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.14);
+      box-shadow: 0 18px 42px rgba(15,23,42,0.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 12px 12px;
+      color: rgba(9,10,12,0.82);
+      font-weight: 850;
+      font-size: 12.5px;
+      line-height: 1.35;
+      letter-spacing: 0.1px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      min-height: 52px;
+    }
+
+    #smc-{{ section.id }} .smc__dots{
       display: flex;
       gap: 8px;
       justify-content: center;
-      padding: 4px 0 0;
+      padding-bottom: 12px;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__dot{
+    #smc-{{ section.id }} .smc__dot{
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      border: 1px solid rgba(9,10,12,0.14);
-      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
       cursor: pointer;
-      transition: transform 180ms var(--ease), width 180ms var(--ease), background 180ms ease;
+      transition: width 220ms cubic-bezier(0.2,0.8,0.2,1), transform 220ms cubic-bezier(0.2,0.8,0.2,1), background 220ms ease;
     }
 
-    #smw-hero-v3-{{ section.id }} .smwv3__dot.is-active{
-      width: 22px;
-      background: linear-gradient(90deg, var(--a1), var(--a2));
-      border-color: rgba(0,0,0,0.10);
+    #smc-{{ section.id }} .smc__dot.is-active{
+      width: 24px;
+      background: linear-gradient(90deg, rgba(255,152,0,0.85), rgba(0,68,204,0.85));
       transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.10);
+    }
+
+    @media (min-width: 900px){
+      #smc-{{ section.id }}{
+        --cardW: 320px;
+        --cardH: 540px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smw-hero-v3-{{ section.id }} *{
-        animation: none !important;
+      #smc-{{ section.id }} *{
         transition: none !important;
+        animation: none !important;
         scroll-behavior: auto !important;
       }
     }
   </style>
 
-  <div class="smwv3__wrap">
-    <div class="smwv3__grid">
-      <div class="smwv3__copy">
-        {% if section.settings.eyebrow != blank %}
-          <div class="smwv3__eyebrow">{{ section.settings.eyebrow | escape }}</div>
-        {% endif %}
-
-        {% if section.settings.headline != blank %}
-          <h2 class="smwv3__h">{{ section.settings.headline | escape }}</h2>
-        {% endif %}
-
-        {% if section.settings.subheadline != blank %}
-          <div class="smwv3__sub">{{ section.settings.subheadline }}</div>
-        {% endif %}
-
-        <div class="smwv3__meta">
-          {% if section.settings.speed_badge != blank %}
-            <div class="smwv3__badge"><i aria-hidden="true"></i><span>{{ section.settings.speed_badge | escape }}</span></div>
-          {% endif %}
-
-          {% if section.settings.cta_url != blank and section.settings.cta_label != blank %}
-            <a class="smwv3__cta" href="{{ section.settings.cta_url }}">
-              <span>{{ section.settings.cta_label | escape }}</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          {% endif %}
-        </div>
-
-        <div class="smwv3__features" aria-label="Key Features">
-          {% if section.settings.feature_1_text != blank %}
-            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_1_icon }}</div><b>{{ section.settings.feature_1_text | escape }}</b></div>
-          {% endif %}
-          {% if section.settings.feature_2_text != blank %}
-            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_2_icon }}</div><b>{{ section.settings.feature_2_text | escape }}</b></div>
-          {% endif %}
-          {% if section.settings.feature_3_text != blank %}
-            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_3_icon }}</div><b>{{ section.settings.feature_3_text | escape }}</b></div>
-          {% endif %}
-          {% if section.settings.feature_4_text != blank %}
-            <div class="smwv3__f"><div class="smwv3__fico">{{ section.settings.feature_4_icon }}</div><b>{{ section.settings.feature_4_text | escape }}</b></div>
-          {% endif %}
-        </div>
-
-        <div class="smwv3__steps" aria-label="Ablauf">
-          {% if section.settings.step_1 != blank %}<div class="smwv3__step">{{ section.settings.step_1 | escape }}</div>{% endif %}
-          {% if section.settings.step_2 != blank %}<div class="smwv3__step">{{ section.settings.step_2 | escape }}</div>{% endif %}
-          {% if section.settings.step_3 != blank %}<div class="smwv3__step">{{ section.settings.step_3 | escape }}</div>{% endif %}
-        </div>
-      </div>
-
-      <div class="smwv3__car" aria-label="Werkstatt Carousel">
-        <div class="smwv3__car-top">
-          <p class="smwv3__car-title">Beispiele</p>
-          <div class="smwv3__nav" aria-label="Carousel Navigation">
-            <button class="smwv3__btn" type="button" data-swv3-prev aria-label="Vorheriges Beispiel">‹</button>
-            <button class="smwv3__btn" type="button" data-swv3-next aria-label="Nächstes Beispiel">›</button>
-          </div>
-        </div>
-
-        <div class="smwv3__viewport">
-          <div class="smwv3__track" data-swv3-track>
-            {% for block in section.blocks %}
-              {% if block.type == 'slide' %}
-                <div class="smwv3__slide" data-swv3-slide data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-                  <div class="smwv3__media" aria-label="Vorher Nachher">
-                    {% if block.settings.base_image != blank %}
-                      <img
-                        class="smwv3__base"
-                        src="{{ block.settings.base_image | image_url: width: 1600 }}"
-                        alt="{{ block.settings.base_image.alt | escape }}"
-                        loading="lazy"
-                        width="1600"
-                        height="2000"
-                      >
-                    {% else %}
-                      <div class="smwv3__base" aria-hidden="true"></div>
-                    {% endif %}
-
-                    <div class="smwv3__signWrap" aria-hidden="true">
-                      {% if block.settings.sign_overlay_image != blank %}
-                        <img
-                          class="smwv3__sign"
-                          src="{{ block.settings.sign_overlay_image | image_url: width: 1600 }}"
-                          alt=""
-                          loading="lazy"
-                          width="1600"
-                          height="2000"
-                        >
-                      {% else %}
-                        <div class="smwv3__sign" aria-hidden="true"></div>
-                      {% endif %}
-                    </div>
-
-                    {% if block.settings.overlay_text != blank %}
-                      <div class="smwv3__text">{{ block.settings.overlay_text | escape }}</div>
-                    {% endif %}
-                  </div>
-
-                  <div class="smwv3__footer">
-                    {% if block.settings.title != blank %}
-                      <p class="smwv3__slideTitle">{{ block.settings.title | escape }}</p>
-                    {% endif %}
-
-                    <button
-                      type="button"
-                      class="smwv3__toggle"
-                      data-swv3-toggle
-                      data-label-off="{{ block.settings.toggle_label_off | escape }}"
-                      data-label-on="{{ block.settings.toggle_label_on | escape }}"
-                      aria-pressed="false"
-                    >
-                      <span class="smwv3__toggleDot" aria-hidden="true"></span>
-                      <span class="smwv3__toggleText">{{ block.settings.toggle_label_off | escape }}</span>
-                    </button>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-
-        <div class="smwv3__dots" data-swv3-dots aria-label="Carousel Punkte"></div>
+  <div class="smc__wrap">
+    <div class="smc__top">
+      <p class="smc__title">Werkstatt Beispiele</p>
+      <div class="smc__nav" aria-label="Navigation">
+        <button class="smc__btn" type="button" data-smc-prev aria-label="Vorheriges">‹</button>
+        <button class="smc__btn" type="button" data-smc-next aria-label="Nächstes">›</button>
       </div>
     </div>
+
+    <div class="smc__viewport">
+      <div class="smc__track" data-smc-track>
+        {% for block in section.blocks %}
+          {% if block.type == 'slide' %}
+            <div class="smc__card" data-smc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              {% if block.settings.base_image != blank %}
+                <img class="smc__img" src="{{ block.settings.base_image | image_url: width: 1800 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1800" height="2400">
+              {% else %}
+                <div class="smc__img" aria-hidden="true"></div>
+              {% endif %}
+
+              <div class="smc__overlayWrap" aria-hidden="true">
+                {% if block.settings.overlay_image != blank %}
+                  <img class="smc__overlay" src="{{ block.settings.overlay_image | image_url: width: 1800 }}" alt="" loading="lazy" width="1800" height="2400">
+                {% else %}
+                  <div class="smc__overlay" aria-hidden="true"></div>
+                {% endif %}
+              </div>
+
+              <div class="smc__edge" aria-hidden="true"></div>
+
+              <button
+                type="button"
+                class="smc__toggle"
+                data-smc-toggle
+                data-label-off="{{ block.settings.btn_off | escape }}"
+                data-label-on="{{ block.settings.btn_on | escape }}"
+                aria-pressed="false"
+                aria-label="{{ block.settings.btn_off | escape }}"
+              >
+                <span class="smc__toggleDot" aria-hidden="true"></span>
+                <svg class="smc__toggleIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 2l1.2 4.2L17.4 7.4 13.2 8.6 12 13 10.8 8.6 6.6 7.4l4.2-1.2L12 2Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.6" stroke-linejoin="round"/>
+                  <path d="M19 11l.9 3.1 3.1.9-3.1.9L19 19l-.9-3.1L15 15l3.1-.9L19 11Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.6" stroke-linejoin="round"/>
+                  <path d="M5 13l.8 2.7 2.7.8-2.7.8L5 20l-.8-2.7L1.5 16.5l2.7-.8L5 13Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.6" stroke-linejoin="round"/>
+                </svg>
+                <span class="smc__toggleText">{{ block.settings.btn_off | escape }}</span>
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="smc__promptWrap" aria-label="Prompt">
+      <div class="smc__prompt" data-smc-prompt> </div>
+    </div>
+
+    <div class="smc__dots" data-smc-dots aria-label="Punkte"></div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var root = document.getElementById("smw-hero-v3-" + SECTION_ID);
+      var root = document.getElementById("smc-" + SECTION_ID);
       if(!root) return;
 
-      var track = root.querySelector("[data-swv3-track]");
-      var slides = Array.prototype.slice.call(root.querySelectorAll("[data-swv3-slide]"));
-      var prevBtn = root.querySelector("[data-swv3-prev]");
-      var nextBtn = root.querySelector("[data-swv3-next]");
-      var dotsWrap = root.querySelector("[data-swv3-dots]");
+      var track = root.querySelector("[data-smc-track]");
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smc-card]"));
+      var prev = root.querySelector("[data-smc-prev]");
+      var next = root.querySelector("[data-smc-next]");
+      var promptEl = root.querySelector("[data-smc-prompt]");
+      var dotsWrap = root.querySelector("[data-smc-dots]");
 
-      if(!track || !slides.length) return;
+      if(!track || !cards.length) return;
 
       var autoplay = {{ section.settings.autoplay | json }};
       var autoplayMs = ({{ section.settings.autoplay_seconds | default: 6 }} * 1000) || 6000;
       var timer = null;
       var isPointerDown = false;
 
-      function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+      function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
       function getActiveIndex(){
-        var trackRect = track.getBoundingClientRect();
-        var centerX = trackRect.left + trackRect.width / 2;
+        var t = track.getBoundingClientRect();
+        var cx = t.left + t.width / 2;
+        var best = 0;
+        var dist = Infinity;
 
-        var bestIdx = 0;
-        var bestDist = Infinity;
-
-        for(var i=0;i<slides.length;i++){
-          var r = slides[i].getBoundingClientRect();
-          var slideCenter = r.left + r.width / 2;
-          var d = Math.abs(slideCenter - centerX);
-          if(d < bestDist){
-            bestDist = d;
-            bestIdx = i;
+        for(var i=0;i<cards.length;i++){
+          var r = cards[i].getBoundingClientRect();
+          var c = r.left + r.width / 2;
+          var d = Math.abs(c - cx);
+          if(d < dist){
+            dist = d;
+            best = i;
           }
         }
-        return bestIdx;
+        return best;
+      }
+
+      function setActive(idx){
+        for(var i=0;i<cards.length;i++){
+          if(i === idx) cards[i].classList.add("is-active");
+          else cards[i].classList.remove("is-active");
+        }
+
+        if(promptEl){
+          var p = cards[idx].getAttribute("data-prompt") || "";
+          promptEl.textContent = p;
+        }
+
+        if(dotsWrap){
+          var dots = dotsWrap.querySelectorAll(".smc__dot");
+          for(var j=0;j<dots.length;j++){
+            if(j === idx) dots[j].classList.add("is-active");
+            else dots[j].classList.remove("is-active");
+          }
+        }
       }
 
       function scrollToIndex(idx){
-        idx = clamp(idx, 0, slides.length - 1);
-        var el = slides[idx];
-        if(!el) return;
-        el.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-        setDots(idx);
+        idx = clamp(idx, 0, cards.length - 1);
+        cards[idx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        setActive(idx);
+      }
+
+      function step(dir){
+        var idx = getActiveIndex();
+        scrollToIndex(idx + dir);
       }
 
       function buildDots(){
         if(!dotsWrap) return;
         dotsWrap.innerHTML = "";
-        for(var i=0;i<slides.length;i++){
+        for(var i=0;i<cards.length;i++){
           var b = document.createElement("button");
           b.type = "button";
-          b.className = "smwv3__dot" + (i === 0 ? " is-active" : "");
-          b.setAttribute("aria-label", "Gehe zu Beispiel " + (i + 1));
+          b.className = "smc__dot" + (i === 0 ? " is-active" : "");
+          b.setAttribute("aria-label", "Gehe zu Slide " + (i + 1));
           (function(index){
             b.addEventListener("click", function(){
               stopAutoplay();
@@ -803,28 +509,14 @@
         }
       }
 
-      function setDots(activeIdx){
-        if(!dotsWrap) return;
-        var dots = dotsWrap.querySelectorAll(".smwv3__dot");
-        for(var i=0;i<dots.length;i++){
-          if(i === activeIdx) dots[i].classList.add("is-active");
-          else dots[i].classList.remove("is-active");
-        }
-      }
-
-      function step(dir){
-        var idx = getActiveIndex();
-        scrollToIndex(idx + dir);
-      }
-
       function startAutoplay(){
         if(!autoplay) return;
         stopAutoplay();
         timer = setInterval(function(){
           if(isPointerDown) return;
           var idx = getActiveIndex();
-          var next = (idx + 1) % slides.length;
-          scrollToIndex(next);
+          var nxt = (idx + 1) % cards.length;
+          scrollToIndex(nxt);
         }, autoplayMs);
       }
 
@@ -833,43 +525,50 @@
       }
 
       function bind(){
-        if(prevBtn) prevBtn.addEventListener("click", function(){ stopAutoplay(); step(-1); });
-        if(nextBtn) nextBtn.addEventListener("click", function(){ stopAutoplay(); step(1); });
+        if(prev) prev.addEventListener("click", function(){ stopAutoplay(); step(-1); });
+        if(next) next.addEventListener("click", function(){ stopAutoplay(); step(1); });
 
         track.addEventListener("scroll", function(){
-          setDots(getActiveIndex());
+          setActive(getActiveIndex());
         }, { passive: true });
 
         track.addEventListener("pointerdown", function(){ isPointerDown = true; stopAutoplay(); }, { passive: true });
         window.addEventListener("pointerup", function(){ isPointerDown = false; startAutoplay(); }, { passive: true });
 
-        var toggles = root.querySelectorAll("[data-swv3-toggle]");
-        toggles.forEach(function(btn){
+        root.querySelectorAll("[data-smc-toggle]").forEach(function(btn){
           btn.addEventListener("click", function(){
-            var slide = btn.closest("[data-swv3-slide]");
-            if(!slide) return;
+            var card = btn.closest("[data-smc-card]");
+            if(!card) return;
 
-            var isSigned = slide.classList.toggle("is-signed");
-            btn.setAttribute("aria-pressed", isSigned ? "true" : "false");
+            var isOn = card.classList.toggle("is-on");
+            btn.setAttribute("aria-pressed", isOn ? "true" : "false");
 
             var off = btn.getAttribute("data-label-off") || "In Schild verwandeln";
-            var on = btn.getAttribute("data-label-on") || "Zurück zur Vorlage";
-            var t = btn.querySelector(".smwv3__toggleText");
-            if(t) t.textContent = isSigned ? on : off;
+            var on = btn.getAttribute("data-label-on") || "Zurück";
+            var label = isOn ? on : off;
+
+            var t = btn.querySelector(".smc__toggleText");
+            if(t) t.textContent = label;
+            btn.setAttribute("aria-label", label);
           });
         });
       }
 
       buildDots();
       bind();
+
+      setActive(0);
       startAutoplay();
+
+      var ro = new ResizeObserver(function(){
+        setActive(getActiveIndex());
+      });
+      ro.observe(track);
 
       document.addEventListener("shopify:section:load", function(e){
         if(!e || !e.detail || !e.detail.sectionId) return;
         if(String(e.detail.sectionId) !== String(SECTION_ID)) return;
         stopAutoplay();
-        root = document.getElementById("smw-hero-v3-" + SECTION_ID);
-        if(!root) return;
       });
     })();
   </script>
