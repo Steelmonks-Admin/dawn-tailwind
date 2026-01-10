@@ -223,6 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
     finish: el('smc-finish'),
     size: el('smc-size'),
     note: el('smc-note'), // New note field
+    type: el('smc-type'), // New type field
+    bolts: el('smc-bolts'), // New bolts/mounting field
 
     // Status pill
     pill: el('smc-pill'),
@@ -269,6 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
     propGen: el('smc-prop-gen'),
     propPrice: el('smc-prop-price'),
     propNote: el('smc-prop-note'), // New prop for note
+    propType: el('smc-prop-type'), // New prop for type
+    propBolts: el('smc-prop-bolts'), // New prop for bolts/mounting
 
     // Main containers
     smc: el('smc'),
@@ -462,6 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
           finish: elements.finish?.value || '',
           size: elements.size?.value || '',
           note: elements.note?.value || '',
+          type: elements.type?.value || '',
+          bolts: elements.bolts?.value || '',
           uploadFileName: elements.upload?.files?.[0]?.name || '',
           uploadDataUrl: null, // Will be set if file exists
         };
@@ -510,6 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
           hasFinish: !!parsed.finish,
           hasSize: !!parsed.size,
           hasNote: !!parsed.note,
+          hasType: !!parsed.type,
+          hasBolts: !!parsed.bolts,
           hasImage: !!parsed.uploadDataUrl,
         });
         return parsed;
@@ -541,6 +549,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Restore note
         if (formDataObj.note && elements.note) {
           elements.note.value = formDataObj.note;
+        }
+
+        // Restore type
+        if (formDataObj.type && elements.type) {
+          elements.type.value = formDataObj.type;
+        }
+
+        // Restore bolts/mounting
+        if (formDataObj.bolts && elements.bolts) {
+          elements.bolts.value = formDataObj.bolts;
         }
 
         // Restore image preview if available
@@ -1157,6 +1175,10 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.propPrice.value = state.pendingPriceValue || '';
       if (elements.propNote && elements.note)
         elements.propNote.value = elements.note.value || '';
+      if (elements.propType && elements.type)
+        elements.propType.value = elements.type.value || '';
+      if (elements.propBolts && elements.bolts)
+        elements.propBolts.value = elements.bolts.value || '';
     },
 
     createPayload(extra = {}) {
@@ -1166,17 +1188,23 @@ document.addEventListener('DOMContentLoaded', () => {
       // Ensure price is calculated and current before sending
       const material = elements.finish?.value || '';
       const size = elements.size?.value || '';
+      const bolts = elements.bolts?.value || '';
       if (material && size) {
-        priceManager.calculate(material, size);
+        priceManager.calculate(material, size, bolts);
       }
 
       fd.append('Bild', file || '');
       fd.append('Beschreibung', elements.desc?.value || '');
       fd.append('Oberfläche', elements.finish?.value || '');
       fd.append('Größe', elements.size?.value || '');
+      fd.append('Type', elements.type?.value || '');
       fd.append('Route', this.routeValue());
       fd.append('generator_id', state.generatorId || '');
       fd.append('section_id', sid);
+
+      // Append boolean value for mounting set
+      const hasMountingSet = bolts === 'Befestigung';
+      fd.append('Befestigung', String(hasMountingSet));
 
       // Pass the calculated price to the API
       if (state.pendingPriceValue) {
@@ -1303,7 +1331,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   };
 
-  const calculatePrice = (material, size) => {
+  const calculatePrice = (material, size, bolts = '') => {
     if (!material || !size) return null;
 
     const materialPrices = PRICE_MATRIX[material];
@@ -1323,7 +1351,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return null; // Return null to indicate custom pricing needed
     }
 
-    return price;
+    // Add mounting set cost if "Befestigung" is selected
+    let totalPrice = price;
+    if (bolts === 'Befestigung') {
+      totalPrice += 9.95;
+    }
+
+    return totalPrice;
   };
 
   const formatPrice = (price) => {
@@ -1334,8 +1368,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const priceManager = {
-    calculate(material, size) {
-      const price = calculatePrice(material, size);
+    calculate(material, size, bolts = '') {
+      const price = calculatePrice(material, size, bolts);
       const formattedPrice = formatPrice(price);
 
       if (formattedPrice) {
@@ -1351,6 +1385,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.debug('Price calculated and saved', {
           material,
           size,
+          bolts,
           price,
           formattedPrice,
         });
@@ -1380,6 +1415,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.debug('Price calculation returned null', {
           material,
           size,
+          bolts,
           hasMaterial: !!material,
           hasSize: !!size,
         });
@@ -2570,6 +2606,47 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
+  if (elements.type) {
+    elements.type.addEventListener('change', () => {
+      try {
+        if (state.locked) return;
+        formData.updateProps();
+        storageManager.saveFormData();
+        logger.debug('Type field changed', { type: elements.type?.value });
+      } catch (error) {
+        logger.error('Error handling type change', error);
+      }
+    });
+  }
+
+  if (elements.bolts) {
+    elements.bolts.addEventListener('change', () => {
+      try {
+        if (state.locked) return;
+        formData.updateProps();
+        storageManager.saveFormData();
+
+        // Recalculate price when mounting set selection changes
+        const material = elements.finish?.value || '';
+        const size = elements.size?.value || '';
+        const bolts = elements.bolts?.value || '';
+
+        if (material && size) {
+          logger.info('Recalculating price for mounting set change', {
+            material,
+            size,
+            bolts,
+          });
+          priceManager.calculate(material, size, bolts);
+        }
+
+        logger.debug('Bolts/mounting field changed', { bolts });
+      } catch (error) {
+        logger.error('Error handling bolts/mounting change', error);
+      }
+    });
+  }
+
   if (elements.finish) {
     elements.finish.addEventListener('change', () => {
       if (state.locked) return;
@@ -2578,7 +2655,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Calculate and update price immediately when material changes
       const material = elements.finish.value || '';
       const size = elements.size?.value || '';
-      priceManager.calculate(material, size);
+      const bolts = elements.bolts?.value || '';
+      priceManager.calculate(material, size, bolts);
     });
   }
 
@@ -2602,6 +2680,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Calculate and update price immediately when size changes
         const material = elements.finish?.value || '';
         const size = elements.size.value || '';
+        const bolts = elements.bolts?.value || '';
 
         if (!material || !size) {
           logger.warn('Cannot calculate price: missing material or size', {
@@ -2614,9 +2693,10 @@ document.addEventListener('DOMContentLoaded', () => {
         logger.info('Calculating price for size change', {
           material,
           size,
+          bolts,
         });
 
-        priceManager.calculate(material, size);
+        priceManager.calculate(material, size, bolts);
 
         logger.info('Price calculation completed after size change', {
           newPrice: state.pendingPriceValue,
@@ -2876,7 +2956,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.applyPriceDisplay();
       } else if (elements.finish?.value && elements.size?.value) {
         // Calculate price if we have material and size but no saved price
-        priceManager.calculate(elements.finish.value, elements.size.value);
+        const bolts = elements.bolts?.value || '';
+        priceManager.calculate(
+          elements.finish.value,
+          elements.size.value,
+          bolts,
+        );
       }
 
       // Restore timer if available
@@ -2904,7 +2989,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Calculate price if material and size are available
       if (elements.finish?.value && elements.size?.value) {
-        priceManager.calculate(elements.finish.value, elements.size.value);
+        const bolts = elements.bolts?.value || '';
+        priceManager.calculate(
+          elements.finish.value,
+          elements.size.value,
+          bolts,
+        );
       }
     }
 

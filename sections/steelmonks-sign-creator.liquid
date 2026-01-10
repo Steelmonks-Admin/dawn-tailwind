@@ -10,13 +10,21 @@
 
 {% comment %} * HTML Markup {% endcomment %}
 {% comment %} ! Open button {% endcomment %}
-<div class='werkstatt-shadow-wrap twcss-mx-auto twcss-w-fit'>
-  <button
-    id='smc-open-btn'
-    class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+<div class='twcss-fixed twcss-w-full twcss-flex twcss-gap-4 twcss-items-center twcss-justify-center twcss-bottom-0 twcss-z-10 twcss-py-4'>
+  <span class='twcss-bg-brandblack/70 twcss-text-brandwhite twcss-py-3 twcss-px-4 twcss-rounded-full twcss-text-sm'
+    >→</span
   >
-    In die Werkstatt
-  </button>
+  <div class='werkstatt-shadow-wrap twcss-w-fit'>
+    <button
+      id='smc-open-btn'
+      class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
+    >
+      In die Werkstatt
+    </button>
+  </div>
+  <span class='twcss-bg-brandblack/70 twcss-text-brandwhite twcss-py-3 twcss-px-4 twcss-rounded-full twcss-text-sm'
+    >←</span
+  >
 </div>
 
 {% comment %} ! Main container {% endcomment %}
@@ -29,9 +37,9 @@
   {% comment %} ! CLOSE BUTTON {% endcomment %}
   <button
     data-close-button
-    class='twcss-absolute twcss-top-8 twcss-right-8 twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-z-10 twcss-transition-all hover:twcss-bg-brandwhite twcss-duration-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
+    class='twcss-absolute twcss-top-8 twcss-right-8 twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 md:twcss-p-8 twcss-shadow-xl twcss-rounded-full twcss-text-lg md:twcss-text-4xl twcss-z-10 twcss-transition-all hover:twcss-bg-brandwhite twcss-duration-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
   >
-    <div class='twcss-leading-3 twcss-w-3'>&times;</div>
+    <div class='twcss-leading-3 twcss-w-3 md:twcss-leading-6 md:twcss-w-6'>&times;</div>
   </button>
 
   {% comment %} ! Navigation & Status Pill {% endcomment %}
@@ -150,26 +158,50 @@
             </div>
           </div>
 
-          {% comment %} ! Material select {% endcomment %}
-          <div class='smc__field twcss-mb-6'>
-            <label class='smc__label twcss-block twcss-font-bold' for='smc-finish'>Oberfläche</label>
-            <div class='smc__select twcss-relative'>
-              <select
-                id='smc-finish'
-                class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
-              >
-                <option value='Schwarz pulverbeschichtet'>Schwarz pulverbeschichtet</option>
-                <option value='Anthrazit pulverbeschichtet'>Anthrazit pulverbeschichtet</option>
-                <option value='Weiß pulverbeschichtet'>Weiß pulverbeschichtet</option>
-                <option value='Gold'>Gold</option>
-                <option value='Cortenstahl Optik'>Cortenstahl Optik</option>
-                <option value='Satinierter Edelstahl'>Satinierter Edelstahl</option>
-              </select>
-              <span
-                class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
-                aria-hidden='true'
-                >⌄</span
-              >
+          <div class='twcss-flex twcss-flex-col twcss-gap-2 twcss-mb-6 md:twcss-flex-row'>
+            {% comment %} ! Material select {% endcomment %}
+            <div class='twcss-flex-1'>
+              <label class='smc__label twcss-block twcss-font-bold' for='smc-finish'>Oberfläche</label>
+              <div class='smc__select twcss-relative'>
+                <select
+                  id='smc-finish'
+                  class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
+                >
+                  <option value='Schwarz pulverbeschichtet'>Schwarz pulverbeschichtet</option>
+                  <option value='Anthrazit pulverbeschichtet'>Anthrazit pulverbeschichtet</option>
+                  <option value='Weiß pulverbeschichtet'>Weiß pulverbeschichtet</option>
+                  <option value='Gold'>Gold</option>
+                  <option value='Cortenstahl Optik'>Cortenstahl Optik</option>
+                  <option value='Satinierter Edelstahl'>Satinierter Edelstahl</option>
+                </select>
+                <span
+                  class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
+                  aria-hidden='true'
+                  >⌄</span
+                >
+              </div>
+            </div>
+            {% comment %} ! Type select {% endcomment %}
+            <div class='twcss-flex-1'>
+              <label class='smc__label twcss-block twcss-font-bold' for='smc-type'>Type</label>
+              <div class='smc__select twcss-relative'>
+                <select
+                  id='smc-type'
+                  class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
+                >
+                  <option value='Frei'>Frei</option>
+                  <option value='Personen & Tiere'>Personen & Tiere</option>
+                  <option value='Fahrzeuge'>Fahrzeuge</option>
+                  <option value='Hausschilder'>Hausschilder</option>
+                  <option value='Wappen'>Wappen</option>
+                  <option value='Logos'>Logos</option>
+                </select>
+                <span
+                  class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
+                  aria-hidden='true'
+                  >⌄</span
+                >
+              </div>
             </div>
           </div>
 
@@ -196,6 +228,8 @@
           <input type='hidden' name='properties[Generator ID]' id='smc-prop-gen'>
           <input type='hidden' name='properties[Preis]' id='smc-prop-price'>
           <input type='hidden' name='properties[Anmerkung]' id='smc-prop-note'>
+          <input type='hidden' name='properties[Type]' id='smc-prop-type'>
+          <input type='hidden' name='properties[Befestigung]' id='smc-prop-bolts'>
 
           {% if base_product != blank %}
             {% comment %} Submit button is on page 3 {% endcomment %}
@@ -233,7 +267,7 @@
               {% comment %} Preview Image {% endcomment %}
               <img
                 id='smc-preview-img'
-                class='twcss-w-full twcss-h-full twcss-object-contain twcss-hidden'
+                class='twcss-w-[300px] md:twcss-w-full twcss-h-full twcss-object-contain twcss-hidden'
                 alt='Vorschau'
                 loading='lazy'
                 width='100%'
@@ -299,7 +333,7 @@
       >
         <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
           {% comment %} ! Result container {% endcomment %}
-          <div class='twcss-flex twcss-justify-center twcss-flex-col twcss-gap-8'>
+          <div class='twcss-flex twcss-justify-center twcss-flex-col twcss-gap-6'>
             {% comment %} ! Small Preview + nanme, price and size columns {% endcomment %}
             <div class='twcss-flex twcss-items-center twcss-gap-4 twcss-flex-col md:twcss-flex-row'>
               {% comment %} * Small Preview {% endcomment %}
@@ -331,6 +365,25 @@
                       <option value='55 cm'>55 cm</option>
                       <option value='75 cm'>75 cm</option>
                       <option value='75 cm+'>75 cm+</option>
+                    </select>
+                    <span
+                      class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
+                      aria-hidden='true'
+                      >⌄</span
+                    >
+                  </div>
+                </div>
+
+                {% comment %} * Bolts / Mounting set select {% endcomment %}
+                <div class='smc__field'>
+                  <label class='smc__label twcss-block twcss-font-bold' for='smc-bolts'>Befestigung: </label>
+                  <div class='smc__select twcss-relative'>
+                    <select
+                      id='smc-bolts'
+                      class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
+                    >
+                      <option value='Keine Befestigung'>Kein Befestigungssatz</option>
+                      <option value='Befestigung'>Unsichtbare Befestigung (+€9,95)</option>
                     </select>
                     <span
                       class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
