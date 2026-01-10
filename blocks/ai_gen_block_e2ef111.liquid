@@ -1,0 +1,457 @@
+{% doc %}
+  @prompt
+    create me a Bestseller selection. A  slider with 3 products. On desktop, all 3 next to each other. On mobile, they should be a slider. Corner rounding should be editable. All three products should have an editable badge on the top left. Color and text editable. Spacing on all sides should be editable for mobile and desktop. The images should have a slight floating effect. The selection should look premium, make the container height editable. Center the images on mobile, make the mobile images square, make it a slider for mobile. Desktop is good 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-bestseller-slider-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.desktop_spacing_top }}px {{ block.settings.desktop_spacing_sides }}px {{ block.settings.desktop_spacing_bottom }}px;
+    overflow: hidden;
+  }
+
+  .ai-bestseller-slider__container-{{ ai_gen_id }} {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .ai-bestseller-slider__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .ai-bestseller-slider__product-{{ ai_gen_id }} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .ai-bestseller-slider__product-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+  }
+
+  .ai-bestseller-slider__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    overflow: hidden;
+    border-radius: {{ block.settings.corner_radius }}px;
+    background-color: #f4f4f4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.4s ease;
+  }
+
+  .ai-bestseller-slider__product-{{ ai_gen_id }}:hover .ai-bestseller-slider__image-wrapper-{{ ai_gen_id }} {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .ai-bestseller-slider__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .ai-bestseller-slider__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+  }
+
+  .ai-bestseller-slider__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-bestseller-slider__badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: {{ block.settings.badge_background_color }};
+    color: {{ block.settings.badge_text_color }};
+    padding: 6px 14px;
+    border-radius: {{ block.settings.badge_corner_radius }}px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-bestseller-slider__info-{{ ai_gen_id }} {
+    padding: 16px 0 0;
+    text-align: center;
+  }
+
+  .ai-bestseller-slider__title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #090a0c;
+    line-height: 1.4;
+  }
+
+  .ai-bestseller-slider__title-link-{{ ai_gen_id }} {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
+  .ai-bestseller-slider__title-link-{{ ai_gen_id }}:hover {
+    color: #0044cc;
+  }
+
+  .ai-bestseller-slider__price-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0044cc;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-bestseller-slider-{{ ai_gen_id }} {
+      padding: {{ block.settings.mobile_spacing_top }}px 0 {{ block.settings.mobile_spacing_bottom }}px;
+    }
+
+    .ai-bestseller-slider__container-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.mobile_spacing_sides }}px;
+    }
+
+    .ai-bestseller-slider__grid-{{ ai_gen_id }} {
+      display: flex;
+      grid-template-columns: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      gap: 16px;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+    }
+
+    .ai-bestseller-slider__grid-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-bestseller-slider__product-{{ ai_gen_id }} {
+      flex: 0 0 80%;
+      min-width: 80%;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+    }
+
+    .ai-bestseller-slider__product-{{ ai_gen_id }}:hover {
+      transform: none;
+    }
+
+    .ai-bestseller-slider__image-wrapper-{{ ai_gen_id }} {
+      aspect-ratio: 1 / 1;
+      height: auto;
+    }
+
+    .ai-bestseller-slider__badge-{{ ai_gen_id }} {
+      top: 8px;
+      left: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+
+    .ai-bestseller-slider__title-{{ ai_gen_id }} {
+      font-size: 14px;
+    }
+
+    .ai-bestseller-slider__price-{{ ai_gen_id }} {
+      font-size: 16px;
+    }
+  }
+{% endstyle %}
+
+<bestseller-slider-{{ ai_gen_id }}
+  class="ai-bestseller-slider-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-bestseller-slider__container-{{ ai_gen_id }}">
+    <div class="ai-bestseller-slider__grid-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign product_key = 'product_' | append: i
+          assign product = block.settings[product_key]
+        %}
+
+        <div class="ai-bestseller-slider__product-{{ ai_gen_id }}">
+          <div class="ai-bestseller-slider__image-wrapper-{{ ai_gen_id }}">
+            {% if block.settings.badge_text != blank %}
+              <div class="ai-bestseller-slider__badge-{{ ai_gen_id }}">
+                {{ block.settings.badge_text }}
+              </div>
+            {% endif %}
+
+            {% if product != blank and product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 800 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-bestseller-slider__image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="800"
+                height="800"
+              >
+            {% else %}
+              <div class="ai-bestseller-slider__image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-bestseller-slider__info-{{ ai_gen_id }}">
+            {% if product != blank %}
+              <h3 class="ai-bestseller-slider__title-{{ ai_gen_id }}">
+                <a
+                  href="{{ product.url }}"
+                  class="ai-bestseller-slider__title-link-{{ ai_gen_id }}"
+                >
+                  {{ product.title }}
+                </a>
+              </h3>
+              <div class="ai-bestseller-slider__price-{{ ai_gen_id }}">
+                {{ product.price | money }}
+              </div>
+            {% else %}
+              <h3 class="ai-bestseller-slider__title-{{ ai_gen_id }}">Product {{ i }}</h3>
+              <div class="ai-bestseller-slider__price-{{ ai_gen_id }}">€0,00</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</bestseller-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BestsellerSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.grid = this.querySelector('.ai-bestseller-slider__grid-{{ ai_gen_id }}');
+        if (this.grid) {
+          this.enableTouchScroll();
+        }
+      }
+
+      enableTouchScroll() {
+        let startX = 0;
+        let scrollLeft = 0;
+        let isDown = false;
+
+        this.grid.addEventListener('touchstart', (e) => {
+          if (window.innerWidth > 749) return;
+          startX = e.touches[0].pageX - this.grid.offsetLeft;
+          scrollLeft = this.grid.scrollLeft;
+        });
+
+        this.grid.addEventListener('touchmove', (e) => {
+          if (window.innerWidth > 749) return;
+          const x = e.touches[0].pageX - this.grid.offsetLeft;
+          const walk = (x - startX) * 1.5;
+          this.grid.scrollLeft = scrollLeft - walk;
+        });
+
+        this.grid.addEventListener('mousedown', (e) => {
+          if (window.innerWidth > 749) return;
+          isDown = true;
+          this.grid.style.cursor = 'grabbing';
+          startX = e.pageX - this.grid.offsetLeft;
+          scrollLeft = this.grid.scrollLeft;
+        });
+
+        this.grid.addEventListener('mouseleave', () => {
+          isDown = false;
+          this.grid.style.cursor = 'grab';
+        });
+
+        this.grid.addEventListener('mouseup', () => {
+          isDown = false;
+          this.grid.style.cursor = 'grab';
+        });
+
+        this.grid.addEventListener('mousemove', (e) => {
+          if (!isDown || window.innerWidth > 749) return;
+          e.preventDefault();
+          const x = e.pageX - this.grid.offsetLeft;
+          const walk = (x - startX) * 1.5;
+          this.grid.scrollLeft = scrollLeft - walk;
+        });
+      }
+    }
+
+    customElements.define('bestseller-slider-{{ ai_gen_id }}', BestsellerSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Bestseller slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product 3"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Bestseller"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Background color",
+      "default": "#0044cc"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_corner_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge corner radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Image corner radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Image height",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Desktop spacing"
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_spacing_sides",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Sides",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Mobile spacing"
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_spacing_sides",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Sides",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bestseller slider"
+    }
+  ]
+}
+{% endschema %}

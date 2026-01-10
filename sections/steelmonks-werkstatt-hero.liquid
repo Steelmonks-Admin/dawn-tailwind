@@ -1,702 +1,720 @@
 {% comment %}
-  Werkstatt From-To (Final + Black Pill + 3 Trust Features)
-  - Keeps exact From-To layout as approved
-  - Adds Black pill + 3 features row above (same style language as your hero)
+  Werkstatt Carousel (FINAL)
+  FIX (mobile overflow):
+  - Prevent unselected/offscreen cards from creating horizontal page scroll on mobile
+  - We clip ONLY the horizontal overflow at the section level (no visual layout changes)
 {% endcomment %}
 
 {% schema %}
 {
-  "name": "Werkstatt From-To",
+  "name": "Werkstatt Carousel",
   "tag": "section",
   "settings": [
+    { "type": "range", "id": "top_spacing", "label": "Abstand oben", "default": 18, "min": 0, "max": 160, "step": 2 },
+    { "type": "range", "id": "bottom_spacing", "label": "Abstand unten", "default": 18, "min": 0, "max": 160, "step": 2 },
+    { "type": "text", "id": "desc_heading", "label": "Beschreibung Überschrift", "default": "Beschreibung" },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
+    { "type": "range", "id": "autoplay_seconds", "label": "Autoplay Sekunden", "default": 6, "min": 3, "max": 12, "step": 1 }
+  ],
+  "blocks": [
     {
-      "type": "range",
-      "id": "top_spacing",
-      "label": "Abstand oben",
-      "default": 34,
-      "min": 0,
-      "max": 180,
-      "step": 2
-    },
-    {
-      "type": "range",
-      "id": "bottom_spacing",
-      "label": "Abstand unten",
-      "default": 40,
-      "min": 0,
-      "max": 200,
-      "step": 2
-    },
-
-    {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Black Pill Text",
-      "default": "Die Steelmonks Werkstatt"
-    },
-
-    {
-      "type": "text",
-      "id": "trust_1_icon",
-      "label": "Trust 1 Icon",
-      "default": "🇩🇪"
-    },
-    {
-      "type": "text",
-      "id": "trust_1_text",
-      "label": "Trust 1 Text",
-      "default": "Schneller Versand."
-    },
-    {
-      "type": "text",
-      "id": "trust_2_icon",
-      "label": "Trust 2 Icon",
-      "default": "🏅"
-    },
-    {
-      "type": "text",
-      "id": "trust_2_text",
-      "label": "Trust 2 Text",
-      "default": "Über 100.000+ Bestellungen."
-    },
-    {
-      "type": "text",
-      "id": "trust_3_icon",
-      "label": "Trust 3 Icon",
-      "default": "⭐⭐⭐⭐⭐"
-    },
-    {
-      "type": "text",
-      "id": "trust_3_text",
-      "label": "Trust 3 Text",
-      "default": "10.000+ Bewertungen."
-    },
-
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading (left)",
-      "default": "Von einem Foto"
-    },
-    {
-      "type": "text",
-      "id": "heading_2",
-      "label": "Heading (right)",
-      "default": "zu deinem Metallschild"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "in 2 Minuten"
-    },
-
-    {
-      "type": "image_picker",
-      "id": "from_image",
-      "label": "From image (photo reference)"
-    },
-    {
-      "type": "textarea",
-      "id": "from_label",
-      "label": "Label unter linkem Bild",
-      "default": "Lade ein Foto oder eine Skizze hoch"
-    },
-    {
-      "type": "image_picker",
-      "id": "to_image",
-      "label": "To image (metal sign)"
-    },
-    {
-      "type": "textarea",
-      "id": "to_label",
-      "label": "Label unter rechtem Bild",
-      "default": "Wir verwandeln es in ein sauberes, schnittfähiges Schild"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "autoplay",
-      "label": "Autoplay animation",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "duration_seconds",
-      "min": 6,
-      "max": 20,
-      "step": 1,
-      "unit": "s",
-      "label": "Animation loop duration (visual)",
-      "default": 10
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "base_image", "label": "Basisbild" },
+        { "type": "image_picker", "id": "overlay_image", "label": "Overlay Bild (Schild)" },
+        { "type": "textarea", "id": "prompt", "label": "Beschreibung", "default": "Beispiel Prompt" }
+      ]
     }
   ],
   "presets": [
-    { "name": "Werkstatt From-To" }
+    {
+      "name": "Werkstatt Carousel",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
+          }
+        }
+      ]
+    }
   ]
 }
 {% endschema %}
 
 <section
-  id="smwh-fromto-{{ section.id }}"
-  class="smwft"
-  aria-label="Von Foto zu Schild"
-  style="padding-top: {{ section.settings.top_spacing | default: 34 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 40 }}px;"
+  id="smwc-final-{{ section.id }}"
+  class="smwc2"
+  aria-label="Werkstatt Carousel"
+  style="padding-top: {{ section.settings.top_spacing | default: 18 }}px; padding-bottom: {{ section.settings.bottom_spacing | default: 18 }}px;"
 >
   <style>
-    #smwh-fromto-{{ section.id }}{
-      --ink: rgba(9,10,12,0.92);
-      --muted: rgba(9,10,12,0.68);
-      --stroke: rgba(9,10,12,0.10);
-      --shadow2: 0 16px 34px rgba(15,23,42,0.10);
+    #smwc-final-{{ section.id }}{
+      --a1:#ff9800;
+      --a2:#0044CC;
 
-      --radius: 32px;
-      --img-radius: 30px;
+      --shadow: 0 22px 70px rgba(15,23,42,0.18);
+      --shadow2: 0 18px 54px rgba(15,23,42,0.16);
 
-      /* Steelmonks accents */
-      --a1: #ff9800;
-      --a2: #0044CC;
-      --a3: #00235e;
+      --rCard: 26px;
+      --fade: 2000ms;
+      --ease: cubic-bezier(0.2,0.8,0.2,1);
 
-      --loop: {{ section.settings.duration_seconds | default: 10 }}s;
+      --cardSize: clamp(240px, 62vw, 460px);
+      --stageH: clamp(330px, 72vw, 560px);
 
-      --gap: 38px;
-      --midw: 248px;
+      --navOffset: 420px;
+
+      /* ✅ prevents mobile page from being pushed wider by offscreen cards */
+      overflow-x: hidden;
+      overflow-x: clip;
+      overflow-y: visible;
+      position: relative;
+      max-width: 100%;
     }
 
-    #smwh-fromto-{{ section.id }}{
-      background: transparent;
-      color: var(--ink);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__wrap{
-      max-width: 1240px;
+    #smwc-final-{{ section.id }} .smwc2__wrap{
+      width: min(1440px, 100%);
       margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    /* ===== Top (Black pill + Trust row) ===== */
-    #smwh-fromto-{{ section.id }} .smwft__top{
-      display: grid;
-      justify-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__pill-black{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      border-radius: 999px;
-      background: #090A0C;
-      color: rgba(255,255,255,0.96);
-      font-size: 1.05rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      box-shadow: 0 14px 34px rgba(0,0,0,0.45);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__pill-black::before{
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--a1);
-      box-shadow: 0 0 0 4px rgba(255,152,0,0.35);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__trust{
-      width: 100%;
-      max-width: 980px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__trust-item{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__trust-ico{
-      font-size: 1.2rem;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__trust-txt{
-      font-size: 1.05rem;
-      color: rgba(9,10,12,0.68);
-      font-weight: 700;
-    }
-
-    @media (min-width: 768px){
-      #smwh-fromto-{{ section.id }} .smwft__trust{
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-      #smwh-fromto-{{ section.id }} .smwft__pill-black{
-        padding: 12px 28px;
-        font-size: 1.18rem;
-      }
-    }
-
-    /* ===== Headline ===== */
-    #smwh-fromto-{{ section.id }} .smwft__head{
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__title{
-      margin: 0;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      font-size: clamp(22px, 2.9vw, 38px);
-      line-height: 1.12;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__sub{
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.2px;
-    }
-
-    /* ===== Layout: image | timer | image ===== */
-    #smwh-fromto-{{ section.id }} .smwft__grid{
-      display: grid;
-      grid-template-columns: 1fr var(--midw) 1fr;
-      gap: var(--gap);
-      align-items: center;
-    }
-
-    /* Image cards */
-    #smwh-fromto-{{ section.id }} .smwft__img-card{
-      border-radius: var(--img-radius);
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      background: rgba(9,10,12,0.05);
-      border: 1px solid rgba(9,10,12,0.08);
-      box-shadow: var(--shadow2);
+      overflow: visible;
       position: relative;
-      transform: translateZ(0);
-      will-change: transform;
+      padding: 0 12px;
+      max-width: 100%;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__img{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1);
-      transition: transform 560ms cubic-bezier(0.2,0.8,0.2,1), filter 320ms ease;
-      will-change: transform, filter;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__img-card:hover .smwft__img{
-      transform: scale(1.04);
-      filter: saturate(0.96);
-    }
-
-    /* Single labels */
-    #smwh-fromto-{{ section.id }} .smwft__label{
-      margin-top: 12px;
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid rgba(9,10,12,0.10);
-      background: rgba(255,255,255,0.62);
-      box-shadow: var(--shadow2);
-      padding: 11px 14px;
-      text-align: center;
-      color: rgba(9,10,12,0.82);
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.1px;
-      line-height: 1.25;
-      min-height: 46px;
-      white-space: pre-wrap;
-    }
-
-    /* Timer block */
-    #smwh-fromto-{{ section.id }} .smwft__mid{
+    #smwc-final-{{ section.id }} .smwc2__stage{
       position: relative;
+      height: var(--stageH);
+      overflow: visible;
       display: grid;
-      gap: 10px;
-      justify-items: center;
-      padding: 14px 12px 12px;
-      border-radius: 24px;
-      background: rgba(9,10,12,0.28);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: 0 22px 60px rgba(0,0,0,0.22);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transform: translateZ(0);
-      isolation: isolate;
-      overflow: hidden;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__mid:before{
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: 26px;
-      background:
-        radial-gradient(90% 70% at 20% 10%, rgba(255,152,0,0.40), rgba(255,255,255,0) 55%),
-        radial-gradient(90% 70% at 80% 10%, rgba(0,68,204,0.35), rgba(255,255,255,0) 55%);
-      filter: blur(2px);
-      opacity: 0.85;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__mid:after{
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__pill{
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.92);
-      font-size: 12px;
-      line-height: 1;
+      place-items: center;
+      padding: 8px 0 10px;
+      touch-action: pan-y;
       user-select: none;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__pill-dot{
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.84);
-      box-shadow: 0 0 0 6px rgba(255,255,255,0.10);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__ring{
-      position: relative;
-      z-index: 1;
-      width: 86px;
-      height: 86px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
-      overflow: hidden;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__ring:before{
-      content: "";
-      position: absolute;
-      inset: 9px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__ring svg{
+    #smwc-final-{{ section.id }} .smwc2__cards{
       position: absolute;
       inset: 0;
-      transform: rotate(-90deg);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__ring circle{
-      fill: none;
-      stroke-width: 8;
-      stroke-linecap: round;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__track{
-      stroke: rgba(255,255,255,0.16);
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__prog{
-      stroke: url(#smwft-grad-{{ section.id }});
-      stroke-dasharray: 251.2;
-      stroke-dashoffset: 251.2;
-      animation: smwftRing var(--loop) linear infinite;
-    }
-
-    #smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwft__prog{
-      animation: none !important;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__time{
-      position: relative;
+      overflow: visible;
+      pointer-events: none;
+      perspective: 1100px;
       z-index: 1;
-      color: rgba(255,255,255,0.95);
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      font-size: 14px;
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__scan{
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.10);
-      overflow: hidden;
-    }
-
-    #smwh-fromto-{{ section.id }} .smwft__scan:before{
-      content: "";
+    #smwc-final-{{ section.id }} .smwc2__navbtn{
       position: absolute;
-      top: -40%;
-      left: -30%;
-      width: 40%;
-      height: 180%;
-      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 45%, rgba(255,255,255,0) 100%);
-      transform: skewX(-18deg);
-      animation: smwftScan var(--loop) cubic-bezier(0.2,0.8,0.2,1) infinite;
-      opacity: 0.95;
+      top: 50%;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.12);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      z-index: 9999;
+      pointer-events: auto;
+      touch-action: manipulation;
+      transition: filter 180ms ease, background 180ms ease, transform 180ms var(--ease);
     }
 
-    #smwh-fromto-{{ section.id }}[data-autoplay="0"] .smwft__scan:before{
-      animation: none !important;
+    #smwc-final-{{ section.id }} .smwc2__navbtn svg{
+      width: 18px;
+      height: 18px;
+      display: block;
+      color: rgba(9,10,12,0.78);
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__status{
+    #smwc-final-{{ section.id }} .smwc2__navbtn:hover{
+      filter: brightness(1.03);
+      background: rgba(255,255,255,0.14);
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__navbtn:focus-visible{
+      outline: 3px solid rgba(0,68,204,0.35);
+      outline-offset: 2px;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__navbtn--prev{
+      left: calc(50% - var(--navOffset));
+      transform: translate(-100%, -50%);
+    }
+    #smwc-final-{{ section.id }} .smwc2__navbtn--next{
+      left: calc(50% + var(--navOffset));
+      transform: translate(0, -50%);
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__navbtn--prev:active{ transform: translate(-100%, -50%) scale(0.98); }
+    #smwc-final-{{ section.id }} .smwc2__navbtn--next:active{ transform: translate(0, -50%) scale(0.98); }
+
+    #smwc-final-{{ section.id }} .smwc2__card{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--cardSize);
+      height: var(--cardSize);
+      transform: translate(-50%, -50%);
+      border-radius: var(--rCard);
+      opacity: 0;
+      pointer-events: none;
+      isolation: isolate;
+      will-change: transform, opacity, filter;
+      transition:
+        transform 760ms var(--ease),
+        opacity 620ms ease,
+        filter 620ms ease;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__card:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius: calc(var(--rCard) + 1px);
+      padding: 1.5px;
+      background: linear-gradient(135deg, rgba(255,152,0,0.75), rgba(0,68,204,0.62));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.14;
+      pointer-events:none;
+      z-index: 0;
+      transition: opacity 260ms ease;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__card:after{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      border-radius: calc(var(--rCard) + 22px);
+      background:
+        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.18), rgba(255,255,255,0) 62%),
+        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.16), rgba(255,255,255,0) 62%);
+      opacity: 0.12;
+      filter: blur(16px);
+      pointer-events:none;
+      z-index: -1;
+      transition: opacity 260ms ease;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__card.is-active:before{ opacity: 0.92; }
+    #smwc-final-{{ section.id }} .smwc2__card.is-active:after{ opacity: 0.54; }
+
+    #smwc-final-{{ section.id }} .smwc2__frame{
+      width: 100%;
+      height: 100%;
+      border-radius: var(--rCard);
+      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       position: relative;
       z-index: 1;
-      font-size: 12px;
-      color: rgba(255,255,255,0.84);
-      letter-spacing: 0.2px;
-      text-align: center;
-      min-height: 18px;
+      pointer-events: auto;
+      cursor: pointer;
+      transform: translateZ(0);
     }
 
-    #smwh-fromto-{{ section.id }} .smwft__status b{
+    #smwc-final-{{ section.id }} .smwc2__img,
+    #smwc-final-{{ section.id }} .smwc2__overlay{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      transform: none;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__overlay{
+      opacity: 0;
+      transition: opacity var(--fade) ease;
+      will-change: opacity;
+    }
+    #smwc-final-{{ section.id }} .smwc2__card.is-on .smwc2__overlay{ opacity: 1; }
+    #smwc-final-{{ section.id }} .smwc2__card.is-on .smwc2__img{ filter: blur(1.1px) brightness(0.88) saturate(0.92); }
+
+    #smwc-final-{{ section.id }} .smwc2__toggle{
+      position: absolute;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(9,10,12,0.22);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       color: rgba(255,255,255,0.96);
+      box-shadow: 0 18px 46px rgba(0,0,0,0.18);
+      cursor: pointer;
+      font-weight: 950;
+      font-size: 12.5px;
+      letter-spacing: 0.2px;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease, filter 180ms ease, background 180ms ease, transform 180ms var(--ease);
+      z-index: 2;
+      max-width: calc(100% - 22px);
+      white-space: nowrap;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__card.is-active .smwc2__toggle{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__pillDot{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
+      box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
+      flex: 0 0 auto;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__card.is-on .smwc2__toggle{
+      background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
+      border-color: rgba(255,255,255,0.16);
+      box-shadow: 0 20px 56px rgba(0,35,94,0.22);
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__desc{
+      margin-top: 10px;
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      text-align: center;
+      padding: 0 8px;
+      max-width: 100%;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__descHead{
+      font-weight: 950;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: rgba(9,10,12,0.58);
+      margin: 0;
+      user-select:none;
+    }
+
+    #smwc-final-{{ section.id }} .smwc2__descText{
+      width: min(920px, 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow2);
+      padding: 16px 16px;
+
+      color: rgba(9,10,12,0.82);
       font-weight: 900;
+      font-size: clamp(13px, 3.6vw, 16px);
+      line-height: 1.35;
+
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
+
+      min-height: var(--promptMinH, auto);
+
+      transform: translateY(8px);
+      opacity: 0;
+      transition: opacity 240ms ease, transform 240ms var(--ease);
     }
 
-    @keyframes smwftFloat{
-      0%{ transform: translateY(0); }
-      50%{ transform: translateY(-6px); }
-      100%{ transform: translateY(0); }
+    #smwc-final-{{ section.id }} .smwc2__measure{
+      position: absolute !important;
+      left: -9999px !important;
+      top: 0 !important;
+      visibility: hidden !important;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: none !important;
+      height: auto !important;
     }
 
-    #smwh-fromto-{{ section.id }}[data-autoplay="1"] .smwft__mid{
-      animation: smwftFloat 7.5s ease-in-out infinite;
-    }
-
-    @keyframes smwftRing{
-      0%{ stroke-dashoffset: 251.2; }
-      100%{ stroke-dashoffset: 0; }
-    }
-
-    @keyframes smwftScan{
-      0%{ left: -45%; opacity: 0.0; }
-      8%{ opacity: 0.95; }
-      40%{ left: 110%; opacity: 0.95; }
-      55%{ opacity: 0.0; }
-      100%{ left: 110%; opacity: 0.0; }
-    }
-
-    /* Mobile */
-    @media (max-width: 900px){
-      #smwh-fromto-{{ section.id }}{
-        --gap: 16px;
-        --midw: 1fr;
+    @media (hover:hover){
+      #smwc-final-{{ section.id }} .smwc2__wrap:hover .smwc2__descText,
+      #smwc-final-{{ section.id }} .smwc2__wrap:focus-within .smwc2__descText{
+        opacity: 1;
+        transform: translateY(0);
       }
-
-      #smwh-fromto-{{ section.id }} .smwft__grid{
-        grid-template-columns: 1fr;
-        gap: 14px;
+    }
+    @media (hover:none){
+      #smwc-final-{{ section.id }} .smwc2__descText{
+        opacity: 1;
+        transform: translateY(0);
       }
+    }
 
-      #smwh-fromto-{{ section.id }} .smwft__mid{
-        max-width: 400px;
-        margin: 0 auto;
-        animation: none;
-      }
+    @media (max-width: 520px){
+      #smwc-final-{{ section.id }}{ --navOffset: 230px; }
+      #smwc-final-{{ section.id }} .smwc2__navbtn{ width: 44px; height: 44px; }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smwh-fromto-{{ section.id }} .smwft__prog,
-      #smwh-fromto-{{ section.id }} .smwft__scan:before,
-      #smwh-fromto-{{ section.id }} .smwft__mid,
-      #smwh-fromto-{{ section.id }} .smwft__img{
-        animation: none !important;
-        transition: none !important;
-      }
+      #smwc-final-{{ section.id }} *{ transition: none !important; animation: none !important; }
     }
   </style>
 
-  <div class="smwft__wrap">
-    <div class="smwft__top">
-      {% if section.settings.badge_text != blank %}
-        <div class="smwft__pill-black">{{ section.settings.badge_text }}</div>
-      {% endif %}
+  <div class="smwc2__wrap">
+    <div class="smwc2__stage">
+      <button class="smwc2__navbtn smwc2__navbtn--prev" type="button" data-smwc-prev aria-label="Vorheriges">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M14.5 5.5L8.5 12l6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
 
-      <div class="smwft__trust" aria-label="Trust Row">
-        <div class="smwft__trust-item">
-          <div class="smwft__trust-ico">{{ section.settings.trust_1_icon }}</div>
-          <div class="smwft__trust-txt">{{ section.settings.trust_1_text }}</div>
-        </div>
-        <div class="smwft__trust-item">
-          <div class="smwft__trust-ico">{{ section.settings.trust_2_icon }}</div>
-          <div class="smwft__trust-txt">{{ section.settings.trust_2_text }}</div>
-        </div>
-        <div class="smwft__trust-item">
-          <div class="smwft__trust-ico">{{ section.settings.trust_3_icon }}</div>
-          <div class="smwft__trust-txt">{{ section.settings.trust_3_text }}</div>
-        </div>
+      <div class="smwc2__cards" data-smwc-cards>
+        {% for block in section.blocks %}
+          {% if block.type == 'slide' %}
+            {% liquid
+              assign base_fallback = blank
+              assign over_fallback = blank
+
+              if block.settings.base_image == blank
+                if forloop.index0 == 0
+                  assign base_fallback = 'Werkstatt-Hero-1' | file_url
+                elsif forloop.index0 == 1
+                  assign base_fallback = 'Werkstatt-Hero-2-First' | file_url
+                endif
+              endif
+
+              if block.settings.overlay_image == blank
+                if forloop.index0 == 0
+                  assign over_fallback = 'Werkstatt-Hero-1-Overlay' | file_url
+                elsif forloop.index0 == 1
+                  assign over_fallback = 'Werkstatt-Hero-2-Overlay' | file_url
+                endif
+              endif
+            %}
+
+            <article class="smwc2__card" data-smwc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
+              <div class="smwc2__frame" data-smwc-frame role="button" tabindex="0" aria-label="Slide auswählen">
+                {% if block.settings.base_image != blank %}
+                  <img class="smwc2__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                {% elsif base_fallback != blank %}
+                  <img class="smwc2__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
+                {% else %}
+                  <img class="smwc2__img" src="https://placehold.co/1600x1600" alt="Placeholder" loading="lazy" width="1600" height="1600">
+                {% endif %}
+
+                {% if block.settings.overlay_image != blank %}
+                  <img class="smwc2__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                {% elsif over_fallback != blank %}
+                  <img class="smwc2__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
+                {% else %}
+                  <img class="smwc2__overlay" src="https://placehold.co/1600x1600" alt="" loading="lazy" width="1600" height="1600">
+                {% endif %}
+
+                <button type="button" class="smwc2__toggle" data-smwc-toggle aria-pressed="false">
+                  <span class="smwc2__pillDot" aria-hidden="true"></span>
+                  <span class="smwc2__toggleText">Verwandeln</span>
+                </button>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
       </div>
+
+      <button class="smwc2__navbtn smwc2__navbtn--next" type="button" data-smwc-next aria-label="Nächstes">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9.5 5.5L15.5 12l-6 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="smwft__head">
-      <h2 class="smwft__title">
-        <span>{{ section.settings.heading }}</span>
-        <span> {{ section.settings.heading_2 }}</span>
-      </h2>
-      <p class="smwft__sub">{{ section.settings.subheading }}</p>
-    </div>
-
-    <div class="smwft__grid">
-      <div>
-        <div class="smwft__img-card">
-          {% if section.settings.from_image != blank %}
-            <img class="smwft__img" src="{{ section.settings.from_image | image_url: width: 1800 }}" alt="{{ section.settings.from_image.alt | escape }}" loading="lazy" width="1800" height="1800">
-          {% else %}
-            <img class="smwft__img" src="https://placehold.co/1800x1800" alt="Placeholder" loading="lazy" width="1800" height="1800">
-          {% endif %}
-        </div>
-        <div class="smwft__label">{{ section.settings.from_label | escape }}</div>
-      </div>
-
-      <div class="smwft__mid" aria-hidden="false">
-        <div class="smwft__pill" aria-label="in 2 Minuten">
-          <span class="smwft__pill-dot" aria-hidden="true"></span>
-          <span><b>in 2 Minuten</b></span>
-        </div>
-
-        <div class="smwft__ring" aria-label="Processing indicator">
-          <svg viewBox="0 0 100 100" aria-hidden="true">
-            <defs>
-              <linearGradient id="smwft-grad-{{ section.id }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="var(--a1)"/>
-                <stop offset="55%" stop-color="var(--a2)"/>
-                <stop offset="100%" stop-color="var(--a3)"/>
-              </linearGradient>
-            </defs>
-            <circle class="smwft__track" cx="50" cy="50" r="40"></circle>
-            <circle class="smwft__prog" cx="50" cy="50" r="40"></circle>
-          </svg>
-          <div class="smwft__time" id="smwft-time-{{ section.id }}">02:00</div>
-        </div>
-
-        <div class="smwft__scan" aria-hidden="true"></div>
-        <div class="smwft__status" id="smwft-status-{{ section.id }}">Wir bauen deinen <b>Entwurf</b> …</div>
-      </div>
-
-      <div>
-        <div class="smwft__img-card">
-          {% if section.settings.to_image != blank %}
-            <img class="smwft__img" src="{{ section.settings.to_image | image_url: width: 1800 }}" alt="{{ section.settings.to_image.alt | escape }}" loading="lazy" width="1800" height="1800">
-          {% else %}
-            <img class="smwft__img" src="https://placehold.co/1800x1800" alt="Placeholder" loading="lazy" width="1800" height="1800">
-          {% endif %}
-        </div>
-        <div class="smwft__label">{{ section.settings.to_label | escape }}</div>
-      </div>
+    <div class="smwc2__desc" aria-label="Beschreibung">
+      <p class="smwc2__descHead">{{ section.settings.desc_heading | default: "Beschreibung" | escape }}</p>
+      <div class="smwc2__descText" data-smwc-prompt></div>
+      <div class="smwc2__descText smwc2__measure" data-smwc-measure aria-hidden="true"></div>
     </div>
   </div>
 
   <script>
     (function(){
       var SECTION_ID = "{{ section.id }}";
-      var rootId = "smwh-fromto-" + SECTION_ID;
+      var root = document.getElementById("smwc-final-" + SECTION_ID);
+      if(!root) return;
 
-      function init(){
-        var root = document.getElementById(rootId);
-        if(!root) return false;
+      var cards = Array.prototype.slice.call(root.querySelectorAll("[data-smwc-card]"));
+      var prev = root.querySelector("[data-smwc-prev]");
+      var next = root.querySelector("[data-smwc-next]");
+      var promptEl = root.querySelector("[data-smwc-prompt]");
+      var measureEl = root.querySelector("[data-smwc-measure]");
+      if(!cards.length) return;
 
-        root.setAttribute('data-autoplay', {{ section.settings.autoplay | json }} ? '1' : '0');
+      var autoplay = {{ section.settings.autoplay | json }};
+      var autoplayMs = ({{ section.settings.autoplay_seconds | default: 6 }} * 1000) || 6000;
 
-        var timeEl = document.getElementById("smwft-time-" + SECTION_ID);
-        var statusEl = document.getElementById("smwft-status-" + SECTION_ID);
-        if(!timeEl) return true;
+      var active = 0;
+      var timer = null;
+      var onState = cards.map(function(){ return false; });
+      var isInteracting = false;
 
-        var loopMs = ({{ section.settings.duration_seconds | default: 10 }} * 1000) || 10000;
-        var labels = [
-          'Wir prüfen dein <b>Motiv</b> …',
-          'Wir bauen deinen <b>Entwurf</b> …',
-          'Wir optimieren die <b>Konturen</b> …',
-          'Wir finalisieren das <b>Schild</b> …'
-        ];
+      function mod(n,m){ return ((n % m) + m) % m; }
+      function diff(i, a, n){
+        var d = mod(i - a, n);
+        if(d > n/2) d -= n;
+        return d;
+      }
 
-        function pad(n){ return (n < 10 ? '0' : '') + n; }
+      function setPrompt(idx){
+        if(!promptEl) return;
+        idx = Math.max(0, Math.min(cards.length - 1, idx));
+        promptEl.textContent = cards[idx].getAttribute("data-prompt") || "";
+      }
 
-        if(root.__smwftRAF) cancelAnimationFrame(root.__smwftRAF);
+      function computeLayout(){
+        var cs = parseFloat(getComputedStyle(root).getPropertyValue("--cardSize")) || 320;
+        var w = root.getBoundingClientRect().width || 1200;
 
-        function tick(){
-          if(root.getAttribute('data-autoplay') !== '1') return;
+        var rx = Math.min(Math.max(460, (w * 0.48)), 860);
+        var ry = Math.min(Math.max(70, cs * 0.22), 120);
 
-          var now = Date.now();
-          var phase = (now % loopMs) / loopMs;
+        var navOffset = (cs / 2) + Math.min(190, Math.max(120, w * 0.11));
+        root.style.setProperty("--navOffset", navOffset + "px");
 
-          var seconds = Math.max(0, Math.round(120 * (1 - phase)));
-          var mm = Math.floor(seconds / 60);
-          var ss = seconds % 60;
-          timeEl.textContent = pad(mm) + ':' + pad(ss);
+        return { rx: rx, ry: ry };
+      }
 
-          if(statusEl){
-            var idx = Math.min(labels.length - 1, Math.floor(phase * labels.length));
-            statusEl.innerHTML = labels[idx];
-          }
+      function computeMaxPromptHeight(){
+        if(!promptEl || !measureEl) return;
 
-          root.__smwftRAF = requestAnimationFrame(tick);
+        var w = Math.max(240, Math.floor(promptEl.getBoundingClientRect().width || 0));
+        measureEl.style.width = w + "px";
+
+        var maxH = 0;
+        for(var i=0;i<cards.length;i++){
+          var txt = cards[i].getAttribute("data-prompt") || "";
+          measureEl.textContent = txt;
+          var h = Math.ceil(measureEl.scrollHeight || 0);
+          if(h > maxH) maxH = h;
         }
 
-        root.__smwftRAF = requestAnimationFrame(tick);
-        return true;
+        if(maxH > 0){
+          promptEl.style.minHeight = maxH + "px";
+          root.style.setProperty("--promptMinH", maxH + "px");
+        }
       }
 
-      function boot(){
-        if(init()) return;
-        var tries = 0;
-        (function retry(){
-          tries += 1;
-          if(init()) return;
-          if(tries > 80) return;
-          requestAnimationFrame(retry);
-        })();
+      function render(){
+        var n = cards.length;
+        var layout = computeLayout();
+        var rx = layout.rx;
+        var ry = layout.ry;
+
+        var stepDeg = (n <= 6) ? 22 : (n <= 9 ? 16 : 12);
+        var maxShow = (n <= 6) ? 3 : 4;
+
+        for(var i=0;i<n;i++){
+          var d = diff(i, active, n);
+          var abs = Math.abs(d);
+          var show = abs <= maxShow;
+
+          var el = cards[i];
+
+          var ang = (d * stepDeg) * (Math.PI / 180);
+          var x = Math.sin(ang) * rx;
+          var y = (1 - Math.cos(ang)) * ry;
+
+          var s = (abs === 0) ? 1.10 : Math.max(0.46, 0.76 - abs * 0.10);
+          var op = show ? Math.max(0.08, 0.48 - abs * 0.16) : 0;
+          var blur = (abs === 0) ? 0 : Math.min(11, 6 + abs * 1.6);
+
+          if(d === 0){
+            el.classList.add("is-active");
+            x = 0; y = 0;
+            op = 1; blur = 0;
+          } else {
+            el.classList.remove("is-active");
+          }
+
+          el.style.opacity = String(op);
+          el.style.filter = "blur(" + blur.toFixed(2) + "px)";
+          el.style.zIndex = String(500 - abs * 40);
+
+          el.style.transform =
+            "translate(-50%, -50%) translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + s.toFixed(3) + ")";
+
+          if(onState[i]) el.classList.add("is-on");
+          else el.classList.remove("is-on");
+
+          el.style.pointerEvents = (d === 0) ? "auto" : "none";
+        }
+
+        setPrompt(active);
       }
 
-      if(document.readyState === "loading"){
-        document.addEventListener("DOMContentLoaded", boot, { once: true });
-      } else {
-        boot();
+      function go(dir){
+        active = mod(active + dir, cards.length);
+        render();
       }
+
+      function stopAutoplay(){
+        if(timer){ clearInterval(timer); timer = null; }
+      }
+
+      function startAutoplay(){
+        if(!autoplay) return;
+        stopAutoplay();
+        timer = setInterval(function(){
+          if(isInteracting) return;
+          go(1);
+        }, autoplayMs);
+      }
+
+      function bindNav(btn, dir){
+        if(!btn) return;
+
+        var lastNavAt = 0;
+
+        function navOnce(e){
+          var now = Date.now();
+
+          if(e && e.type === "click" && btn.__blockClickUntil && now < btn.__blockClickUntil){
+            if(e.preventDefault) e.preventDefault();
+            if(e.stopPropagation) e.stopPropagation();
+            return;
+          }
+
+          if(now - lastNavAt < 240) {
+            if(e && e.stopPropagation) e.stopPropagation();
+            return;
+          }
+          lastNavAt = now;
+
+          if(e && e.type !== "click"){
+            btn.__blockClickUntil = now + 500;
+          }
+
+          if(e && e.stopPropagation) e.stopPropagation();
+
+          isInteracting = false;
+          stopAutoplay();
+          go(dir);
+          startAutoplay();
+        }
+
+        btn.addEventListener("pointerdown", function(e){
+          if(e && e.stopPropagation) e.stopPropagation();
+        }, true);
+
+        btn.addEventListener("pointerup", navOnce, true);
+        btn.addEventListener("click", navOnce, true);
+
+        btn.addEventListener("touchend", function(e){
+          if(e && e.preventDefault) e.preventDefault();
+          navOnce(e);
+        }, { passive: false, capture: true });
+      }
+
+      function bind(){
+        bindNav(prev, -1);
+        bindNav(next,  1);
+
+        var startX = 0;
+        var dx = 0;
+
+        root.addEventListener("pointerdown", function(e){
+          if(e.target && e.target.closest && e.target.closest("[data-smwc-prev],[data-smwc-next]")) return;
+          isInteracting = true;
+          stopAutoplay();
+          startX = e.clientX;
+          dx = 0;
+        }, { passive: true });
+
+        root.addEventListener("pointermove", function(e){
+          if(!isInteracting) return;
+          dx = e.clientX - startX;
+        }, { passive: true });
+
+        root.addEventListener("pointerup", function(){
+          if(!isInteracting) return;
+          isInteracting = false;
+          if(Math.abs(dx) > 40){
+            go(dx > 0 ? -1 : 1);
+          }
+          startAutoplay();
+        }, { passive: true });
+
+        root.querySelectorAll("[data-smwc-toggle]").forEach(function(btn){
+          btn.addEventListener("click", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            stopAutoplay();
+
+            var card = btn.closest("[data-smwc-card]");
+            if(!card) return;
+
+            var idx = parseInt(card.getAttribute("data-index") || "0", 10);
+            if(idx !== active) active = idx;
+
+            onState[active] = !onState[active];
+            btn.setAttribute("aria-pressed", onState[active] ? "true" : "false");
+
+            var t = btn.querySelector(".smwc2__toggleText");
+            if(t) t.textContent = onState[active] ? "Zurück" : "Verwandeln";
+
+            render();
+            startAutoplay();
+          });
+        });
+
+        root.addEventListener("keydown", function(e){
+          if(e.key === "ArrowLeft"){ stopAutoplay(); go(-1); startAutoplay(); }
+          if(e.key === "ArrowRight"){ stopAutoplay(); go(1); startAutoplay(); }
+        });
+
+        var ro = new ResizeObserver(function(){
+          render();
+          computeMaxPromptHeight();
+        });
+        ro.observe(root);
+      }
+
+      bind();
+      render();
+
+      requestAnimationFrame(function(){
+        computeMaxPromptHeight();
+      });
+      if(document.fonts && document.fonts.ready){
+        document.fonts.ready.then(function(){ computeMaxPromptHeight(); });
+      }
+
+      startAutoplay();
 
       document.addEventListener("shopify:section:load", function(e){
         if(!e || !e.detail || !e.detail.sectionId) return;
-        if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
-      });
-      document.addEventListener("shopify:section:select", function(e){
-        if(!e || !e.detail || !e.detail.sectionId) return;
-        if(String(e.detail.sectionId) === String(SECTION_ID)) boot();
+        if(String(e.detail.sectionId) !== String(SECTION_ID)) return;
+        stopAutoplay();
+        render();
+        computeMaxPromptHeight();
+        startAutoplay();
       });
     })();
   </script>

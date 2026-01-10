@@ -1,9 +1,9 @@
 {% comment %}
   Werkstatt Steps (polished v2)
-  - No big background card, only freestanding step cards
-  - Square images on all screens
-  - Centered, frameless arrows (no box)
-  - On-brand subtle float + arrow nudge animations
+  UPDATE:
+  - Mobile stays ONE row
+  - Numbers moved ABOVE the image (so captions have full width, no cut-off)
+  - Desktop keeps the inline number pill inside caption (same as before)
 {% endcomment %}
 
 {% schema %}
@@ -11,87 +11,24 @@
   "name": "Werkstatt Steps",
   "tag": "section",
   "settings": [
-    {
-      "type": "range",
-      "id": "top_spacing",
-      "label": "Abstand oben",
-      "default": 28,
-      "min": 0,
-      "max": 160,
-      "step": 2
-    },
-    {
-      "type": "range",
-      "id": "bottom_spacing",
-      "label": "Abstand unten",
-      "default": 40,
-      "min": 0,
-      "max": 200,
-      "step": 2
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "So entsteht dein Schild"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "Upload → Entwurf → Fertiges Schild"
-    },
-    {
-      "type": "image_picker",
-      "id": "image_1",
-      "label": "Image 1"
-    },
-    {
-      "type": "textarea",
-      "id": "caption_1",
-      "label": "Caption 1",
-      "default": "Motiv hochladen"
-    },
-    {
-      "type": "image_picker",
-      "id": "image_2",
-      "label": "Image 2"
-    },
-    {
-      "type": "textarea",
-      "id": "caption_2",
-      "label": "Caption 2",
-      "default": "Entwurf generieren"
-    },
-    {
-      "type": "image_picker",
-      "id": "image_3",
-      "label": "Image 3"
-    },
-    {
-      "type": "textarea",
-      "id": "caption_3",
-      "label": "Caption 3",
-      "default": "Fertiges Schild"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_numbers",
-      "label": "Show step numbers",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_animations",
-      "label": "Enable animations",
-      "default": true
-    }
+    { "type": "range", "id": "top_spacing", "label": "Abstand oben", "default": 28, "min": 0, "max": 160, "step": 2 },
+    { "type": "range", "id": "bottom_spacing", "label": "Abstand unten", "default": 40, "min": 0, "max": 200, "step": 2 },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "So entsteht dein Schild" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Upload → Entwurf → Fertiges Schild" },
+
+    { "type": "image_picker", "id": "image_1", "label": "Image 1" },
+    { "type": "textarea", "id": "caption_1", "label": "Caption 1", "default": "Motiv hochladen" },
+
+    { "type": "image_picker", "id": "image_2", "label": "Image 2" },
+    { "type": "textarea", "id": "caption_2", "label": "Caption 2", "default": "Entwurf generieren" },
+
+    { "type": "image_picker", "id": "image_3", "label": "Image 3" },
+    { "type": "textarea", "id": "caption_3", "label": "Caption 3", "default": "Fertiges Schild" },
+
+    { "type": "checkbox", "id": "show_numbers", "label": "Show step numbers", "default": true },
+    { "type": "checkbox", "id": "enable_animations", "label": "Enable animations", "default": true }
   ],
-  "presets": [
-    {
-      "name": "Werkstatt Steps"
-    }
-  ]
+  "presets": [{ "name": "Werkstatt Steps" }]
 }
 {% endschema %}
 
@@ -106,8 +43,6 @@
     #sm-steps-{{ section.id }}{
       --ink: rgba(9,10,12,0.92);
       --muted: rgba(9,10,12,0.68);
-      --stroke: rgba(9,10,12,0.10);
-      --shadow: 0 34px 110px rgba(15,23,42,0.14);
       --shadow2: 0 16px 34px rgba(15,23,42,0.10);
       --radius: 30px;
 
@@ -147,45 +82,67 @@
       letter-spacing: 0.2px;
     }
 
-    /* Desktop row */
+    /* Row layout (desktop + mobile) */
     #sm-steps-{{ section.id }} .smws__row{
       display: grid;
       grid-template-columns: 1fr auto 1fr auto 1fr;
-      align-items: center; /* keeps arrows centered */
+      align-items: center;
       gap: var(--gap);
     }
 
-    /* Mobile stack */
+    /* Mobile: still one row */
     @media (max-width: 900px){
       #sm-steps-{{ section.id }}{
-        --gap: 14px;
-        --arrow-gap: 10px;
+        --gap: 10px;
+        --arrow-gap: 6px;
+        --radius: 22px;
       }
-
-      #sm-steps-{{ section.id }} .smws__row{
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
+      #sm-steps-{{ section.id }} .smws__wrap{ padding: 0 12px; }
     }
 
     /* Step card */
     #sm-steps-{{ section.id }} .smws__card{
       display: grid;
-      gap: 12px;
+      gap: 10px;
       align-content: start;
       transform: translateZ(0);
       will-change: transform;
+      min-width: 0;
+      justify-items: center;
+    }
+
+    /* Number ABOVE image on mobile */
+    #sm-steps-{{ section.id }} .smws__num-top{
+      display: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      place-items: center;
+      background: rgba(9,10,12,0.08);
+      border: 1px solid rgba(9,10,12,0.12);
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(9,10,12,0.86);
+      box-shadow: 0 12px 26px rgba(15,23,42,0.08);
+      user-select: none;
+    }
+
+    @media (max-width: 900px){
+      #sm-steps-{{ section.id }} .smws__num-top{
+        display: grid;
+      }
     }
 
     #sm-steps-{{ section.id }} .smws__media{
       position: relative;
       border-radius: var(--radius);
-      aspect-ratio: 1 / 1; /* ALWAYS SQUARE */
+      aspect-ratio: 1 / 1;
       overflow: hidden;
       background: rgba(9,10,12,0.05);
       border: 1px solid rgba(9,10,12,0.08);
       box-shadow: var(--shadow2);
       transform: translateZ(0);
+      width: 100%;
     }
 
     #sm-steps-{{ section.id }} .smws__img{
@@ -199,7 +156,6 @@
       will-change: transform, filter;
     }
 
-    /* subtle hover, no background tricks */
     #sm-steps-{{ section.id }} .smws__media:hover .smws__img,
     #sm-steps-{{ section.id }} .smws__media:focus-within .smws__img{
       transform: scale(1.04);
@@ -221,12 +177,20 @@
       text-align: center;
       color: rgba(9,10,12,0.82);
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.1px;
-      line-height: 1.25;
+      line-height: 1.2;
       min-height: 46px;
+      min-width: 0;
     }
 
+    #sm-steps-{{ section.id }} .smws__cap span:last-child{
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    /* Desktop inline number (original behavior) */
     #sm-steps-{{ section.id }} .smws__num{
       flex: 0 0 auto;
       width: 26px;
@@ -241,7 +205,20 @@
       color: rgba(9,10,12,0.86);
     }
 
-    /* Frameless arrows, centered */
+    /* Mobile: hide inline number inside caption to save width */
+    @media (max-width: 900px){
+      #sm-steps-{{ section.id }} .smws__cap{
+        padding: 9px 10px;
+        font-size: 12px;
+        min-height: 40px;
+        gap: 8px;
+      }
+      #sm-steps-{{ section.id }} .smws__num{
+        display: none;
+      }
+    }
+
+    /* Frameless arrows */
     #sm-steps-{{ section.id }} .smws__arrow{
       display: grid;
       place-items: center;
@@ -259,13 +236,13 @@
       filter: drop-shadow(0 14px 26px rgba(15,23,42,0.12));
     }
 
-    /* Mobile: arrow becomes down chevron */
     @media (max-width: 900px){
-      #sm-steps-{{ section.id }} .smws__arrow{
-        padding: 0;
-      }
+      #sm-steps-{{ section.id }} .smws__arrow{ padding: 0; }
       #sm-steps-{{ section.id }} .smws__arrow svg{
-        transform: rotate(90deg);
+        width: 22px;
+        height: 22px;
+        transform: none;
+        filter: drop-shadow(0 10px 18px rgba(15,23,42,0.10));
       }
     }
 
@@ -294,17 +271,11 @@
       opacity: 1;
     }
 
-    /* disable float on mobile for pixel-perfect stability */
     @media (max-width: 900px){
-      #sm-steps-{{ section.id }}[data-anim="true"] .smws__card{
-        animation: none;
-      }
-      #sm-steps-{{ section.id }}[data-anim="true"] .smws__row:hover .smws__arrow svg{
-        animation: none;
-      }
+      #sm-steps-{{ section.id }}[data-anim="true"] .smws__card{ animation: none; }
+      #sm-steps-{{ section.id }}[data-anim="true"] .smws__row:hover .smws__arrow svg{ animation: none; }
     }
 
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       #sm-steps-{{ section.id }} .smws__img,
       #sm-steps-{{ section.id }} .smws__arrow svg,
@@ -324,32 +295,17 @@
     <div class="smws__row">
       {% comment %} Step 1 {% endcomment %}
       <div class="smws__card">
+        {% if section.settings.show_numbers %}<div class="smws__num-top" aria-hidden="true">1</div>{% endif %}
         <div class="smws__media" tabindex="0">
           {% if section.settings.image_1 != blank %}
-            <img
-              class="smws__img"
-              src="{{ section.settings.image_1 | image_url: width: 1400 }}"
-              alt="{{ section.settings.image_1.alt | escape }}"
-              loading="lazy"
-              width="1400"
-              height="1400"
-            >
+            <img class="smws__img" src="{{ section.settings.image_1 | image_url: width: 1400 }}" alt="{{ section.settings.image_1.alt | escape }}" loading="lazy" width="1400" height="1400">
           {% else %}
-            <img
-              class="smws__img"
-              src="https://placehold.co/1400x1400"
-              alt="Placeholder"
-              loading="lazy"
-              width="1400"
-              height="1400"
-            >
+            <img class="smws__img" src="https://placehold.co/1400x1400" alt="Placeholder" loading="lazy" width="1400" height="1400">
           {% endif %}
         </div>
 
         <div class="smws__cap">
-          {% if section.settings.show_numbers %}
-            <span class="smws__num" aria-hidden="true">1</span>
-          {% endif %}
+          {% if section.settings.show_numbers %}<span class="smws__num" aria-hidden="true">1</span>{% endif %}
           <span>{{ section.settings.caption_1 | escape }}</span>
         </div>
       </div>
@@ -363,32 +319,17 @@
 
       {% comment %} Step 2 {% endcomment %}
       <div class="smws__card">
+        {% if section.settings.show_numbers %}<div class="smws__num-top" aria-hidden="true">2</div>{% endif %}
         <div class="smws__media" tabindex="0">
           {% if section.settings.image_2 != blank %}
-            <img
-              class="smws__img"
-              src="{{ section.settings.image_2 | image_url: width: 1400 }}"
-              alt="{{ section.settings.image_2.alt | escape }}"
-              loading="lazy"
-              width="1400"
-              height="1400"
-            >
+            <img class="smws__img" src="{{ section.settings.image_2 | image_url: width: 1400 }}" alt="{{ section.settings.image_2.alt | escape }}" loading="lazy" width="1400" height="1400">
           {% else %}
-            <img
-              class="smws__img"
-              src="https://placehold.co/1400x1400"
-              alt="Placeholder"
-              loading="lazy"
-              width="1400"
-              height="1400"
-            >
+            <img class="smws__img" src="https://placehold.co/1400x1400" alt="Placeholder" loading="lazy" width="1400" height="1400">
           {% endif %}
         </div>
 
         <div class="smws__cap">
-          {% if section.settings.show_numbers %}
-            <span class="smws__num" aria-hidden="true">2</span>
-          {% endif %}
+          {% if section.settings.show_numbers %}<span class="smws__num" aria-hidden="true">2</span>{% endif %}
           <span>{{ section.settings.caption_2 | escape }}</span>
         </div>
       </div>
@@ -402,32 +343,17 @@
 
       {% comment %} Step 3 {% endcomment %}
       <div class="smws__card">
+        {% if section.settings.show_numbers %}<div class="smws__num-top" aria-hidden="true">3</div>{% endif %}
         <div class="smws__media" tabindex="0">
           {% if section.settings.image_3 != blank %}
-            <img
-              class="smws__img"
-              src="{{ section.settings.image_3 | image_url: width: 1400 }}"
-              alt="{{ section.settings.image_3.alt | escape }}"
-              loading="lazy"
-              width="1400"
-              height="1400"
-            >
+            <img class="smws__img" src="{{ section.settings.image_3 | image_url: width: 1400 }}" alt="{{ section.settings.image_3.alt | escape }}" loading="lazy" width="1400" height="1400">
           {% else %}
-            <img
-              class="smws__img"
-              src="https://placehold.co/1400x1400"
-              alt="Placeholder"
-              loading="lazy"
-              width="1400"
-              height="1400"
-            >
+            <img class="smws__img" src="https://placehold.co/1400x1400" alt="Placeholder" loading="lazy" width="1400" height="1400">
           {% endif %}
         </div>
 
         <div class="smws__cap">
-          {% if section.settings.show_numbers %}
-            <span class="smws__num" aria-hidden="true">3</span>
-          {% endif %}
+          {% if section.settings.show_numbers %}<span class="smws__num" aria-hidden="true">3</span>{% endif %}
           <span>{{ section.settings.caption_3 | escape }}</span>
         </div>
       </div>

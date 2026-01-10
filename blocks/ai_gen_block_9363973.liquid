@@ -1,0 +1,858 @@
+{% doc %}
+  @prompt
+    Creat me an image slider with headline and subheadline text underneath for each image. Add an editable Arrow on the sides to moves images. Place the arrows at the middle of the image and add a setting for automatic scolling after a set time. Make the images fill the screen width. I want to be able to upload seperate images for Desktop and Mobile. It should fill out the screen on desktop and mobile.  Center the text on mobile and desktop. Give me editable padding around the text. Make sure the image is fully contained in the frame., make sure that the slide hight is consistent with the first slide. the images should be fully contained within the frame of the slider and each arrow click should move an entire slide. Make it pixel perfect. Make sure that there is no added background color under the images or text. Make the amount of slides editable, so i can choose myself how many slides there are, Make the text editable as in Titel text or heading with all settings. Make all spaces between the text editable. For mobile and separately for desktop. Only show the slide options for the amount of slides, selecting in the amount setting , Each click on the arrows should move one slide on both formats. The slide height should be adapted to the image on both mobile and desktop., align the arrows in the horizontal center of the image.., the image height should always be adapted to the selected image on both formats. The image should never be cut off. The arrows should always be centered on the image. I want to be able to upload different formats for desktop and mobile, the slide height should be adapted to the format of the first image on both mobile and desktop. This is very important , the Formating works correctly. There is an issue when uploading one image for mobile and desktop. The desktop image gets used on mobile as well. This should not be the case, the formating should be the same for all slides. The size should be adapted to the first image uploaded for both mobile and desktop seperately. Right now it seems to be working for desktop but not for mobile. The images are getting cut off on mobile, the formatting does not work yet for mobile. Please fix the issue so that the format on mobile also gets adapted by the first image uploaded to the mobile placeholder, on mobile, it uses the image from the desktop section and does not make it fit. Please fix this issue, the formatting does not work correctly on mobile. it used the desktop image for mobile which should not happen. fix this issue, make sure that the text for both formats stays in the same format as the image. when i enter longer text on mobile for the subheadline it should fit the width of the image, not just one line, the text on mobile should also be made to fit the width of the image. Right now the text can be wider than the image, distorting the format. Fix this error , text is now working correctly but both images for mobile and desktop get shown at the same time. Fix this issue and seperate the format for desktop and mobile
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-slider-container-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-slider-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-slider-track-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+  }
+
+  .ai-slider-slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-slider-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    position: relative;
+  }
+
+  .ai-slider-image-wrapper-{{ ai_gen_id }} img,
+  .ai-slider-image-wrapper-{{ ai_gen_id }} > div {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-slider-desktop-image-{{ ai_gen_id }} {
+    display: block !important;
+  }
+
+  .ai-slider-mobile-image-{{ ai_gen_id }} {
+    display: none !important;
+  }
+
+  .ai-slider-placeholder-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #f4f4f4;
+  }
+
+  .ai-slider-placeholder-wrapper-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-slider-text-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    padding: {{ block.settings.text_padding_top_desktop }}px {{ block.settings.text_padding_horizontal_desktop }}px {{ block.settings.text_padding_bottom_desktop }}px;
+    box-sizing: border-box;
+  }
+
+  .ai-slider-heading-{{ ai_gen_id }} {
+    margin: 0 0 {{ block.settings.heading_subheading_gap_desktop }}px;
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    color: {{ block.settings.heading_color }};
+    line-height: 1.2;
+    word-wrap: break-word;
+  }
+
+  .ai-slider-subheading-{{ ai_gen_id }} {
+    margin: 0;
+    font-size: {{ block.settings.subheading_size_desktop }}px;
+    font-weight: {{ block.settings.subheading_weight }};
+    color: {{ block.settings.subheading_color }};
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+
+  .ai-slider-arrow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: {{ block.settings.arrow_background_color }};
+    color: {{ block.settings.arrow_icon_color }};
+    border: none;
+    width: {{ block.settings.arrow_size }}px;
+    height: {{ block.settings.arrow_size }}px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-slider-arrow-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.arrow_hover_background_color }};
+  }
+
+  .ai-slider-arrow-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.arrow_size }}px * 0.5);
+    height: calc({{ block.settings.arrow_size }}px * 0.5);
+  }
+
+  .ai-slider-arrow-prev-{{ ai_gen_id }} {
+    left: {{ block.settings.arrow_offset_desktop }}px;
+  }
+
+  .ai-slider-arrow-next-{{ ai_gen_id }} {
+    right: {{ block.settings.arrow_offset_desktop }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-slider-desktop-image-{{ ai_gen_id }} {
+      display: none !important;
+    }
+
+    .ai-slider-mobile-image-{{ ai_gen_id }} {
+      display: block !important;
+    }
+
+    .ai-slider-text-container-{{ ai_gen_id }} {
+      padding: {{ block.settings.text_padding_top_mobile }}px {{ block.settings.text_padding_horizontal_mobile }}px {{ block.settings.text_padding_bottom_mobile }}px;
+    }
+
+    .ai-slider-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+      margin: 0 0 {{ block.settings.heading_subheading_gap_mobile }}px;
+    }
+
+    .ai-slider-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size_mobile }}px;
+    }
+
+    .ai-slider-arrow-prev-{{ ai_gen_id }} {
+      left: {{ block.settings.arrow_offset_mobile }}px;
+    }
+
+    .ai-slider-arrow-next-{{ ai_gen_id }} {
+      right: {{ block.settings.arrow_offset_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<image-slider-{{ ai_gen_id }}
+  class="ai-slider-container-{{ ai_gen_id }}"
+  data-autoplay="{{ block.settings.autoplay_enabled }}"
+  data-autoplay-speed="{{ block.settings.autoplay_speed }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-slider-wrapper-{{ ai_gen_id }}">
+    <div class="ai-slider-track-{{ ai_gen_id }}">
+      {% for i in (1..block.settings.number_of_slides) %}
+        {% liquid
+          assign desktop_image_key = 'slide_' | append: i | append: '_desktop_image'
+          assign mobile_image_key = 'slide_' | append: i | append: '_mobile_image'
+          assign heading_key = 'slide_' | append: i | append: '_heading'
+          assign subheading_key = 'slide_' | append: i | append: '_subheading'
+
+          assign desktop_image = block.settings[desktop_image_key]
+          assign mobile_image = block.settings[mobile_image_key]
+          assign heading = block.settings[heading_key]
+          assign subheading = block.settings[subheading_key]
+        %}
+
+        <div class="ai-slider-slide-{{ ai_gen_id }}" data-slide-index="{{ forloop.index0 }}">
+          <div class="ai-slider-image-wrapper-{{ ai_gen_id }}">
+            {% if desktop_image %}
+              <img
+                src="{{ desktop_image | image_url: width: 2000 }}"
+                alt="{{ desktop_image.alt | escape }}"
+                loading="lazy"
+                width="{{ desktop_image.width }}"
+                height="{{ desktop_image.height }}"
+                class="ai-slider-desktop-image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-slider-desktop-image-{{ ai_gen_id }} ai-slider-placeholder-wrapper-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+
+            {% if mobile_image %}
+              <img
+                src="{{ mobile_image | image_url: width: 1000 }}"
+                alt="{{ mobile_image.alt | escape }}"
+                loading="lazy"
+                width="{{ mobile_image.width }}"
+                height="{{ mobile_image.height }}"
+                class="ai-slider-mobile-image-{{ ai_gen_id }}"
+              >
+            {% elsif desktop_image %}
+              <img
+                src="{{ desktop_image | image_url: width: 1000 }}"
+                alt="{{ desktop_image.alt | escape }}"
+                loading="lazy"
+                width="{{ desktop_image.width }}"
+                height="{{ desktop_image.height }}"
+                class="ai-slider-mobile-image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-slider-mobile-image-{{ ai_gen_id }} ai-slider-placeholder-wrapper-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-slider-text-container-{{ ai_gen_id }}">
+            {% if heading != blank %}
+              <h2 class="ai-slider-heading-{{ ai_gen_id }}">{{ heading }}</h2>
+            {% endif %}
+            {% if subheading != blank %}
+              <p class="ai-slider-subheading-{{ ai_gen_id }}">{{ subheading }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <button
+      class="ai-slider-arrow-{{ ai_gen_id }} ai-slider-arrow-prev-{{ ai_gen_id }}"
+      aria-label="Previous slide"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <button
+      class="ai-slider-arrow-{{ ai_gen_id }} ai-slider-arrow-next-{{ ai_gen_id }}"
+      aria-label="Next slide"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+</image-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('.ai-slider-track-{{ ai_gen_id }}');
+        this.slides = this.querySelectorAll('.ai-slider-slide-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('.ai-slider-arrow-prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-slider-arrow-next-{{ ai_gen_id }}');
+        this.totalSlides = this.slides.length;
+
+        this.setupEventListeners();
+        this.updateSlidePosition();
+        this.setupAutoplay();
+        this.adjustArrowPositions();
+        
+        window.addEventListener('resize', () => this.adjustArrowPositions());
+      }
+
+      setupEventListeners() {
+        this.prevButton.addEventListener('click', () => this.goToPrevSlide());
+        this.nextButton.addEventListener('click', () => this.goToNextSlide());
+      }
+
+      goToPrevSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.updateSlidePosition();
+        this.resetAutoplay();
+      }
+
+      goToNextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateSlidePosition();
+        this.resetAutoplay();
+      }
+
+      updateSlidePosition() {
+        const offset = -this.currentSlide * 100;
+        this.track.style.transform = `translateX(${offset}%)`;
+      }
+
+      setupAutoplay() {
+        const autoplayEnabled = this.dataset.autoplay === 'true';
+        const autoplaySpeed = parseInt(this.dataset.autoplaySpeed) * 1000;
+
+        if (autoplayEnabled && autoplaySpeed > 0) {
+          this.autoplayInterval = setInterval(() => {
+            this.goToNextSlide();
+          }, autoplaySpeed);
+        }
+      }
+
+      resetAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.setupAutoplay();
+        }
+      }
+
+      adjustArrowPositions() {
+        const firstSlide = this.slides[0];
+        if (!firstSlide) return;
+
+        const imageWrapper = firstSlide.querySelector('.ai-slider-image-wrapper-{{ ai_gen_id }}');
+        if (!imageWrapper) return;
+
+        const isMobile = window.innerWidth <= 749;
+        const visibleImage = isMobile 
+          ? imageWrapper.querySelector('.ai-slider-mobile-image-{{ ai_gen_id }}')
+          : imageWrapper.querySelector('.ai-slider-desktop-image-{{ ai_gen_id }}');
+
+        if (!visibleImage) return;
+
+        const imageHeight = visibleImage.offsetHeight;
+        const arrows = this.querySelectorAll('.ai-slider-arrow-{{ ai_gen_id }}');
+
+        arrows.forEach(arrow => {
+          arrow.style.top = `${imageHeight / 2}px`;
+        });
+      }
+
+      disconnectedCallback() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+        }
+        window.removeEventListener('resize', () => this.adjustArrowPositions());
+      }
+    }
+
+    customElements.define('image-slider-{{ ai_gen_id }}', ImageSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Image slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "range",
+      "id": "number_of_slides",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Number of slides",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay_enabled",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Arrow settings"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "arrow_offset_desktop",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow offset (desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "arrow_offset_mobile",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow offset (mobile)",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "arrow_background_color",
+      "label": "Arrow background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_background_color",
+      "label": "Arrow hover background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow icon color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Text settings - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_desktop",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "heading_subheading_gap_desktop",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between heading and subheading",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "text_padding_top_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_padding_bottom_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding bottom",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal_desktop",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding horizontal",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Text settings - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "subheading_size_mobile",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "heading_subheading_gap_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between heading and subheading",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "text_padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding top",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding bottom",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_padding_horizontal_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding horizontal",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Subheading weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_heading",
+      "label": "Heading",
+      "default": "Slide 1 Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_1_subheading",
+      "label": "Subheading",
+      "default": "This is the subheading for slide 1"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_heading",
+      "label": "Heading",
+      "default": "Slide 2 Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_2_subheading",
+      "label": "Subheading",
+      "default": "This is the subheading for slide 2"
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_heading",
+      "label": "Heading",
+      "default": "Slide 3 Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_3_subheading",
+      "label": "Subheading",
+      "default": "This is the subheading for slide 3"
+    },
+    {
+      "type": "header",
+      "content": "Slide 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_4_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_4_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_4_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_4_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_5_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_5_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_5_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_5_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_6_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_6_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_6_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_6_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_7_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_7_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_7_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_7_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_8_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_8_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_8_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_8_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_9_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_9_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_9_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_9_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Slide 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_10_desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_10_mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "slide_10_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_10_subheading",
+      "label": "Subheading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image slider"
+    }
+  ]
+}
+{% endschema %}
