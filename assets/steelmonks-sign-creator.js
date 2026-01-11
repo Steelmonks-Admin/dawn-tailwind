@@ -1354,7 +1354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add mounting set cost if "Befestigung" is selected
     let totalPrice = price;
     if (bolts === 'Befestigung') {
-      totalPrice += 9.95;
+      totalPrice += 9.45;
     }
 
     return totalPrice;

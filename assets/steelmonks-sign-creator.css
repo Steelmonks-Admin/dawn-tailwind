@@ -163,7 +163,7 @@
 .smc__eta {
   position: fixed;
   left: 50%;
-  bottom: 18px;
+  bottom: 68px;
   transform: translateX(-50%);
   z-index: 2147483646;
   display: flex;
