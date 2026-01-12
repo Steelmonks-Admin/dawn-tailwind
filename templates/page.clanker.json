@@ -108,7 +108,7 @@
           "type": "slide",
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
             "prompt": "Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu."
           }
         },
