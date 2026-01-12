@@ -104,12 +104,20 @@
             "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
           }
         },
+        "slide_9DaD7j": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last.jpg",
+            "prompt": "Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu."
+          }
+        },
         "slide_xpwLCB": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/download_ecb89219-692c-4063-9c4e-d51c5245b12c.jpg",
-            "overlay_image": "shopify://shop_images/download_0521f1ff-900a-4054-a423-d178241dc083.jpg",
-            "prompt": "Beispiel Prompt"
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-6-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-6-Last.jpg",
+            "prompt": "Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen."
           }
         },
         "slide_fAmNE9": {
@@ -118,14 +126,6 @@
             "base_image": "shopify://shop_images/Werkstatt-Carousel-5-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Carousel-5-Last.jpg",
             "prompt": "Hier wurde folgender Text angegeben: \n\n\"Erstelle mir ein schönes Geschenk für meine Schwester, sie backt gerne Brot, ist eine Sauerteig Mama und hat einen eleganten und edlen Stil.\""
-          }
-        },
-        "slide_9DaD7j": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58.jpg",
-            "overlay_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58_1.jpg",
-            "prompt": "Beispiel Prompt"
           }
         },
         "slide_RWQfby": {
@@ -141,9 +141,9 @@
         "slide_V4mdEE",
         "slide_bCMMg3",
         "slide_xeKJbk",
+        "slide_9DaD7j",
         "slide_xpwLCB",
         "slide_fAmNE9",
-        "slide_9DaD7j",
         "slide_RWQfby"
       ],
       "name": "Werkstatt Hero Section",
