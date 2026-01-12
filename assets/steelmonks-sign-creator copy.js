@@ -1,1189 +1,2284 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // console.log('Steelmonks Sign Creator loaded', sid);
+  // ============================================================================
+  // ! Configuration & Constants
+  // ============================================================================
+  const TIMING = {
+    TOTAL_MS: 180000,
+    FETCH_TIMEOUT_MS: 25000,
+    TIME_PRICE_MS: 5000,
+    TIME_ENTWURF_POLL_MS: 70000,
+    MOCK_POLL_START_MS: 90000,
+    MOCK_POLL_END_MS: 240000,
+    MOCK_POLL_EVERY_MS: 10000,
+    HOLD_DURATION_MS: 30 * 60 * 1000,
+  };
 
-  // ? Helper function to get an element by its ID
-  function el(id) {
-    return document.getElementById(id);
-  }
-
-  var upload = el('smc-upload');
-  var uploadLabel = el('smc-upload-label');
-  var uploadPrevImg = el('smc-upload-preview');
-  var uploadPrevEmpty = el('smc-upload-preview-empty');
-
-  var desc = el('smc-desc');
-  desc.placeholder = `Lass Deiner Vorstellung freien Lauf. Probier doch:
-• Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
-• Mein Familienwappen wie aus der Zeichnung
-• Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
-• Oder ein Hausschild mit der Nummer 22 und einem Ritter`;
-  var finish = el('smc-finish');
-  var size = el('smc-size');
-
-  var pill = el('smc-pill');
-  var pillText = el('smc-pill-text');
-
-  var priceVal = el('smc-price');
-  var previewKicker = el('smc-preview-kicker');
-
-  var previewArea = el('smc-preview-area');
-  var previewEmpty = el('smc-preview-empty');
-  var previewImg = el('smc-preview-img');
-
-  var previewOverlay = el('smc-preview-overlay');
-  var previewOverlayTitle = el('smc-preview-overlay-title');
-  var previewOverlaySub = el('smc-preview-overlay-sub');
-
-  var etaWrap = el('smc-eta');
-  var etaLabel = el('smc-eta-label');
-  var etaTime = el('smc-eta-time');
-
-  var ctaBtn = el('smc-cta-btn');
-  var ctaLabel = el('smc-cta-label');
-  var resetBtn = el('smc-reset-btn');
-
-  var propImg = el('smc-prop-img');
-  var propDesc = el('smc-prop-desc');
-  var propFinish = el('smc-prop-finish');
-  var propSize = el('smc-prop-size');
-  var propRoute = el('smc-prop-route');
-  var propGen = el('smc-prop-gen');
-  var propPrice = el('smc-prop-price');
-
-  var modal = el('smc-modal');
-  var modalBackdrop = el('smc-modal-backdrop');
-  var modalClose = el('smc-modal-close');
-  var modalDl = el('smc-modal-dl');
-
-  var modalTitle = el('smc-modal-title');
-  var modalPreview = el('smc-modal-preview');
-  var modalImg = el('smc-modal-img');
-  var modalCopy = el('smc-modal-copy');
-  var modalText = el('smc-modal-text');
-  var modalAdd = el('smc-modal-add');
-  var modalAddLabel = el('smc-modal-add-label');
-  var modalLink = el('smc-modal-link');
-  var modalFoot = el('smc-modal-foot');
-  var modalActions = el('smc-modal-actions');
-
-  var modalHold = el('smc-modal-hold');
-  var modalHoldTime = el('smc-modal-hold-time');
-  var modalHoldBarfill = el('smc-modal-hold-barfill');
-
-  var smc = el('smc');
-  var closeBtn = el('smc-close-btn');
-  // Re-add overflow to body and add scale-down class to smc
-  closeBtn.addEventListener('click', () => {
-    document.body.style.overflow = 'auto';
-    smc.classList.add('smc--scale-down');
-  });
-
-  var generatorId = '';
-  var lastMockUrl = '';
-  var lastEntUrl = '';
-
-  var checkoutReady = false;
-
-  var priceReady = false;
-  var priceRequested = false;
-  var pendingPriceValue = '';
-
-  var state = 'init';
-  var locked = false;
-
-  var etaTick = null;
-  var etaEndsAt = 0;
-
-  var holdTick = null;
-  var holdEndsAt = 0;
-
-  var pollInFlight = false;
-
-  var timerPriceA = null;
-  var timerEntwurf = null;
-  var timerMock = null;
-  var mockPoll = null;
-  var mockPollEndsAt = 0;
-
-  var previewDone = false;
-  var previewInFlight = false;
-
-  var forceMockLoading = false;
-  var runStartedAt = 0;
-
-  var TOTAL_MS = 120000;
-  var FETCH_TIMEOUT_MS = 25000;
-
-  var TIME_PRICE_MS = 5000;
-  var TIME_ENTWURF_POLL_MS = 70000;
-
-  var MOCK_POLL_START_MS = 90000;
-  var MOCK_POLL_END_MS = 240000;
-  var MOCK_POLL_EVERY_MS = 10000;
-
-  var DEFAULT_ENDPOINTS = {
+  const DEFAULT_ENDPOINTS = {
     run: '/apps/creator/run-creator',
-    preview: '/apps/creator/run-creator-preview',
-    price: '/apps/creator/get-creator-price',
     sign: '/apps/creator/get-creator-sign',
     product: '/apps/creator/get-creator-product',
   };
 
-  var ENDPOINTS = (function () {
-    var cfg = window.SMCREATOR_ENDPOINTS || {};
-    var merged = {};
-    Object.keys(DEFAULT_ENDPOINTS).forEach(function (k) {
-      merged[k] = DEFAULT_ENDPOINTS[k];
-    });
+  const ENDPOINTS = (() => {
+    const cfg = window.SMCREATOR_ENDPOINTS || {};
+    const merged = { ...DEFAULT_ENDPOINTS };
     try {
-      Object.keys(cfg).forEach(function (k) {
+      Object.keys(cfg).forEach((k) => {
         if (cfg[k] != null && String(cfg[k]).trim() !== '') {
           merged[k] = cfg[k];
         }
       });
-    } catch (_e) {}
+    } catch (error) {
+      // Silent fail
+    }
     return merged;
   })();
 
-  function fmtMMSS(ms) {
-    var s = Math.max(0, Math.ceil(ms / 1000));
-    var m = Math.floor(s / 60);
-    var r = s % 60;
-    return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
-  }
+  const STATUS_TEXTS = {
+    FAILED: 'Fehlgeschlagen',
+    PREVIEW_READY: 'Vorschau ist fertig',
+    DESIGN_READY: [
+      'Entwurf ist fertig',
+      'Design ist Fertig',
+      'Entwurf ist fertig.',
+      'Design ist fertig',
+    ],
+  };
 
-  function stopEta() {
-    if (etaTick) clearInterval(etaTick);
-    etaTick = null;
-    etaEndsAt = 0;
-    if (etaWrap) etaWrap.style.display = 'none';
-  }
+  // ============================================================================
+  // ! Utility Functions
+  // ============================================================================
+  const el = (id) => document.getElementById(id);
 
-  function onEtaFinished() {
-    if (state === 'creating' && !lastMockUrl) {
-      forceMockLoading = true;
-      setPillState('work', 'Vorschau wird geladen');
-      setPreviewOverlay(true, 'Vorschau wird geladen', 'Bitte warten');
-      setPreviewLoading(true);
-    }
-  }
+  const fmtMMSS = (ms) => {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+  };
 
-  function startEta(label, ms) {
-    stopEta();
-    etaEndsAt = Date.now() + ms;
-    if (etaLabel) etaLabel.textContent = label || 'Geschätzte Zeit';
-    if (etaWrap) etaWrap.style.display = 'flex';
-    function tick() {
-      var left = etaEndsAt - Date.now();
-      if (etaTime) etaTime.textContent = fmtMMSS(left);
-      if (left <= 0) {
-        stopEta();
-        onEtaFinished();
-      }
-    }
-    tick();
-    etaTick = setInterval(tick, 1000);
-  }
-
-  function stopHold() {
-    if (holdTick) clearInterval(holdTick);
-    holdTick = null;
-    holdEndsAt = 0;
-    if (modalHold) modalHold.style.display = 'none';
-  }
-
-  function startHold30() {
-    stopHold();
-    holdEndsAt = Date.now() + 30 * 60 * 1000;
-    if (modalHold) modalHold.style.display = 'block';
-    function tick() {
-      var left = holdEndsAt - Date.now();
-      if (modalHoldTime) modalHoldTime.textContent = fmtMMSS(left);
-      var total = 30 * 60 * 1000;
-      var pct = Math.max(0, Math.min(1, left / total));
-      if (modalHoldBarfill)
-        modalHoldBarfill.style.width = (pct * 100).toFixed(2) + '%';
-      if (left <= 0) {
-        if (modalHoldTime) modalHoldTime.textContent = '00:00';
-        if (modalHoldBarfill) modalHoldBarfill.style.width = '0%';
-        clearInterval(holdTick);
-        holdTick = null;
-      }
-    }
-    tick();
-    holdTick = setInterval(tick, 1000);
-  }
-
-  function setPillState(kind, text) {
-    if (pill) pill.setAttribute('data-state', kind || 'idle');
-    if (pillText) pillText.textContent = text || 'Bereit';
-  }
-
-  function setPreviewLoading(on) {
-    if (!previewArea) return;
-    previewArea.setAttribute('data-loading', on ? '1' : '0');
-  }
-
-  function setSoftBlur(on) {
-    if (!previewArea) return;
-    previewArea.setAttribute('data-softblur', on ? '1' : '0');
-  }
-
-  function setFade(on) {
-    if (!previewArea) return;
-    previewArea.setAttribute('data-fade', on ? '1' : '0');
-  }
-
-  function setPreviewOverlay(on, title, sub) {
-    if (previewOverlay) previewOverlay.style.display = on ? 'flex' : 'none';
-    if (previewOverlayTitle && title) previewOverlayTitle.textContent = title;
-    if (previewOverlaySub && sub) previewOverlaySub.textContent = sub;
-  }
-
-  function setClickable(on) {
-    if (!previewArea) return;
-    previewArea.setAttribute('data-clickable', on ? '1' : '0');
-  }
-
-  function setModalPreviewLoading(on) {
-    if (!modalPreview) return;
-    modalPreview.setAttribute('data-loading', on ? '1' : '0');
-  }
-
-  function hasImage() {
-    return !!(upload && upload.files && upload.files[0]);
-  }
-
-  function routeValue() {
-    return hasImage() ? 'Edit' : 'Generate';
-  }
-
-  function lockInputs(on) {
-    if (!upload || !desc || !finish || !size) return;
-    locked = !!on;
-
-    upload.disabled = locked;
-    desc.disabled = locked;
-    finish.disabled = locked;
-    size.disabled = locked;
-
-    if (resetBtn) resetBtn.style.display = locked ? 'inline-flex' : 'none';
-  }
-
-  function updateProps() {
-    if (propDesc) propDesc.value = desc && desc.value ? desc.value : '';
-    if (propFinish)
-      propFinish.value = finish && finish.value ? finish.value : '';
-    if (propSize) propSize.value = size && size.value ? size.value : '';
-    if (propRoute) propRoute.value = routeValue();
-    if (propGen) propGen.value = generatorId || '';
-    if (propImg)
-      propImg.value =
-        upload && upload.files && upload.files[0] ? upload.files[0].name : '';
-    if (propPrice) propPrice.value = pendingPriceValue || '';
-  }
-
-  function normalizePriceDisplay(p) {
-    var s = p == null ? '' : String(p).trim();
-    if (!s) return '';
-    if (s.indexOf('€') !== -1) return s;
-    if (/[0-9]/.test(s)) return s + ' €';
-    return s;
-  }
-
-  function applyPriceDisplay() {
-    if (!priceVal) return;
-    if (pendingPriceValue) {
-      if (lastMockUrl) {
-        priceVal.textContent = pendingPriceValue;
-      } else {
-        priceVal.textContent = 'Preis berechnet';
-      }
-    } else {
-      priceVal.textContent = 'Den Preis berechnen wir nach dem Entwurf.';
-    }
-  }
-
-  function setPrice(txt) {
-    var out = normalizePriceDisplay(txt);
-    if (out) {
-      pendingPriceValue = out;
-      priceReady = true;
-      updateProps();
-      applyPriceDisplay();
-      if (state === 'creating' && !lastMockUrl) {
-        setPillState('work', 'Preis berechnet');
-      }
-      return;
-    }
-    pendingPriceValue = '';
-    priceReady = false;
-    updateProps();
-    applyPriceDisplay();
-  }
-
-  function setPriceCalculating() {
-    if (priceVal) priceVal.textContent = 'Preis wird berechnet…';
-    pendingPriceValue = '';
-    priceReady = false;
-    updateProps();
-  }
-
-  function setCta(label, enabled) {
-    if (ctaLabel) ctaLabel.textContent = label || 'Entwurf erstellen';
-    if (ctaBtn) ctaBtn.disabled = !enabled;
-  }
-
-  function setCtaFromState() {
-    if (state === 'init') {
-      var ok = desc && desc.value && desc.value.trim().length >= 5;
-      setCta('Entwurf erstellen', ok && !locked);
-      return;
-    }
-    if (state === 'creating') {
-      setCta('Wird erstellt', false);
-      return;
-    }
-    if (state === 'ready') {
-      setCta('Schild ansehen', true);
-      return;
-    }
-    setCta('Wird erstellt', false);
-  }
-
-  function showPreview(url) {
-    if (!url) return;
-    if (previewImg) {
-      setFade(true);
-      previewImg.onload = function () {
-        setFade(false);
-        previewImg.onload = null;
-      };
-      previewImg.src = url;
-      previewImg.classList.remove('smc__preview-img--hidden');
-    }
-    if (previewEmpty) previewEmpty.style.display = 'none';
-  }
-
-  function showPlaceholder(text) {
-    if (previewEmpty) {
-      previewEmpty.textContent = text || 'Starte zuerst den Entwurf';
-      previewEmpty.style.display = 'block';
-    }
-    if (previewImg) previewImg.classList.add('smc__preview-img--hidden');
-  }
-
-  function handleUploadUI() {
-    if (!upload || !uploadLabel) return;
-
-    if (upload.files && upload.files[0]) {
-      uploadLabel.textContent = upload.files[0].name;
-      var file = upload.files[0];
-
-      if (file.type && file.type.indexOf('image') === 0) {
-        var r = new FileReader();
-        r.onload = function (e) {
-          if (uploadPrevImg && uploadPrevEmpty) {
-            uploadPrevImg.src = e && e.target ? e.target.result : '';
-            uploadPrevImg.style.display = 'block';
-            uploadPrevEmpty.style.display = 'none';
-          }
-        };
-        r.readAsDataURL(file);
-      }
-    } else {
-      uploadLabel.textContent = 'Noch kein Upload';
-      if (uploadPrevImg && uploadPrevEmpty) {
-        uploadPrevImg.removeAttribute('src');
-        uploadPrevImg.style.display = 'none';
-        uploadPrevEmpty.style.display = 'flex';
-      }
-    }
-  }
-
-  function formDataPayload(extra) {
-    var fd = new FormData();
-
-    if (upload && upload.files && upload.files[0])
-      fd.append('Bild', upload.files[0]);
-    else fd.append('Bild', '');
-
-    fd.append('Beschreibung', desc && desc.value ? desc.value : '');
-    fd.append('Oberfläche', finish && finish.value ? finish.value : '');
-    fd.append('Größe', size && size.value ? size.value : '');
-    fd.append('Route', routeValue());
-
-    fd.append('generator_id', generatorId || '');
-    fd.append('section_id', sid);
-
-    if (extra && typeof extra === 'object') {
-      try {
-        Object.keys(extra).forEach(function (k) {
-          fd.append(k, extra[k]);
-        });
-      } catch (_e) {}
-    }
-
-    return fd;
-  }
-
-  async function postText(url, fd) {
-    var ctrl = 'AbortController' in window ? new AbortController() : null;
-    var t = null;
-    if (ctrl) {
-      t = setTimeout(function () {
-        try {
-          ctrl.abort();
-        } catch (_e) {}
-      }, FETCH_TIMEOUT_MS);
-    }
-
-    var res = await fetch(url, {
-      method: 'POST',
-      body: fd,
-      signal: ctrl ? ctrl.signal : undefined,
-    });
-
-    if (t) clearTimeout(t);
-
-    var text = await res.text();
-    if (!res.ok) throw new Error(text || 'HTTP ' + res.status);
-    return text || '';
-  }
-
-  function tryParseJson(text) {
+  const tryParseJson = (text) => {
     try {
       return JSON.parse(text);
-    } catch (e) {
+    } catch (error) {
       return null;
     }
-  }
+  };
 
-  function extractIdFromText(text) {
-    var m = text.match(/"id"\s*:\s*"([^"]+)"/i);
+  const extractIdFromText = (text) => {
+    const m = text.match(/"id"\s*:\s*"([^"]+)"/i);
     return m ? m[1] : '';
-  }
+  };
 
-  function toGoogleDriveUrl(id) {
-    if (!id) return '';
-    return 'https://lh3.googleusercontent.com/d/' + id;
-  }
+  const toGoogleDriveUrl = (id) =>
+    id ? `https://lh3.googleusercontent.com/d/${id}` : '';
 
-  function normalizeImageUrl(candidate) {
+  const normalizeImageUrl = (candidate) => {
     if (!candidate) return '';
-    var c = String(candidate).trim();
+    const c = String(candidate).trim();
     if (/^https?:\/\//i.test(c)) return c;
     if (/^[a-zA-Z0-9_-]{10,}$/.test(c)) return toGoogleDriveUrl(c);
     return '';
-  }
+  };
 
-  function extractField(j, key) {
-    function pick(o) {
-      if (!o || typeof o !== 'object') return '';
-      if (o[key] != null) return String(o[key]);
-      return '';
-    }
+  const extractField = (j, key) => {
+    const pick = (o) =>
+      o && typeof o === 'object' && o[key] != null ? String(o[key]) : '';
     if (!j) return '';
     if (Array.isArray(j) && j[0]) return pick(j[0]);
     return pick(j);
-  }
+  };
 
-  function extractPriceValue(j, raw) {
-    var keys = [
-      'Preis',
-      'preis',
-      'price',
-      'display_price',
-      'price_display',
-      'amount',
-      'value',
-    ];
-    function pick(o) {
-      if (!o || typeof o !== 'object') return '';
-      for (var i = 0; i < keys.length; i++) {
-        if (o[keys[i]] != null && String(o[keys[i]]).trim() !== '')
-          return String(o[keys[i]]);
-      }
+  const normalizePriceDisplay = (p) => {
+    const s = p == null ? '' : String(p).trim();
+    if (!s) return '';
+    if (s.includes('€')) return s;
+    if (/[0-9]/.test(s)) return `${s} €`;
+    return s;
+  };
+
+  const safeProductJsonUrl = (productUrl) => {
+    try {
+      const u = new URL(productUrl, window.location.origin);
+      return `${u.origin}${u.pathname.replace(/\/$/, '')}.js`;
+    } catch (error) {
       return '';
     }
-    if (j) {
-      if (Array.isArray(j) && j[0]) {
-        var p0 = pick(j[0]);
-        if (p0) return p0;
-      }
-      var p = pick(j);
-      if (p) return p;
-    }
-    var m = raw && raw.match(/\d+([.,]\d+)?\s?€|€\s?\d+([.,]\d+)?/);
-    return m ? m[0] : '';
-  }
+  };
 
-  function clearTimers() {
-    if (timerPriceA) clearTimeout(timerPriceA);
-    if (timerEntwurf) clearTimeout(timerEntwurf);
-    if (timerMock) clearTimeout(timerMock);
-    timerPriceA = timerEntwurf = timerMock = null;
+  // ============================================================================
+  // ! DOM Elements
+  // ============================================================================
+  const elements = {
+    // Navigation
+    slider: el('smc-slider'),
+    page1: el('smc-page-1'),
+    page2: el('smc-page-2'),
+    page3: el('smc-page-3'),
 
-    if (mockPoll) clearInterval(mockPoll);
-    mockPoll = null;
-    mockPollEndsAt = 0;
-  }
+    // Form inputs
+    upload: el('smc-upload'),
+    uploadLabel: el('smc-upload-label'),
+    uploadPrevImg: el('smc-upload-preview'),
+    uploadPrevEmpty: el('smc-upload-preview-empty'),
+    desc: el('smc-desc'),
+    finish: el('smc-finish'),
+    size: el('smc-size'),
+    note: el('smc-note'), // New note field
+    type: el('smc-type'), // New type field
+    bolts: el('smc-bolts'), // New bolts/mounting field
 
-  function lockScroll(on) {
+    // Status pill
+    pill: el('smc-pill'),
+    pillText: el('smc-pill-text'),
+
+    // Price
+    priceVal: el('smc-price'), // Moved to Page 3
+
+    // Preview (Page 2)
+    previewLoading: el('smc-preview-loading'),
+    previewEmpty: el('smc-preview-empty'),
+    previewImg: el('smc-preview-img'),
+    previewDownload: el('smc-preview-download'),
+    previewShare: el('smc-preview-share'),
+    previewActions: el('smc-preview-actions'),
+
+    // Result (Page 3)
+    resultImg: el('smc-result-img'),
+    productName: el('smc-product-name'),
+    confirmBtn: el('smc-confirm-btn'),
+    confirmBtnWrap: el('smc-confirm-btn-wrap'),
+    backBtn: el('smc-back-btn'),
+
+    // ETA
+    etaWrap: el('smc-eta'),
+    etaLabel: el('smc-eta-label'),
+    etaTime: el('smc-eta-time'),
+
+    // Buttons
+    ctaBtn: el('smc-cta-btn'),
+    ctaLabel: el('smc-cta-label'),
+    openBtn: el('smc-open-btn'),
+    continueBtn: el('smc-continue-btn'),
+    continueLabel: el('smc-continue-label'),
+
+    // Hidden form properties
+    propImg: el('smc-prop-img'),
+    propDesc: el('smc-prop-desc'),
+    propFinish: el('smc-prop-finish'),
+    propSize: el('smc-prop-size'),
+    propRoute: el('smc-prop-route'),
+    propGen: el('smc-prop-gen'),
+    propPrice: el('smc-prop-price'),
+    propNote: el('smc-prop-note'), // New prop for note
+    propType: el('smc-prop-type'), // New prop for type
+    propBolts: el('smc-prop-bolts'), // New prop for bolts/mounting
+
+    // Main containers
+    smc: el('smc'),
+    smcContainer: el('smc-container'),
+  };
+
+  // Set placeholder text
+  if (elements.desc) {
     try {
-      if (on) {
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-      }
-    } catch (_e) {}
+      elements.desc.placeholder = `Lass Deiner Vorstellung freien Lauf. Probier doch:
+• Ein schönes Familienschild mit unserem Labradoodle wie aus dem Foto
+• Mein Familienwappen wie aus der Zeichnung
+• Mach mir ein Schild für meinen Bruder, er liebt Schlagzeug und Croissants
+• Oder ein Hausschild mit der Nummer 22 und einem Ritter`;
+    } catch (error) {}
+  } else {
   }
 
-  function setModalMode(mode) {
-    if (modal) modal.setAttribute('data-mode', mode || 'product');
-  }
+  // ============================================================================
+  // ! State Management
+  // ============================================================================
+  const state = {
+    current: 'init',
+    locked: false,
+    generatorId: '',
+    lastMockUrl: '',
+    lastEntUrl: '',
+    priceReady: false,
+    priceRequested: false,
+    pendingPriceValue: '',
+    previewDone: false,
+    previewInFlight: false,
+    forceMockLoading: false,
+    runStartedAt: 0,
+    pollInFlight: false,
+    generatedProductUrl: '',
+    generatedProductName: '',
+    generatedProductId: '',
+    generatedVariantId: '',
+    hasGeneratedDesign: false,
+    designConfirmed: false,
+    cooldown: null, // Timestamp when cooldown expires (current time + 30 seconds)
+  };
 
-  function closeModal() {
-    if (modal) modal.setAttribute('aria-hidden', 'true');
-    lockScroll(false);
-    if (((modal && modal.getAttribute('data-mode')) || '') === 'product') {
-      stopHold();
-    }
-  }
+  // ============================================================================
+  // ! LocalStorage Persistence
+  // ============================================================================
+  const STORAGE_KEY = 'steelmonks-sign-creator-state-123';
+  const STORAGE_TIMER_KEY = 'steelmonks-sign-creator-timer-123';
+  const STORAGE_FORM_KEY = 'steelmonks-sign-creator-form-123';
 
-  async function downloadUrl(url, filename) {
-    if (!url) return;
-    var name =
-      filename || 'steelmonks-vorschau-' + (generatorId || 'download') + '.png';
-    try {
-      var res = await fetch(url, { method: 'GET', mode: 'cors' });
-      if (!res.ok) throw new Error('download');
-      var blob = await res.blob();
-      var obj = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = obj;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () {
-        try {
-          URL.revokeObjectURL(obj);
-        } catch (_e) {}
-      }, 8000);
-    } catch (_e) {
+  const storageManager = {
+    saveState() {
       try {
-        var a2 = document.createElement('a');
-        a2.href = url;
-        a2.download = name;
-        document.body.appendChild(a2);
-        a2.click();
-        a2.remove();
-      } catch (_e2) {
-        window.open(url, '_blank');
+        const stateToSave = {
+          current: state.current,
+          generatorId: state.generatorId,
+          lastMockUrl: state.lastMockUrl,
+          lastEntUrl: state.lastEntUrl,
+          priceReady: state.priceReady,
+          pendingPriceValue: state.pendingPriceValue,
+          previewDone: state.previewDone,
+          runStartedAt: state.runStartedAt,
+          generatedProductUrl: state.generatedProductUrl,
+          generatedProductName: state.generatedProductName,
+          generatedProductId: state.generatedProductId,
+          generatedVariantId: state.generatedVariantId,
+          hasGeneratedDesign: state.hasGeneratedDesign,
+          designConfirmed: state.designConfirmed,
+          cooldown: state.cooldown,
+          // Add timestamp if it doesn't exist (for new state) or preserve existing one
+          createdAt: this.getCreatedAt() || Date.now(),
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+      } catch (error) {}
+    },
+
+    getCreatedAt() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        return parsed.createdAt || null;
+      } catch (error) {
+        return null;
       }
-    }
-  }
+    },
 
-  function openModalViewer(kind, url) {
-    if (!url) return;
-    setModalMode('viewer');
+    isStateExpired() {
+      const createdAt = this.getCreatedAt();
+      if (!createdAt) return false; // No timestamp means it's a new state or old format
 
-    if (modalTitle) modalTitle.textContent = kind || 'Vorschau';
+      const now = Date.now();
+      const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+      const isExpired = now - createdAt > twentyFourHours;
 
-    if (modalCopy) modalCopy.style.display = 'none';
-    if (modalActions) modalActions.style.display = 'none';
-    if (modalFoot) modalFoot.style.display = 'none';
-    if (modalHold) modalHold.style.display = 'none';
+      if (isExpired) {
+        // State expired
+      }
 
-    if (modalImg) modalImg.src = url;
+      return isExpired;
+    },
 
-    if (modalDl) {
-      modalDl.style.display = 'inline-flex';
-      modalDl.onclick = function () {
-        downloadUrl(
-          url,
-          'steelmonks-vorschau-' + (generatorId || 'download') + '.png',
-        );
-      };
-    }
+    loadState() {
+      try {
+        // Check if state has expired before loading
+        if (this.isStateExpired()) {
+          this.clearState();
+          return null;
+        }
 
-    if (modal) modal.setAttribute('aria-hidden', 'false');
-    lockScroll(true);
-  }
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
 
-  function openModalProduct() {
-    setModalMode('product');
+        // If loaded state doesn't have createdAt, add it now for future expiration checks
+        if (!parsed.createdAt) {
+          parsed.createdAt = Date.now();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+        }
+        return parsed;
+      } catch (error) {
+        return null;
+      }
+    },
 
-    if (modalCopy) modalCopy.style.display = 'flex';
-    if (modalActions) modalActions.style.display = 'flex';
-    if (modalFoot) modalFoot.style.display = 'block';
+    clearState() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_TIMER_KEY);
+        localStorage.removeItem(STORAGE_FORM_KEY);
+      } catch (error) {}
+    },
 
-    if (modalTitle) modalTitle.textContent = 'Schild ansehen';
-    if (modalImg && lastMockUrl) modalImg.src = lastMockUrl;
-
-    if (modalText)
-      modalText.textContent =
-        'Dein Schild ist bereit – wir erstellen gerade dein Produkt.';
-
-    if (modalDl) {
-      modalDl.style.display = 'inline-flex';
-      modalDl.onclick = function () {
-        if (lastMockUrl)
-          downloadUrl(
-            lastMockUrl,
-            'steelmonks-vorschau-' + (generatorId || 'download') + '.png',
+    saveTimer(etaEndsAt) {
+      try {
+        if (etaEndsAt && etaEndsAt > Date.now()) {
+          localStorage.setItem(
+            STORAGE_TIMER_KEY,
+            JSON.stringify({ etaEndsAt }),
           );
+        } else {
+          localStorage.removeItem(STORAGE_TIMER_KEY);
+        }
+      } catch (error) {}
+    },
+
+    loadTimer() {
+      try {
+        const saved = localStorage.getItem(STORAGE_TIMER_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        // Only return if timer hasn't expired
+        if (parsed.etaEndsAt && parsed.etaEndsAt > Date.now()) {
+          return parsed;
+        } else {
+          localStorage.removeItem(STORAGE_TIMER_KEY);
+          return null;
+        }
+      } catch (error) {
+        return null;
+      }
+    },
+
+    saveFormData() {
+      try {
+        const formToSave = {
+          description: elements.desc?.value || '',
+          finish: elements.finish?.value || '',
+          size: elements.size?.value || '',
+          note: elements.note?.value || '',
+          type: elements.type?.value || '',
+          bolts: elements.bolts?.value || '',
+          uploadFileName: elements.upload?.files?.[0]?.name || '',
+          uploadDataUrl: null, // Will be set if file exists
+        };
+
+        // Save file as data URL if it exists
+        const file = elements.upload?.files?.[0];
+        if (file && file.type?.startsWith('image')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              formToSave.uploadDataUrl = e.target?.result || null;
+              localStorage.setItem(
+                STORAGE_FORM_KEY,
+                JSON.stringify(formToSave),
+              );
+            } catch (error) {}
+          };
+          reader.onerror = (error) => {
+            // Save without image
+            localStorage.setItem(STORAGE_FORM_KEY, JSON.stringify(formToSave));
+          };
+          reader.readAsDataURL(file);
+        } else {
+          localStorage.setItem(STORAGE_FORM_KEY, JSON.stringify(formToSave));
+        }
+      } catch (error) {}
+    },
+
+    loadFormData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_FORM_KEY);
+        if (!saved) return null;
+        const parsed = JSON.parse(saved);
+        return parsed;
+      } catch (error) {
+        return null;
+      }
+    },
+
+    restoreFormData(formDataObj) {
+      if (!formDataObj) return;
+
+      try {
+        // Restore description
+        if (formDataObj.description && elements.desc) {
+          elements.desc.value = formDataObj.description;
+        }
+
+        // Restore finish
+        if (formDataObj.finish && elements.finish) {
+          elements.finish.value = formDataObj.finish;
+        }
+
+        // Restore size
+        if (formDataObj.size && elements.size) {
+          elements.size.value = formDataObj.size;
+        }
+
+        // Restore note
+        if (formDataObj.note && elements.note) {
+          elements.note.value = formDataObj.note;
+        }
+
+        // Restore type
+        if (formDataObj.type && elements.type) {
+          elements.type.value = formDataObj.type;
+        }
+
+        // Restore bolts/mounting
+        if (formDataObj.bolts && elements.bolts) {
+          elements.bolts.value = formDataObj.bolts;
+        }
+
+        // Restore image preview if available
+        if (
+          formDataObj.uploadDataUrl &&
+          elements.uploadPrevImg &&
+          elements.uploadPrevEmpty
+        ) {
+          elements.uploadPrevImg.src = formDataObj.uploadDataUrl;
+          elements.uploadPrevImg.style.display = 'block';
+          elements.uploadPrevEmpty.style.display = 'none';
+          if (elements.uploadLabel) {
+            elements.uploadLabel.textContent =
+              formDataObj.uploadFileName || 'Bild hochgeladen';
+          }
+        }
+
+        formData.updateProps();
+      } catch (error) {}
+    },
+  };
+
+  const timers = {
+    etaTick: null,
+    etaEndsAt: 0,
+    holdTick: null,
+    holdEndsAt: 0,
+    priceA: null,
+    entwurf: null,
+    mock: null,
+    mockPoll: null,
+    mockPollEndsAt: 0,
+  };
+
+  // ============================================================================
+  // ! Timer Management
+  // ============================================================================
+  const timerManager = {
+    clearAll() {
+      if (timers.etaTick) clearInterval(timers.etaTick);
+      if (timers.holdTick) clearInterval(timers.holdTick);
+      if (timers.priceA) clearTimeout(timers.priceA);
+      if (timers.entwurf) clearTimeout(timers.entwurf);
+      if (timers.mock) clearTimeout(timers.mock);
+      if (timers.mockPoll) clearInterval(timers.mockPoll);
+
+      Object.assign(timers, {
+        etaTick: null,
+        etaEndsAt: 0,
+        holdTick: null,
+        holdEndsAt: 0,
+        priceA: null,
+        entwurf: null,
+        mock: null,
+        mockPoll: null,
+        mockPollEndsAt: 0,
+      });
+    },
+
+    stopEta() {
+      if (timers.etaTick) clearInterval(timers.etaTick);
+      timers.etaTick = null;
+      timers.etaEndsAt = 0;
+      storageManager.saveTimer(null);
+      if (elements.etaWrap) elements.etaWrap.style.display = 'none';
+    },
+
+    startEta(label, ms, onFinish) {
+      this.stopEta();
+      timers.etaEndsAt = Date.now() + ms;
+      storageManager.saveTimer(timers.etaEndsAt);
+      if (elements.etaLabel)
+        elements.etaLabel.textContent = label || 'Geschätzte Zeit';
+      if (elements.etaWrap) elements.etaWrap.style.display = 'flex';
+
+      const tick = () => {
+        try {
+          const left = timers.etaEndsAt - Date.now();
+          if (elements.etaTime) elements.etaTime.textContent = fmtMMSS(left);
+          if (left <= 0) {
+            this.stopEta();
+            if (onFinish) {
+              try {
+                onFinish();
+              } catch (error) {}
+            }
+          }
+        } catch (error) {}
       };
-    }
 
-    if (modal) modal.setAttribute('aria-hidden', 'false');
-    lockScroll(true);
-  }
+      tick();
+      timers.etaTick = setInterval(tick, 1000);
+    },
 
-  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
-  if (modalClose) modalClose.addEventListener('click', closeModal);
-  document.addEventListener('keydown', function (e) {
-    if (e && e.key === 'Escape') closeModal();
-  });
+    restoreEta() {
+      const savedTimer = storageManager.loadTimer();
+      if (savedTimer && savedTimer.etaEndsAt) {
+        timers.etaEndsAt = savedTimer.etaEndsAt;
+        const left = timers.etaEndsAt - Date.now();
+        if (left > 0) {
+          if (elements.etaLabel)
+            elements.etaLabel.textContent = 'Geschätzte Zeit';
+          if (elements.etaWrap) elements.etaWrap.style.display = 'flex';
 
-  function statusToPill(status) {
-    var s = (status || '').trim();
+          const tick = () => {
+            try {
+              const remaining = timers.etaEndsAt - Date.now();
+              if (elements.etaTime)
+                elements.etaTime.textContent = fmtMMSS(remaining);
+              if (remaining <= 0) {
+                this.stopEta();
+              }
+            } catch (error) {}
+          };
 
-    if (forceMockLoading && !lastMockUrl) {
-      if (
-        s === 'Entwurf ist fertig' ||
-        s === 'Design ist Fertig' ||
-        s === 'Entwurf ist fertig.' ||
-        s === 'Design ist fertig'
-      ) {
+          tick();
+          timers.etaTick = setInterval(tick, 1000);
+          return true;
+        } else {
+          storageManager.saveTimer(null);
+        }
+      }
+      return false;
+    },
+
+    stopHold() {
+      if (timers.holdTick) clearInterval(timers.holdTick);
+      timers.holdTick = null;
+      timers.holdEndsAt = 0;
+    },
+  };
+
+  // ============================================================================
+  // ! UI Updates
+  // ============================================================================
+  const ui = {
+    setPillState(kind, text) {
+      if (elements.pill)
+        elements.pill.setAttribute('data-state', kind || 'idle');
+      if (elements.pillText) elements.pillText.textContent = text || 'Bereit';
+    },
+
+    setPreviewLoading(on) {
+      if (elements.previewLoading) {
+        elements.previewLoading.style.display = on ? 'flex' : 'none';
+      }
+    },
+
+    showPreview(url) {
+      if (!url) {
+        this.showPlaceholder('Keine Vorschau verfügbar');
         return;
       }
-    }
 
-    if (!s) {
-      setPillState('work', 'Bitte warten');
-      return;
-    }
-    if (s === 'Fehlgeschlagen') {
-      setPillState('bad', 'Fehlgeschlagen');
-      return;
-    }
-    if (s === 'Vorschau ist fertig') {
-      setPillState('ok', 'Vorschau ist fertig');
-      return;
-    }
-    if (s === 'Entwurf ist fertig') {
-      setPillState('work', 'Entwurf ist fertig');
-      return;
-    }
-    setPillState('work', s);
-  }
-
-  async function runPriceOnce() {
-    if (!generatorId) return;
-    if (priceRequested) return;
-    priceRequested = true;
-    try {
-      var raw = await postText(ENDPOINTS.price, formDataPayload());
-      var j = tryParseJson(raw);
-      var p = extractPriceValue(j, raw);
-      if (p) setPrice(p);
-    } catch (_e) {
-      priceRequested = true;
-    }
-  }
-
-  async function runCreatorPreviewOnce(reason) {
-    if (!generatorId) return;
-    if (previewDone) return;
-    if (previewInFlight) return;
-
-    previewInFlight = true;
-    try {
-      var fd = formDataPayload({ reason: reason || '' });
-      await postText(ENDPOINTS.preview, fd);
-      previewDone = true;
-    } catch (_e) {
-    } finally {
-      previewInFlight = false;
-    }
-  }
-
-  async function fetchSignOnce(mode) {
-    if (!generatorId) return null;
-    if (pollInFlight) return null;
-    pollInFlight = true;
-    try {
-      var raw = await postText(ENDPOINTS.sign, formDataPayload());
-      var j = tryParseJson(raw);
-
-      var statusText = (extractField(j, 'Status') || '').trim();
-      statusToPill(statusText);
-
-      var signPrice = extractField(j, 'Preis');
-      if (signPrice && !pendingPriceValue) {
-        setPrice(signPrice);
+      // Show loading state
+      this.setPreviewLoading(true);
+      if (elements.previewEmpty) {
+        elements.previewEmpty.style.display = 'none';
       }
 
-      if (statusText === 'Fehlgeschlagen') {
-        stopEta();
-        clearTimers();
-        setPreviewLoading(false);
-        setPreviewOverlay(false);
-        setClickable(false);
-        setSoftBlur(false);
-        showPlaceholder('Fehlgeschlagen. Bitte Neu anfangen');
-        pollInFlight = false;
-        return { failed: true, json: j };
-      }
+      // Update page 2 preview
+      if (elements.previewImg) {
+        // Reset src to force reload if needed, though usually not needed if URL is different
+        elements.previewImg.src = '';
 
-      if (mode === 'entwurf' || mode === 'any') {
-        var entUrl = normalizeImageUrl(extractField(j, 'Entwurf'));
-        if (entUrl) {
-          lastEntUrl = entUrl;
-          setPreviewLoading(false);
-          setClickable(false);
-          setSoftBlur(true);
-          showPreview(entUrl);
-          setPreviewOverlay(
-            true,
-            'Wir finalisieren dein Design',
-            'Bitte warten',
-          );
+        elements.previewImg.onload = () => {
+          // Hide loading and empty states when image loads
+          this.setPreviewLoading(false);
+          if (elements.previewEmpty) {
+            elements.previewEmpty.style.display = 'none';
+          }
+        };
+        elements.previewImg.onerror = () => {
+          this.setPreviewLoading(false);
+          if (elements.previewEmpty) {
+            elements.previewEmpty.textContent =
+              'Fehler beim Laden der Vorschau';
+            elements.previewEmpty.style.display = 'block';
+          }
+          // Keep buttons disabled on error and hide container
+          if (elements.previewActions)
+            elements.previewActions.classList.add('twcss-hidden');
+          if (elements.previewDownload)
+            elements.previewDownload.disabled = true;
+          if (elements.previewShare) elements.previewShare.disabled = true;
+        };
+
+        // Force update the src attribute
+        elements.previewImg.src = url;
+
+        // Show image and enable buttons immediately (don't wait for onload)
+        elements.previewImg.classList.remove('twcss-hidden');
+
+        if (elements.previewActions)
+          elements.previewActions.classList.remove('twcss-hidden');
+        if (elements.previewDownload) elements.previewDownload.disabled = false;
+        if (elements.previewShare) elements.previewShare.disabled = false;
+
+        // Enable continue button when preview is available
+        if (elements.continueBtn && state.current === 'creating') {
+          elements.continueBtn.disabled = false;
         }
       }
 
-      if (mode === 'mock' || mode === 'any') {
-        var mockUrl = normalizeImageUrl(extractField(j, 'Mock Up'));
-        if (mockUrl) {
-          lastMockUrl = mockUrl;
-
-          forceMockLoading = false;
-
-          stopEta();
-          clearTimers();
-
-          setPreviewLoading(false);
-          setSoftBlur(false);
-          setPreviewOverlay(false);
-          setClickable(true);
-
-          applyPriceDisplay();
-
-          if (previewKicker) previewKicker.textContent = 'Vorschau';
-          showPreview(mockUrl);
-
-          state = 'ready';
-          setCtaFromState();
-
-          pollInFlight = false;
-          return { ok: true, mock: true, json: j };
-        }
+      // Update page 3 preview immediately as well
+      if (elements.resultImg) {
+        elements.resultImg.src = url;
+        elements.resultImg.classList.remove('twcss-hidden');
       }
+    },
 
-      pollInFlight = false;
-      return { ok: true, json: j };
-    } catch (_e) {
-      pollInFlight = false;
-      return null;
-    }
-  }
-
-  function startMockPollingWindow() {
-    if (mockPoll) return;
-
-    var hardStart = runStartedAt
-      ? runStartedAt + MOCK_POLL_START_MS
-      : Date.now();
-    var hardEnd = runStartedAt
-      ? runStartedAt + MOCK_POLL_END_MS
-      : Date.now() + 150000;
-
-    mockPollEndsAt = hardEnd;
-
-    if (Date.now() >= hardStart) {
-      fetchSignOnce('mock');
-    }
-
-    mockPoll = setInterval(async function () {
-      if (!generatorId) return;
-      if (Date.now() > mockPollEndsAt) {
-        clearInterval(mockPoll);
-        mockPoll = null;
-        return;
+    showPlaceholder(text) {
+      if (elements.previewEmpty) {
+        elements.previewEmpty.textContent = text || 'Starte zuerst den Entwurf';
+        elements.previewEmpty.style.display = 'block';
       }
-      await fetchSignOnce('mock');
-    }, MOCK_POLL_EVERY_MS);
-  }
-
-  async function startRunCreator() {
-    var d = desc && desc.value ? desc.value.trim() : '';
-    if (d.length < 5) return;
-
-    checkoutReady = false;
-
-    priceReady = false;
-    priceRequested = false;
-    pendingPriceValue = '';
-
-    generatorId = '';
-    lastMockUrl = '';
-    lastEntUrl = '';
-
-    previewDone = false;
-    previewInFlight = false;
-
-    forceMockLoading = false;
-    runStartedAt = Date.now();
-
-    stopEta();
-    stopHold();
-    clearTimers();
-    closeModal();
-
-    setClickable(false);
-    setSoftBlur(false);
-
-    setPriceCalculating();
-    setPillState('work', 'Wir starten…');
-    lockInputs(true);
-
-    state = 'creating';
-    setCtaFromState();
-
-    if (previewKicker) previewKicker.textContent = 'Vorschau';
-    showPlaceholder('Wir erstellen gerade deine Vorschau');
-    setPreviewLoading(true);
-    setFade(false);
-    setPreviewOverlay(true, 'Bitte warten', 'Wir erstellen deine Vorschau');
-
-    startEta('Geschätzte Zeit', TOTAL_MS);
-
-    updateProps();
-
-    try {
-      var raw = await postText(ENDPOINTS.run, formDataPayload());
-      var id = extractIdFromText(raw);
-
-      if (!id) {
-        generatorId = '';
-        updateProps();
-
-        stopEta();
-        clearTimers();
-        setPreviewLoading(false);
-        setPreviewOverlay(false);
-        showPlaceholder('Starte zuerst den Entwurf');
-
-        state = 'init';
-        setCtaFromState();
-        setPillState('bad', 'Es fehlt eine ID, bitte Neu anfangen');
-        lockInputs(true);
-        return;
+      if (elements.previewImg) {
+        elements.previewImg.classList.add('twcss-hidden');
       }
+      // Disable buttons when showing placeholder and hide container
+      if (elements.previewActions)
+        elements.previewActions.classList.add('twcss-hidden');
+      if (elements.previewDownload) elements.previewDownload.disabled = true;
+      if (elements.previewShare) elements.previewShare.disabled = true;
+      this.setPreviewLoading(false);
+    },
 
-      generatorId = id;
-      updateProps();
+    lockInputs(on) {
+      state.locked = !!on;
+    },
 
-      setPillState('work', 'Wird erstellt');
+    lockScroll(on) {
+      try {
+        const value = on ? 'hidden' : '';
+        document.documentElement.style.overflow = value;
+        document.body.style.overflow = value;
+      } catch (error) {}
+    },
 
-      runCreatorPreviewOnce('Sofort nach run-creator');
+    setCta(label, enabled) {
+      if (elements.ctaLabel)
+        elements.ctaLabel.textContent = label || 'Entwurf erstellen';
+      if (elements.ctaBtn) elements.ctaBtn.disabled = !enabled;
+    },
 
-      timerPriceA = setTimeout(function () {
-        setPillState('work', 'Preis wird berechnet');
-        runPriceOnce();
-      }, TIME_PRICE_MS);
-
-      timerEntwurf = setTimeout(async function () {
-        setPillState('work', 'Entwurf wird geladen');
-        await fetchSignOnce('entwurf');
-      }, TIME_ENTWURF_POLL_MS);
-
-      timerMock = setTimeout(function () {
-        setPillState('work', 'Finale Vorschau wird geladen');
-        startMockPollingWindow();
-      }, MOCK_POLL_START_MS);
-    } catch (_e) {
-      generatorId = '';
-      updateProps();
-
-      stopEta();
-      clearTimers();
-
-      setPreviewLoading(false);
-      setPreviewOverlay(false);
-      showPlaceholder('Starte zuerst den Entwurf');
-
-      state = 'init';
-      setCtaFromState();
-      setPillState('bad', 'Fehler beim Start, bitte Neu anfangen');
-      lockInputs(true);
-    }
-  }
-
-  function safeProductJsonUrl(productUrl) {
-    try {
-      var u = new URL(productUrl, window.location.origin);
-      return u.origin + u.pathname.replace(/\/$/, '') + '.js';
-    } catch (_e) {
-      return '';
-    }
-  }
-
-  async function addToCartFromProductUrl(productUrl) {
-    var jsonUrl = safeProductJsonUrl(productUrl);
-    if (!jsonUrl) return { ok: false };
-
-    var pRes = await fetch(jsonUrl, {
-      method: 'GET',
-      credentials: 'same-origin',
-    });
-    if (!pRes.ok) return { ok: false };
-
-    var p = await pRes.json();
-    var variants = p && p.variants ? p.variants : [];
-    if (!variants.length) return { ok: false };
-
-    var v =
-      variants.find(function (x) {
-        return x && x.available;
-      }) || variants[0];
-    if (!v || !v.id) return { ok: false };
-
-    var properties = {
-      Beschreibung: desc && desc.value ? desc.value : '',
-      Oberfläche: finish && finish.value ? finish.value : '',
-      Größe: size && size.value ? size.value : '',
-      Route: routeValue(),
-      'Generator ID': generatorId || '',
-      Preis: pendingPriceValue || '',
-    };
-
-    var payload = { id: v.id, quantity: 1, properties: properties };
-
-    var addRes = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(payload),
-      credentials: 'same-origin',
-    });
-
-    if (!addRes.ok) return { ok: false };
-    return { ok: true };
-  }
-
-  async function startProductModal() {
-    if (!generatorId || !lastMockUrl) return;
-
-    setPillState('work', 'Produkt wird vorbereitet');
-    setModalPreviewLoading(true);
-
-    if (modalLink) {
-      modalLink.href = '#';
-      modalLink.style.display = 'none';
-    }
-    if (modalFoot) modalFoot.textContent = '';
-    if (modalAdd) modalAdd.disabled = true;
-
-    openModalProduct();
-
-    try {
-      var raw = await postText(ENDPOINTS.product, formDataPayload());
-      var j = tryParseJson(raw);
-
-      var productUrl = (
-        extractField(j, 'Product URL') ||
-        extractField(j, 'product_url') ||
-        extractField(j, 'url') ||
-        ''
-      ).trim();
-      var productName = (
-        extractField(j, 'Product Name') ||
-        extractField(j, 'product_name') ||
-        extractField(j, 'name') ||
-        ''
-      ).trim();
-
-      setModalPreviewLoading(false);
-
-      if (!productUrl) {
-        setPillState('bad', 'Produkt Link fehlt');
-        if (modalText) modalText.textContent = 'Kein Product URL erhalten.';
-        if (modalAdd) modalAdd.disabled = false;
-        return;
-      }
-
-      if (modalLink) {
-        modalLink.href = productUrl;
-        modalLink.style.display = 'none';
-      }
-      if (modalFoot) modalFoot.textContent = productUrl;
-
-      setPillState('ok', 'Produkt bereit');
-
-      if (modalText)
-        modalText.textContent = productName ? productName : 'Produkt bereit';
-
-      startHold30();
-
-      checkoutReady = false;
-      if (modalAddLabel) modalAddLabel.textContent = 'Zum Warenkorb hinzufügen';
-      if (modalAdd) {
-        modalAdd.disabled = false;
-        modalAdd.onclick = async function () {
-          if (checkoutReady) {
-            window.location.href = '/checkout';
+    setCtaFromState() {
+      // Only updates CTA button state without navigation
+      switch (state.current) {
+        case 'init': {
+          // If a design has been generated and we're back on page 1, show "Weiter →"
+          if (state.generatedVariantId || state.generatedProductUrl) {
+            this.setCta('Weiter →', true);
             return;
           }
 
-          try {
-            if (modalAdd) modalAdd.setAttribute('data-loading', '1');
-            setModalPreviewLoading(true);
-            setPillState('work', 'Wird in den Warenkorb gelegt');
+          if (
+            state.hasGeneratedDesign &&
+            (state.lastMockUrl || state.lastEntUrl)
+          ) {
+            this.setCta('Weiter →', true);
+            return;
+          }
 
-            var added = await addToCartFromProductUrl(productUrl);
+          const ok = elements.desc?.value?.trim().length >= 5;
 
-            setModalPreviewLoading(false);
-            if (modalAdd) modalAdd.setAttribute('data-loading', '0');
+          // Check for cooldown
+          const cooldownInfo = this.checkCooldown();
+          if (cooldownInfo.isOnCooldown) {
+            this.setCta(cooldownInfo.countdownText, false);
+            return;
+          }
 
-            if (added && added.ok) {
-              checkoutReady = true;
-              setPillState('ok', 'Im Warenkorb');
+          // Default: "Entwurf erstellen"
+          this.setCta('Entwurf erstellen', ok && !state.locked);
+          break;
+        }
+        case 'creating':
+          // Show "Weiter →" when creating (user can navigate to preview page)
+          this.setCta('Weiter →', true);
+          break;
+        case 'ready':
+          // Show "Weiter →" when ready (user can navigate to preview page)
+          this.setCta('Weiter →', true);
+          break;
+        default:
+          this.setCta('Wird erstellt', false);
+      }
+    },
 
-              if (modalText) {
-                modalText.textContent = productName
-                  ? productName
-                  : 'Produkt bereit';
+    checkCooldown() {
+      if (!state.cooldown) {
+        return { isOnCooldown: false, countdownText: '' };
+      }
+
+      const now = Date.now();
+      const remaining = state.cooldown - now;
+
+      if (remaining <= 0) {
+        // Cooldown expired, clear it
+        state.cooldown = null;
+        storageManager.saveState();
+        return { isOnCooldown: false, countdownText: '' };
+      }
+
+      // Calculate minutes and seconds
+      const minutes = Math.floor(remaining / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+      const countdownText = `Bitte warten (${String(minutes).padStart(
+        2,
+        '0',
+      )}:${String(seconds).padStart(2, '0')})`;
+
+      return { isOnCooldown: true, countdownText };
+    },
+
+    navigateTo(page) {
+      if (!elements.slider) return;
+
+      let translateX = '0%';
+      switch (page) {
+        case 1:
+          translateX = '0%';
+          break;
+        case 2:
+          translateX = '-100%';
+          break;
+        case 3:
+          translateX = '-200%';
+          break;
+        default:
+          translateX = '0%';
+      }
+
+      // Set opacity for all pages: fade out inactive pages, fade in active page
+      const pages = [elements.page1, elements.page2, elements.page3];
+      pages.forEach((pageEl, index) => {
+        if (pageEl) {
+          const targetPage = page - 1; // Convert to 0-based index
+          if (index === targetPage) {
+            // Fade in the active page
+            pageEl.style.opacity = '0';
+            pageEl.style.transition = 'opacity 0.3s ease-in-out';
+            // Use requestAnimationFrame to ensure the opacity: 0 is applied before transitioning to 1
+            requestAnimationFrame(() => {
+              if (pageEl) {
+                pageEl.style.opacity = '1';
               }
-              if (modalAddLabel) modalAddLabel.textContent = 'Zum Checkout';
-              return;
+            });
+          } else {
+            // Fade out inactive pages
+            pageEl.style.opacity = '0';
+            pageEl.style.transition = 'opacity 0.3s ease-in-out';
+          }
+        }
+      });
+
+      elements.slider.style.transform = `translateX(${translateX})`;
+    },
+
+    updateUIFromState() {
+      // Navigation
+      switch (state.current) {
+        case 'init':
+          this.navigateTo(1);
+          break;
+        case 'creating':
+          this.navigateTo(2);
+          // Enable continue button when we have a preview
+          if (elements.continueBtn) {
+            elements.continueBtn.disabled =
+              !state.lastMockUrl && !state.lastEntUrl;
+          }
+
+          // If we manually navigate to page 3 while in 'creating', show Confirm button
+          // Actually updateUIFromState is usually called with a reason or implicitly by state change.
+          // But navigation between pages can be manual.
+          // If the user clicks "Continue", navigateTo(3) is called directly.
+          // But updateUIFromState is NOT called.
+          // We need to handle page 3 UI elements.
+          // The navigateTo function handles opacity.
+          // The visibility of buttons on page 3 depends on state.
+          // Since "creating" + mock means we are ready to confirm.
+          // We should update buttons whenever we are on page 3 or about to go there.
+          // But updateUIFromState switches on state.current.
+
+          // If we manually navigate to page 3 while in 'creating', show Confirm button
+          // Actually updateUIFromState is usually called with a reason or implicitly by state change.
+          // But navigation between pages can be manual.
+          // If the user clicks "Continue", navigateTo(3) is called directly.
+          // But updateUIFromState is NOT called.
+          // We need to handle page 3 UI elements.
+          // The navigateTo function handles opacity.
+          // The visibility of buttons on page 3 depends on state.
+          // Since "creating" + mock means we are ready to confirm.
+          // We should update buttons whenever we are on page 3 or about to go there.
+          // But updateUIFromState switches on state.current.
+
+          // If state is creating, we expect to be on page 1 or 2.
+          // But user can click continue to go to 3.
+          // We should handle the buttons visibility:
+          if (elements.confirmBtnWrap)
+            elements.confirmBtnWrap.classList.remove('hidden');
+
+          // Re-enable confirm button explicitly if not confirmed yet
+          if (elements.confirmBtn && !state.designConfirmed) {
+            elements.confirmBtn.disabled = false;
+          }
+
+          // CRITICAL FIX: If product is already generated (e.g. state reset but data persists, or late mockup arrival handled weirdly),
+          // don't show confirm button again.
+          if (
+            state.generatedVariantId ||
+            state.generatedProductUrl ||
+            state.designConfirmed
+          ) {
+            if (elements.confirmBtnWrap)
+              elements.confirmBtnWrap.classList.add('hidden');
+            // Automatically add to cart if we arrive here and product is ready?
+            // Or just show ATC?
+            // If we are navigating to page 3 and product is ready, show ATC.
+            // ATC trigger is removed.
+          }
+
+          break;
+        case 'ready':
+          this.navigateTo(3);
+          if (state.generatedProductName && elements.productName) {
+            elements.productName.textContent = state.generatedProductName;
+          }
+
+          // Show ATC button, Hide Confirm button
+          // ATC trigger is removed
+          if (elements.confirmBtnWrap)
+            elements.confirmBtnWrap.classList.add('hidden');
+
+          // If we have a variant ID, assume product is already created and hide Confirm button forever to prevent duplicates
+          // Actually, if we are in 'ready' state, Confirm button is already hidden by above lines.
+          // But if we are in 'creating' state and mockup arrives late, we might need to check if product is already created.
+
+          if (
+            state.generatedVariantId ||
+            state.generatedProductUrl ||
+            state.designConfirmed
+          ) {
+            if (elements.confirmBtnWrap)
+              elements.confirmBtnWrap.classList.add('hidden');
+            // ATC trigger is removed
+          }
+
+          // Enable continue button when ready
+          if (elements.continueBtn) {
+            elements.continueBtn.disabled = false;
+          }
+          // Update backBtn state (Neu anfangen) based on cooldown
+          if (typeof updateBackBtnState === 'function') {
+            updateBackBtnState();
+          }
+
+          break;
+        default:
+          this.navigateTo(1);
+      }
+
+      // CTA State
+      this.setCtaFromState();
+    },
+
+    applyPriceDisplay() {
+      if (!elements.priceVal) return;
+
+      // If we have a pending price, show it regardless of priceReady flag
+      // because calculate() sets pendingPriceValue but might not always trigger updateUIFromState immediately
+      // Actually priceReady is set by calculate() so it should be fine.
+      // But let's log to see what's happening
+      if (state.pendingPriceValue) {
+        // Always show the calculated price when available
+        elements.priceVal.textContent = state.pendingPriceValue;
+      } else {
+        elements.priceVal.textContent =
+          'Den Preis berechnen wir nach dem Entwurf.';
+      }
+    },
+  };
+
+  // ============================================================================
+  // ! Form & Data Management
+  // ============================================================================
+  const formData = {
+    hasImage() {
+      return !!elements.upload?.files?.[0];
+    },
+
+    routeValue() {
+      return this.hasImage() ? 'Edit' : 'Generate';
+    },
+
+    updateProps() {
+      if (elements.propDesc)
+        elements.propDesc.value = elements.desc?.value || '';
+      if (elements.propFinish)
+        elements.propFinish.value = elements.finish?.value || '';
+      if (elements.propSize)
+        elements.propSize.value = elements.size?.value || '';
+      if (elements.propRoute) elements.propRoute.value = this.routeValue();
+      if (elements.propGen) elements.propGen.value = state.generatorId || '';
+      if (elements.propImg) {
+        elements.propImg.value = elements.upload?.files?.[0]?.name || '';
+      }
+      if (elements.propPrice)
+        elements.propPrice.value = state.pendingPriceValue || '';
+      if (elements.propNote && elements.note)
+        elements.propNote.value = elements.note.value || '';
+      if (elements.propType && elements.type)
+        elements.propType.value = elements.type.value || '';
+      if (elements.propBolts && elements.bolts)
+        elements.propBolts.value = elements.bolts.value || '';
+    },
+
+    createPayload(extra = {}) {
+      const fd = new FormData();
+      const file = elements.upload?.files?.[0];
+
+      // Ensure price is calculated and current before sending
+      const material = elements.finish?.value || '';
+      const size = elements.size?.value || '';
+      const bolts = elements.bolts?.value || '';
+      if (material && size) {
+        priceManager.calculate(material, size, bolts);
+      }
+
+      fd.append('Bild', file || '');
+      fd.append('Beschreibung', elements.desc?.value || '');
+      fd.append('Oberfläche', elements.finish?.value || '');
+      fd.append('Größe', elements.size?.value || '');
+      fd.append('Type', elements.type?.value || '');
+      fd.append('Route', this.routeValue());
+      fd.append('generator_id', state.generatorId || '');
+      fd.append('section_id', sid);
+
+      // Append boolean value for mounting set
+      const hasMountingSet = bolts === 'Befestigung';
+      fd.append('Befestigung', String(hasMountingSet));
+
+      // Pass the calculated price to the API
+      if (state.pendingPriceValue) {
+        fd.append(
+          'Preis',
+          Number(
+            state.pendingPriceValue.replace('€', '').trim().replace(',', '.'),
+          ),
+        );
+      }
+
+      try {
+        Object.keys(extra).forEach((k) => {
+          if (extra[k] != null) fd.append(k, extra[k]);
+        });
+      } catch (error) {}
+
+      return fd;
+    },
+
+    handleUploadUI() {
+      if (!elements.upload || !elements.uploadLabel) return;
+
+      const file = elements.upload.files?.[0];
+      if (file) {
+        elements.uploadLabel.textContent = file.name;
+
+        if (file.type?.startsWith('image')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              if (elements.uploadPrevImg && elements.uploadPrevEmpty) {
+                elements.uploadPrevImg.src = e.target?.result || '';
+                elements.uploadPrevImg.style.display = 'block';
+                elements.uploadPrevEmpty.style.display = 'none';
+              }
+            } catch (error) {}
+          };
+          reader.onerror = (error) => {};
+          try {
+            reader.readAsDataURL(file);
+          } catch (error) {}
+        } else {
+        }
+      } else {
+        elements.uploadLabel.textContent = 'Noch kein Upload';
+        if (elements.uploadPrevImg && elements.uploadPrevEmpty) {
+          elements.uploadPrevImg.removeAttribute('src');
+          elements.uploadPrevImg.style.display = 'none';
+          elements.uploadPrevEmpty.style.display = 'flex';
+        }
+      }
+    },
+  };
+
+  // ============================================================================
+  // ! Price Management
+  // ============================================================================
+  const PRICE_MATRIX = {
+    // Material prices by size (in euros)
+    'Schwarz pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0, // Custom pricing
+    },
+    'Anthrazit pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    'Weiß pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    Gold: {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    'Cortenstahl Optik': {
+      '22,5 cm': 69,
+      '45 cm': 99,
+      '55 cm': 129,
+      '75 cm': 199,
+      '75 cm+': 0,
+    },
+    'Satinierter Edelstahl': {
+      '22,5 cm': 69,
+      '45 cm': 99,
+      '55 cm': 129,
+      '75 cm': 199,
+      '75 cm+': 0,
+    },
+  };
+
+  const calculatePrice = (material, size, bolts = '') => {
+    if (!material || !size) return null;
+
+    const materialPrices = PRICE_MATRIX[material];
+    if (!materialPrices) {
+      return null;
+    }
+
+    const price = materialPrices[size];
+    if (price === undefined) {
+      return null;
+    }
+
+    // Custom pricing for 75 cm+
+    if (price === 0 && size === '75 cm+') {
+      return null; // Return null to indicate custom pricing needed
+    }
+
+    // Add mounting set cost if "Befestigung" is selected
+    let totalPrice = price;
+    if (bolts === 'Befestigung') {
+      totalPrice += 9.45;
+    }
+
+    return totalPrice;
+  };
+
+  const formatPrice = (price) => {
+    if (price === null || price === undefined) return '';
+    // Format with two decimal places and comma as decimal separator
+    const formatted = Number(price).toFixed(2).replace('.', ',');
+    return `${formatted} €`;
+  };
+
+  const priceManager = {
+    calculate(material, size, bolts = '') {
+      const price = calculatePrice(material, size, bolts);
+      const formattedPrice = formatPrice(price);
+
+      if (formattedPrice) {
+        // Valid price calculated
+        state.pendingPriceValue = formattedPrice;
+        state.priceReady = true;
+        storageManager.saveState(); // Save to localStorage
+        formData.updateProps();
+        ui.applyPriceDisplay(); // Update UI immediately
+        if (state.current === 'creating' && !state.lastMockUrl) {
+          ui.setPillState('work', 'Preis berechnet');
+        }
+        return formattedPrice;
+      } else {
+        // No valid price (missing material/size or custom pricing needed)
+        const wasPriceReady = state.priceReady;
+        state.pendingPriceValue = '';
+        state.priceReady = false;
+        storageManager.saveState(); // Save cleared state to localStorage
+        formData.updateProps();
+
+        // Update UI with appropriate message
+        if (!material || !size) {
+          // Missing material or size
+          if (elements.priceVal) {
+            elements.priceVal.textContent =
+              'Den Preis berechnen wir nach dem Entwurf.';
+          }
+        } else {
+          // Custom pricing needed (75 cm+)
+          if (elements.priceVal) {
+            elements.priceVal.textContent = 'Preis auf Anfrage';
+          }
+        }
+        return null;
+      }
+    },
+
+    set(txt) {
+      // Legacy method for backward compatibility - can still accept text
+      const out = normalizePriceDisplay(txt);
+      if (out) {
+        state.pendingPriceValue = out;
+        state.priceReady = true;
+        storageManager.saveState();
+        formData.updateProps();
+        ui.applyPriceDisplay();
+        if (state.current === 'creating' && !state.lastMockUrl) {
+          ui.setPillState('work', 'Preis berechnet');
+        }
+      } else {
+        state.pendingPriceValue = '';
+        state.priceReady = false;
+        formData.updateProps();
+        ui.applyPriceDisplay();
+      }
+    },
+
+    setCalculating() {
+      if (elements.priceVal)
+        elements.priceVal.textContent = 'Preis wird berechnet…';
+      state.pendingPriceValue = '';
+      state.priceReady = false;
+      formData.updateProps();
+    },
+  };
+
+  // ============================================================================
+  // ! API Communication
+  // ============================================================================
+  const api = {
+    async postText(url, fd) {
+      const ctrl = 'AbortController' in window ? new AbortController() : null;
+      let timeoutId = null;
+
+      if (ctrl) {
+        timeoutId = setTimeout(() => {
+          try {
+            ctrl.abort();
+          } catch (error) {}
+        }, TIMING.FETCH_TIMEOUT_MS);
+      }
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          body: fd,
+          signal: ctrl?.signal,
+        });
+
+        if (timeoutId) clearTimeout(timeoutId);
+        const text = await res.text();
+
+        if (!res.ok) {
+          throw new Error(text || `HTTP ${res.status}`);
+        }
+        return text;
+      } catch (error) {
+        if (timeoutId) clearTimeout(timeoutId);
+        if (error.name !== 'AbortError') {
+          // Network error
+        }
+        throw error;
+      }
+    },
+
+    async fetchSignOnce(mode) {
+      if (!state.generatorId || state.pollInFlight) return null;
+
+      state.pollInFlight = true;
+      try {
+        const raw = await this.postText(
+          ENDPOINTS.sign,
+          formData.createPayload(),
+        );
+        const j = tryParseJson(raw);
+        const statusText = (extractField(j, 'Status') || '').trim();
+        if (statusText) {
+        }
+
+        statusManager.updateFromStatus(statusText);
+
+        const signPrice = extractField(j, 'Preis');
+        if (signPrice && !state.pendingPriceValue) {
+          priceManager.set(signPrice);
+        }
+
+        if (statusText === STATUS_TEXTS.FAILED) {
+          this.handleFailure();
+          return { failed: true, json: j };
+        }
+
+        if (mode === 'entwurf' || mode === 'any') {
+          const entUrl = normalizeImageUrl(extractField(j, 'Entwurf'));
+          if (entUrl) {
+            state.lastEntUrl = entUrl;
+            storageManager.saveState();
+            ui.setPreviewLoading(false);
+            ui.showPreview(entUrl);
+          }
+        }
+
+        if (mode === 'mock' || mode === 'any') {
+          const mockUrl = normalizeImageUrl(extractField(j, 'Mock Up'));
+          if (mockUrl) {
+            state.lastMockUrl = mockUrl;
+            state.forceMockLoading = false;
+
+            timerManager.stopEta();
+            timerManager.clearAll();
+
+            ui.setPreviewLoading(false);
+            ui.applyPriceDisplay();
+
+            // Explicitly update preview elements with the new URL
+            ui.showPreview(mockUrl);
+
+            // Also update result image if on page 3 or preparing for it
+            if (elements.resultImg) {
+              elements.resultImg.src = mockUrl;
+              elements.resultImg.classList.remove('twcss-hidden');
             }
 
-            setPillState('ok', 'Weiter');
-            if (modalText)
-              modalText.textContent =
-                'Öffne das Produkt und lege es dort in den Warenkorb.';
-          } catch (_e) {
-            setModalPreviewLoading(false);
-            if (modalAdd) modalAdd.setAttribute('data-loading', '0');
-            setPillState('bad', 'Warenkorb Fehler');
-            if (modalText)
-              modalText.textContent =
-                'Beim Hinzufügen zum Warenkorb ist etwas schiefgelaufen.';
+            // state.current = 'ready';
+
+            // ! RATE LIMIT
+            // Mark that a design has been generated and set cooldown (30 seconds)
+            state.hasGeneratedDesign = true;
+            state.cooldown = Date.now() + 30 * 1000; // 30 seconds from now
+
+            storageManager.saveState();
+
+            ui.setPillState('ok', 'Fertig!');
+
+            // Enable continue button to allow user to proceed to confirmation
+            if (elements.continueBtn) {
+              elements.continueBtn.disabled = false;
+            }
+
+            // Update UI to ensure buttons are correct
+            ui.updateUIFromState();
+            return { ok: true, mock: true, json: j };
           }
-        };
+        }
+
+        return { ok: true, json: j };
+      } catch (error) {
+        return null;
+      } finally {
+        state.pollInFlight = false;
       }
-    } catch (_e) {
-      setModalPreviewLoading(false);
-      setPillState('bad', 'Produkt Fehler');
-      if (modalText)
-        modalText.textContent =
-          'Beim Erstellen des Produkts ist etwas schiefgelaufen.';
-      if (modalAdd) modalAdd.disabled = false;
+    },
+
+    async prepareProduct() {
+      try {
+        const raw = await this.postText(
+          ENDPOINTS.product,
+          formData.createPayload(),
+        );
+        const j = tryParseJson(raw);
+        // Check if we received only a URL (string or object with just url)
+        // Case 1: Simple object { "Product URL": "..." }
+        // Case 2: Array [{ product: ... }]
+
+        let productUrl = '';
+        let productId = '';
+        let variantId = '';
+        let productName = '';
+
+        // Helper to extract from various possible keys
+        const getVal = (obj, keys) => {
+          if (!obj) return '';
+          for (const k of keys) {
+            if (obj[k] != null) return obj[k];
+          }
+          return '';
+        };
+
+        const urlKeys = ['Product URL', 'product_url', 'url'];
+        const idKeys = ['Product ID', 'product_id', 'id'];
+        const varIdKeys = ['Variant ID', 'variant_id', 'variant'];
+        const nameKeys = ['Product Name', 'product_name', 'name', 'title'];
+
+        // Normalize input to work with
+        // If j is array, use first element. If object, use it directly.
+        const data = Array.isArray(j) && j[0] ? j[0] : j;
+
+        // 1. Try to extract from top level or data.product
+        // In the new webhook format: { "Product URL": "...", "product_id": "...", "variant_id": "..." }
+        // These are at the top level of 'data'.
+        // We also support the old format: { product: { ... } } via rootProduct check.
+        const rootProduct = data?.product || data;
+
+        productUrl =
+          getVal(data, urlKeys) || getVal(rootProduct, urlKeys) || '';
+        if (!productUrl && rootProduct?.handle) {
+          productUrl = `/products/${rootProduct.handle}`;
+        }
+        productUrl = String(productUrl).trim();
+
+        productId = getVal(data, idKeys) || getVal(rootProduct, idKeys) || '';
+        if (!productId && rootProduct?.id) productId = rootProduct.id;
+        productId = String(productId).trim();
+
+        variantId =
+          getVal(data, varIdKeys) || getVal(rootProduct, varIdKeys) || '';
+        // If no variant ID found, look inside variants array
+        if (
+          !variantId &&
+          rootProduct?.variants &&
+          Array.isArray(rootProduct.variants) &&
+          rootProduct.variants.length > 0
+        ) {
+          variantId = rootProduct.variants[0].id;
+        }
+        variantId = String(variantId).trim();
+
+        productName =
+          getVal(data, nameKeys) || getVal(rootProduct, nameKeys) || '';
+        productName = String(productName).trim();
+
+        // Fallback: If we only have URL but no IDs, fetch product JSON
+        if (productUrl && (!productId || !variantId)) {
+          try {
+            const jsonUrl = safeProductJsonUrl(productUrl);
+            if (jsonUrl) {
+              const res = await fetch(jsonUrl);
+              if (res.ok) {
+                const pJson = await res.json();
+                const pData = pJson.product || pJson;
+
+                if (!productId) productId = String(pData.id || '').trim();
+                if (!productName)
+                  productName = String(pData.title || '').trim();
+
+                if (!variantId && pData.variants && pData.variants.length > 0) {
+                  variantId = String(pData.variants[0].id).trim();
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
+        if (productName) {
+          state.generatedProductName = productName;
+          if (elements.productName)
+            elements.productName.textContent = productName;
+        }
+
+        if (productUrl) {
+          state.generatedProductUrl = productUrl;
+        }
+
+        if (productId) {
+          state.generatedProductId = productId;
+        }
+
+        if (variantId) {
+          state.generatedVariantId = variantId;
+        }
+
+        storageManager.saveState();
+      } catch (error) {}
+    },
+
+    handleFailure() {
+      timerManager.stopEta();
+      timerManager.clearAll();
+      ui.setPreviewLoading(false);
+      ui.showPlaceholder('Fehlgeschlagen. Bitte Neu anfangen');
+      state.current = 'init';
+      ui.updateUIFromState();
+    },
+
+    startMockPollingWindow() {
+      if (timers.mockPoll) return;
+
+      const hardStart = state.runStartedAt
+        ? state.runStartedAt + TIMING.MOCK_POLL_START_MS
+        : Date.now();
+      const hardEnd = state.runStartedAt
+        ? state.runStartedAt + TIMING.MOCK_POLL_END_MS
+        : Date.now() + 150000;
+
+      timers.mockPollEndsAt = hardEnd;
+
+      if (Date.now() >= hardStart) {
+        this.fetchSignOnce('mock');
+      }
+
+      timers.mockPoll = setInterval(async () => {
+        try {
+          if (!state.generatorId || Date.now() > timers.mockPollEndsAt) {
+            clearInterval(timers.mockPoll);
+            timers.mockPoll = null;
+            return;
+          }
+          await this.fetchSignOnce('mock');
+        } catch (error) {}
+      }, TIMING.MOCK_POLL_EVERY_MS);
+    },
+
+    async startRunCreator() {
+      const descText = elements.desc?.value?.trim() || '';
+      if (descText.length < 5) {
+        return;
+      }
+
+      // Check for cooldown
+      const cooldownInfo = ui.checkCooldown();
+      if (cooldownInfo.isOnCooldown) {
+        ui.setCtaFromState(); // Update button with countdown
+        return;
+      }
+
+      // Reset state
+      Object.assign(state, {
+        current: 'creating',
+        locked: false,
+        generatorId: '',
+        lastMockUrl: '',
+        lastEntUrl: '',
+        priceReady: false,
+        priceRequested: false,
+        pendingPriceValue: '',
+        previewDone: false,
+        previewInFlight: false,
+        forceMockLoading: false,
+        runStartedAt: Date.now(),
+        pollInFlight: false,
+        generatedProductUrl: '',
+        generatedProductName: '',
+      });
+
+      storageManager.saveState();
+
+      storageManager.saveFormData();
+
+      timerManager.stopEta();
+      timerManager.stopHold();
+      timerManager.clearAll();
+
+      priceManager.setCalculating();
+      ui.setPillState('work', 'Wir starten…');
+      ui.lockInputs(true);
+
+      // Verify state is still 'creating' before updating UI
+      if (state.current !== 'creating') {
+        state.current = 'creating';
+        storageManager.saveState();
+      }
+
+      ui.updateUIFromState(); // Navigate to page 2
+      ui.showPlaceholder('Wir erstellen gerade deine Vorschau');
+      ui.setPreviewLoading(true);
+
+      timerManager.startEta('Geschätzte Zeit', TIMING.TOTAL_MS, () => {
+        if (state.current === 'creating' && !state.lastMockUrl) {
+          state.forceMockLoading = true;
+          ui.setPillState('work', 'Vorschau wird geladen');
+          ui.setPreviewLoading(true);
+        }
+      });
+
+      formData.updateProps();
+
+      try {
+        // Validate required variables
+        if (typeof sid === 'undefined') {
+          this.handleFailure();
+          return;
+        }
+
+        let payload;
+        try {
+          payload = formData.createPayload();
+        } catch (payloadError) {
+          throw payloadError;
+        }
+        let raw;
+        try {
+          raw = await this.postText(ENDPOINTS.run, payload);
+        } catch (postError) {
+          throw postError;
+        }
+
+        if (!raw || typeof raw !== 'string') {
+          this.handleFailure();
+          return;
+        }
+
+        let id;
+        try {
+          id = extractIdFromText(raw);
+        } catch (extractError) {
+          throw extractError;
+        }
+
+        if (!id) {
+          this.handleFailure();
+          return;
+        }
+        state.generatorId = id;
+
+        // Ensure state is still 'creating' after receiving generator ID
+        if (state.current !== 'creating') {
+          state.current = 'creating';
+        }
+
+        storageManager.saveState();
+        formData.updateProps();
+        ui.setPillState('work', 'Wird erstellt');
+        timers.entwurf = setTimeout(async () => {
+          try {
+            ui.setPillState('work', 'Entwurf wird geladen');
+            await this.fetchSignOnce('entwurf');
+          } catch (error) {}
+        }, TIMING.TIME_ENTWURF_POLL_MS);
+
+        timers.mock = setTimeout(() => {
+          try {
+            ui.setPillState('work', 'Finale Vorschau wird geladen');
+            this.startMockPollingWindow();
+          } catch (error) {}
+        }, TIMING.MOCK_POLL_START_MS);
+      } catch (error) {
+        this.handleFailure();
+      }
+    },
+
+    // ...
+  };
+
+  // ============================================================================
+  // ! Status Management
+  // ============================================================================
+  const statusManager = {
+    updateFromStatus(statusText) {
+      const s = (statusText || '').trim();
+
+      if (state.forceMockLoading && !state.lastMockUrl) {
+        if (STATUS_TEXTS.DESIGN_READY.includes(s)) return;
+      }
+
+      if (!s) {
+        ui.setPillState('work', 'Bitte warten');
+        return;
+      }
+
+      switch (s) {
+        case STATUS_TEXTS.FAILED:
+          ui.setPillState('bad', 'Fehlgeschlagen');
+          break;
+        case STATUS_TEXTS.PREVIEW_READY:
+          ui.setPillState('ok', 'Vorschau ist fertig');
+          break;
+        case STATUS_TEXTS.DESIGN_READY[0]:
+          ui.setPillState('work', 'Entwurf ist fertig');
+          break;
+        default:
+          ui.setPillState('work', s);
+      }
+    },
+  };
+
+  // ============================================================================
+  // ! Download & Share Helpers
+  // ============================================================================
+  const downloadHelper = {
+    async downloadUrl(url, filename) {
+      if (!url) return;
+      const name =
+        filename ||
+        `steelmonks-vorschau-${state.generatorId || 'download'}.png`;
+
+      try {
+        const res = await fetch(url, { method: 'GET', mode: 'cors' });
+        if (!res.ok) throw new Error('download');
+
+        const blob = await res.blob();
+        const obj = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = obj;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => {
+          try {
+            URL.revokeObjectURL(obj);
+          } catch (error) {}
+        }, 8000);
+      } catch (error) {
+        try {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } catch (fallbackError) {
+          window.open(url, '_blank');
+        }
+      }
+    },
+  };
+
+  const shareHelper = {
+    async shareUrl(url, title = 'Mein personalisiertes Schild') {
+      if (!url) return false;
+
+      // Try Web Share API first (mobile-friendly)
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: title,
+            text: 'Schau dir mein personalisiertes Schild an!',
+            url: url,
+          });
+          return true;
+        } catch (error) {
+          // User cancelled or error occurred
+          if (error.name !== 'AbortError') {
+          } else {
+            return false; // User cancelled
+          }
+        }
+      }
+
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(url);
+        // Show a brief feedback (you could add a toast notification here)
+        if (elements.previewShare) {
+          const originalText = elements.previewShare.textContent;
+          elements.previewShare.textContent = 'Kopiert!';
+          setTimeout(() => {
+            if (elements.previewShare) {
+              elements.previewShare.textContent = originalText;
+            }
+          }, 2000);
+        }
+        return true;
+      } catch (error) {
+        // Last resort: show URL in alert
+        alert(`Link zum Teilen:\n${url}`);
+        return false;
+      }
+    },
+  };
+
+  // ============================================================================
+  // ! Reset & Initialization
+  // ============================================================================
+  const resetAll = () => {
+    try {
+      timerManager.clearAll();
+      timerManager.stopEta();
+      timerManager.stopHold();
+      storageManager.clearState();
+
+      Object.assign(state, {
+        current: 'init',
+        locked: false,
+        generatorId: '',
+        lastMockUrl: '',
+        lastEntUrl: '',
+        priceReady: false,
+        priceRequested: false,
+        pendingPriceValue: '',
+        previewDone: false,
+        previewInFlight: false,
+        forceMockLoading: false,
+        runStartedAt: 0,
+        pollInFlight: false,
+        generatedProductUrl: '',
+        generatedProductName: '',
+        generatedProductId: '',
+        generatedVariantId: '',
+      });
+
+      ui.lockInputs(false);
+      ui.setPillState('idle', 'Bereit');
+
+      if (elements.priceVal) {
+        elements.priceVal.textContent =
+          'Den Preis berechnen wir nach dem Entwurf.';
+      }
+      ui.showPlaceholder('Starte zuerst den Entwurf');
+      ui.setPreviewLoading(false);
+
+      ui.lockScroll(false);
+      ui.updateUIFromState();
+      formData.updateProps();
+    } catch (error) {}
+  };
+
+  // ============================================================================
+  // ! Event Listeners
+  // ============================================================================
+  // Back to configuration button handler (page 2) - navigates to page 1, doesn't change state
+  const backToConfigBtn = document.querySelector('[data-back-to-config]');
+  if (backToConfigBtn) {
+    backToConfigBtn.addEventListener('click', () => {
+      try {
+        // Only navigate to page 1, do NOT change state
+        ui.navigateTo(1);
+        ui.setCtaFromState(); // Update button text based on current state
+      } catch (error) {}
+    });
+  }
+
+  // Close button handlers (using data-close-button attribute)
+  // These will close the modal
+  const closeButtons = document.querySelectorAll('[data-close-button]');
+  closeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      try {
+        // Close the modal
+        document.body.style.overflow = 'auto';
+        elements.smc?.classList.add('smc--scale-down');
+      } catch (error) {}
+    });
+  });
+
+  if (elements.backBtn) {
+    elements.backBtn.addEventListener('click', () => {
+      try {
+        // Check for cooldown - if on cooldown, don't allow reset
+        const cooldownInfo = ui.checkCooldown();
+        if (cooldownInfo.isOnCooldown) {
+          return;
+        }
+        timerManager.clearAll();
+        timerManager.stopEta();
+
+        // Clear all generation state including preview URLs
+        // Reset hasGeneratedDesign so CTA button goes back to "Entwurf erstellen"
+        Object.assign(state, {
+          current: 'init',
+          locked: false,
+          generatorId: '',
+          lastMockUrl: '',
+          lastEntUrl: '',
+          priceReady: false,
+          previewDone: false,
+          runStartedAt: 0,
+          generatedProductUrl: '',
+          generatedProductName: '',
+          generatedProductId: '',
+          generatedVariantId: '',
+          hasGeneratedDesign: false, // Reset so CTA button shows "Entwurf erstellen"
+          designConfirmed: false,
+          // Keep cooldown - rate limit persists across resets
+        });
+        storageManager.saveState();
+
+        ui.lockInputs(false);
+        ui.setPillState('idle', 'Bereit');
+        ui.showPlaceholder('Starte zuerst den Entwurf');
+        ui.setPreviewLoading(false);
+
+        ui.updateUIFromState(); // Navigate to page 1
+        ui.setCtaFromState(); // Update button text back to "Entwurf erstellen"
+      } catch (error) {}
+    });
+  }
+
+  // Function to update backBtn state based on cooldown
+  const updateBackBtnState = () => {
+    if (!elements.backBtn) return;
+
+    // Check for cooldown
+    const cooldownInfo = ui.checkCooldown();
+    if (cooldownInfo.isOnCooldown) {
+      elements.backBtn.disabled = true;
+      // Extract countdown time from the text (format: "Bitte warten (MM:SS)")
+      const countdownMatch =
+        cooldownInfo.countdownText.match(/\((\d{2}:\d{2})\)/);
+      const countdownTime = countdownMatch ? countdownMatch[1] : '';
+
+      // Update button text with countdown
+      if (!elements.backBtn.hasAttribute('data-original-text')) {
+        elements.backBtn.setAttribute('data-original-text', 'Neu anfangen');
+      }
+      elements.backBtn.textContent = `Neu anfangen (${countdownTime})`;
+    } else {
+      elements.backBtn.disabled = false;
+      // Restore original text
+      const originalText =
+        elements.backBtn.getAttribute('data-original-text') || 'Neu anfangen';
+      elements.backBtn.textContent = originalText;
+      elements.backBtn.removeAttribute('data-original-text');
     }
+  };
+
+  // Start a regular interval to update the cooldown timer on the button
+  // This ensures the timer ticks down even if no state changes happen
+  setInterval(() => {
+    // Always update the button state (button is always visible, only disabled during cooldown)
+    updateBackBtnState();
+  }, 1000);
+
+  // Confirm button (Page 3)
+  if (elements.confirmBtn) {
+    elements.confirmBtn.addEventListener('click', async () => {
+      try {
+        // Show loading state on button
+        const originalText = elements.confirmBtn.textContent;
+        elements.confirmBtn.textContent = 'Produkt wird erstellt...';
+        elements.confirmBtn.disabled = true;
+
+        ui.setPillState('work', 'Produkt wird erstellt');
+
+        // Check if product is already created to avoid duplication
+        if (state.generatedVariantId) {
+        } else {
+          // Call prepareProduct only if needed
+          await api.prepareProduct();
+        }
+
+        // Check if product was created successfully (or already existed)
+        if (state.generatedVariantId || state.generatedProductUrl) {
+          // Transition to ready state and confirm design
+          state.current = 'ready';
+          state.designConfirmed = true;
+          storageManager.saveState();
+
+          ui.setPillState('ok', 'Fertig!');
+
+          // Update UI to show/hide buttons based on new state
+          ui.updateUIFromState();
+
+          // Automatically add to cart using the helper function
+          ui.setPillState('work', 'In den Warenkorb...');
+
+          const formData = {
+            id: state.generatedVariantId,
+            quantity: 1,
+          };
+
+          try {
+            const res = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              ui.setPillState('ok', 'Im Warenkorb');
+
+              // Redirect to checkout
+              window.location.href = '/checkout';
+            } else {
+              throw new Error('Failed to add to cart');
+            }
+          } catch (err) {
+            ui.setPillState('bad', 'Fehler');
+            // If add to cart fails, we might want to re-enable the button?
+            // But design is confirmed. Maybe refresh page or contact support?
+            // For now, let's leave it disabled as per "should not be visible anymore"
+          }
+        } else {
+          // Handle failure
+          ui.setPillState('bad', 'Fehler bei Erstellung');
+          elements.confirmBtn.textContent = 'Erneut versuchen';
+          elements.confirmBtn.disabled = false;
+        }
+      } catch (error) {
+        ui.setPillState('bad', 'Fehler');
+        elements.confirmBtn.textContent = 'Erneut versuchen';
+        elements.confirmBtn.disabled = false;
+      }
+    });
   }
 
-  function resetAll() {
-    clearTimers();
-    stopEta();
-    stopHold();
-
-    generatorId = '';
-    lastMockUrl = '';
-    lastEntUrl = '';
-    checkoutReady = false;
-
-    priceReady = false;
-    priceRequested = false;
-    pendingPriceValue = '';
-
-    previewDone = false;
-    previewInFlight = false;
-
-    forceMockLoading = false;
-    runStartedAt = 0;
-
-    setClickable(false);
-    setSoftBlur(false);
-    lockInputs(false);
-
-    setPillState('idle', 'Bereit');
-    if (priceVal)
-      priceVal.textContent = 'Den Preis berechnen wir nach dem Entwurf.';
-
-    if (previewKicker) previewKicker.textContent = 'Vorschau';
-    showPlaceholder('Starte zuerst den Entwurf');
-    setPreviewLoading(false);
-    setPreviewOverlay(false);
-    setFade(false);
-
-    if (modal) modal.setAttribute('aria-hidden', 'true');
-    lockScroll(false);
-
-    state = 'init';
-    setCtaFromState();
-    updateProps();
+  if (elements.upload) {
+    elements.upload.addEventListener('change', () => {
+      try {
+        if (state.locked) {
+          return;
+        }
+        formData.handleUploadUI();
+        formData.updateProps();
+        storageManager.saveFormData();
+      } catch (error) {}
+    });
   }
 
-  if (resetBtn) resetBtn.addEventListener('click', resetAll);
+  if (elements.desc) {
+    elements.desc.addEventListener(
+      'input',
+      () => {
+        try {
+          if (state.locked) return;
+          ui.setCtaFromState();
+          formData.updateProps();
+          storageManager.saveFormData();
+        } catch (error) {}
+      },
+      { passive: true },
+    );
+  }
 
-  if (upload)
-    upload.addEventListener('change', function () {
-      if (locked) return;
-      handleUploadUI();
-      updateProps();
+  if (elements.note) {
+    elements.note.addEventListener(
+      'input',
+      () => {
+        try {
+          if (state.locked) return;
+          formData.updateProps();
+          storageManager.saveFormData();
+        } catch (error) {}
+      },
+      { passive: true },
+    );
+  }
+
+  if (elements.type) {
+    elements.type.addEventListener('change', () => {
+      try {
+        if (state.locked) return;
+        formData.updateProps();
+        storageManager.saveFormData();
+      } catch (error) {}
+    });
+  }
+
+  if (elements.bolts) {
+    elements.bolts.addEventListener('change', () => {
+      try {
+        if (state.locked) return;
+        formData.updateProps();
+        storageManager.saveFormData();
+
+        // Recalculate price when mounting set selection changes
+        const material = elements.finish?.value || '';
+        const size = elements.size?.value || '';
+        const bolts = elements.bolts?.value || '';
+
+        if (material && size) {
+          priceManager.calculate(material, size, bolts);
+        }
+      } catch (error) {}
+    });
+  }
+
+  if (elements.finish) {
+    elements.finish.addEventListener('change', () => {
+      if (state.locked) return;
+      formData.updateProps();
+      storageManager.saveFormData();
+      // Calculate and update price immediately when material changes
+      const material = elements.finish.value || '';
+      const size = elements.size?.value || '';
+      const bolts = elements.bolts?.value || '';
+      priceManager.calculate(material, size, bolts);
+    });
+  }
+
+  if (elements.size) {
+    elements.size.addEventListener('change', () => {
+      try {
+        // Update form data and props immediately
+        formData.updateProps();
+        storageManager.saveFormData();
+
+        // Calculate and update price immediately when size changes
+        const material = elements.finish?.value || '';
+        const size = elements.size.value || '';
+        const bolts = elements.bolts?.value || '';
+
+        if (!material || !size) {
+          return;
+        }
+        priceManager.calculate(material, size, bolts);
+      } catch (error) {}
+    });
+  } else {
+  }
+
+  if (elements.ctaBtn) {
+    elements.ctaBtn.addEventListener('click', () => {
+      try {
+        const buttonText = elements.ctaLabel?.textContent?.trim() || '';
+
+        // If button says "Weiter →", navigate to page 2 (preview)
+        if (buttonText === 'Weiter →' || buttonText.includes('Weiter')) {
+          // If we have a product ready, maybe we should check if we should go to page 3 directly?
+          // If the user clicks "Continue" on page 1, they expect to see the preview.
+          // From page 2 they can go to page 3.
+          // But if they have a product ready, we could allow them to skip.
+          // For now, consistent flow: Page 1 -> Page 2 -> Page 3.
+
+          // Always navigate to page 2 when "Weiter →" is clicked
+          // If state is creating or ready, we can navigate directly
+          if (state.current === 'creating' || state.current === 'ready') {
+            ui.navigateTo(2);
+          } else if (
+            state.current === 'init' &&
+            (state.lastMockUrl || state.lastEntUrl)
+          ) {
+            // If on init but have preview, navigate to page 2
+            ui.navigateTo(2);
+          }
+          return;
+        }
+
+        // Otherwise, if on init state, start creating a new design
+        if (state.current === 'init') {
+          api.startRunCreator();
+        }
+      } catch (error) {}
+    });
+  }
+
+  // Download button (Page 2)
+  if (elements.previewDownload) {
+    elements.previewDownload.addEventListener('click', async () => {
+      try {
+        const url = state.lastMockUrl || state.lastEntUrl;
+        if (!url) {
+          return;
+        }
+        await downloadHelper.downloadUrl(
+          url,
+          `steelmonks-vorschau-${state.generatorId || 'download'}.png`,
+        );
+      } catch (error) {}
+    });
+  }
+
+  // Share button (Page 2)
+  if (elements.previewShare) {
+    elements.previewShare.addEventListener('click', async () => {
+      try {
+        const url = state.lastMockUrl || state.lastEntUrl;
+        if (!url) {
+          return;
+        }
+        await shareHelper.shareUrl(url, 'Mein personalisiertes Schild');
+      } catch (error) {}
+    });
+  }
+
+  // Continue button (Page 2) - navigates to page 3, doesn't change state
+  if (elements.continueBtn) {
+    elements.continueBtn.addEventListener('click', () => {
+      try {
+        // Only navigate to page 3, do NOT change state
+        ui.navigateTo(3);
+      } catch (error) {}
+    });
+  }
+
+  // ============================================================================
+  // ! Animations (Closing, Opening)
+  // ============================================================================
+  if (elements.smc && elements.openBtn) {
+    // Open Button (scales up the whole container: #sm-sign-creator then #smc)
+    elements.openBtn.addEventListener('click', () => {
+      try {
+        elements.smcContainer.style.opacity = '1';
+        elements.smcContainer.style.visibility = 'visible';
+        elements.smc.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+          try {
+            elements.smc.style.transform = 'scale(1)';
+          } catch (error) {}
+        }, 300);
+
+        // Set body overflow to hidden
+        document.body.style.overflow = 'hidden';
+      } catch (error) {}
     });
 
-  if (desc)
-    desc.addEventListener('input', function () {
-      if (locked) return;
-      setCtaFromState();
-      updateProps();
-    });
+    // Close Button handlers (using data-close-button attribute)
+    // This allows multiple close buttons across different pages
+    const closeButtonsForAnimation = document.querySelectorAll(
+      '[data-close-button]',
+    );
+    closeButtonsForAnimation.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        try {
+          elements.smc.style.transform = 'scale(0)';
+          setTimeout(() => {
+            try {
+              elements.smcContainer.style.opacity = '0';
+              elements.smcContainer.style.visibility = 'hidden';
+              elements.smc.setAttribute('aria-hidden', 'true');
+            } catch (error) {}
+          }, 300);
 
-  if (finish)
-    finish.addEventListener('change', function () {
-      if (locked) return;
-      updateProps();
+          // Set body overflow back to auto
+          document.body.style.overflow = 'auto';
+        } catch (error) {}
+      });
     });
-  if (size)
-    size.addEventListener('change', function () {
-      if (locked) return;
-      updateProps();
-    });
+  }
 
-  if (previewArea)
-    previewArea.addEventListener('click', function () {
-      if (!lastMockUrl) return;
-      if (previewArea.getAttribute('data-clickable') !== '1') return;
-      openModalViewer('Vorschau', lastMockUrl);
-    });
+  // ============================================================================
+  // ! Initialization
+  // ============================================================================
+  try {
+    // Try to restore state from localStorage
+    const savedState = storageManager.loadState();
+    const savedFormData = storageManager.loadFormData();
 
-  if (ctaBtn)
-    ctaBtn.addEventListener('click', function () {
-      if (state === 'init') startRunCreator();
-      else if (state === 'ready') startProductModal();
-    });
+    if (savedState) {
+      // Restore state values
+      Object.assign(state, {
+        current: savedState.current || 'init',
+        generatorId: savedState.generatorId || '',
+        lastMockUrl: savedState.lastMockUrl || '',
+        lastEntUrl: savedState.lastEntUrl || '',
+        priceReady: savedState.priceReady || false,
+        pendingPriceValue: savedState.pendingPriceValue || '',
+        previewDone: savedState.previewDone || false,
+        runStartedAt: savedState.runStartedAt || 0,
+        generatedProductUrl: savedState.generatedProductUrl || '',
+        generatedProductName: savedState.generatedProductName || '',
+        generatedProductId: savedState.generatedProductId || '',
+        generatedVariantId: savedState.generatedVariantId || '',
+        hasGeneratedDesign: savedState.hasGeneratedDesign || false,
+        designConfirmed: savedState.designConfirmed || false,
+        cooldown: savedState.cooldown || null,
+      });
 
-  handleUploadUI();
-  updateProps();
-  if (priceVal)
-    priceVal.textContent = 'Den Preis berechnen wir nach dem Entwurf.';
-  setPillState('idle', 'Bereit');
-  if (previewKicker) previewKicker.textContent = 'Vorschau';
-  showPlaceholder('Starte zuerst den Entwurf');
-  setPreviewLoading(false);
-  setSoftBlur(false);
-  setPreviewOverlay(false);
-  setFade(false);
+      // Restore form data if available
+      if (savedFormData) {
+        storageManager.restoreFormData(savedFormData);
+      }
 
-  lockInputs(false);
-  state = 'init';
-  setCtaFromState();
+      // Restore preview if we have a mock URL
+      if (state.lastMockUrl) {
+        ui.showPreview(state.lastMockUrl);
+        if (state.current === 'ready') {
+          ui.setPillState('ok', 'Entwurf ist fertig');
+          // Enable continue button when ready
+          if (elements.continueBtn) {
+            elements.continueBtn.disabled = false;
+          }
+        } else {
+          ui.setPillState('work', 'Wird erstellt');
+        }
+      } else if (state.lastEntUrl) {
+        ui.showPreview(state.lastEntUrl);
+        ui.setPillState('work', 'Wird erstellt');
+      }
+
+      // Start cooldown countdown if on cooldown
+      if (state.cooldown) {
+        const cooldownInterval = setInterval(() => {
+          const cooldownInfo = ui.checkCooldown();
+          if (!cooldownInfo.isOnCooldown) {
+            clearInterval(cooldownInterval);
+            // Update button text when cooldown expires
+            if (state.current === 'init') {
+              ui.setCtaFromState();
+            }
+            // Update backBtn state when cooldown expires
+            if (typeof updateBackBtnState === 'function') {
+              updateBackBtnState();
+            }
+          } else {
+            // Update button text with countdown
+            if (state.current === 'init' && elements.ctaBtn) {
+              ui.setCtaFromState();
+            }
+            // Update backBtn state with countdown (always update since button is always visible)
+            if (typeof updateBackBtnState === 'function') {
+              updateBackBtnState();
+            }
+          }
+        }, 1000); // Update every second
+      }
+
+      // Restore price if available, or calculate if material and size are set
+      if (state.priceReady && state.pendingPriceValue) {
+        ui.applyPriceDisplay();
+      } else if (elements.finish?.value && elements.size?.value) {
+        // Calculate price if we have material and size but no saved price
+        const bolts = elements.bolts?.value || '';
+        priceManager.calculate(
+          elements.finish.value,
+          elements.size.value,
+          bolts,
+        );
+      }
+
+      // Restore timer if available
+      timerManager.restoreEta();
+
+      // Update UI based on restored state
+      ui.updateUIFromState();
+      formData.updateProps();
+
+      // Initialize back button state (always visible, disabled during cooldown)
+      if (typeof updateBackBtnState === 'function') {
+        updateBackBtnState();
+      }
+    } else {
+      // No saved state, initialize normally
+      formData.handleUploadUI();
+      formData.updateProps();
+
+      if (elements.priceVal) {
+        elements.priceVal.textContent =
+          'Den Preis berechnen wir nach dem Entwurf.';
+      }
+
+      ui.setPillState('idle', 'Bereit');
+
+      ui.showPlaceholder('Starte zuerst den Entwurf');
+      ui.setPreviewLoading(false);
+      ui.lockInputs(false);
+      ui.updateUIFromState(); // Should go to page 1
+
+      // Initialize back button state (always visible, disabled during cooldown)
+      if (typeof updateBackBtnState === 'function') {
+        updateBackBtnState();
+      }
+
+      // Calculate price if material and size are available
+      if (elements.finish?.value && elements.size?.value) {
+        const bolts = elements.bolts?.value || '';
+        priceManager.calculate(
+          elements.finish.value,
+          elements.size.value,
+          bolts,
+        );
+      }
+    }
+  } catch (error) {
+    ui.setPillState('bad', 'Initialisierungsfehler');
+  }
 });

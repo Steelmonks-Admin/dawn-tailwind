@@ -6,7 +6,7 @@
 <script>
   var sid = '{{ sid }}';
 </script>
-<script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
+<script src='{{ 'steelmonks-sign-creator-min.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
 {% comment %} ! Open button {% endcomment %}
@@ -431,7 +431,7 @@
 
               <button
                 type='button'
-                class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600 twcss-hidden'
+                class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
                 id='smc-back-btn'
               >
                 Neu anfangen
@@ -447,5 +447,5 @@
 {% comment %} ! TIMER {% endcomment %}
 <div class='smc__eta werkstatt-btn' id='smc-eta' style='display:none'>
   <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
-  <span class='smc__eta-time' id='smc-eta-time'>02:00</span>
+  <span class='smc__eta-time' id='smc-eta-time'>03:00</span>
 </div>

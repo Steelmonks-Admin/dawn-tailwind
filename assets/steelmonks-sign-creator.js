@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ! Configuration & Constants
   // ============================================================================
   const TIMING = {
-    TOTAL_MS: 120000,
+    TOTAL_MS: 180000,
     FETCH_TIMEOUT_MS: 25000,
     TIME_PRICE_MS: 5000,
     TIME_ENTWURF_POLL_MS: 70000,
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generatedVariantId: '',
     hasGeneratedDesign: false,
     designConfirmed: false,
-    cooldown: null, // Timestamp when cooldown expires (current time + 5 minutes)
+    cooldown: null, // Timestamp when cooldown expires (current time + 30 seconds)
   };
 
   // ============================================================================
@@ -1102,16 +1102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateBackBtnState();
           }
 
-          // Unhide back button if product is ready
-          if (
-            state.generatedVariantId ||
-            state.generatedProductUrl ||
-            state.designConfirmed
-          ) {
-            if (elements.backBtn)
-              elements.backBtn.classList.remove('twcss-hidden');
-          }
-
           break;
         default:
           logger.warn('Unknown state in updateUIFromState', {
@@ -1576,9 +1566,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // state.current = 'ready';
 
             // ! RATE LIMIT
-            // Mark that a design has been generated and set cooldown (5 minutes)
+            // Mark that a design has been generated and set cooldown (30 seconds)
             state.hasGeneratedDesign = true;
-            state.cooldown = Date.now() + 5 * 60 * 1000; // 5 minutes from now
+            state.cooldown = Date.now() + 30 * 1000; // 30 seconds from now
 
             storageManager.saveState();
 
@@ -2329,9 +2319,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.showPlaceholder('Starte zuerst den Entwurf');
         ui.setPreviewLoading(false);
 
-        // Hide back button again
-        if (elements.backBtn) elements.backBtn.classList.add('twcss-hidden');
-
         ui.updateUIFromState(); // Navigate to page 1
         ui.setCtaFromState(); // Update button text back to "Entwurf erstellen"
       } catch (error) {
@@ -2343,13 +2330,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to update backBtn state based on cooldown
   const updateBackBtnState = () => {
     if (!elements.backBtn) return;
-
-    // First ensure button visibility based on product state
-    // We only show it if the product is generated
-    // BUT updateBackBtnState might be called repeatedly for timer updates
-    // The visibility logic is mainly in updateUIFromState, but we can reinforce it here?
-    // Actually, updateUIFromState handles the visibility on state change/nav.
-    // This function handles the *content* and *disabled state*.
 
     // Check for cooldown
     const cooldownInfo = ui.checkCooldown();
@@ -2378,14 +2358,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Start a regular interval to update the cooldown timer on the button
   // This ensures the timer ticks down even if no state changes happen
   setInterval(() => {
-    // Only update if we are on page 3 (ready state) or wherever the button is visible
-    // Actually backBtn is on page 3.
-    if (
-      state.current === 'ready' &&
-      (state.generatedVariantId || state.generatedProductUrl)
-    ) {
-      updateBackBtnState();
-    }
+    // Always update the button state (button is always visible, only disabled during cooldown)
+    updateBackBtnState();
   }, 1000);
 
   // Confirm button (Page 3)
@@ -2929,10 +2903,7 @@ document.addEventListener('DOMContentLoaded', () => {
               ui.setCtaFromState();
             }
             // Update backBtn state when cooldown expires
-            if (
-              state.current === 'ready' &&
-              typeof updateBackBtnState === 'function'
-            ) {
+            if (typeof updateBackBtnState === 'function') {
               updateBackBtnState();
             }
           } else {
@@ -2940,11 +2911,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.current === 'init' && elements.ctaBtn) {
               ui.setCtaFromState();
             }
-            // Update backBtn state with countdown
-            if (
-              state.current === 'ready' &&
-              typeof updateBackBtnState === 'function'
-            ) {
+            // Update backBtn state with countdown (always update since button is always visible)
+            if (typeof updateBackBtnState === 'function') {
               updateBackBtnState();
             }
           }
@@ -2970,6 +2938,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update UI based on restored state
       ui.updateUIFromState();
       formData.updateProps();
+
+      // Initialize back button state (always visible, disabled during cooldown)
+      if (typeof updateBackBtnState === 'function') {
+        updateBackBtnState();
+      }
     } else {
       // No saved state, initialize normally
       formData.handleUploadUI();
@@ -2986,6 +2959,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ui.setPreviewLoading(false);
       ui.lockInputs(false);
       ui.updateUIFromState(); // Should go to page 1
+
+      // Initialize back button state (always visible, disabled during cooldown)
+      if (typeof updateBackBtnState === 'function') {
+        updateBackBtnState();
+      }
 
       // Calculate price if material and size are available
       if (elements.finish?.value && elements.size?.value) {
