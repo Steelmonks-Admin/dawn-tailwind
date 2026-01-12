@@ -101,7 +101,7 @@
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
-            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \nErstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das"
+            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
           }
         },
         "slide_xpwLCB": {
@@ -115,17 +115,9 @@
         "slide_fAmNE9": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/download_c7a12765-f1da-42dc-a63d-71800596b5e7.jpg",
-            "overlay_image": "shopify://shop_images/download_f746be23-bf8e-4133-a6c5-87cbe137face.jpg",
-            "prompt": "Beispiel Prompt"
-          }
-        },
-        "slide_RWQfby": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/download_02089dc5-227a-4851-8559-3f42fe437f45.jpg",
-            "overlay_image": "shopify://shop_images/download_d3dd76e9-e62e-4d09-8d3b-6f44c98339ee.jpg",
-            "prompt": "Beispiel Prompt"
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-5-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-5-Last.jpg",
+            "prompt": "Hier wurde folgender Text angegeben: \n\n\"Erstelle mir ein schönes Geschenk für meine Schwester, sie backt gerne Brot, ist eine Sauerteig Mama und hat einen eleganten und edlen Stil.\""
           }
         },
         "slide_9DaD7j": {
@@ -135,6 +127,14 @@
             "overlay_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58_1.jpg",
             "prompt": "Beispiel Prompt"
           }
+        },
+        "slide_RWQfby": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-4-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-4-Last.jpg",
+            "prompt": "Hier wurde nur dieser Text, ohne Bild angegeben: \n\"Ein Schild von der Schlacht um Wien, als die Hussaren den Berg runter kamen in soviel detail und Historischer treue wie geht.\""
+          }
         }
       },
       "block_order": [
@@ -143,8 +143,8 @@
         "slide_xeKJbk",
         "slide_xpwLCB",
         "slide_fAmNE9",
-        "slide_RWQfby",
-        "slide_9DaD7j"
+        "slide_9DaD7j",
+        "slide_RWQfby"
       ],
       "name": "Werkstatt Hero Section",
       "settings": {
