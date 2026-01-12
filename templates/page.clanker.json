@@ -99,9 +99,9 @@
         "slide_xeKJbk": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/download_e400eb97-8dca-4b3f-a9c5-97cddbf2221e.jpg",
-            "overlay_image": "shopify://shop_images/download_342d819c-0546-4b89-9b10-d62b7bda28f3.jpg",
-            "prompt": "Beispiel Prompt"
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
+            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \nErstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das"
           }
         },
         "slide_xpwLCB": {
