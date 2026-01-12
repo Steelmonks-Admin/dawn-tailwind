@@ -99,41 +99,41 @@
         "slide_xeKJbk": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/download_e400eb97-8dca-4b3f-a9c5-97cddbf2221e.jpg",
-            "overlay_image": "shopify://shop_images/download_342d819c-0546-4b89-9b10-d62b7bda28f3.jpg",
-            "prompt": "Beispiel Prompt"
-          }
-        },
-        "slide_xpwLCB": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/download_ecb89219-692c-4063-9c4e-d51c5245b12c.jpg",
-            "overlay_image": "shopify://shop_images/download_0521f1ff-900a-4054-a423-d178241dc083.jpg",
-            "prompt": "Beispiel Prompt"
-          }
-        },
-        "slide_fAmNE9": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/download_c7a12765-f1da-42dc-a63d-71800596b5e7.jpg",
-            "overlay_image": "shopify://shop_images/download_f746be23-bf8e-4133-a6c5-87cbe137face.jpg",
-            "prompt": "Beispiel Prompt"
-          }
-        },
-        "slide_RWQfby": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/download_02089dc5-227a-4851-8559-3f42fe437f45.jpg",
-            "overlay_image": "shopify://shop_images/download_d3dd76e9-e62e-4d09-8d3b-6f44c98339ee.jpg",
-            "prompt": "Beispiel Prompt"
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
+            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
           }
         },
         "slide_9DaD7j": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58.jpg",
-            "overlay_image": "shopify://shop_images/WhatsApp_Image_2026-01-02_at_15.05.58_1.jpg",
-            "prompt": "Beispiel Prompt"
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
+            "prompt": "Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu."
+          }
+        },
+        "slide_xpwLCB": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-6-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-6-Last.jpg",
+            "prompt": "Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen."
+          }
+        },
+        "slide_fAmNE9": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-5-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-5-Last.jpg",
+            "prompt": "Hier wurde folgender Text angegeben: \n\n\"Erstelle mir ein schönes Geschenk für meine Schwester, sie backt gerne Brot, ist eine Sauerteig Mama und hat einen eleganten und edlen Stil.\""
+          }
+        },
+        "slide_RWQfby": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-4-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-4-Last.jpg",
+            "prompt": "Hier wurde nur dieser Text, ohne Bild angegeben: \n\"Ein Schild von der Schlacht um Wien, als die Hussaren den Berg runter kamen in soviel detail und Historischer treue wie geht.\""
           }
         }
       },
@@ -141,10 +141,10 @@
         "slide_V4mdEE",
         "slide_bCMMg3",
         "slide_xeKJbk",
+        "slide_9DaD7j",
         "slide_xpwLCB",
         "slide_fAmNE9",
-        "slide_RWQfby",
-        "slide_9DaD7j"
+        "slide_RWQfby"
       ],
       "name": "Werkstatt Hero Section",
       "settings": {

@@ -90,7 +90,7 @@
           "type": "ai_gen_block_9363973",
           "settings": {
             "number_of_slides": 3,
-            "autoplay_enabled": false,
+            "autoplay_enabled": true,
             "autoplay_speed": 5,
             "arrow_size": 30,
             "arrow_offset_desktop": 20,
