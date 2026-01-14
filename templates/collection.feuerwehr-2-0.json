@@ -33,7 +33,7 @@
             "padding_sides": 20,
             "spacing_between_mobile": 2,
             "padding_top_mobile": 40,
-            "padding_bottom_mobile": 4,
+            "padding_bottom_mobile": 0,
             "padding_sides_mobile": 16
           },
           "blocks": {}
