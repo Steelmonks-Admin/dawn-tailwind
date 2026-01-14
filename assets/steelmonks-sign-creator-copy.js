@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     TOTAL_MS: 180000,
     FETCH_TIMEOUT_MS: 25000,
     TIME_PRICE_MS: 5000,
-    TIME_ENTWURF_POLL_MS: 70000,
-    MOCK_POLL_START_MS: 90000,
-    MOCK_POLL_END_MS: 240000,
-    MOCK_POLL_EVERY_MS: 20000,
+    FIRST_DRAFT_CHECK_DELAY_MS: 70000, // When to first check for draft preview (70 seconds)
+    FINAL_MOCK_CHECK_START_MS: 90000, // When to start checking for final mockup (90 seconds)
+    FINAL_MOCK_CHECK_END_MS: 240000, // When to stop checking for final mockup (240 seconds)
+    FINAL_MOCK_CHECK_INTERVAL_MS: 20000, // How often to check for final mockup (every 20 seconds)
     HOLD_DURATION_MS: 30 * 60 * 1000,
   };
 
@@ -43,6 +43,52 @@ document.addEventListener('DOMContentLoaded', () => {
       'Entwurf ist fertig.',
       'Design ist fertig',
     ],
+  };
+
+  const PRICE_MATRIX = {
+    // Material prices by size (in euros)
+    'Schwarz pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0, // Custom pricing
+    },
+    'Anthrazit pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    'Weiß pulverbeschichtet': {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    Gold: {
+      '22,5 cm': 59,
+      '45 cm': 89,
+      '55 cm': 99,
+      '75 cm': 169,
+      '75 cm+': 0,
+    },
+    'Cortenstahl Optik': {
+      '22,5 cm': 69,
+      '45 cm': 99,
+      '55 cm': 129,
+      '75 cm': 199,
+      '75 cm+': 0,
+    },
+    'Satinierter Edelstahl': {
+      '22,5 cm': 69,
+      '45 cm': 99,
+      '55 cm': 129,
+      '75 cm': 199,
+      '75 cm+': 0,
+    },
   };
 
   // ============================================================================
@@ -445,10 +491,10 @@ document.addEventListener('DOMContentLoaded', () => {
     holdTick: null,
     holdEndsAt: 0,
     priceA: null,
-    entwurf: null,
-    mock: null,
-    mockPoll: null,
-    mockPollEndsAt: 0,
+    draftCheck: null, // Timer for first draft preview check
+    finalMockCheckStart: null, // Timer to start checking for final mockup
+    finalMockCheck: null, // Interval for checking final mockup
+    finalMockCheckEndsAt: 0, // When to stop checking for final mockup
   };
 
   // ============================================================================
@@ -459,9 +505,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (timers.etaTick) clearInterval(timers.etaTick);
       if (timers.holdTick) clearInterval(timers.holdTick);
       if (timers.priceA) clearTimeout(timers.priceA);
-      if (timers.entwurf) clearTimeout(timers.entwurf);
-      if (timers.mock) clearTimeout(timers.mock);
-      if (timers.mockPoll) clearInterval(timers.mockPoll);
+      if (timers.draftCheck) clearTimeout(timers.draftCheck);
+      if (timers.finalMockCheckStart) clearTimeout(timers.finalMockCheckStart);
+      if (timers.finalMockCheck) clearInterval(timers.finalMockCheck);
 
       Object.assign(timers, {
         etaTick: null,
@@ -469,10 +515,10 @@ document.addEventListener('DOMContentLoaded', () => {
         holdTick: null,
         holdEndsAt: 0,
         priceA: null,
-        entwurf: null,
-        mock: null,
-        mockPoll: null,
-        mockPollEndsAt: 0,
+        draftCheck: null,
+        finalMockCheckStart: null,
+        finalMockCheck: null,
+        finalMockCheckEndsAt: 0,
       });
     },
 
@@ -1017,90 +1063,44 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================================
   // ! Price Management
   // ============================================================================
-  const PRICE_MATRIX = {
-    // Material prices by size (in euros)
-    'Schwarz pulverbeschichtet': {
-      '22,5 cm': 59,
-      '45 cm': 89,
-      '55 cm': 99,
-      '75 cm': 169,
-      '75 cm+': 0, // Custom pricing
-    },
-    'Anthrazit pulverbeschichtet': {
-      '22,5 cm': 59,
-      '45 cm': 89,
-      '55 cm': 99,
-      '75 cm': 169,
-      '75 cm+': 0,
-    },
-    'Weiß pulverbeschichtet': {
-      '22,5 cm': 59,
-      '45 cm': 89,
-      '55 cm': 99,
-      '75 cm': 169,
-      '75 cm+': 0,
-    },
-    Gold: {
-      '22,5 cm': 59,
-      '45 cm': 89,
-      '55 cm': 99,
-      '75 cm': 169,
-      '75 cm+': 0,
-    },
-    'Cortenstahl Optik': {
-      '22,5 cm': 69,
-      '45 cm': 99,
-      '55 cm': 129,
-      '75 cm': 199,
-      '75 cm+': 0,
-    },
-    'Satinierter Edelstahl': {
-      '22,5 cm': 69,
-      '45 cm': 99,
-      '55 cm': 129,
-      '75 cm': 199,
-      '75 cm+': 0,
-    },
-  };
-
-  const calculatePrice = (material, size, bolts = '') => {
-    if (!material || !size) return null;
-
-    const materialPrices = PRICE_MATRIX[material];
-    if (!materialPrices) {
-      return null;
-    }
-
-    const price = materialPrices[size];
-    if (price === undefined) {
-      return null;
-    }
-
-    // Custom pricing for 75 cm+
-    if (price === 0 && size === '75 cm+') {
-      return null; // Return null to indicate custom pricing needed
-    }
-
-    // Add mounting set cost if "Befestigung" is selected
-    let totalPrice = price;
-    if (bolts === 'Befestigung') {
-      totalPrice += 9.45;
-    }
-
-    return totalPrice;
-  };
-
-  const formatPrice = (price) => {
-    if (price === null || price === undefined) return '';
-    // Format with two decimal places and comma as decimal separator
-    const formatted = Number(price).toFixed(2).replace('.', ',');
-    return `${formatted} €`;
-  };
-
   const priceManager = {
+    _calculatePrice(material, size, bolts = '') {
+      if (!material || !size) return null;
+
+      const materialPrices = PRICE_MATRIX[material];
+      if (!materialPrices) {
+        return null;
+      }
+
+      const price = materialPrices[size];
+      if (price === undefined) {
+        return null;
+      }
+
+      // Custom pricing for 75 cm+
+      if (price === 0 && size === '75 cm+') {
+        return null; // Return null to indicate custom pricing needed
+      }
+
+      // Add mounting set cost if "Befestigung" is selected
+      let totalPrice = price;
+      if (bolts === 'Befestigung') {
+        totalPrice += 9.45;
+      }
+
+      return totalPrice;
+    },
+
+    _formatPrice(price) {
+      if (price === null || price === undefined) return '';
+      // Format with two decimal places and comma as decimal separator
+      const formatted = Number(price).toFixed(2).replace('.', ',');
+      return `${formatted} €`;
+    },
+
     calculate(material, size, bolts = '') {
-      const price = calculatePrice(material, size, bolts);
-      const formattedPrice = formatPrice(price);
+      const price = this._calculatePrice(material, size, bolts);
+      const formattedPrice = this._formatPrice(price);
 
       if (formattedPrice) {
         // Valid price calculated
@@ -1109,6 +1109,9 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState(); // Save to localStorage
         formData.updateProps();
         ui.applyPriceDisplay(); // Update UI immediately
+        if (state.current === 'creating' && !state.lastMockUrl) {
+          ui.setPillState('work', 'Preis berechnet');
+        }
         return formattedPrice;
       } else {
         // No valid price (missing material/size or custom pricing needed)
@@ -1144,6 +1147,9 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState();
         formData.updateProps();
         ui.applyPriceDisplay();
+        if (state.current === 'creating' && !state.lastMockUrl) {
+          ui.setPillState('work', 'Preis berechnet');
+        }
       } else {
         state.pendingPriceValue = '';
         state.priceReady = false;
@@ -1262,6 +1268,8 @@ document.addEventListener('DOMContentLoaded', () => {
             state.cooldown = Date.now() + 30 * 1000; // 30 seconds from now
 
             storageManager.saveState();
+
+            ui.setPillState('ok', 'Fertig!');
 
             // Enable continue button to allow user to proceed to confirmation
             if (elements.continueBtn) {
@@ -1403,32 +1411,34 @@ document.addEventListener('DOMContentLoaded', () => {
       ui.updateUIFromState();
     },
 
-    startMockPollingWindow() {
-      if (timers.mockPoll) return;
+    startCheckingForFinalMock() {
+      if (timers.finalMockCheck) return;
 
-      const hardStart = state.runStartedAt
-        ? state.runStartedAt + TIMING.MOCK_POLL_START_MS
+      const checkStartTime = state.runStartedAt
+        ? state.runStartedAt + TIMING.FINAL_MOCK_CHECK_START_MS
         : Date.now();
-      const hardEnd = state.runStartedAt
-        ? state.runStartedAt + TIMING.MOCK_POLL_END_MS
+      const checkEndTime = state.runStartedAt
+        ? state.runStartedAt + TIMING.FINAL_MOCK_CHECK_END_MS
         : Date.now() + 150000;
 
-      timers.mockPollEndsAt = hardEnd;
+      timers.finalMockCheckEndsAt = checkEndTime;
 
-      if (Date.now() >= hardStart) {
+      // Check immediately if we're past the start time
+      if (Date.now() >= checkStartTime) {
         this.fetchSignOnce('mock');
       }
 
-      timers.mockPoll = setInterval(async () => {
+      // Set up interval to check for final mockup
+      timers.finalMockCheck = setInterval(async () => {
         try {
-          if (!state.generatorId || Date.now() > timers.mockPollEndsAt) {
-            clearInterval(timers.mockPoll);
-            timers.mockPoll = null;
+          if (!state.generatorId || Date.now() > timers.finalMockCheckEndsAt) {
+            clearInterval(timers.finalMockCheck);
+            timers.finalMockCheck = null;
             return;
           }
           await this.fetchSignOnce('mock');
         } catch (error) {}
-      }, TIMING.MOCK_POLL_EVERY_MS);
+      }, TIMING.FINAL_MOCK_CHECK_INTERVAL_MS);
     },
 
     async startRunCreator() {
@@ -1540,19 +1550,21 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState();
         formData.updateProps();
         ui.setPillState('work', 'Wird erstellt');
-        timers.entwurf = setTimeout(async () => {
+        // Check for draft preview after delay
+        timers.draftCheck = setTimeout(async () => {
           try {
             ui.setPillState('work', 'Entwurf wird geladen');
             await this.fetchSignOnce('entwurf');
           } catch (error) {}
-        }, TIMING.TIME_ENTWURF_POLL_MS);
+        }, TIMING.FIRST_DRAFT_CHECK_DELAY_MS);
 
-        timers.mock = setTimeout(() => {
+        // Start checking for final mockup after delay
+        timers.finalMockCheckStart = setTimeout(() => {
           try {
             // ui.setPillState('work', 'Finale Vorschau wird geladen');
-            this.startMockPollingWindow();
+            this.startCheckingForFinalMock();
           } catch (error) {}
-        }, TIMING.MOCK_POLL_START_MS);
+        }, TIMING.FINAL_MOCK_CHECK_START_MS);
       } catch (error) {
         this.handleFailure();
       }
@@ -1857,13 +1869,13 @@ document.addEventListener('DOMContentLoaded', () => {
           state.designConfirmed = true;
           storageManager.saveState();
 
-          // ui.setPillState('ok', 'Fertig!');
+          ui.setPillState('ok', 'Fertig!');
 
           // Update UI to show/hide buttons based on new state
           ui.updateUIFromState();
 
           // Automatically add to cart using the helper function
-          // ui.setPillState('work', 'In den Warenkorb...');
+          ui.setPillState('work', 'In den Warenkorb...');
 
           const formData = {
             id: state.generatedVariantId,
