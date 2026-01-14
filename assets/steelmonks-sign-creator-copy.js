@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     TIME_ENTWURF_POLL_MS: 70000,
     MOCK_POLL_START_MS: 90000,
     MOCK_POLL_END_MS: 240000,
-    MOCK_POLL_EVERY_MS: 10000,
+    MOCK_POLL_EVERY_MS: 20000,
     HOLD_DURATION_MS: 30 * 60 * 1000,
   };
 
@@ -1109,9 +1109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState(); // Save to localStorage
         formData.updateProps();
         ui.applyPriceDisplay(); // Update UI immediately
-        if (state.current === 'creating' && !state.lastMockUrl) {
-          ui.setPillState('work', 'Preis berechnet');
-        }
         return formattedPrice;
       } else {
         // No valid price (missing material/size or custom pricing needed)
@@ -1147,9 +1144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState();
         formData.updateProps();
         ui.applyPriceDisplay();
-        if (state.current === 'creating' && !state.lastMockUrl) {
-          ui.setPillState('work', 'Preis berechnet');
-        }
       } else {
         state.pendingPriceValue = '';
         state.priceReady = false;
@@ -1217,9 +1211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         const j = tryParseJson(raw);
         const statusText = (extractField(j, 'Status') || '').trim();
-        if (statusText) {
-        }
-
         statusManager.updateFromStatus(statusText);
 
         const signPrice = extractField(j, 'Preis');
@@ -1271,8 +1262,6 @@ document.addEventListener('DOMContentLoaded', () => {
             state.cooldown = Date.now() + 30 * 1000; // 30 seconds from now
 
             storageManager.saveState();
-
-            ui.setPillState('ok', 'Fertig!');
 
             // Enable continue button to allow user to proceed to confirmation
             if (elements.continueBtn) {
@@ -1475,7 +1464,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       storageManager.saveState();
-
       storageManager.saveFormData();
 
       timerManager.stopEta();
@@ -1561,7 +1549,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         timers.mock = setTimeout(() => {
           try {
-            ui.setPillState('work', 'Finale Vorschau wird geladen');
+            // ui.setPillState('work', 'Finale Vorschau wird geladen');
             this.startMockPollingWindow();
           } catch (error) {}
         }, TIMING.MOCK_POLL_START_MS);
@@ -1869,13 +1857,13 @@ document.addEventListener('DOMContentLoaded', () => {
           state.designConfirmed = true;
           storageManager.saveState();
 
-          ui.setPillState('ok', 'Fertig!');
+          // ui.setPillState('ok', 'Fertig!');
 
           // Update UI to show/hide buttons based on new state
           ui.updateUIFromState();
 
           // Automatically add to cart using the helper function
-          ui.setPillState('work', 'In den Warenkorb...');
+          // ui.setPillState('work', 'In den Warenkorb...');
 
           const formData = {
             id: state.generatedVariantId,

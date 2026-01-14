@@ -6,7 +6,7 @@
 <script>
   var sid = '{{ sid }}';
 </script>
-<script src='{{ 'steelmonks-sign-creator-min.js' | asset_url }}' defer='defer'></script>
+<script src='{{ 'steelmonks-sign-creator-copy.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
 {% comment %} ! Open button {% endcomment %}
@@ -34,13 +34,15 @@
   aria-label='Steelmonks Creator'
   style='opacity: 0; visibility: hidden;'
 >
-  {% comment %} ! CLOSE BUTTON {% endcomment %}
-  <button
-    data-close-button
-    class='twcss-absolute twcss-top-8 twcss-right-8 twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 md:twcss-p-8 twcss-shadow-xl twcss-rounded-full twcss-text-lg md:twcss-text-4xl twcss-z-10 twcss-transition-all hover:twcss-bg-brandwhite twcss-duration-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
-  >
-    <div class='twcss-leading-3 twcss-w-3 md:twcss-leading-6 md:twcss-w-6'>&times;</div>
-  </button>
+  {% comment %} ! CLOSE BUTTON + INFO BUTTON {% endcomment %}
+  <div class='twcss-absolute twcss-top-8 twcss-right-8 twcss-flex twcss-gap-4'>
+    <button
+      data-close-button
+      class='twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 md:twcss-p-8 twcss-shadow-xl twcss-rounded-full twcss-text-lg md:twcss-text-4xl twcss-z-10 twcss-transition-all hover:twcss-bg-brandwhite twcss-duration-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
+    >
+      <div class='twcss-leading-3 twcss-w-3 md:twcss-leading-6 md:twcss-w-6'>&times;</div>
+    </button>
+  </div>
 
   {% comment %} ! Navigation & Status Pill {% endcomment %}
   <div class='twcss-flex twcss-gap-4 twcss-justify-center twcss-relative twcss-z-20'>
@@ -118,7 +120,12 @@
             </label>
 
             <div class='smc__file twcss-relative'>
-              <input type='file' id='smc-upload' class='smc__file-input twcss-hidden' accept='image/*'>
+              <input
+                type='file'
+                id='smc-upload'
+                class='smc__file-input twcss-hidden'
+                accept='image/jpg, image/png, image/jpeg, image/webp'
+              >
               <label
                 for='smc-upload'
                 class='smc__file-ui twcss-block twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-dashed twcss-border-gray-400 twcss-cursor-pointer hover:twcss-bg-gray-50 twcss-transition-colors'
