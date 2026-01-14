@@ -46,7 +46,7 @@
       "settings": {
         "logo_position": "middle-left",
         "menu": "main-menu",
-        "menu_type_desktop": "dropdown",
+        "menu_type_desktop": "mega",
         "sticky_header_type": "always",
         "show_line_separator": true,
         "color_scheme": "scheme-8d7d68f1-302f-4d23-badd-0d1e89624e2d",
