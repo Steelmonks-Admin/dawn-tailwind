@@ -209,32 +209,20 @@
         "heading_DiM8kk": {
           "type": "heading",
           "settings": {
-            "heading": "Erzähle etwas über deine Marke",
+            "heading": "Nur bei Steelmonks! Von Deinem Bild zum Schild",
             "heading_size": "h1"
           }
         },
         "text_C86W9k": {
           "type": "text",
           "settings": {
-            "text": "<p>Teile Infos über deine Marke mit deinen Kunden. Beschreibe ein Produkt, kündige etwas an oder heiße Kunden willkommen.</p>"
-          }
-        },
-        "button_wRrUcX": {
-          "type": "button",
-          "settings": {
-            "button_label": "Schaltflächenbeschriftung",
-            "button_link": "",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "text": "<p>Mit Hilfe von neuster Technologien haben wir ein einzigartiges Werkzeug entwickelt, das es Dir ermöglicht von einem Satz oder einem Bild in 2 Minuten ein wunderschönes Geschenk zu erstellen. Schau Dir hier die Beispiele an und probier unsere \"Werkstatt\" aus!</p>"
           }
         }
       },
       "block_order": [
         "heading_DiM8kk",
-        "text_C86W9k",
-        "button_wRrUcX"
+        "text_C86W9k"
       ],
       "name": "t:sections.rich-text.presets.name",
       "settings": {
@@ -242,8 +230,8 @@
         "content_alignment": "center",
         "color_scheme": "",
         "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52,
+        "padding_top": 20,
+        "padding_bottom": 12,
         "enable_smooth_scroll": true
       }
     },
