@@ -104,6 +104,14 @@
             "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
           }
         },
+        "slide_jg6UyD": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Panther-First.jpg",
+            "overlay_image": "shopify://shop_images/Panther-Last.jpg",
+            "prompt": "\"Erstelle mir bitte ein Schild von genau dem Rosenbauer 8x8 aus dem Bild, in der selben exakten Position mit möglichst vielen details, arbeite mir positiven und negativen Formen.\""
+          }
+        },
         "slide_xeKJbk": {
           "type": "slide",
           "settings": {
@@ -141,6 +149,7 @@
         "slide_9DaD7j",
         "slide_V4mdEE",
         "slide_bCMMg3",
+        "slide_jg6UyD",
         "slide_xeKJbk",
         "slide_xpwLCB",
         "slide_fAmNE9",
