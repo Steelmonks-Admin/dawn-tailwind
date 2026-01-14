@@ -80,6 +80,14 @@
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
       "blocks": {
+        "slide_9DaD7j": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
+            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
+          }
+        },
         "slide_V4mdEE": {
           "type": "slide",
           "settings": {
@@ -102,14 +110,6 @@
             "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
             "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
-          }
-        },
-        "slide_9DaD7j": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
-            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
           }
         },
         "slide_xpwLCB": {
@@ -138,10 +138,10 @@
         }
       },
       "block_order": [
+        "slide_9DaD7j",
         "slide_V4mdEE",
         "slide_bCMMg3",
         "slide_xeKJbk",
-        "slide_9DaD7j",
         "slide_xpwLCB",
         "slide_fAmNE9",
         "slide_RWQfby"
