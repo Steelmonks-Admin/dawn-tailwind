@@ -3,12 +3,14 @@
   steelmonks-werkstatt-pop-up.liquid
 
   Werkstatt Pop Up
-  Fixes
-  - Overlay wird per JS in den Body verschoben, damit es garantiert über allem liegt
-  - Seite wird dahinter blurry durch backdrop filter
-  - Kein X Button, nur Alles klar schließt
-  - Text und Labels im Theme Editor editierbar
-  - Mobile optimized, Panel max height, scrollt sauber wenn nötig
+  Ziele
+  - Popup liegt garantiert über allem, weil Overlay per JS an document.body gehängt wird
+  - Werkstatt Seite dahinter wird abgedunkelt UND verschwommen per backdrop filter
+  - Gerundete Ecken, keine komische Outline
+  - Text nicht komplett bold, saubere Typo
+  - Text frei editierbar im Theme Editor per richtext
+  - Mobile pixel perfect, Panel ist max height und scrollt innen sauber
+  - Schließen nur über "Alles klar", optional ESC und Klick aufs Overlay
 {% endcomment %}
 
 {% schema %}
@@ -18,28 +20,40 @@
   "settings": [
     { "type": "checkbox", "id": "enabled", "label": "Popup aktiv", "default": true },
 
+    { "type": "header", "content": "Trigger" },
+    { "type": "checkbox", "id": "show_trigger", "label": "Hinweis Pille anzeigen", "default": true },
+    { "type": "text", "id": "pill_label", "label": "Pille Text", "default": "Werkstatt Hinweis" },
+
     { "type": "header", "content": "Öffnen" },
     { "type": "checkbox", "id": "auto_open", "label": "Automatisch öffnen", "default": true },
     { "type": "range", "id": "open_delay_seconds", "label": "Delay in Sekunden", "default": 1, "min": 0, "max": 20, "step": 1 },
     { "type": "checkbox", "id": "once_per_session", "label": "Nur einmal pro Session anzeigen", "default": true },
+    { "type": "checkbox", "id": "close_on_overlay_click", "label": "Schließen bei Klick außerhalb", "default": true },
+    { "type": "checkbox", "id": "close_on_esc", "label": "Schließen mit ESC", "default": true },
 
-    { "type": "checkbox", "id": "show_trigger", "label": "Hinweis Pille anzeigen", "default": true },
-
-    { "type": "header", "content": "Text" },
-    { "type": "text", "id": "pill_label", "label": "Pille Text", "default": "Werkstatt Hinweis" },
+    { "type": "header", "content": "Inhalt" },
     { "type": "text", "id": "heading", "label": "Überschrift", "default": "Willkommen in der Werkstatt" },
-    { "type": "textarea", "id": "body", "label": "Text", "default": "Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.\n\nBitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.\n\nWenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst und es testest." },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text Inhalt",
+      "default": "<p>Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.</p><p>Bitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst.</p>"
+    },
     { "type": "text", "id": "cta_label", "label": "Button Text", "default": "Alles klar" },
 
-    { "type": "header", "content": "Style" },
-    { "type": "range", "id": "modal_max_width", "label": "Modal Max Breite", "default": 760, "min": 520, "max": 980, "step": 10 },
-    { "type": "range", "id": "radius", "label": "Ecken Radius", "default": 26, "min": 14, "max": 40, "step": 1 },
-    { "type": "range", "id": "blur_strength", "label": "Blur Stärke", "default": 16, "min": 8, "max": 26, "step": 1 },
-    { "type": "range", "id": "overlay_opacity", "label": "Overlay Deckkraft", "default": 24, "min": 10, "max": 55, "step": 1 },
+    { "type": "header", "content": "Design" },
+    { "type": "range", "id": "modal_max_width", "label": "Modal Max Breite", "default": 860, "min": 520, "max": 1040, "step": 10 },
+    { "type": "range", "id": "radius", "label": "Ecken Radius", "default": 28, "min": 16, "max": 44, "step": 1 },
+
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay Dunkelheit", "default": 22, "min": 8, "max": 60, "step": 1 },
+    { "type": "range", "id": "blur_strength", "label": "Hintergrund Blur Stärke", "default": 16, "min": 8, "max": 28, "step": 1 },
 
     { "type": "color", "id": "accent_1", "label": "Akzent Farbe 1", "default": "#ff9800" },
     { "type": "color", "id": "accent_2", "label": "Akzent Farbe 2", "default": "#0044CC" },
-    { "type": "color", "id": "text_color", "label": "Text Farbe", "default": "#0b1220" }
+    { "type": "color", "id": "text_color", "label": "Text Farbe", "default": "#0b1220" },
+
+    { "type": "range", "id": "title_weight", "label": "Titel Gewicht", "default": 900, "min": 600, "max": 950, "step": 10 },
+    { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 650, "min": 400, "max": 850, "step": 10 }
   ],
   "presets": [
     { "name": "Werkstatt Pop Up" }
@@ -48,56 +62,68 @@
 {% endschema %}
 
 {% if section.settings.enabled %}
-<section id="smw-popup-{{ section.id }}" class="smwpop" data-smwpop-root>
+<section id="smw-pop-{{ section.id }}" class="smwpop" data-smwpop-root>
   <style>
-    #smw-popup-{{ section.id }}{
+    #smw-pop-{{ section.id }}{
       --a1: {{ section.settings.accent_1 }};
       --a2: {{ section.settings.accent_2 }};
       --txt: {{ section.settings.text_color }};
+
       --r: {{ section.settings.radius }}px;
       --maxW: {{ section.settings.modal_max_width }}px;
-      --blur: {{ section.settings.blur_strength }}px;
+
       --overlayA: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+      --blur: {{ section.settings.blur_strength }}px;
+
+      --wTitle: {{ section.settings.title_weight }};
+      --wBody: {{ section.settings.body_weight }};
+
+      --shadow: 0 28px 90px rgba(15,23,42,0.22);
+      --shadow2: 0 18px 54px rgba(15,23,42,0.16);
     }
 
-    /* Center pill */
-    #smw-popup-{{ section.id }} .smwpop__triggerWrap{
+    /* Trigger Pille zentriert */
+    #smw-pop-{{ section.id }} .smwpop__triggerWrap{
       display: flex;
       justify-content: center;
-      margin: 12px 0;
+      align-items: center;
+      padding: 10px 12px;
     }
 
-    #smw-popup-{{ section.id }} .smwpop__trigger{
+    #smw-pop-{{ section.id }} .smwpop__trigger{
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
+      padding: 12px 16px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.12);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 18px 46px rgba(15,23,42,0.14);
+      box-shadow: 0 16px 44px rgba(15,23,42,0.12);
       cursor: pointer;
+
       color: rgba(9,10,12,0.82);
-      font-weight: 950;
+      font-weight: 900;
       font-size: 13px;
       letter-spacing: 0.2px;
+
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
+      max-width: 100%;
     }
 
-    #smw-popup-{{ section.id }} .smwpop__trigger:hover{
+    #smw-pop-{{ section.id }} .smwpop__trigger:hover{
       filter: brightness(1.03);
-      background: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.16);
     }
 
-    #smw-popup-{{ section.id }} .smwpop__trigger:active{
+    #smw-pop-{{ section.id }} .smwpop__trigger:active{
       transform: scale(0.985);
     }
 
-    #smw-popup-{{ section.id }} .smwpop__dot{
+    #smw-pop-{{ section.id }} .smwpop__dot{
       width: 10px;
       height: 10px;
       border-radius: 999px;
@@ -106,14 +132,17 @@
       flex: 0 0 auto;
     }
 
-    /* Overlay is moved into body, so these rules target it by id */
+    /* Overlay wird in body verschoben, deshalb global über id gestylt */
     #smw-overlay-{{ section.id }}{
       position: fixed;
       inset: 0;
       z-index: 2147483647;
+
       display: none;
       place-items: center;
-      padding: 18px 14px;
+
+      padding: 20px 14px;
+
       background: rgba(8,10,14, var(--overlayA));
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
@@ -123,22 +152,28 @@
       display: grid;
     }
 
+    /* Panel mit echten runden Ecken und ohne harte Outline */
     #smw-overlay-{{ section.id }} .smwpop__panel{
       width: min(var(--maxW), 100%);
-      max-height: calc(100vh - 36px);
-      overflow: auto;
+      max-height: calc(100vh - 40px);
+      overflow: hidden;
       border-radius: var(--r);
-      position: relative;
-      box-shadow: 0 28px 90px rgba(15,23,42,0.22);
+
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      box-shadow: var(--shadow);
       border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+
+      position: relative;
       isolation: isolate;
 
       transform: translateY(10px) scale(0.995);
       opacity: 0;
       transition: transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 240ms ease;
+
+      outline: none;
     }
 
     #smw-overlay-{{ section.id }}.is-open .smwpop__panel{
@@ -146,17 +181,18 @@
       opacity: 1;
     }
 
+    /* Subtiler Premium Glow statt komische Outline */
     #smw-overlay-{{ section.id }} .smwpop__panel:before{
       content:"";
       position:absolute;
       inset:-1px;
       border-radius: calc(var(--r) + 1px);
-      padding: 1.5px;
-      background: linear-gradient(135deg, rgba(255,152,0,0.65), rgba(0,68,204,0.58));
+      padding: 1.2px;
+      background: linear-gradient(135deg, rgba(255,152,0,0.55), rgba(0,68,204,0.48));
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
-      opacity: 0.92;
+      opacity: 0.55;
       pointer-events:none;
       z-index: 0;
     }
@@ -164,46 +200,66 @@
     #smw-overlay-{{ section.id }} .smwpop__panel:after{
       content:"";
       position:absolute;
-      inset:-26px;
-      border-radius: calc(var(--r) + 28px);
+      inset:-30px;
+      border-radius: calc(var(--r) + 34px);
       background:
-        radial-gradient(60% 60% at 18% 10%, rgba(255,152,0,0.18), rgba(255,255,255,0) 62%),
-        radial-gradient(60% 60% at 86% 10%, rgba(0,68,204,0.16), rgba(255,255,255,0) 62%);
-      opacity: 0.42;
+        radial-gradient(70% 70% at 20% 10%, rgba(255,152,0,0.18), rgba(255,255,255,0) 60%),
+        radial-gradient(70% 70% at 80% 10%, rgba(0,68,204,0.16), rgba(255,255,255,0) 60%);
+      opacity: 0.45;
       filter: blur(18px);
       pointer-events:none;
       z-index: -1;
     }
 
+    /* Inner content */
     #smw-overlay-{{ section.id }} .smwpop__inner{
       position: relative;
       z-index: 1;
-      padding: 22px 22px 18px;
+
+      padding: 24px 24px 18px;
       text-align: center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+
+      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
     }
 
     #smw-overlay-{{ section.id }} .smwpop__title{
       margin: 0;
-      font-weight: 980;
+      font-weight: var(--wTitle);
       letter-spacing: -0.01em;
-      font-size: clamp(18px, 4.2vw, 30px);
-      line-height: 1.12;
+      font-size: clamp(18px, 4.2vw, 34px);
+      line-height: 1.10;
       color: rgba(9,10,12,0.88);
     }
 
-    #smw-overlay-{{ section.id }} .smwpop__text{
-      margin: 12px auto 0;
-      max-width: 56ch;
-      font-weight: 850;
-      font-size: clamp(13px, 3.3vw, 16px);
-      line-height: 1.5;
+    #smw-overlay-{{ section.id }} .smwpop__content{
+      margin: 14px auto 0;
+      max-width: 60ch;
       color: rgba(9,10,12,0.78);
-      white-space: pre-line;
+      font-size: clamp(13px, 3.3vw, 16px);
+      line-height: 1.55;
+      font-weight: var(--wBody);
+    }
+
+    /* Richtext sauber, nicht alles bold */
+    #smw-overlay-{{ section.id }} .smwpop__content p{
+      margin: 0;
+      font-weight: var(--wBody);
+    }
+    #smw-overlay-{{ section.id }} .smwpop__content p + p{
+      margin-top: 12px;
+    }
+    #smw-overlay-{{ section.id }} .smwpop__content strong{
+      font-weight: 900;
+    }
+    #smw-overlay-{{ section.id }} .smwpop__content a{
+      color: rgba(0,68,204,0.92);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 800;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__actions{
-      margin-top: 16px;
+      margin-top: 18px;
       display: flex;
       justify-content: center;
     }
@@ -213,17 +269,22 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 12px 16px;
-      min-width: 160px;
+
+      padding: 12px 18px;
+      width: min(340px, 100%);
+
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.18);
       background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       color: rgba(255,255,255,0.96);
+
       font-weight: 950;
-      font-size: 13px;
+      font-size: 13.5px;
       cursor: pointer;
+
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
       transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease;
+
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
@@ -236,19 +297,22 @@
       transform: scale(0.985);
     }
 
+    /* Fokus ohne hässliche Outline */
+    #smw-overlay-{{ section.id }} .smwpop__cta:focus-visible{
+      outline: 3px solid rgba(0,68,204,0.30);
+      outline-offset: 3px;
+    }
+
+    /* Mobile: enger, aber weiterhin clean */
     @media (max-width: 520px){
+      #smw-overlay-{{ section.id }}{
+        padding: 14px 12px;
+      }
       #smw-overlay-{{ section.id }} .smwpop__inner{
         padding: 18px 16px 16px;
       }
-      #smw-overlay-{{ section.id }} .smwpop__text{
+      #smw-overlay-{{ section.id }} .smwpop__content{
         max-width: 44ch;
-      }
-      #smw-overlay-{{ section.id }} .smwpop__cta{
-        width: 100%;
-        min-width: 0;
-      }
-      #smw-overlay-{{ section.id }}{
-        padding: 14px 12px;
       }
     }
 
@@ -270,17 +334,20 @@
   {% endif %}
 
   {%- comment -%}
-    Overlay markup lives here first, then JS moves it into body to avoid z index fights
+    Overlay wird initial hier gerendert und dann per JS an body verschoben,
+    damit backdrop blur wirklich die komplette Werkstatt Seite dahinter betrifft.
   {%- endcomment -%}
-  <div id="smw-overlay-{{ section.id }}" class="smwpop__overlay" data-smwpop-overlay role="presentation">
+  <div id="smw-overlay-{{ section.id }}" data-smwpop-overlay role="presentation" aria-hidden="true">
     <div class="smwpop__panel" role="dialog" aria-modal="true" aria-label="{{ section.settings.heading | escape }}" tabindex="-1" data-smwpop-panel>
       <div class="smwpop__inner">
         {% if section.settings.heading != blank %}
           <h2 class="smwpop__title">{{ section.settings.heading | escape }}</h2>
         {% endif %}
 
-        {% if section.settings.body != blank %}
-          <p class="smwpop__text">{{ section.settings.body | escape }}</p>
+        {% if section.settings.content != blank %}
+          <div class="smwpop__content">
+            {{ section.settings.content }}
+          </div>
         {% endif %}
 
         <div class="smwpop__actions">
@@ -294,7 +361,7 @@
 
   <script>
     (function(){
-      var root = document.getElementById("smw-popup-{{ section.id }}");
+      var root = document.getElementById("smw-pop-{{ section.id }}");
       if(!root) return;
 
       var overlay = document.getElementById("smw-overlay-{{ section.id }}");
@@ -302,14 +369,17 @@
 
       var panel = overlay.querySelector("[data-smwpop-panel]");
       var openBtns = root.querySelectorAll("[data-smwpop-open]");
-      var closeBtn = overlay.querySelector("[data-smwpop-close]");
+      var closeBtns = overlay.querySelectorAll("[data-smwpop-close]");
 
       var autoOpen = {{ section.settings.auto_open | json }};
       var delayMs = ({{ section.settings.open_delay_seconds | default: 1 }} * 1000) || 0;
       var oncePerSession = {{ section.settings.once_per_session | json }};
+      var closeOnOverlay = {{ section.settings.close_on_overlay_click | json }};
+      var closeOnEsc = {{ section.settings.close_on_esc | json }};
       var seenKey = "smwpop_seen_{{ section.id }}";
 
       var prevBodyOverflow = null;
+      var lastFocus = null;
 
       function moveOverlayToBody(){
         try{
@@ -345,16 +415,27 @@
       function open(){
         moveOverlayToBody();
         if(overlay.classList.contains("is-open")) return;
+
+        lastFocus = document.activeElement;
+
         overlay.classList.add("is-open");
+        overlay.setAttribute("aria-hidden", "false");
         lockScroll();
         setSeen();
+
         if(panel) panel.focus({ preventScroll: true });
       }
 
       function close(){
         if(!overlay.classList.contains("is-open")) return;
+
         overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden", "true");
         unlockScroll();
+
+        if(lastFocus && lastFocus.focus){
+          try{ lastFocus.focus({ preventScroll: true }); }catch(e){}
+        }
       }
 
       openBtns.forEach(function(btn){
@@ -364,21 +445,25 @@
         });
       });
 
-      if(closeBtn){
-        closeBtn.addEventListener("click", function(e){
+      closeBtns.forEach(function(btn){
+        btn.addEventListener("click", function(e){
           e.preventDefault();
           close();
         });
+      });
+
+      if(closeOnOverlay){
+        overlay.addEventListener("click", function(e){
+          if(e.target === overlay) close();
+        });
       }
 
-      overlay.addEventListener("click", function(e){
-        if(e.target === overlay) close();
-      });
-
-      document.addEventListener("keydown", function(e){
-        if(!overlay.classList.contains("is-open")) return;
-        if(e.key === "Escape") close();
-      });
+      if(closeOnEsc){
+        document.addEventListener("keydown", function(e){
+          if(!overlay.classList.contains("is-open")) return;
+          if(e.key === "Escape") close();
+        });
+      }
 
       function maybeAutoOpen(){
         if(!autoOpen) return;
