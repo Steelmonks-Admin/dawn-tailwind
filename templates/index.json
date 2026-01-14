@@ -203,6 +203,116 @@
         "text_color": "#000000"
       }
     },
+    "rich_text_xkqYLg": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_DiM8kk": {
+          "type": "heading",
+          "settings": {
+            "heading": "Erzähle etwas über deine Marke",
+            "heading_size": "h1"
+          }
+        },
+        "text_C86W9k": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Teile Infos über deine Marke mit deinen Kunden. Beschreibe ein Produkt, kündige etwas an oder heiße Kunden willkommen.</p>"
+          }
+        },
+        "button_wRrUcX": {
+          "type": "button",
+          "settings": {
+            "button_label": "Schaltflächenbeschriftung",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_DiM8kk",
+        "text_C86W9k",
+        "button_wRrUcX"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52,
+        "enable_smooth_scroll": true
+      }
+    },
+    "steelmonks_werkstatt_hero_gt9RdT": {
+      "type": "steelmonks-werkstatt-hero",
+      "blocks": {
+        "slide_qRbgPQ": {
+          "type": "slide",
+          "settings": {
+            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
+          }
+        },
+        "slide_RA7jNA": {
+          "type": "slide",
+          "settings": {
+            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
+          }
+        }
+      },
+      "block_order": [
+        "slide_qRbgPQ",
+        "slide_RA7jNA"
+      ],
+      "name": "Werkstatt Carousel",
+      "settings": {
+        "top_spacing": 18,
+        "bottom_spacing": 18,
+        "desc_heading": "Beschreibung",
+        "autoplay": true,
+        "autoplay_seconds": 6
+      }
+    },
+    "rich_text_H9Enym": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_qM9dAA": {
+          "type": "heading",
+          "settings": {
+            "heading": "Zur Steelmonks \"Werkstatt\"",
+            "heading_size": "h1"
+          }
+        },
+        "button_bnfTcm": {
+          "type": "button",
+          "settings": {
+            "button_label": "Erstelle mein eigenes Schild",
+            "button_link": "shopify://pages/werkstatt",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_qM9dAA",
+        "button_bnfTcm"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 12,
+        "padding_bottom": 12,
+        "enable_smooth_scroll": true
+      }
+    },
     "featured_collection_yUM3tM": {
       "type": "featured-collection",
       "name": "t:sections.featured-collection.presets.name",
@@ -727,6 +837,9 @@
     "steelmonks_hero_hub_7JR7Nz",
     "custom_icon_grid_Ahzicm",
     "steelmonks_collection_grid_k79tHx",
+    "rich_text_xkqYLg",
+    "steelmonks_werkstatt_hero_gt9RdT",
+    "rich_text_H9Enym",
     "featured_collection_yUM3tM",
     "image_banner_hWcQdN",
     "image_banner_XjHB9c",
