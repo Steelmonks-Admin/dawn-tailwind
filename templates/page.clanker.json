@@ -17,7 +17,7 @@
         "auto_open": true,
         "open_delay_seconds": 1,
         "once_per_session": true,
-        "show_trigger": true,
+        "show_trigger": false,
         "pill_label": "Werkstatt Hinweis",
         "heading": "Willkommen in der Werkstatt",
         "body": "Unsere Werkstatt ist ein neues Tool, mit dem Du Dein eigenes Metallschild innerhalb 2 Minuten online gestalten kannst.\n\nBitte behalte im Kopf, das ist das erste Werkzeug dieser Art auf der Welt. Es hängt von mehreren externen Diensten ab, darum kann es in seltenen Fällen haken.\n\nWenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. :) \n\nDanke, dass du es testest und offen bleibst.",
