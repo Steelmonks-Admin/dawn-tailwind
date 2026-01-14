@@ -2,12 +2,11 @@
   steelmonks-werkstatt-pop-up.liquid
   Werkstatt Pop Up
 
-  Fixes in this version
-  - Seite dahinter wird deutlich "weggeblendet" mit hellem milchigem Overlay + Blur
-  - Optional Background Filter auf der gesamten Seite, solange Popup offen ist
-  - Panel Ecken garantiert rund, inklusive Border Glow und Inner Content
-  - Kein komischer Rahmen, keine harten Kanten, pixel perfect auf mobile
-  - Text frei editierbar im Theme Editor via richtext
+  Fix
+  - CSS Variablen liegen direkt auf dem Overlay Element, damit sie auch nach body append funktionieren
+  - Overlay ist milchig weiss plus Blur, Seite dahinter wird klar weggedrückt
+  - Panel Ecken wirklich rund, keine harte Outline
+  - Text frei editierbar per richtext
 {% endcomment %}
 
 {% schema %}
@@ -29,11 +28,9 @@
     { "type": "checkbox", "id": "close_on_esc", "label": "Schließen mit ESC", "default": true },
 
     { "type": "header", "content": "Hintergrund Fokus" },
-    { "type": "range", "id": "overlay_white", "label": "Weißes Overlay Stärke", "default": 72, "min": 35, "max": 95, "step": 1 },
-    { "type": "range", "id": "overlay_dim", "label": "Zusätzliche Abdunkelung", "default": 8, "min": 0, "max": 30, "step": 1 },
+    { "type": "range", "id": "overlay_white", "label": "Weißes Overlay Stärke", "default": 80, "min": 35, "max": 95, "step": 1 },
+    { "type": "range", "id": "overlay_dim", "label": "Zusätzliche Abdunkelung", "default": 10, "min": 0, "max": 35, "step": 1 },
     { "type": "range", "id": "blur_strength", "label": "Blur Stärke", "default": 18, "min": 8, "max": 30, "step": 1 },
-    { "type": "range", "id": "bg_saturate", "label": "Hintergrund Sättigung", "default": 70, "min": 0, "max": 100, "step": 1 },
-    { "type": "range", "id": "bg_brightness", "label": "Hintergrund Helligkeit", "default": 110, "min": 90, "max": 140, "step": 1 },
 
     { "type": "header", "content": "Inhalt" },
     { "type": "text", "id": "heading", "label": "Überschrift", "default": "Willkommen in der Werkstatt" },
@@ -61,95 +58,88 @@
 {% endschema %}
 
 {% if section.settings.enabled %}
-<section id="smw-pop-{{ section.id }}" class="smwpop" data-smwpop-root>
+<section id="smw-pop-{{ section.id }}" data-smwpop-root>
   <style>
     #smw-pop-{{ section.id }}{
       --a1: {{ section.settings.accent_1 }};
       --a2: {{ section.settings.accent_2 }};
       --txt: {{ section.settings.text_color }};
-
-      --r: {{ section.settings.radius }}px;
-      --maxW: {{ section.settings.modal_max_width }}px;
-
-      --blur: {{ section.settings.blur_strength }}px;
-
-      --whiteA: {{ section.settings.overlay_white | divided_by: 100.0 }};
-      --dimA: {{ section.settings.overlay_dim | divided_by: 100.0 }};
-
-      --bgSat: {{ section.settings.bg_saturate | divided_by: 100.0 }};
-      --bgBri: {{ section.settings.bg_brightness | divided_by: 100.0 }};
-
-      --wTitle: {{ section.settings.title_weight }};
-      --wBody: {{ section.settings.body_weight }};
-
-      --shadow: 0 28px 90px rgba(15,23,42,0.22);
     }
 
     #smw-pop-{{ section.id }} .smwpop__triggerWrap{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px 12px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:10px 12px;
     }
 
     #smw-pop-{{ section.id }} .smwpop__trigger{
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 16px 44px rgba(15,23,42,0.12);
-      cursor: pointer;
-      color: rgba(9,10,12,0.82);
-      font-weight: 900;
-      font-size: 13px;
-      letter-spacing: 0.2px;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.20);
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      box-shadow:0 16px 44px rgba(15,23,42,0.12);
+      cursor:pointer;
+      color:rgba(9,10,12,0.82);
+      font-weight:900;
+      font-size:13px;
+      letter-spacing:0.2px;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      transition:transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
     }
 
     #smw-pop-{{ section.id }} .smwpop__trigger:hover{
-      filter: brightness(1.03);
-      background: rgba(255,255,255,0.16);
+      filter:brightness(1.03);
+      background:rgba(255,255,255,0.16);
     }
 
     #smw-pop-{{ section.id }} .smwpop__trigger:active{
-      transform: scale(0.985);
+      transform:scale(0.985);
     }
 
     #smw-pop-{{ section.id }} .smwpop__dot{
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
-      box-shadow: 0 0 0 6px rgba(255,152,0,0.18);
-      flex: 0 0 auto;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
+      box-shadow:0 0 0 6px rgba(255,152,0,0.18);
+      flex:0 0 auto;
     }
 
-    /* Overlay lives in body, use id */
+    /* Overlay wird in body verschoben, deshalb muss alles Wichtige hier drauf liegen */
     #smw-overlay-{{ section.id }}{
-      position: fixed;
-      inset: 0;
-      z-index: 2147483647;
+      /* FIX: Variablen sind hier, nicht am Section Wrapper */
+      --r: {{ section.settings.radius }}px;
+      --maxW: {{ section.settings.modal_max_width }}px;
+      --blur: {{ section.settings.blur_strength }}px;
+      --whiteA: {{ section.settings.overlay_white | divided_by: 100.0 }};
+      --dimA: {{ section.settings.overlay_dim | divided_by: 100.0 }};
+      --wTitle: {{ section.settings.title_weight }};
+      --wBody: {{ section.settings.body_weight }};
 
-      display: none;
-      place-items: center;
+      position:fixed;
+      inset:0;
+      z-index:2147483647;
 
-      padding: 20px 14px;
+      display:none;
+      place-items:center;
 
-      /* The key: milky white overlay + subtle dim + blur */
+      padding:20px 14px;
+
+      /* milchig weiss plus Blur, damit die Seite dahinter wirklich ruhig wird */
       background:
         linear-gradient(0deg,
           rgba(255,255,255, var(--whiteA)),
           rgba(255,255,255, var(--whiteA))
         ),
         radial-gradient(1200px 600px at 50% 10%,
-          rgba(255,255,255, 0.18),
+          rgba(255,255,255, 0.22),
           rgba(255,255,255, 0) 70%
         ),
         rgba(8,10,14, var(--dimA));
@@ -159,157 +149,137 @@
     }
 
     #smw-overlay-{{ section.id }}.is-open{
-      display: grid;
+      display:grid;
     }
 
-    /* Panel with guaranteed rounded corners everywhere */
     #smw-overlay-{{ section.id }} .smwpop__panel{
-      width: min(var(--maxW), 100%);
-      max-height: calc(100vh - 40px);
+      width:min(var(--maxW), 100%);
+      max-height:calc(100vh - 40px);
 
-      border-radius: var(--r);
-      overflow: hidden;
+      border-radius:var(--r);
+      overflow:hidden;
 
-      background: rgba(255,255,255,0.18);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      background:rgba(255,255,255,0.18);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
 
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,0.20);
+      box-shadow:0 28px 90px rgba(15,23,42,0.22);
+      border:1px solid rgba(255,255,255,0.20);
 
-      position: relative;
-      isolation: isolate;
+      position:relative;
+      isolation:isolate;
 
-      transform: translateY(10px) scale(0.995);
-      opacity: 0;
-      transition: transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 240ms ease;
-      outline: none;
+      transform:translateY(10px) scale(0.995);
+      opacity:0;
+      transition:transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 240ms ease;
+      outline:none;
     }
 
     #smw-overlay-{{ section.id }}.is-open .smwpop__panel{
-      transform: translateY(0) scale(1);
-      opacity: 1;
+      transform:translateY(0) scale(1);
+      opacity:1;
     }
 
-    /* Border glow, rounded too */
+    /* Glow Border, auch rund */
     #smw-overlay-{{ section.id }} .smwpop__panel:before{
       content:"";
       position:absolute;
       inset:-1px;
-      border-radius: calc(var(--r) + 1px);
-      padding: 1.2px;
-      background: linear-gradient(135deg, rgba(255,152,0,0.55), rgba(0,68,204,0.48));
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0.55;
+      border-radius:calc(var(--r) + 1px);
+      padding:1.2px;
+      background:linear-gradient(135deg, rgba(255,152,0,0.55), rgba(0,68,204,0.48));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:0.55;
       pointer-events:none;
-      z-index: 0;
+      z-index:0;
     }
 
-    #smw-overlay-{{ section.id }} .smwpop__panel:after{
-      content:"";
-      position:absolute;
-      inset:-30px;
-      border-radius: calc(var(--r) + 34px);
-      background:
-        radial-gradient(70% 70% at 20% 10%, rgba(255,152,0,0.18), rgba(255,255,255,0) 60%),
-        radial-gradient(70% 70% at 80% 10%, rgba(0,68,204,0.16), rgba(255,255,255,0) 60%);
-      opacity: 0.45;
-      filter: blur(18px);
-      pointer-events:none;
-      z-index: -1;
-    }
-
-    /* Inner content, still clipped by rounded corners because overflow hidden on panel */
     #smw-overlay-{{ section.id }} .smwpop__inner{
-      position: relative;
-      z-index: 1;
-      padding: 24px 24px 18px;
-      text-align: center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+      position:relative;
+      z-index:1;
+      padding:24px 24px 18px;
+      text-align:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
     }
 
     #smw-overlay-{{ section.id }} .smwpop__title{
-      margin: 0;
-      font-weight: var(--wTitle);
-      letter-spacing: -0.01em;
-      font-size: clamp(18px, 4.2vw, 34px);
-      line-height: 1.10;
-      color: rgba(9,10,12,0.88);
+      margin:0;
+      font-weight:var(--wTitle);
+      letter-spacing:-0.01em;
+      font-size:clamp(18px, 4.2vw, 34px);
+      line-height:1.10;
+      color:rgba(9,10,12,0.88);
     }
 
     #smw-overlay-{{ section.id }} .smwpop__content{
-      margin: 14px auto 0;
-      max-width: 60ch;
-      color: rgba(9,10,12,0.78);
-      font-size: clamp(13px, 3.3vw, 16px);
-      line-height: 1.55;
-      font-weight: var(--wBody);
+      margin:14px auto 0;
+      max-width:60ch;
+      color:rgba(9,10,12,0.78);
+      font-size:clamp(13px, 3.3vw, 16px);
+      line-height:1.55;
+      font-weight:var(--wBody);
     }
 
     #smw-overlay-{{ section.id }} .smwpop__content p{
-      margin: 0;
-      font-weight: var(--wBody);
+      margin:0;
+      font-weight:var(--wBody);
     }
 
     #smw-overlay-{{ section.id }} .smwpop__content p + p{
-      margin-top: 12px;
-    }
-
-    #smw-overlay-{{ section.id }} .smwpop__content strong{
-      font-weight: 900;
+      margin-top:12px;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__actions{
-      margin-top: 18px;
-      display: flex;
-      justify-content: center;
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__cta{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 18px;
-      width: min(340px, 100%);
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
-      color: rgba(255,255,255,0.96);
-      font-weight: 950;
-      font-size: 13.5px;
-      cursor: pointer;
-      box-shadow: 0 20px 56px rgba(0,35,94,0.22);
-      transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 18px;
+      width:min(340px, 100%);
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
+      color:rgba(255,255,255,0.96);
+      font-weight:950;
+      font-size:13.5px;
+      cursor:pointer;
+      box-shadow:0 20px 56px rgba(0,35,94,0.22);
+      transition:transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__cta:hover{
-      filter: brightness(1.03);
+      filter:brightness(1.03);
     }
 
     #smw-overlay-{{ section.id }} .smwpop__cta:active{
-      transform: scale(0.985);
+      transform:scale(0.985);
     }
 
     @media (max-width: 520px){
       #smw-overlay-{{ section.id }}{
-        padding: 14px 12px;
+        padding:14px 12px;
       }
       #smw-overlay-{{ section.id }} .smwpop__inner{
-        padding: 18px 16px 16px;
+        padding:18px 16px 16px;
       }
       #smw-overlay-{{ section.id }} .smwpop__content{
-        max-width: 44ch;
+        max-width:44ch;
       }
     }
 
     @media (prefers-reduced-motion: reduce){
       #smw-overlay-{{ section.id }} *{
-        transition: none !important;
-        animation: none !important;
+        transition:none !important;
+        animation:none !important;
       }
     }
   </style>
@@ -388,16 +358,6 @@
         }catch(e){}
       }
 
-      function setBgFocus(on){
-        try{
-          if(on){
-            document.documentElement.classList.add("smwpop-bgfocus-{{ section.id }}");
-          } else {
-            document.documentElement.classList.remove("smwpop-bgfocus-{{ section.id }}");
-          }
-        }catch(e){}
-      }
-
       function isSeen(){
         if(!oncePerSession) return false;
         try{ return sessionStorage.getItem(seenKey) === "1"; }catch(e){ return false; }
@@ -418,7 +378,6 @@
         overlay.setAttribute("aria-hidden", "false");
         lockScroll();
         setSeen();
-        setBgFocus(true);
 
         if(panel) panel.focus({ preventScroll: true });
       }
@@ -429,7 +388,6 @@
         overlay.classList.remove("is-open");
         overlay.setAttribute("aria-hidden", "true");
         unlockScroll();
-        setBgFocus(false);
 
         if(lastFocus && lastFocus.focus){
           try{ lastFocus.focus({ preventScroll: true }); }catch(e){}
@@ -484,22 +442,8 @@
         if(!e || !e.detail || !e.detail.sectionId) return;
         if(String(e.detail.sectionId) !== String("{{ section.id }}")) return;
         unlockScroll();
-        setBgFocus(false);
         try{ overlay.remove(); }catch(err){}
       });
-
-      /* Optional: background filter on whole page while open */
-      (function(){
-        var styleId = "smw-bgfocus-style-{{ section.id }}";
-        if(document.getElementById(styleId)) return;
-        var st = document.createElement("style");
-        st.id = styleId;
-        st.textContent =
-          "html.smwpop-bgfocus-{{ section.id }} body > *:not(#smw-overlay-{{ section.id }}){" +
-          " filter: saturate(" + ({{ section.settings.bg_saturate | divided_by: 100.0 }}) + ") brightness(" + ({{ section.settings.bg_brightness | divided_by: 100.0 }}) + ");" +
-          " }";
-        document.head.appendChild(st);
-      })();
     })();
   </script>
 </section>
