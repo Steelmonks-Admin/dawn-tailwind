@@ -9,6 +9,26 @@
  */
 {
   "sections": {
+    "steelmonks_werkstatt_pop_up_bmbtaz": {
+      "type": "steelmonks-werkstatt-pop-up",
+      "name": "Werkstatt Hinweis Popup",
+      "settings": {
+        "enabled": true,
+        "auto_open": true,
+        "open_delay_seconds": 1,
+        "once_per_session": true,
+        "heading": "Willkommen in der Werkstatt",
+        "body": "Unsere Werkstatt ist ein neues Tool, mit dem du dein eigenes Metallschild direkt online gestalten kannst.\n\nBitte behalte im Kopf, das ist eines der ersten Tools dieser Art. Es hängt von mehreren externen Diensten ab, darum kann es in seltenen Fällen haken.\n\nWenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du es testest und offen bleibst.",
+        "cta_label": "Alles klar",
+        "modal_max_width": 860,
+        "radius": 26,
+        "blur_strength": 14,
+        "overlay_opacity": 22,
+        "accent_1": "#ff9800",
+        "accent_2": "#0044CC",
+        "text_color": "#0b1220"
+      }
+    },
     "rich_text_rMFFNh": {
       "type": "rich-text",
       "blocks": {
@@ -520,6 +540,7 @@
     }
   },
   "order": [
+    "steelmonks_werkstatt_pop_up_bmbtaz",
     "rich_text_rMFFNh",
     "blocks_nMQt6z",
     "steelmonks_sign_creator_possibilites_3nqh9k",
