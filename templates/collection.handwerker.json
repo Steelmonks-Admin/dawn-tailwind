@@ -1,0 +1,355 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "176794548922873341": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_4706151_r9wEXg": {
+          "type": "ai_gen_block_4706151",
+          "settings": {
+            "headline": "Personalisierte Geschenke für Handwerker aus Metall",
+            "headline_font": "poppins_n6",
+            "headline_bold": true,
+            "headline_color": "#090a0c",
+            "headline_size_desktop": 40,
+            "headline_size_mobile": 18,
+            "subheadline": "<p>Zunftschilder, Anhänger, Pins & Anstecker<br/>Über <strong>50 Zünfte</strong> · individuell personalisierbar</p>",
+            "subheadline_font": "poppins_n4",
+            "subheadline_bold": false,
+            "subheadline_color": "#090a0c",
+            "subheadline_size_desktop": 22,
+            "subheadline_size_mobile": 14,
+            "spacing_between_desktop": 16,
+            "padding_top": 40,
+            "padding_bottom": 4,
+            "padding_sides": 20,
+            "spacing_between_mobile": 12,
+            "padding_top_mobile": 40,
+            "padding_bottom_mobile": 4,
+            "padding_sides_mobile": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_4706151_r9wEXg"
+      ],
+      "settings": {}
+    },
+    "17678838077d500cac": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_b5331c5_zxJXh4": {
+          "type": "ai_gen_block_b5331c5",
+          "settings": {
+            "icon_1": "shopify://shop_images/461f6e77-d4de-4c09-81cd-e6483a180c49_clipped_rev_1.png",
+            "text_1": "Wetterfest & langlebig",
+            "icon_2": "shopify://shop_images/bf139964-1b70-4ff1-bf8b-f10e8a3db6f0_clipped_rev_1.png",
+            "text_2": "Jedes Schild ein Unikat",
+            "icon_3": "shopify://shop_images/ae50845a-089a-4c71-8e99-50610412f49f_clipped_rev_1.png",
+            "text_3": "10.000+  5 Sterne Bewertungen",
+            "icon_4": "shopify://shop_images/8f808c0d-6f77-49c6-8a1a-b1113946e5c9_clipped_rev_1_1.png",
+            "text_4": "Größe, Farbe & Text nach Wunsch",
+            "desktop_columns": "4",
+            "mobile_columns": "2",
+            "desktop_width_percent": 100,
+            "gap": 24,
+            "icon_text_gap": 12,
+            "icon_size": 44,
+            "text_size": 13,
+            "text_color": "#090a0c",
+            "background_color": "#fafaff",
+            "border_radius": 0,
+            "padding_vertical": 20,
+            "padding_horizontal": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_b5331c5_zxJXh4"
+      ],
+      "settings": {}
+    },
+    "17678852240e5b61e4": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "17679594536d892333": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_9363973_rFzih4": {
+          "type": "ai_gen_block_9363973",
+          "settings": {
+            "number_of_slides": 3,
+            "autoplay_enabled": false,
+            "autoplay_speed": 5,
+            "arrow_size": 30,
+            "arrow_offset_desktop": 20,
+            "arrow_offset_mobile": 10,
+            "arrow_background_color": "#090a0c",
+            "arrow_hover_background_color": "#0044cc",
+            "arrow_icon_color": "#fafaff",
+            "heading_size_desktop": 42,
+            "subheading_size_desktop": 24,
+            "heading_subheading_gap_desktop": 0,
+            "text_padding_top_desktop": 10,
+            "text_padding_bottom_desktop": 0,
+            "text_padding_horizontal_desktop": 20,
+            "heading_size_mobile": 20,
+            "subheading_size_mobile": 16,
+            "heading_subheading_gap_mobile": 0,
+            "text_padding_top_mobile": 10,
+            "text_padding_bottom_mobile": 0,
+            "text_padding_horizontal_mobile": 15,
+            "heading_weight": "700",
+            "subheading_weight": "400",
+            "heading_color": "#000000",
+            "subheading_color": "#000000",
+            "slide_1_desktop_image": "shopify://shop_images/AI.jpg",
+            "slide_1_mobile_image": "shopify://shop_images/2d9a2aee-9e3f-452f-8aa3-a9f54553a1a6.png",
+            "slide_1_heading": "Zunftschild aus Metall",
+            "slide_1_subheading": "Mit Name, Zunft & Wunschtext",
+            "slide_2_desktop_image": "shopify://shop_images/Unbenannt-3-lang.jpg",
+            "slide_2_mobile_image": "shopify://shop_images/Unbenannt-2.jpg",
+            "slide_2_heading": "Dein Zunft-Anhänger",
+            "slide_2_subheading": "Mit deinem Name & Zunftzeichen",
+            "slide_3_desktop_image": "shopify://shop_images/Unbenannt-3--lang-pin.jpg",
+            "slide_3_mobile_image": "shopify://shop_images/Unbenannt-2.-neu.jpg",
+            "slide_3_heading": "Trage dein Stolz",
+            "slide_3_subheading": "Zunft & Handwerker Pins\n aus Metall",
+            "slide_4_heading": "",
+            "slide_4_subheading": "",
+            "slide_5_heading": "",
+            "slide_5_subheading": "",
+            "slide_6_heading": "",
+            "slide_6_subheading": "",
+            "slide_7_heading": "",
+            "slide_7_subheading": "",
+            "slide_8_heading": "",
+            "slide_8_subheading": "",
+            "slide_9_heading": "",
+            "slide_9_subheading": "",
+            "slide_10_heading": "",
+            "slide_10_subheading": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_9363973_rFzih4"
+      ],
+      "settings": {}
+    },
+    "1767957390bd96ece4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_6fecc59_LCkRHh": {
+          "type": "ai_gen_block_6fecc59",
+          "settings": {
+            "product_1": "zunftschild-geschenk-fur-handwerker-personalisiert",
+            "product_2": "zunft-anhanger-geschenk-fur-handwerker",
+            "product_3": "lecker-bierchen-anstecker",
+            "badge_text": "Bestseller",
+            "badge_background": "#0044cc",
+            "badge_text_color": "#ffffff",
+            "corner_radius": 12,
+            "container_height": 500,
+            "background_color": "#fafaff",
+            "card_background": "#ffffff",
+            "text_color": "#090a0c",
+            "price_color": "#0044cc",
+            "desktop_padding_top": 0,
+            "desktop_padding_bottom": 0,
+            "desktop_padding_sides": 40,
+            "desktop_gap": 24,
+            "mobile_padding_top": 0,
+            "mobile_padding_bottom": 8,
+            "mobile_padding_sides": 20,
+            "mobile_gap": 16,
+            "dot_color": "#0044cc"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_6fecc59_LCkRHh"
+      ],
+      "settings": {}
+    },
+    "17458178119bf2149e": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "disabled": true,
+      "custom_css": [
+        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "banner": {
+      "type": "main-collection-banner",
+      "disabled": true,
+      "settings": {
+        "show_collection_description": false,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "1767887385169ffa1f": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_61505c1_prPVj6": {
+          "type": "ai_gen_block_61505c1",
+          "settings": {
+            "usp_1": "Für draußen geeignet",
+            "usp_2": "Wetterfest",
+            "usp_3": "Individuell gefertigt",
+            "background_color": "#fafaff",
+            "text_color": "#090a0c",
+            "icon_color": "#0044cc",
+            "padding_vertical": 10,
+            "spacing": 30,
+            "text_size": 14,
+            "icon_size": 24,
+            "spacing_mobile": 15,
+            "text_size_mobile": 8,
+            "icon_size_mobile": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_61505c1_prPVj6"
+      ],
+      "settings": {}
+    },
+    "featured_collection_NUC336": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "geschenke-fur-handwerker",
+        "products_to_show": 20,
+        "columns_desktop": 4,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "disabled": true,
+      "settings": {
+        "products_per_page": 16,
+        "columns_desktop": 4,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": false,
+        "filter_type": "horizontal",
+        "enable_sorting": false,
+        "columns_mobile": "2",
+        "padding_top": 12,
+        "padding_bottom": 36,
+        "enable_search": true
+      }
+    },
+    "1748939636340fa12c": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_qbXqpk": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_qbXqpk"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "accordions_8JABj6": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_aiPqBR": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Straßenschilder von Steelmonks",
+            "content": "<h1>Der Charme der Straßenschilder von Steelmonks</h1><p>Design und Ästhetik sind heute sehr wichtig. Die Dinge, die unser Zuhause von draußen zeigen, sollten stilvoll und modern sein.</p><p>Unsere Straßenschilder und Hausnummern sind mehr als nur nützlich. Sie machen eine starke Aussage über Design. Sie geben Deinem Zuhause Persönlichkeit und einen eigenen Stil.</p><h2>Moderne Eleganz trifft auf Funktionalität</h2><p>Unsere Straßenschilder mit Straßennamen dienen nicht nur als Wegweiser. Sie stehen auch für moderne Eleganz und sind durch ihre geraden Linien und einfachen Buchstaben gekennzeichnet.</p><p>Die Designs fallen auf und sehen bei modernen Gebäuden und Wohnhäusern gut aus. Sie verleihen jedem Haus einen besonderen Stil und verschönern es.</p><p>Für Liebhaber des klassischen Stils bieten wir ebenfalls eine Vielzahl von Optionen. Unsere traditionellen Straßenschilder sind elegant und etwas nostalgisch. Sie passen gut zu alten Gebäuden und gefallen Menschen, die den Vintage-Stil mögen.</p><h2>Häufig gestellte Fragen</h2><p><strong>Aus welchem Material sind die Schilder?</strong></p><p>Unsere Schilder werden aus 2mm dickem Stahl gefertigt, mittels Laser geschnitten und in verschiedenen Farben pulverbeschichtet. Wir haben eine Auswahl klassischer Farben wie Schwarz, Anthrazit, Weiß und Gold. Außerdem bieten wir Edelstahl und Cortenstahl an, die für ihre einzigartige Rostoptik bekannt sind. Für spezielle Farbwünsche stehen wir Dir gerne zur Verfügung.</p><p><strong>Wie wird das Schild befestigt?</strong></p><p>Jedes unserer Straßenschilder kommt mit einem unsichtbaren Befestigungsset, das eine einfache und sichere Montage ermöglicht. Die Schilder werden mittels rückseitig angebrachter Bolzen und Gewindestiften befestigt und stehen elegant ca. 8mm von der Wand ab.</p><p><strong>Sind individuelle Designs möglich?</strong></p><p>Absolut! Wir sind stolz darauf, maßgeschneiderte Straßenschilder anzufertigen, die deinen individuellen Vorstellungen entsprechen. Von Gravurtechniken über eine breite Auswahl an Schriftarten bis hin zur Farbgestaltung – wir setzen Deine Wünsche um. Auch Logos und Firmenschilder sind realisierbar, um Deinem Geschäft mehr Sichtbarkeit zu verleihen.</p><p><strong>Pflege und Erhaltung der Straßenschilder</strong></p><p>Damit Deine neuen Straßenschilder und Hausnummern auch lange schön bleiben, ist die richtige Pflege wichtig. Unsere Schilder bestehen aus hochwertigen, langlebigen Materialien. Trotzdem kann ein bisschen Pflege ihre Lebensdauer und ihr Aussehen verbessern.</p><p>Wir raten dazu, Schilder aus pulverbeschichtetem Stahl manchmal abzuwischen. Nutze dafür ein weiches, feuchtes Tuch. So entfernst Du Staub und Schmutz.</p><p>Vermeide aggressive Reinigungsmittel, die die Oberfläche beschädigen könnten. Edelstahl- und Cortenstahl-Schilder profitieren von einer leichten Reinigung, um ihre einzigartige Patina zu bewahren. Bei spezifischen Pflegeanweisungen für Dein individuelles Schild, zögere nicht, uns zu kontaktieren.</p><p><strong>Schnelle Lieferung direkt zu Dir nach Hause</strong></p><p>Wir verstehen, dass Du es kaum erwarten kannst, Dein Zuhause mit unseren modernen Straßenschildern zu verschönern. Deshalb sorgen wir für eine schnelle Bearbeitung Deiner Bestellung. Die meisten unserer Produkte sind innerhalb von ca. 1 Woche nach Bestelleingang versandbereit.</p><p>Wir arbeiten mit zuverlässigen Versandpartnern zusammen, um sicherzustellen, dass Dein Schild sicher und schnell bei Dir ankommt. Sollte es zu Verzögerungen kommen oder Du eine dringende Lieferung benötigst, kontaktiert uns bitte. Wir sind stets bemüht, eine Lösung zu finden, die Deinen Bedürfnissen entspricht.</p><h2>Qualität, die überzeugt</h2><p>Bei <a href=\"https://steelmonks.com/collections/beliebt\" target=\"_blank\">Steelmonks</a> legen wir größten Wert auf die Qualität und Langlebigkeit unserer Produkte. Wir verwenden nur hochwertige Materialien für unsere Straßenschilder. Sie müssen strenge Qualitätsprüfungen bestehen.</p><p>Wenn du eines unserer Produkte wählst, bekommst du ein schönes Straßenschild, welches sehr lange halten wird. Sie können Deinem Zuhause das gewisse Extra verleihen, das es verdient. Besuche unsere Seite für Sonderanfertigungen, um mehr über individuelle Gestaltungsmöglichkeiten zu erfahren.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_aiPqBR"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "padding_top": 0,
+        "padding_bottom": 40,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    }
+  },
+  "order": [
+    "176794548922873341",
+    "17678838077d500cac",
+    "17678852240e5b61e4",
+    "17679594536d892333",
+    "1767957390bd96ece4",
+    "17458178119bf2149e",
+    "banner",
+    "1767887385169ffa1f",
+    "featured_collection_NUC336",
+    "product-grid",
+    "1748939636340fa12c",
+    "accordions_8JABj6"
+  ]
+}

@@ -1,0 +1,450 @@
+{% comment %}
+  steelmonks-werkstatt-pop-up.liquid
+  Werkstatt Pop Up
+
+  Fix
+  - CSS Variablen liegen direkt auf dem Overlay Element, damit sie auch nach body append funktionieren
+  - Overlay ist milchig weiss plus Blur, Seite dahinter wird klar weggedrückt
+  - Panel Ecken wirklich rund, keine harte Outline
+  - Text frei editierbar per richtext
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Werkstatt Pop Up",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Popup aktiv", "default": true },
+
+    { "type": "header", "content": "Trigger" },
+    { "type": "checkbox", "id": "show_trigger", "label": "Hinweis Pille anzeigen", "default": true },
+    { "type": "text", "id": "pill_label", "label": "Pille Text", "default": "Werkstatt Hinweis" },
+
+    { "type": "header", "content": "Öffnen" },
+    { "type": "checkbox", "id": "auto_open", "label": "Automatisch öffnen", "default": true },
+    { "type": "range", "id": "open_delay_seconds", "label": "Delay in Sekunden", "default": 1, "min": 0, "max": 20, "step": 1 },
+    { "type": "checkbox", "id": "once_per_session", "label": "Nur einmal pro Session anzeigen", "default": true },
+    { "type": "checkbox", "id": "close_on_overlay_click", "label": "Schließen bei Klick außerhalb", "default": true },
+    { "type": "checkbox", "id": "close_on_esc", "label": "Schließen mit ESC", "default": true },
+
+    { "type": "header", "content": "Hintergrund Fokus" },
+    { "type": "range", "id": "overlay_white", "label": "Weißes Overlay Stärke", "default": 80, "min": 35, "max": 95, "step": 1 },
+    { "type": "range", "id": "overlay_dim", "label": "Zusätzliche Abdunkelung", "default": 10, "min": 0, "max": 35, "step": 1 },
+    { "type": "range", "id": "blur_strength", "label": "Blur Stärke", "default": 18, "min": 8, "max": 30, "step": 1 },
+
+    { "type": "header", "content": "Inhalt" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Willkommen in der Werkstatt" },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text Inhalt",
+      "default": "<p>Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.</p><p>Bitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst.</p>"
+    },
+    { "type": "text", "id": "cta_label", "label": "Button Text", "default": "Alles klar" },
+
+    { "type": "header", "content": "Design" },
+    { "type": "range", "id": "modal_max_width", "label": "Modal Max Breite", "default": 860, "min": 520, "max": 1040, "step": 10 },
+    { "type": "range", "id": "radius", "label": "Ecken Radius", "default": 30, "min": 16, "max": 50, "step": 1 },
+    { "type": "color", "id": "accent_1", "label": "Akzent Farbe 1", "default": "#ff9800" },
+    { "type": "color", "id": "accent_2", "label": "Akzent Farbe 2", "default": "#0044CC" },
+    { "type": "color", "id": "text_color", "label": "Text Farbe", "default": "#0b1220" },
+    { "type": "range", "id": "title_weight", "label": "Titel Gewicht", "default": 900, "min": 600, "max": 950, "step": 10 },
+    { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 650, "min": 400, "max": 850, "step": 10 }
+  ],
+  "presets": [
+    { "name": "Werkstatt Pop Up" }
+  ]
+}
+{% endschema %}
+
+{% if section.settings.enabled %}
+<section id="smw-pop-{{ section.id }}" data-smwpop-root>
+  <style>
+    #smw-pop-{{ section.id }}{
+      --a1: {{ section.settings.accent_1 }};
+      --a2: {{ section.settings.accent_2 }};
+      --txt: {{ section.settings.text_color }};
+    }
+
+    #smw-pop-{{ section.id }} .smwpop__triggerWrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:10px 12px;
+    }
+
+    #smw-pop-{{ section.id }} .smwpop__trigger{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.20);
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      box-shadow:0 16px 44px rgba(15,23,42,0.12);
+      cursor:pointer;
+      color:rgba(9,10,12,0.82);
+      font-weight:900;
+      font-size:13px;
+      letter-spacing:0.2px;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      transition:transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
+    }
+
+    #smw-pop-{{ section.id }} .smwpop__trigger:hover{
+      filter:brightness(1.03);
+      background:rgba(255,255,255,0.16);
+    }
+
+    #smw-pop-{{ section.id }} .smwpop__trigger:active{
+      transform:scale(0.985);
+    }
+
+    #smw-pop-{{ section.id }} .smwpop__dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,152,0,0.95), rgba(0,68,204,0.90));
+      box-shadow:0 0 0 6px rgba(255,152,0,0.18);
+      flex:0 0 auto;
+    }
+
+    /* Overlay wird in body verschoben, deshalb muss alles Wichtige hier drauf liegen */
+    #smw-overlay-{{ section.id }}{
+      /* FIX: Variablen sind hier, nicht am Section Wrapper */
+      --r: {{ section.settings.radius }}px;
+      --maxW: {{ section.settings.modal_max_width }}px;
+      --blur: {{ section.settings.blur_strength }}px;
+      --whiteA: {{ section.settings.overlay_white | divided_by: 100.0 }};
+      --dimA: {{ section.settings.overlay_dim | divided_by: 100.0 }};
+      --wTitle: {{ section.settings.title_weight }};
+      --wBody: {{ section.settings.body_weight }};
+
+      position:fixed;
+      inset:0;
+      z-index:2147483647;
+
+      display:none;
+      place-items:center;
+
+      padding:20px 14px;
+
+      /* milchig weiss plus Blur, damit die Seite dahinter wirklich ruhig wird */
+      background:
+        linear-gradient(0deg,
+          rgba(255,255,255, var(--whiteA)),
+          rgba(255,255,255, var(--whiteA))
+        ),
+        radial-gradient(1200px 600px at 50% 10%,
+          rgba(255,255,255, 0.22),
+          rgba(255,255,255, 0) 70%
+        ),
+        rgba(8,10,14, var(--dimA));
+
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+
+    #smw-overlay-{{ section.id }}.is-open{
+      display:grid;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__panel{
+      width:min(var(--maxW), 100%);
+      max-height:calc(100vh - 40px);
+
+      border-radius:var(--r);
+      overflow:hidden;
+
+      background:rgba(255,255,255,0.18);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+
+      box-shadow:0 28px 90px rgba(15,23,42,0.22);
+      border:1px solid rgba(255,255,255,0.20);
+
+      position:relative;
+      isolation:isolate;
+
+      transform:translateY(10px) scale(0.995);
+      opacity:0;
+      transition:transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 240ms ease;
+      outline:none;
+    }
+
+    #smw-overlay-{{ section.id }}.is-open .smwpop__panel{
+      transform:translateY(0) scale(1);
+      opacity:1;
+    }
+
+    /* Glow Border, auch rund */
+    #smw-overlay-{{ section.id }} .smwpop__panel:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:calc(var(--r) + 1px);
+      padding:1.2px;
+      background:linear-gradient(135deg, rgba(255,152,0,0.55), rgba(0,68,204,0.48));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:0.55;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__inner{
+      position:relative;
+      z-index:1;
+      padding:24px 24px 18px;
+      text-align:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__title{
+      margin:0;
+      font-weight:var(--wTitle);
+      letter-spacing:-0.01em;
+      font-size:clamp(18px, 4.2vw, 34px);
+      line-height:1.10;
+      color:rgba(9,10,12,0.88);
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__content{
+      margin:14px auto 0;
+      max-width:60ch;
+      color:rgba(9,10,12,0.78);
+      font-size:clamp(13px, 3.3vw, 16px);
+      line-height:1.55;
+      font-weight:var(--wBody);
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__content p{
+      margin:0;
+      font-weight:var(--wBody);
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__content p + p{
+      margin-top:12px;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__actions{
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px 18px;
+      width:min(340px, 100%);
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
+      color:rgba(255,255,255,0.96);
+      font-weight:950;
+      font-size:13.5px;
+      cursor:pointer;
+      box-shadow:0 20px 56px rgba(0,35,94,0.22);
+      transition:transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__cta:hover{
+      filter:brightness(1.03);
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__cta:active{
+      transform:scale(0.985);
+    }
+
+    @media (max-width: 520px){
+      #smw-overlay-{{ section.id }}{
+        padding:14px 12px;
+      }
+      #smw-overlay-{{ section.id }} .smwpop__inner{
+        padding:18px 16px 16px;
+      }
+      #smw-overlay-{{ section.id }} .smwpop__content{
+        max-width:44ch;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #smw-overlay-{{ section.id }} *{
+        transition:none !important;
+        animation:none !important;
+      }
+    }
+  </style>
+
+  {% if section.settings.show_trigger %}
+    <div class="smwpop__triggerWrap">
+      <button type="button" class="smwpop__trigger" data-smwpop-open>
+        <span class="smwpop__dot" aria-hidden="true"></span>
+        <span>{{ section.settings.pill_label | escape }}</span>
+      </button>
+    </div>
+  {% endif %}
+
+  <div id="smw-overlay-{{ section.id }}" data-smwpop-overlay role="presentation" aria-hidden="true">
+    <div class="smwpop__panel" role="dialog" aria-modal="true" aria-label="{{ section.settings.heading | escape }}" tabindex="-1" data-smwpop-panel>
+      <div class="smwpop__inner">
+        {% if section.settings.heading != blank %}
+          <h2 class="smwpop__title">{{ section.settings.heading | escape }}</h2>
+        {% endif %}
+
+        {% if section.settings.content != blank %}
+          <div class="smwpop__content">
+            {{ section.settings.content }}
+          </div>
+        {% endif %}
+
+        <div class="smwpop__actions">
+          <button type="button" class="smwpop__cta" data-smwpop-close>
+            {{ section.settings.cta_label | escape }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var root = document.getElementById("smw-pop-{{ section.id }}");
+      if(!root) return;
+
+      var overlay = document.getElementById("smw-overlay-{{ section.id }}");
+      if(!overlay) return;
+
+      var panel = overlay.querySelector("[data-smwpop-panel]");
+      var openBtns = root.querySelectorAll("[data-smwpop-open]");
+      var closeBtns = overlay.querySelectorAll("[data-smwpop-close]");
+
+      var autoOpen = {{ section.settings.auto_open | json }};
+      var delayMs = ({{ section.settings.open_delay_seconds | default: 1 }} * 1000) || 0;
+      var oncePerSession = {{ section.settings.once_per_session | json }};
+      var closeOnOverlay = {{ section.settings.close_on_overlay_click | json }};
+      var closeOnEsc = {{ section.settings.close_on_esc | json }};
+      var seenKey = "smwpop_seen_{{ section.id }}";
+
+      var prevBodyOverflow = null;
+      var lastFocus = null;
+
+      function moveOverlayToBody(){
+        try{
+          if(overlay.parentElement !== document.body){
+            document.body.appendChild(overlay);
+          }
+        }catch(e){}
+      }
+
+      function lockScroll(){
+        try{
+          prevBodyOverflow = document.body.style.overflow;
+          document.body.style.overflow = "hidden";
+        }catch(e){}
+      }
+
+      function unlockScroll(){
+        try{
+          document.body.style.overflow = prevBodyOverflow || "";
+        }catch(e){}
+      }
+
+      function isSeen(){
+        if(!oncePerSession) return false;
+        try{ return sessionStorage.getItem(seenKey) === "1"; }catch(e){ return false; }
+      }
+
+      function setSeen(){
+        if(!oncePerSession) return;
+        try{ sessionStorage.setItem(seenKey, "1"); }catch(e){}
+      }
+
+      function open(){
+        moveOverlayToBody();
+        if(overlay.classList.contains("is-open")) return;
+
+        lastFocus = document.activeElement;
+
+        overlay.classList.add("is-open");
+        overlay.setAttribute("aria-hidden", "false");
+        lockScroll();
+        setSeen();
+
+        if(panel) panel.focus({ preventScroll: true });
+      }
+
+      function close(){
+        if(!overlay.classList.contains("is-open")) return;
+
+        overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden", "true");
+        unlockScroll();
+
+        if(lastFocus && lastFocus.focus){
+          try{ lastFocus.focus({ preventScroll: true }); }catch(e){}
+        }
+      }
+
+      openBtns.forEach(function(btn){
+        btn.addEventListener("click", function(e){
+          e.preventDefault();
+          open();
+        });
+      });
+
+      closeBtns.forEach(function(btn){
+        btn.addEventListener("click", function(e){
+          e.preventDefault();
+          close();
+        });
+      });
+
+      if(closeOnOverlay){
+        overlay.addEventListener("click", function(e){
+          if(e.target === overlay) close();
+        });
+      }
+
+      if(closeOnEsc){
+        document.addEventListener("keydown", function(e){
+          if(!overlay.classList.contains("is-open")) return;
+          if(e.key === "Escape") close();
+        });
+      }
+
+      function maybeAutoOpen(){
+        if(!autoOpen) return;
+        if(isSeen()) return;
+        window.setTimeout(function(){
+          if(isSeen()) return;
+          open();
+        }, Math.max(0, delayMs));
+      }
+
+      moveOverlayToBody();
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", maybeAutoOpen);
+      } else {
+        maybeAutoOpen();
+      }
+
+      document.addEventListener("shopify:section:unload", function(e){
+        if(!e || !e.detail || !e.detail.sectionId) return;
+        if(String(e.detail.sectionId) !== String("{{ section.id }}")) return;
+        unlockScroll();
+        try{ overlay.remove(); }catch(err){}
+      });
+    })();
+  </script>
+</section>
+{% endif %}

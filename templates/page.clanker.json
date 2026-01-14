@@ -9,6 +9,33 @@
  */
 {
   "sections": {
+    "steelmonks_werkstatt_pop_up_bmbtaz": {
+      "type": "steelmonks-werkstatt-pop-up",
+      "name": "Werkstatt Hinweis Popup",
+      "settings": {
+        "enabled": false,
+        "show_trigger": false,
+        "pill_label": "Werkstatt Hinweis",
+        "auto_open": true,
+        "open_delay_seconds": 1,
+        "once_per_session": false,
+        "close_on_overlay_click": true,
+        "close_on_esc": true,
+        "overlay_white": 80,
+        "overlay_dim": 10,
+        "blur_strength": 14,
+        "heading": "Willkommen in der Werkstatt",
+        "content": "<p>Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.</p><p>Bitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst.</p>",
+        "cta_label": "Alles klar",
+        "modal_max_width": 860,
+        "radius": 26,
+        "accent_1": "#ff9800",
+        "accent_2": "#0044cc",
+        "text_color": "#0b1220",
+        "title_weight": 900,
+        "body_weight": 650
+      }
+    },
     "rich_text_rMFFNh": {
       "type": "rich-text",
       "blocks": {
@@ -80,12 +107,20 @@
     "steelmonks_sign_creator_possibilites_3nqh9k": {
       "type": "steelmonks-werkstatt-hero",
       "blocks": {
+        "slide_9DaD7j": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
+            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
+          }
+        },
         "slide_V4mdEE": {
           "type": "slide",
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
-            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
+            "prompt": "\"Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.\""
           }
         },
         "slide_bCMMg3": {
@@ -93,7 +128,15 @@
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
-            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
+            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
+          }
+        },
+        "slide_jg6UyD": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Panther-First.jpg",
+            "overlay_image": "shopify://shop_images/Panther-Last.jpg",
+            "prompt": "\"Erstelle mir bitte ein Schild von genau dem Rosenbauer 8x8 aus dem Bild, in der selben exakten Position mit möglichst vielen details, arbeite mir positiven und negativen Formen.\""
           }
         },
         "slide_xeKJbk": {
@@ -104,20 +147,12 @@
             "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
           }
         },
-        "slide_9DaD7j": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
-            "prompt": "Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu."
-          }
-        },
         "slide_xpwLCB": {
           "type": "slide",
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Carousel-6-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Carousel-6-Last.jpg",
-            "prompt": "Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen."
+            "prompt": "\"Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen.\""
           }
         },
         "slide_fAmNE9": {
@@ -138,10 +173,11 @@
         }
       },
       "block_order": [
+        "slide_9DaD7j",
         "slide_V4mdEE",
         "slide_bCMMg3",
+        "slide_jg6UyD",
         "slide_xeKJbk",
-        "slide_9DaD7j",
         "slide_xpwLCB",
         "slide_fAmNE9",
         "slide_RWQfby"
@@ -511,6 +547,7 @@
     }
   },
   "order": [
+    "steelmonks_werkstatt_pop_up_bmbtaz",
     "rich_text_rMFFNh",
     "blocks_nMQt6z",
     "steelmonks_sign_creator_possibilites_3nqh9k",

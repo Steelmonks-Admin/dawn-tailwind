@@ -80,6 +80,162 @@
         "show_two_items": false
       }
     },
+    "rich_text_xkqYLg": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_DiM8kk": {
+          "type": "heading",
+          "settings": {
+            "heading": "Nur bei Steelmonks! Vom Bild zum Schild!",
+            "heading_size": "h1"
+          }
+        },
+        "text_C86W9k": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Mit Hilfe von neuster Technologien haben wir ein einzigartiges Werkzeug entwickelt, das es Dir ermöglicht von einem Satz oder einem Bild in 2 Minuten ein wunderschönes Geschenk zu erstellen. Schau Dir hier die Beispiele an und probier unsere \"Werkstatt\" aus!</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_DiM8kk",
+        "text_C86W9k"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 20,
+        "padding_bottom": 12,
+        "enable_smooth_scroll": true
+      }
+    },
+    "steelmonks_werkstatt_hero_gt9RdT": {
+      "type": "steelmonks-werkstatt-hero",
+      "blocks": {
+        "slide_TpT63i": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
+            "prompt": "\"Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.\""
+          }
+        },
+        "slide_V9KQUr": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
+            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
+          }
+        },
+        "slide_dxiQdp": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Panther-First.jpg",
+            "overlay_image": "shopify://shop_images/Panther-Last.jpg",
+            "prompt": "\"Erstelle mir bitte ein Schild von genau dem Rosenbauer 8x8 aus dem Bild, in der selben exakten Position mit möglichst vielen details, arbeite mir positiven und negativen Formen.\""
+          }
+        },
+        "slide_NEreD7": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
+            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
+          }
+        },
+        "slide_btQmzN": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
+            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
+          }
+        },
+        "slide_FjYJRp": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-6-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-6-Last_55238bb6-18e7-4017-8d62-96862fcc4c0e.jpg",
+            "prompt": "\"Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen.\""
+          }
+        },
+        "slide_qRbgPQ": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-5-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-5-Last.jpg",
+            "prompt": "Hier wurde folgender Text angegeben: \n\n\"Erstelle mir ein schönes Geschenk für meine Schwester, sie backt gerne Brot, ist eine Sauerteig Mama und hat einen eleganten und edlen Stil.\""
+          }
+        },
+        "slide_RA7jNA": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-4-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-4-Last.jpg",
+            "prompt": "Hier wurde nur dieser Text, ohne Bild angegeben: \n\"Ein Schild von der Schlacht um Wien, als die Hussaren den Berg runter kamen in soviel detail und Historischer treue wie geht.\""
+          }
+        }
+      },
+      "block_order": [
+        "slide_TpT63i",
+        "slide_V9KQUr",
+        "slide_dxiQdp",
+        "slide_NEreD7",
+        "slide_btQmzN",
+        "slide_FjYJRp",
+        "slide_qRbgPQ",
+        "slide_RA7jNA"
+      ],
+      "name": "Werkstatt Carousel",
+      "settings": {
+        "top_spacing": 18,
+        "bottom_spacing": 18,
+        "desc_heading": "Beschreibung",
+        "autoplay": true,
+        "autoplay_seconds": 6
+      }
+    },
+    "rich_text_H9Enym": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_qM9dAA": {
+          "type": "heading",
+          "settings": {
+            "heading": "Zur Steelmonks \"Werkstatt\"",
+            "heading_size": "h1"
+          }
+        },
+        "button_bnfTcm": {
+          "type": "button",
+          "settings": {
+            "button_label": "Erstelle mein eigenes Schild",
+            "button_link": "shopify://pages/werkstatt",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_qM9dAA",
+        "button_bnfTcm"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 12,
+        "padding_bottom": 12,
+        "enable_smooth_scroll": true
+      }
+    },
     "steelmonks_collection_grid_k79tHx": {
       "type": "steelmonks-collection-grid",
       "blocks": {
@@ -726,6 +882,9 @@
     "steelmonks_hero_BFdthq",
     "steelmonks_hero_hub_7JR7Nz",
     "custom_icon_grid_Ahzicm",
+    "rich_text_xkqYLg",
+    "steelmonks_werkstatt_hero_gt9RdT",
+    "rich_text_H9Enym",
     "steelmonks_collection_grid_k79tHx",
     "featured_collection_yUM3tM",
     "image_banner_hWcQdN",
