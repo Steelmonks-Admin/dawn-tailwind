@@ -123,12 +123,12 @@
             "prompt": "\"Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.\""
           }
         },
-        "slide_btQmzN": {
+        "slide_V9KQUr": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
-            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
+            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
           }
         },
         "slide_dxiQdp": {
@@ -147,12 +147,12 @@
             "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
           }
         },
-        "slide_V9KQUr": {
+        "slide_btQmzN": {
           "type": "slide",
           "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
-            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
+            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
+            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
           }
         },
         "slide_FjYJRp": {
@@ -182,10 +182,10 @@
       },
       "block_order": [
         "slide_TpT63i",
-        "slide_btQmzN",
+        "slide_V9KQUr",
         "slide_dxiQdp",
         "slide_NEreD7",
-        "slide_V9KQUr",
+        "slide_btQmzN",
         "slide_FjYJRp",
         "slide_qRbgPQ",
         "slide_RA7jNA"
