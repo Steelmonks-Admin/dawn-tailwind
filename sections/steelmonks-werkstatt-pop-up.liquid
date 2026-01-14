@@ -2,11 +2,9 @@
   steelmonks-werkstatt-pop-up.liquid
   Werkstatt Pop Up
 
-  Fix
-  - CSS Variablen liegen direkt auf dem Overlay Element, damit sie auch nach body append funktionieren
-  - Overlay ist milchig weiss plus Blur, Seite dahinter wird klar weggedrückt
-  - Panel Ecken wirklich rund, keine harte Outline
-  - Text frei editierbar per richtext
+  Fix in this version
+  - Hard reset for font-weight in popup content so theme styles cannot force bold
+  - Only <strong> becomes bold
 {% endcomment %}
 
 {% schema %}
@@ -28,9 +26,13 @@
     { "type": "checkbox", "id": "close_on_esc", "label": "Schließen mit ESC", "default": true },
 
     { "type": "header", "content": "Hintergrund Fokus" },
-    { "type": "range", "id": "overlay_white", "label": "Weißes Overlay Stärke", "default": 80, "min": 35, "max": 95, "step": 1 },
-    { "type": "range", "id": "overlay_dim", "label": "Zusätzliche Abdunkelung", "default": 10, "min": 0, "max": 35, "step": 1 },
-    { "type": "range", "id": "blur_strength", "label": "Blur Stärke", "default": 18, "min": 8, "max": 30, "step": 1 },
+    { "type": "range", "id": "overlay_white", "label": "Weißes Overlay Stärke", "default": 58, "min": 20, "max": 90, "step": 1 },
+    { "type": "range", "id": "overlay_dim", "label": "Zusätzliche Abdunkelung", "default": 6, "min": 0, "max": 35, "step": 1 },
+    { "type": "range", "id": "blur_strength", "label": "Blur Stärke", "default": 14, "min": 6, "max": 28, "step": 1 },
+
+    { "type": "header", "content": "Popup Glas Look" },
+    { "type": "range", "id": "panel_glass_opacity", "label": "Glas Deckkraft", "default": 18, "min": 8, "max": 32, "step": 1 },
+    { "type": "range", "id": "panel_glass_blur", "label": "Glas Blur", "default": 18, "min": 10, "max": 26, "step": 1 },
 
     { "type": "header", "content": "Inhalt" },
     { "type": "text", "id": "heading", "label": "Überschrift", "default": "Willkommen in der Werkstatt" },
@@ -38,7 +40,7 @@
       "type": "richtext",
       "id": "content",
       "label": "Text Inhalt",
-      "default": "<p>Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.</p><p>Bitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst.</p>"
+      "default": "<p>Willkommen in unserer neuen <strong>Design Werkstatt</strong>. Die Möglichkeit, dein Design in wenigen Minuten als Datei zu erstellen, ist ein <strong>einzigartiges neues Tool</strong>.</p><p>Wir haben sehr viel Zeit in die Entwicklung gesteckt, trotzdem ist diese Phase noch nicht komplett abgeschlossen. Wir verbessern die Nutzung laufend und freuen uns riesig über hilfreiches Feedback.</p><p>Bitte behalte im Hinterkopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann es daher länger dauern oder es kann zu Ladeverzögerungen kommen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite bitte neu und probiere es nochmal ganz von vorn. Vielen Dank für deine Geduld, deine Experimentierfreude und dass du offen für Neues bist.</p>"
     },
     { "type": "text", "id": "cta_label", "label": "Button Text", "default": "Alles klar" },
 
@@ -49,7 +51,7 @@
     { "type": "color", "id": "accent_2", "label": "Akzent Farbe 2", "default": "#0044CC" },
     { "type": "color", "id": "text_color", "label": "Text Farbe", "default": "#0b1220" },
     { "type": "range", "id": "title_weight", "label": "Titel Gewicht", "default": 900, "min": 600, "max": 950, "step": 10 },
-    { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 650, "min": 400, "max": 850, "step": 10 }
+    { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 460, "min": 300, "max": 650, "step": 10 }
   ],
   "presets": [
     { "name": "Werkstatt Pop Up" }
@@ -112,59 +114,55 @@
       flex:0 0 auto;
     }
 
-    /* Overlay wird in body verschoben, deshalb muss alles Wichtige hier drauf liegen */
     #smw-overlay-{{ section.id }}{
-      /* FIX: Variablen sind hier, nicht am Section Wrapper */
       --r: {{ section.settings.radius }}px;
       --maxW: {{ section.settings.modal_max_width }}px;
+
       --blur: {{ section.settings.blur_strength }}px;
       --whiteA: {{ section.settings.overlay_white | divided_by: 100.0 }};
       --dimA: {{ section.settings.overlay_dim | divided_by: 100.0 }};
+
+      --glassA: {{ section.settings.panel_glass_opacity | divided_by: 100.0 }};
+      --glassBlur: {{ section.settings.panel_glass_blur }}px;
+
       --wTitle: {{ section.settings.title_weight }};
       --wBody: {{ section.settings.body_weight }};
 
       position:fixed;
       inset:0;
       z-index:2147483647;
-
       display:none;
       place-items:center;
-
       padding:20px 14px;
 
-      /* milchig weiss plus Blur, damit die Seite dahinter wirklich ruhig wird */
       background:
-        linear-gradient(0deg,
-          rgba(255,255,255, var(--whiteA)),
-          rgba(255,255,255, var(--whiteA))
-        ),
-        radial-gradient(1200px 600px at 50% 10%,
-          rgba(255,255,255, 0.22),
-          rgba(255,255,255, 0) 70%
-        ),
+        linear-gradient(0deg, rgba(255,255,255, var(--whiteA)), rgba(255,255,255, var(--whiteA))),
+        radial-gradient(1200px 600px at 50% 10%, rgba(255,255,255, 0.18), rgba(255,255,255, 0) 70%),
         rgba(8,10,14, var(--dimA));
 
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
     }
 
-    #smw-overlay-{{ section.id }}.is-open{
-      display:grid;
-    }
+    #smw-overlay-{{ section.id }}.is-open{ display:grid; }
 
     #smw-overlay-{{ section.id }} .smwpop__panel{
       width:min(var(--maxW), 100%);
       max-height:calc(100vh - 40px);
-
       border-radius:var(--r);
       overflow:hidden;
 
-      background:rgba(255,255,255,0.18);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
+      background:
+        linear-gradient(180deg,
+          rgba(255,255,255, calc(var(--glassA) + 0.08)),
+          rgba(255,255,255, var(--glassA))
+        );
 
-      box-shadow:0 28px 90px rgba(15,23,42,0.22);
-      border:1px solid rgba(255,255,255,0.20);
+      backdrop-filter: blur(var(--glassBlur));
+      -webkit-backdrop-filter: blur(var(--glassBlur));
+
+      box-shadow:0 28px 90px rgba(15,23,42,0.20);
+      border:1px solid rgba(255,255,255,0.22);
 
       position:relative;
       isolation:isolate;
@@ -180,14 +178,13 @@
       opacity:1;
     }
 
-    /* Glow Border, auch rund */
     #smw-overlay-{{ section.id }} .smwpop__panel:before{
       content:"";
       position:absolute;
       inset:-1px;
       border-radius:calc(var(--r) + 1px);
       padding:1.2px;
-      background:linear-gradient(135deg, rgba(255,152,0,0.55), rgba(0,68,204,0.48));
+      background:linear-gradient(135deg, rgba(255,152,0,0.45), rgba(0,68,204,0.38));
       -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite:xor;
       mask-composite:exclude;
@@ -199,9 +196,9 @@
     #smw-overlay-{{ section.id }} .smwpop__inner{
       position:relative;
       z-index:1;
-      padding:24px 24px 18px;
+      padding:26px 24px 18px;
       text-align:center;
-      background:linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
     }
 
     #smw-overlay-{{ section.id }} .smwpop__title{
@@ -213,22 +210,33 @@
       color:rgba(9,10,12,0.88);
     }
 
+    /* IMPORTANT reset so the theme cannot force bold */
     #smw-overlay-{{ section.id }} .smwpop__content{
       margin:14px auto 0;
-      max-width:60ch;
+      max-width:62ch;
       color:rgba(9,10,12,0.78);
-      font-size:clamp(13px, 3.3vw, 16px);
-      line-height:1.55;
-      font-weight:var(--wBody);
+      font-size:clamp(13px, 3.2vw, 16px);
+      line-height:1.60;
+
+      font-weight: var(--wBody) !important;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__content *{
+      font-weight: inherit !important;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__content p{
-      margin:0;
-      font-weight:var(--wBody);
+      margin:0 !important;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__content p + p{
-      margin-top:12px;
+      margin-top:12px !important;
+    }
+
+    /* Only <strong> should be bold */
+    #smw-overlay-{{ section.id }} .smwpop__content strong{
+      font-weight: 800 !important;
+      color: rgba(9,10,12,0.86);
     }
 
     #smw-overlay-{{ section.id }} .smwpop__actions{
@@ -247,7 +255,7 @@
       border:1px solid rgba(255,255,255,0.18);
       background:linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       color:rgba(255,255,255,0.96);
-      font-weight:950;
+      font-weight:900;
       font-size:13.5px;
       cursor:pointer;
       box-shadow:0 20px 56px rgba(0,35,94,0.22);
@@ -256,31 +264,17 @@
       user-select:none;
     }
 
-    #smw-overlay-{{ section.id }} .smwpop__cta:hover{
-      filter:brightness(1.03);
-    }
-
-    #smw-overlay-{{ section.id }} .smwpop__cta:active{
-      transform:scale(0.985);
-    }
+    #smw-overlay-{{ section.id }} .smwpop__cta:hover{ filter:brightness(1.03); }
+    #smw-overlay-{{ section.id }} .smwpop__cta:active{ transform:scale(0.985); }
 
     @media (max-width: 520px){
-      #smw-overlay-{{ section.id }}{
-        padding:14px 12px;
-      }
-      #smw-overlay-{{ section.id }} .smwpop__inner{
-        padding:18px 16px 16px;
-      }
-      #smw-overlay-{{ section.id }} .smwpop__content{
-        max-width:44ch;
-      }
+      #smw-overlay-{{ section.id }}{ padding:14px 12px; }
+      #smw-overlay-{{ section.id }} .smwpop__inner{ padding:18px 16px 16px; }
+      #smw-overlay-{{ section.id }} .smwpop__content{ max-width:44ch; }
     }
 
     @media (prefers-reduced-motion: reduce){
-      #smw-overlay-{{ section.id }} *{
-        transition:none !important;
-        animation:none !important;
-      }
+      #smw-overlay-{{ section.id }} *{ transition:none !important; animation:none !important; }
     }
   </style>
 

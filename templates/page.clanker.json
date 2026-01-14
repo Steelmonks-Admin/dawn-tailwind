@@ -13,7 +13,7 @@
       "type": "steelmonks-werkstatt-pop-up",
       "name": "Werkstatt Hinweis Popup",
       "settings": {
-        "enabled": false,
+        "enabled": true,
         "show_trigger": false,
         "pill_label": "Werkstatt Hinweis",
         "auto_open": true,
@@ -24,16 +24,18 @@
         "overlay_white": 80,
         "overlay_dim": 10,
         "blur_strength": 14,
+        "panel_glass_opacity": 18,
+        "panel_glass_blur": 18,
         "heading": "Willkommen in der Werkstatt",
-        "content": "<p>Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.</p><p>Bitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst.</p>",
+        "content": "<p><em><strong>Unsere Werkstatt ist das einzige Tool seiner Art. </strong></em></p><p>Damit kannst du dein <em>eigenes Metallschild</em> direkt online gestalten.</p><p>Hier spielen mehrere externe Dienste zusammen, es kann in verschiedenen Fällen   kurz hängen oder nicht richtig funktionieren.</p><p>Auf dem Desktop funktioniert es besser als am Handy! 📱</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. </p><p>Danke, dass du offen bleibst. :)</p><p><em>Luis & Jakob</em></p>",
         "cta_label": "Alles klar",
         "modal_max_width": 860,
         "radius": 26,
         "accent_1": "#ff9800",
         "accent_2": "#0044cc",
         "text_color": "#0b1220",
-        "title_weight": 900,
-        "body_weight": 650
+        "title_weight": 800,
+        "body_weight": 470
       }
     },
     "rich_text_rMFFNh": {
