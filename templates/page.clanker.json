@@ -85,7 +85,7 @@
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
-            "prompt": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
+            "prompt": "\"Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.\""
           }
         },
         "slide_bCMMg3": {
@@ -93,7 +93,7 @@
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
-            "prompt": "Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details."
+            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
           }
         },
         "slide_xeKJbk": {
@@ -109,7 +109,7 @@
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
-            "prompt": "Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu."
+            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
           }
         },
         "slide_xpwLCB": {
