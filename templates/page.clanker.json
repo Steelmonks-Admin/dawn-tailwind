@@ -117,7 +117,7 @@
           "settings": {
             "base_image": "shopify://shop_images/Werkstatt-Carousel-6-First.jpg",
             "overlay_image": "shopify://shop_images/Werkstatt-Carousel-6-Last.jpg",
-            "prompt": "Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen."
+            "prompt": "\"Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen.\""
           }
         },
         "slide_fAmNE9": {

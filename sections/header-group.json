@@ -25,7 +25,6 @@
       "block_order": [
         "announcement_hHy47U"
       ],
-      "disabled": true,
       "settings": {
         "color_scheme": "",
         "show_line_separator": true,
@@ -47,7 +46,7 @@
       "settings": {
         "logo_position": "middle-left",
         "menu": "main-menu",
-        "menu_type_desktop": "mega",
+        "menu_type_desktop": "dropdown",
         "sticky_header_type": "always",
         "show_line_separator": true,
         "color_scheme": "scheme-8d7d68f1-302f-4d23-badd-0d1e89624e2d",
