@@ -2,11 +2,9 @@
   steelmonks-werkstatt-pop-up.liquid
   Werkstatt Pop Up
 
-  Tweaks in this version
-  - Page-cover overlay weniger opak (mehr “durchlässig”), Blur bleibt aber ruhiger
-  - Popup Panel wieder glossy / glassy, nicht “full white”
-  - Text nicht global bold, du kannst im Theme Editor einzelne Stellen fett markieren via <strong>
-  - Text basiert auf bestehendem Inhalt plus deiner neuen Copy Idee
+  Fix in this version
+  - Hard reset for font-weight in popup content so theme styles cannot force bold
+  - Only <strong> becomes bold
 {% endcomment %}
 
 {% schema %}
@@ -53,7 +51,7 @@
     { "type": "color", "id": "accent_2", "label": "Akzent Farbe 2", "default": "#0044CC" },
     { "type": "color", "id": "text_color", "label": "Text Farbe", "default": "#0b1220" },
     { "type": "range", "id": "title_weight", "label": "Titel Gewicht", "default": 900, "min": 600, "max": 950, "step": 10 },
-    { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 470, "min": 350, "max": 650, "step": 10 }
+    { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 460, "min": 300, "max": 650, "step": 10 }
   ],
   "presets": [
     { "name": "Werkstatt Pop Up" }
@@ -116,7 +114,6 @@
       flex:0 0 auto;
     }
 
-    /* Overlay is moved into body, keep variables here */
     #smw-overlay-{{ section.id }}{
       --r: {{ section.settings.radius }}px;
       --maxW: {{ section.settings.modal_max_width }}px;
@@ -138,16 +135,9 @@
       place-items:center;
       padding:20px 14px;
 
-      /* Less opaque, more airy, still makes the page calm */
       background:
-        linear-gradient(0deg,
-          rgba(255,255,255, var(--whiteA)),
-          rgba(255,255,255, var(--whiteA))
-        ),
-        radial-gradient(1200px 600px at 50% 10%,
-          rgba(255,255,255, 0.18),
-          rgba(255,255,255, 0) 70%
-        ),
+        linear-gradient(0deg, rgba(255,255,255, var(--whiteA)), rgba(255,255,255, var(--whiteA))),
+        radial-gradient(1200px 600px at 50% 10%, rgba(255,255,255, 0.18), rgba(255,255,255, 0) 70%),
         rgba(8,10,14, var(--dimA));
 
       backdrop-filter: blur(var(--blur));
@@ -156,7 +146,6 @@
 
     #smw-overlay-{{ section.id }}.is-open{ display:grid; }
 
-    /* Glossy glassy panel, not full white */
     #smw-overlay-{{ section.id }} .smwpop__panel{
       width:min(var(--maxW), 100%);
       max-height:calc(100vh - 40px);
@@ -204,20 +193,6 @@
       z-index:0;
     }
 
-    #smw-overlay-{{ section.id }} .smwpop__panel:after{
-      content:"";
-      position:absolute;
-      inset:-34px;
-      border-radius:calc(var(--r) + 38px);
-      background:
-        radial-gradient(70% 70% at 20% 10%, rgba(255,152,0,0.14), rgba(255,255,255,0) 60%),
-        radial-gradient(70% 70% at 80% 10%, rgba(0,68,204,0.12), rgba(255,255,255,0) 60%);
-      opacity:0.45;
-      filter:blur(18px);
-      pointer-events:none;
-      z-index:-1;
-    }
-
     #smw-overlay-{{ section.id }} .smwpop__inner{
       position:relative;
       z-index:1;
@@ -235,25 +210,32 @@
       color:rgba(9,10,12,0.88);
     }
 
-    /* Body text is NOT bold by default */
+    /* IMPORTANT reset so the theme cannot force bold */
     #smw-overlay-{{ section.id }} .smwpop__content{
       margin:14px auto 0;
       max-width:62ch;
       color:rgba(9,10,12,0.78);
       font-size:clamp(13px, 3.2vw, 16px);
       line-height:1.60;
-      font-weight:var(--wBody);
+
+      font-weight: var(--wBody) !important;
+    }
+
+    #smw-overlay-{{ section.id }} .smwpop__content *{
+      font-weight: inherit !important;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__content p{
-      margin:0;
-      font-weight:var(--wBody);
+      margin:0 !important;
     }
-    #smw-overlay-{{ section.id }} .smwpop__content p + p{ margin-top:12px; }
 
-    /* Only <strong> becomes bold */
+    #smw-overlay-{{ section.id }} .smwpop__content p + p{
+      margin-top:12px !important;
+    }
+
+    /* Only <strong> should be bold */
     #smw-overlay-{{ section.id }} .smwpop__content strong{
-      font-weight: 800;
+      font-weight: 800 !important;
       color: rgba(9,10,12,0.86);
     }
 
