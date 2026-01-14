@@ -238,6 +238,42 @@
     "steelmonks_werkstatt_hero_gt9RdT": {
       "type": "steelmonks-werkstatt-hero",
       "blocks": {
+        "slide_TpT63i": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
+            "prompt": "\"Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.\""
+          }
+        },
+        "slide_btQmzN": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
+            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
+          }
+        },
+        "slide_NEreD7": {
+          "type": "slide",
+          "settings": {
+            "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
+            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
+            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
+          }
+        },
+        "slide_V9KQUr": {
+          "type": "slide",
+          "settings": {
+            "prompt": "Beispiel Prompt"
+          }
+        },
+        "slide_FjYJRp": {
+          "type": "slide",
+          "settings": {
+            "prompt": "Beispiel Prompt"
+          }
+        },
         "slide_qRbgPQ": {
           "type": "slide",
           "settings": {
@@ -252,6 +288,11 @@
         }
       },
       "block_order": [
+        "slide_TpT63i",
+        "slide_btQmzN",
+        "slide_NEreD7",
+        "slide_V9KQUr",
+        "slide_FjYJRp",
         "slide_qRbgPQ",
         "slide_RA7jNA"
       ],
