@@ -14,21 +14,25 @@
       "name": "Werkstatt Hinweis Popup",
       "settings": {
         "enabled": true,
-        "auto_open": true,
-        "open_delay_seconds": 1,
-        "once_per_session": true,
         "show_trigger": false,
         "pill_label": "Werkstatt Hinweis",
+        "auto_open": true,
+        "open_delay_seconds": 1,
+        "once_per_session": false,
+        "close_on_overlay_click": true,
+        "close_on_esc": true,
         "heading": "Willkommen in der Werkstatt",
-        "body": "Unsere Werkstatt ist ein neues Tool, mit dem Du Dein eigenes Metallschild innerhalb 2 Minuten online gestalten kannst.\n\nBitte behalte im Kopf, das ist das erste Werkzeug dieser Art auf der Welt. Es hängt von mehreren externen Diensten ab, darum kann es in seltenen Fällen haken.\n\nWenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. :) \n\nDanke, dass du es testest und offen bleibst.",
+        "content": "<p>Unsere Werkstatt ist das einzige Tool seiner Art. Damit kannst du dein eigenes Metallschild direkt online gestalten.</p><p>Bitte behalte im Kopf, dass hier mehrere externe Dienste zusammenspielen. In seltenen Fällen kann etwas kurz hängen.</p><p>Wenn etwas nicht lädt oder sich komisch verhält, lade die Seite neu und probiere es nochmal. Danke, dass du offen bleibst.</p>",
         "cta_label": "Alles klar",
         "modal_max_width": 860,
         "radius": 26,
-        "blur_strength": 14,
         "overlay_opacity": 22,
+        "blur_strength": 14,
         "accent_1": "#ff9800",
         "accent_2": "#0044cc",
-        "text_color": "#0b1220"
+        "text_color": "#0b1220",
+        "title_weight": 900,
+        "body_weight": 650
       }
     },
     "rich_text_rMFFNh": {
