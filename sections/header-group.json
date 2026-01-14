@@ -53,7 +53,7 @@
         "menu_color_scheme": "scheme-8d7d68f1-302f-4d23-badd-0d1e89624e2d",
         "enable_country_selector": false,
         "enable_language_selector": true,
-        "enable_customer_avatar": true,
+        "enable_customer_avatar": false,
         "mobile_logo_position": "center",
         "margin_bottom": 0,
         "padding_top": 20,
