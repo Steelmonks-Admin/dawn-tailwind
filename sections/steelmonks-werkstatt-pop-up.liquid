@@ -1,16 +1,13 @@
 {% comment %}
-  File name
   steelmonks-werkstatt-pop-up.liquid
-
   Werkstatt Pop Up
-  Ziele
-  - Popup liegt garantiert über allem, weil Overlay per JS an document.body gehängt wird
-  - Werkstatt Seite dahinter wird abgedunkelt UND verschwommen per backdrop filter
-  - Gerundete Ecken, keine komische Outline
-  - Text nicht komplett bold, saubere Typo
-  - Text frei editierbar im Theme Editor per richtext
-  - Mobile pixel perfect, Panel ist max height und scrollt innen sauber
-  - Schließen nur über "Alles klar", optional ESC und Klick aufs Overlay
+
+  Fixes in this version
+  - Seite dahinter wird deutlich "weggeblendet" mit hellem milchigem Overlay + Blur
+  - Optional Background Filter auf der gesamten Seite, solange Popup offen ist
+  - Panel Ecken garantiert rund, inklusive Border Glow und Inner Content
+  - Kein komischer Rahmen, keine harten Kanten, pixel perfect auf mobile
+  - Text frei editierbar im Theme Editor via richtext
 {% endcomment %}
 
 {% schema %}
@@ -31,6 +28,13 @@
     { "type": "checkbox", "id": "close_on_overlay_click", "label": "Schließen bei Klick außerhalb", "default": true },
     { "type": "checkbox", "id": "close_on_esc", "label": "Schließen mit ESC", "default": true },
 
+    { "type": "header", "content": "Hintergrund Fokus" },
+    { "type": "range", "id": "overlay_white", "label": "Weißes Overlay Stärke", "default": 72, "min": 35, "max": 95, "step": 1 },
+    { "type": "range", "id": "overlay_dim", "label": "Zusätzliche Abdunkelung", "default": 8, "min": 0, "max": 30, "step": 1 },
+    { "type": "range", "id": "blur_strength", "label": "Blur Stärke", "default": 18, "min": 8, "max": 30, "step": 1 },
+    { "type": "range", "id": "bg_saturate", "label": "Hintergrund Sättigung", "default": 70, "min": 0, "max": 100, "step": 1 },
+    { "type": "range", "id": "bg_brightness", "label": "Hintergrund Helligkeit", "default": 110, "min": 90, "max": 140, "step": 1 },
+
     { "type": "header", "content": "Inhalt" },
     { "type": "text", "id": "heading", "label": "Überschrift", "default": "Willkommen in der Werkstatt" },
     {
@@ -43,15 +47,10 @@
 
     { "type": "header", "content": "Design" },
     { "type": "range", "id": "modal_max_width", "label": "Modal Max Breite", "default": 860, "min": 520, "max": 1040, "step": 10 },
-    { "type": "range", "id": "radius", "label": "Ecken Radius", "default": 28, "min": 16, "max": 44, "step": 1 },
-
-    { "type": "range", "id": "overlay_opacity", "label": "Overlay Dunkelheit", "default": 22, "min": 8, "max": 60, "step": 1 },
-    { "type": "range", "id": "blur_strength", "label": "Hintergrund Blur Stärke", "default": 16, "min": 8, "max": 28, "step": 1 },
-
+    { "type": "range", "id": "radius", "label": "Ecken Radius", "default": 30, "min": 16, "max": 50, "step": 1 },
     { "type": "color", "id": "accent_1", "label": "Akzent Farbe 1", "default": "#ff9800" },
     { "type": "color", "id": "accent_2", "label": "Akzent Farbe 2", "default": "#0044CC" },
     { "type": "color", "id": "text_color", "label": "Text Farbe", "default": "#0b1220" },
-
     { "type": "range", "id": "title_weight", "label": "Titel Gewicht", "default": 900, "min": 600, "max": 950, "step": 10 },
     { "type": "range", "id": "body_weight", "label": "Text Gewicht", "default": 650, "min": 400, "max": 850, "step": 10 }
   ],
@@ -72,17 +71,20 @@
       --r: {{ section.settings.radius }}px;
       --maxW: {{ section.settings.modal_max_width }}px;
 
-      --overlayA: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
       --blur: {{ section.settings.blur_strength }}px;
+
+      --whiteA: {{ section.settings.overlay_white | divided_by: 100.0 }};
+      --dimA: {{ section.settings.overlay_dim | divided_by: 100.0 }};
+
+      --bgSat: {{ section.settings.bg_saturate | divided_by: 100.0 }};
+      --bgBri: {{ section.settings.bg_brightness | divided_by: 100.0 }};
 
       --wTitle: {{ section.settings.title_weight }};
       --wBody: {{ section.settings.body_weight }};
 
       --shadow: 0 28px 90px rgba(15,23,42,0.22);
-      --shadow2: 0 18px 54px rgba(15,23,42,0.16);
     }
 
-    /* Trigger Pille zentriert */
     #smw-pop-{{ section.id }} .smwpop__triggerWrap{
       display: flex;
       justify-content: center;
@@ -102,16 +104,13 @@
       -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 16px 44px rgba(15,23,42,0.12);
       cursor: pointer;
-
       color: rgba(9,10,12,0.82);
       font-weight: 900;
       font-size: 13px;
       letter-spacing: 0.2px;
-
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease, background 180ms ease;
-      max-width: 100%;
     }
 
     #smw-pop-{{ section.id }} .smwpop__trigger:hover{
@@ -132,7 +131,7 @@
       flex: 0 0 auto;
     }
 
-    /* Overlay wird in body verschoben, deshalb global über id gestylt */
+    /* Overlay lives in body, use id */
     #smw-overlay-{{ section.id }}{
       position: fixed;
       inset: 0;
@@ -143,7 +142,18 @@
 
       padding: 20px 14px;
 
-      background: rgba(8,10,14, var(--overlayA));
+      /* The key: milky white overlay + subtle dim + blur */
+      background:
+        linear-gradient(0deg,
+          rgba(255,255,255, var(--whiteA)),
+          rgba(255,255,255, var(--whiteA))
+        ),
+        radial-gradient(1200px 600px at 50% 10%,
+          rgba(255,255,255, 0.18),
+          rgba(255,255,255, 0) 70%
+        ),
+        rgba(8,10,14, var(--dimA));
+
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
     }
@@ -152,19 +162,20 @@
       display: grid;
     }
 
-    /* Panel mit echten runden Ecken und ohne harte Outline */
+    /* Panel with guaranteed rounded corners everywhere */
     #smw-overlay-{{ section.id }} .smwpop__panel{
       width: min(var(--maxW), 100%);
       max-height: calc(100vh - 40px);
-      overflow: hidden;
-      border-radius: var(--r);
 
-      background: rgba(255,255,255,0.14);
+      border-radius: var(--r);
+      overflow: hidden;
+
+      background: rgba(255,255,255,0.18);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
 
       box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.20);
 
       position: relative;
       isolation: isolate;
@@ -172,7 +183,6 @@
       transform: translateY(10px) scale(0.995);
       opacity: 0;
       transition: transform 260ms cubic-bezier(0.2,0.8,0.2,1), opacity 240ms ease;
-
       outline: none;
     }
 
@@ -181,7 +191,7 @@
       opacity: 1;
     }
 
-    /* Subtiler Premium Glow statt komische Outline */
+    /* Border glow, rounded too */
     #smw-overlay-{{ section.id }} .smwpop__panel:before{
       content:"";
       position:absolute;
@@ -211,15 +221,13 @@
       z-index: -1;
     }
 
-    /* Inner content */
+    /* Inner content, still clipped by rounded corners because overflow hidden on panel */
     #smw-overlay-{{ section.id }} .smwpop__inner{
       position: relative;
       z-index: 1;
-
       padding: 24px 24px 18px;
       text-align: center;
-
-      background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08));
+      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
     }
 
     #smw-overlay-{{ section.id }} .smwpop__title{
@@ -240,22 +248,17 @@
       font-weight: var(--wBody);
     }
 
-    /* Richtext sauber, nicht alles bold */
     #smw-overlay-{{ section.id }} .smwpop__content p{
       margin: 0;
       font-weight: var(--wBody);
     }
+
     #smw-overlay-{{ section.id }} .smwpop__content p + p{
       margin-top: 12px;
     }
+
     #smw-overlay-{{ section.id }} .smwpop__content strong{
       font-weight: 900;
-    }
-    #smw-overlay-{{ section.id }} .smwpop__content a{
-      color: rgba(0,68,204,0.92);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      font-weight: 800;
     }
 
     #smw-overlay-{{ section.id }} .smwpop__actions{
@@ -268,23 +271,17 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-
       padding: 12px 18px;
       width: min(340px, 100%);
-
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.18);
       background: linear-gradient(90deg, rgba(0,35,94,0.78), rgba(0,68,204,0.78));
       color: rgba(255,255,255,0.96);
-
       font-weight: 950;
       font-size: 13.5px;
       cursor: pointer;
-
       box-shadow: 0 20px 56px rgba(0,35,94,0.22);
       transition: transform 180ms cubic-bezier(0.2,0.8,0.2,1), filter 180ms ease;
-
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
@@ -297,13 +294,6 @@
       transform: scale(0.985);
     }
 
-    /* Fokus ohne hässliche Outline */
-    #smw-overlay-{{ section.id }} .smwpop__cta:focus-visible{
-      outline: 3px solid rgba(0,68,204,0.30);
-      outline-offset: 3px;
-    }
-
-    /* Mobile: enger, aber weiterhin clean */
     @media (max-width: 520px){
       #smw-overlay-{{ section.id }}{
         padding: 14px 12px;
@@ -333,10 +323,6 @@
     </div>
   {% endif %}
 
-  {%- comment -%}
-    Overlay wird initial hier gerendert und dann per JS an body verschoben,
-    damit backdrop blur wirklich die komplette Werkstatt Seite dahinter betrifft.
-  {%- endcomment -%}
   <div id="smw-overlay-{{ section.id }}" data-smwpop-overlay role="presentation" aria-hidden="true">
     <div class="smwpop__panel" role="dialog" aria-modal="true" aria-label="{{ section.settings.heading | escape }}" tabindex="-1" data-smwpop-panel>
       <div class="smwpop__inner">
@@ -402,6 +388,16 @@
         }catch(e){}
       }
 
+      function setBgFocus(on){
+        try{
+          if(on){
+            document.documentElement.classList.add("smwpop-bgfocus-{{ section.id }}");
+          } else {
+            document.documentElement.classList.remove("smwpop-bgfocus-{{ section.id }}");
+          }
+        }catch(e){}
+      }
+
       function isSeen(){
         if(!oncePerSession) return false;
         try{ return sessionStorage.getItem(seenKey) === "1"; }catch(e){ return false; }
@@ -422,6 +418,7 @@
         overlay.setAttribute("aria-hidden", "false");
         lockScroll();
         setSeen();
+        setBgFocus(true);
 
         if(panel) panel.focus({ preventScroll: true });
       }
@@ -432,6 +429,7 @@
         overlay.classList.remove("is-open");
         overlay.setAttribute("aria-hidden", "true");
         unlockScroll();
+        setBgFocus(false);
 
         if(lastFocus && lastFocus.focus){
           try{ lastFocus.focus({ preventScroll: true }); }catch(e){}
@@ -486,8 +484,22 @@
         if(!e || !e.detail || !e.detail.sectionId) return;
         if(String(e.detail.sectionId) !== String("{{ section.id }}")) return;
         unlockScroll();
+        setBgFocus(false);
         try{ overlay.remove(); }catch(err){}
       });
+
+      /* Optional: background filter on whole page while open */
+      (function(){
+        var styleId = "smw-bgfocus-style-{{ section.id }}";
+        if(document.getElementById(styleId)) return;
+        var st = document.createElement("style");
+        st.id = styleId;
+        st.textContent =
+          "html.smwpop-bgfocus-{{ section.id }} body > *:not(#smw-overlay-{{ section.id }}){" +
+          " filter: saturate(" + ({{ section.settings.bg_saturate | divided_by: 100.0 }}) + ") brightness(" + ({{ section.settings.bg_brightness | divided_by: 100.0 }}) + ");" +
+          " }";
+        document.head.appendChild(st);
+      })();
     })();
   </script>
 </section>
