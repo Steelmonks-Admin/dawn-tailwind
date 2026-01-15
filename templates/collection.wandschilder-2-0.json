@@ -155,9 +155,9 @@
         "ai_gen_block_6fecc59_LCkRHh": {
           "type": "ai_gen_block_6fecc59",
           "settings": {
-            "product_1": "feuerwehr-schlusselanhanger-dfv-signet",
-            "product_2": "feuerwehr-signet-anstecker",
-            "product_3": "signet-feuerwehr-schild",
+            "product_1": "monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
+            "product_2": "geschwungenes-monogramm-einweihungsgeschenk",
+            "product_3": "baum-des-lebens-familienschild-personalisiert",
             "badge_text": "Bestseller",
             "badge_background": "#0044cc",
             "badge_text_color": "#ffffff",
@@ -250,7 +250,7 @@
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "feuerwehr-geschenke",
+        "collection": "motivschilder",
         "products_to_show": 20,
         "columns_desktop": 4,
         "full_width": false,
