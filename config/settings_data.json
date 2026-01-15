@@ -107,7 +107,7 @@
     "sale_badge_color_scheme": "scheme-5",
     "sold_out_badge_color_scheme": "scheme-3",
     "brand_headline": "",
-    "social_facebook_link": "https://www.facebook.com/SteelmonksDE/",
+    "social_facebook_link": "",
     "social_instagram_link": "https://www.instagram.com/steel_monks",
     "social_youtube_link": "https://www.youtube.com/channel/UCoiPMlJFMt8EhIJfo2D5VTw",
     "social_tiktok_link": "https://www.tiktok.com/@steelmonks",
@@ -143,16 +143,6 @@
     "blocks": {
       "7924418359578431505": {
         "type": "shopify://apps/seoant-ai-seo/blocks/seoant-core/8e57283b-dcb0-4f7b-a947-fb5c57a0d59d",
-        "disabled": false,
-        "settings": {}
-      },
-      "11597759809273779251": {
-        "type": "shopify://apps/abconvert/blocks/app-embed-theme-test-clear-cache/5c6be9a4-14ad-4ad6-a0b5-a41137ce4ddf",
-        "disabled": false,
-        "settings": {}
-      },
-      "15626701136048320768": {
-        "type": "shopify://apps/abconvert/blocks/app-embed-custom-label/5c6be9a4-14ad-4ad6-a0b5-a41137ce4ddf",
         "disabled": false,
         "settings": {}
       },
@@ -203,11 +193,6 @@
       },
       "6544682535036668446": {
         "type": "shopify://apps/pumper-bundles-quantity-breaks/blocks/app-embed/0856870d-2aca-4b1e-a662-cf1797f61270",
-        "disabled": false,
-        "settings": {}
-      },
-      "8180082907217142696": {
-        "type": "shopify://apps/abconvert/blocks/app-embed-shipping/5c6be9a4-14ad-4ad6-a0b5-a41137ce4ddf",
         "disabled": false,
         "settings": {}
       },

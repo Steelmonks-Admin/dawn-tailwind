@@ -22,7 +22,7 @@
           "settings": {
             "title": "Alle Schilder",
             "image": "shopify://shop_images/Ivy_Monogramm.jpg",
-            "link": "shopify://collections/schilder",
+            "link": "shopify://collections/motivschilder",
             "sale_badge_text": "Bestseller",
             "sale_badge_color": "#0044cc"
           }
