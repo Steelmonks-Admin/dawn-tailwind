@@ -93,36 +93,36 @@
   {% unless section.settings.info_modal_title == blank %}
     <div
       id='smc-info-modal'
-      class='twcss-fixed twcss-top-0 twcss-left-0 twcss-w-full twcss-h-full twcss-bg-brandblack/50 twcss-z-50 twcss-flex twcss-items-center twcss-justify-center hidden'
+      class='twcss-fixed twcss-top-0 twcss-left-0 twcss-w-full twcss-h-full twcss-bg-brandblack/50 twcss-z-50 twcss-flex twcss-items-center twcss-justify-center hidden twcss-shadow-2xl'
     >
-      <div class='twcss-relative twcss-max-h-[90dvh] twcss-max-w-[90dvw] twcss-bg-brandwhite twcss-p-8 twcss-rounded-xl twcss-shadow-xl twcss-overflow-y-scroll'>
+      <div class='twcss-relative twcss-max-h-[90dvh] twcss-max-w-[90dvw] md:twcss-max-w-[450px] twcss-bg-brandwhite twcss-p-8 twcss-rounded-xl twcss-shadow-xl twcss-overflow-y-scroll twcss-flex twcss-flex-col twcss-gap-2'>
         <button
           data-info-button
           class='twcss-absolute twcss-top-4 twcss-right-4 twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-z-10 twcss-transition-all hover:twcss-bg-brandblack hover:twcss-text-brandwhite twcss-duration-300 hover:twcss-border-gray-600'
         >
           <div class='twcss-leading-3 twcss-w-3'>&times;</div>
         </button>
-        <h2 class='twcss-text-2xl twcss-font-bold twcss-mb-4'>{{ section.settings.info_modal_title }}</h2>
+        <h2 class='twcss-text-xl twcss-font-bold twcss-mb-4'>{{ section.settings.info_modal_title }}</h2>
         {% if section.settings.info_modal_richtext_content1 != blank %}
-          <p class='twcss-text-gray-700'>{{ section.settings.info_modal_richtext_content1 }}</p>
+          <div class='twcss-text-gray-700 twcss-text-base'>{{ section.settings.info_modal_richtext_content1 }}</div>
         {% endif %}
         {% if section.settings.info_modal_image1 != blank %}
           <img
             src='{{ section.settings.info_modal_image1 | image_url: width: 600 }}'
             alt='Info Modal 1'
-            class='twcss-w-full twcss-h-auto twcss-mb-4'
+            class='twcss-w-full twcss-h-auto twcss-my-4 twcss-rounded-xl twcss-border-2 twcss-border-gray-500 twcss-shadow-xl'
             width='600'
             height='400'
           >
         {% endif %}
         {% if section.settings.info_modal_richtext_content2 != blank %}
-          <p class='twcss-text-gray-700'>{{ section.settings.info_modal_richtext_content2 }}</p>
+          <div class='twcss-text-gray-700 twcss-text-base'>{{ section.settings.info_modal_richtext_content2 }}</div>
         {% endif %}
         {% if section.settings.info_modal_image2 != blank %}
           <img
             src='{{ section.settings.info_modal_image2 | image_url: width: 600 }}'
             alt='Info Modal 2'
-            class='twcss-w-full twcss-h-auto twcss-mb-4'
+            class='twcss-w-full twcss-h-auto twcss-my-4 twcss-rounded-xl twcss-border-2 twcss-border-gray-500 twcss-shadow-xl'
             width='600'
             height='400'
           >
