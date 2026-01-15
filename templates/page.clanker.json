@@ -196,7 +196,11 @@
     "steelmonks_sign_creator_FKYF46": {
       "type": "steelmonks-sign-creator",
       "name": "Werkstatt (Sign Creator)",
-      "settings": {}
+      "settings": {
+        "info_modal_title": "Test",
+        "info_modal_richtext_content1": "<p>Dies ist die Info-Modal. 1</p>",
+        "info_modal_richtext_content2": "<p>Dies ist die Info-Modal. 2</p>"
+      }
     },
     "steelmonks_announcement_9wcjnF": {
       "type": "steelmonks-announcement",
