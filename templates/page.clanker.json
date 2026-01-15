@@ -197,9 +197,11 @@
       "type": "steelmonks-sign-creator",
       "name": "Werkstatt (Sign Creator)",
       "settings": {
-        "info_modal_title": "Test",
-        "info_modal_richtext_content1": "<p>Dies ist die Info-Modal. 1</p>",
-        "info_modal_richtext_content2": "<p>Dies ist die Info-Modal. 2</p>"
+        "info_modal_title": "So einfach funktionierts :)",
+        "info_modal_richtext_content1": "<p>Um in der Werkstatt zu arbeiten musst Du einfach nur Dein Wunschmotiv beschreiben. Das geht ganz einfach in dem Du beschreibst was Du gerne hättest.</p><p>\"Ein Schild für meinen Bruder mit seinem Namen \"Jakob\" und dem Kolosseum\" reicht zum Beispiel aus.</p><p>Doch desto genauer Du es beschreibst, desto besser wird das Ergebnis.</p>",
+        "info_modal_image1": "shopify://shop_images/download_99ae1b4a-4ebb-43fd-ab51-aa1f7df5dbad.jpg",
+        "info_modal_richtext_content2": "<p>\"Ein Schild von dem Kolosseum, mit vielen Details, historischer Genauigkeit, ca. 100 n.Chr. Davor sollen Zwei Männer stehen auf dem Weg ins Tor, der Name \"Jakob\" soll mittig in das Design integriert sein\"</p>",
+        "info_modal_image2": "shopify://shop_images/download_c9f22155-3058-420d-9d77-6ff9e8b454d4.jpg"
       }
     },
     "steelmonks_announcement_9wcjnF": {
