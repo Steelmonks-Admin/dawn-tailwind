@@ -1,3 +1,40 @@
+{% comment %} * Schema {% endcomment %}
+{% schema %}
+{
+  "name": "Steelmonks Sign Creator",
+  "settings": [
+    {
+      "type": "text",
+      "id": "info_modal_title",
+      "label": "Info Modal Title",
+      "info": "The info modal will not be displayed if the title is blank."
+    },
+    {
+      "type": "richtext",
+      "id": "info_modal_richtext_content1",
+      "label": "Info Modal Richtext Content 1",
+      "default": "<p>Dies ist die Info-Modal.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "info_modal_image1",
+      "label": "Info Modal Image 1"
+    },
+    {
+      "type": "richtext",
+      "id": "info_modal_richtext_content2",
+      "label": "Info Modal Richtext Content 2",
+      "default": "<p>Dies ist die Info-Modal.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "info_modal_image2",
+      "label": "Info Modal Image 2"
+    }
+  ]
+}
+{% endschema %}
+
 {% comment %} * Variables {% endcomment %}
 {% assign sid = section.id %}
 
@@ -6,7 +43,7 @@
 <script>
   var sid = '{{ sid }}';
 </script>
-<script src='{{ 'steelmonks-sign-creator-min.js' | asset_url }}' defer='defer'></script>
+<script src='{{ 'steelmonks-sign-creator-copy.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
 {% comment %} ! Open button {% endcomment %}
@@ -36,13 +73,63 @@
 >
   {% comment %} ! CLOSE BUTTON + INFO BUTTON {% endcomment %}
   <div class='twcss-absolute twcss-top-8 twcss-right-8 twcss-flex twcss-gap-4'>
+    {% unless section.settings.info_modal_title == blank %}
+      <button
+        data-info-button
+        class='twcss-flex-2 twcss-bg-[#ebebfff5] twcss-text-gray-700 twcss-border-2 twcss-border-brandblue twcss-p-4 md:twcss-p-8 twcss-shadow-xl twcss-rounded-full twcss-text-lg md:twcss-text-4xl twcss-z-10 twcss-transition-all hover:twcss-bg-brandblack hover:twcss-text-brandwhite twcss-duration-300 hover:twcss-border-gray-600'
+      >
+        <div class='twcss-leading-3 twcss-w-3 md:twcss-leading-6 md:twcss-w-6'>i</div>
+      </button>
+    {%- endunless %}
     <button
       data-close-button
-      class='twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 md:twcss-p-8 twcss-shadow-xl twcss-rounded-full twcss-text-lg md:twcss-text-4xl twcss-z-10 twcss-transition-all hover:twcss-bg-brandwhite twcss-duration-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
+      class='twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 md:twcss-p-8 twcss-shadow-xl twcss-rounded-full twcss-text-lg md:twcss-text-4xl twcss-z-10 twcss-transition-all hover:twcss-bg-brandblack hover:twcss-text-brandwhite twcss-duration-300 hover:twcss-border-gray-600'
     >
       <div class='twcss-leading-3 twcss-w-3 md:twcss-leading-6 md:twcss-w-6'>&times;</div>
     </button>
   </div>
+
+  {% comment %} ! INFO MODAL {% endcomment %}
+  {% unless section.settings.info_modal_title == blank %}
+    <div
+      id='smc-info-modal'
+      class='twcss-fixed twcss-top-0 twcss-left-0 twcss-w-full twcss-h-full twcss-bg-brandblack/50 twcss-z-50 twcss-flex twcss-items-center twcss-justify-center hidden'
+    >
+      <div class='twcss-relative twcss-max-h-[90dvh] twcss-max-w-[90dvw] twcss-bg-brandwhite twcss-p-8 twcss-rounded-xl twcss-shadow-xl twcss-overflow-y-scroll'>
+        <button
+          data-info-button
+          class='twcss-absolute twcss-top-4 twcss-right-4 twcss-flex-2 twcss-bg-[#fafafff5] twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-p-4 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-z-10 twcss-transition-all hover:twcss-bg-brandblack hover:twcss-text-brandwhite twcss-duration-300 hover:twcss-border-gray-600'
+        >
+          <div class='twcss-leading-3 twcss-w-3'>&times;</div>
+        </button>
+        <h2 class='twcss-text-2xl twcss-font-bold twcss-mb-4'>{{ section.settings.info_modal_title }}</h2>
+        {% if section.settings.info_modal_richtext_content1 != blank %}
+          <p class='twcss-text-gray-700'>{{ section.settings.info_modal_richtext_content1 }}</p>
+        {% endif %}
+        {% if section.settings.info_modal_image1 != blank %}
+          <img
+            src='{{ section.settings.info_modal_image1 | image_url: width: 600 }}'
+            alt='Info Modal 1'
+            class='twcss-w-full twcss-h-auto twcss-mb-4'
+            width='600'
+            height='400'
+          >
+        {% endif %}
+        {% if section.settings.info_modal_richtext_content2 != blank %}
+          <p class='twcss-text-gray-700'>{{ section.settings.info_modal_richtext_content2 }}</p>
+        {% endif %}
+        {% if section.settings.info_modal_image2 != blank %}
+          <img
+            src='{{ section.settings.info_modal_image2 | image_url: width: 600 }}'
+            alt='Info Modal 2'
+            class='twcss-w-full twcss-h-auto twcss-mb-4'
+            width='600'
+            height='400'
+          >
+        {% endif %}
+      </div>
+    </div>
+  {% endunless %}
 
   {% comment %} ! Navigation & Status Pill {% endcomment %}
   <div class='twcss-flex twcss-gap-4 twcss-justify-center twcss-relative twcss-z-20'>

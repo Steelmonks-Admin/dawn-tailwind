@@ -220,6 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
     propType: el('smc-prop-type'), // New prop for type
     propBolts: el('smc-prop-bolts'), // New prop for bolts/mounting
 
+    // Info modal
+    smcInfoModal: el('smc-info-modal'),
+
     // Main containers
     smc: el('smc'),
     smcContainer: el('smc-container'),
@@ -1109,9 +1112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState(); // Save to localStorage
         formData.updateProps();
         ui.applyPriceDisplay(); // Update UI immediately
-        if (state.current === 'creating' && !state.lastMockUrl) {
-          ui.setPillState('work', 'Preis berechnet');
-        }
         return formattedPrice;
       } else {
         // No valid price (missing material/size or custom pricing needed)
@@ -1147,9 +1147,6 @@ document.addEventListener('DOMContentLoaded', () => {
         storageManager.saveState();
         formData.updateProps();
         ui.applyPriceDisplay();
-        if (state.current === 'creating' && !state.lastMockUrl) {
-          ui.setPillState('work', 'Preis berechnet');
-        }
       } else {
         state.pendingPriceValue = '';
         state.priceReady = false;
@@ -1268,8 +1265,6 @@ document.addEventListener('DOMContentLoaded', () => {
             state.cooldown = Date.now() + 30 * 1000; // 30 seconds from now
 
             storageManager.saveState();
-
-            ui.setPillState('ok', 'Fertig!');
 
             // Enable continue button to allow user to proceed to confirmation
             if (elements.continueBtn) {
@@ -1497,7 +1492,6 @@ document.addEventListener('DOMContentLoaded', () => {
       timerManager.startEta('Geschätzte Zeit', TIMING.TOTAL_MS, () => {
         if (state.current === 'creating' && !state.lastMockUrl) {
           state.forceMockLoading = true;
-          ui.setPillState('work', 'Vorschau wird geladen');
           ui.setPreviewLoading(true);
         }
       });
@@ -1549,11 +1543,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         storageManager.saveState();
         formData.updateProps();
-        ui.setPillState('work', 'Wird erstellt');
         // Check for draft preview after delay
         timers.draftCheck = setTimeout(async () => {
           try {
-            ui.setPillState('work', 'Entwurf wird geladen');
             await this.fetchSignOnce('entwurf');
           } catch (error) {}
         }, TIMING.FIRST_DRAFT_CHECK_DELAY_MS);
@@ -1753,6 +1745,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Info button handlers (using data-info-button attribute to toggle hidden class on smc-info-modal)
+  const infoButton = document.querySelectorAll('[data-info-button]');
+  infoButton.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      elements.smcInfoModal?.classList.toggle('hidden');
+    });
+  });
+
   // Close button handlers (using data-close-button attribute)
   // These will close the modal
   const closeButtons = document.querySelectorAll('[data-close-button]');
@@ -1869,13 +1869,8 @@ document.addEventListener('DOMContentLoaded', () => {
           state.designConfirmed = true;
           storageManager.saveState();
 
-          ui.setPillState('ok', 'Fertig!');
-
           // Update UI to show/hide buttons based on new state
           ui.updateUIFromState();
-
-          // Automatically add to cart using the helper function
-          ui.setPillState('work', 'In den Warenkorb...');
 
           const formData = {
             id: state.generatedVariantId,
