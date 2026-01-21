@@ -1848,6 +1848,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.confirmBtn) {
     elements.confirmBtn.addEventListener('click', async () => {
       try {
+        // DataLayer event for adding to cart
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'werkstatt-add-to-cart',
+          variantId: state.generatedVariantId,
+          productId: state.generatedProductId,
+          productName: state.generatedProductName,
+          price: state.pendingPriceValue
+        });
+
         // Show loading state on button
         const originalText = elements.confirmBtn.textContent;
         elements.confirmBtn.textContent = 'Produkt wird erstellt...';
@@ -2024,6 +2034,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.ctaBtn) {
     elements.ctaBtn.addEventListener('click', () => {
       try {
+        // DataLayer event for werkstatt view/interaction
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'werkstatt-view' });
+
         const buttonText = elements.ctaLabel?.textContent?.trim() || '';
 
         // If button says "Weiter →", navigate to page 2 (preview)
