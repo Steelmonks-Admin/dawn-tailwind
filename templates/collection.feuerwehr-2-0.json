@@ -168,7 +168,7 @@
             "text_color": "#090a0c",
             "price_color": "#0044cc",
             "desktop_padding_top": 0,
-            "desktop_padding_bottom": 32,
+            "desktop_padding_bottom": 60,
             "desktop_padding_sides": 40,
             "desktop_gap": 24,
             "mobile_padding_top": 0,
