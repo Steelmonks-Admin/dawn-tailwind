@@ -213,34 +213,6 @@
         "color_scheme": "scheme-1"
       }
     },
-    "1767887385169ffa1f": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_61505c1_prPVj6": {
-          "type": "ai_gen_block_61505c1",
-          "settings": {
-            "usp_1": "Für draußen geeignet",
-            "usp_2": "Wetterfest",
-            "usp_3": "Individuell gefertigt",
-            "background_color": "#fafaff",
-            "text_color": "#090a0c",
-            "icon_color": "#0044cc",
-            "padding_vertical": 10,
-            "spacing": 30,
-            "text_size": 14,
-            "icon_size": 24,
-            "spacing_mobile": 15,
-            "text_size_mobile": 8,
-            "icon_size_mobile": 12
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_61505c1_prPVj6"
-      ],
-      "settings": {}
-    },
     "featured_collection_NUC336": {
       "type": "featured-collection",
       "name": "t:sections.featured-collection.presets.name",
@@ -346,7 +318,6 @@
     "1767957390bd96ece4",
     "17458178119bf2149e",
     "banner",
-    "1767887385169ffa1f",
     "featured_collection_NUC336",
     "product-grid",
     "1748939636340fa12c",
