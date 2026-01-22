@@ -349,6 +349,7 @@
   </head>
 
   <body class='gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}'>
+    {% comment %} ! POSSIBLY DEPRECATED {% endcomment %}
     <!-- Google Tag Manager (noscript) -->
     <noscript
       ><iframe
@@ -358,6 +359,17 @@
         style='display:none;visibility:hidden'
       ></iframe
     ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6M60EF6P2Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-6M60EF6P2Z');
+    </script>
     <!-- End Google Tag Manager (noscript) -->
 
     <a class='skip-to-content-link button visually-hidden' href='#MainContent'>

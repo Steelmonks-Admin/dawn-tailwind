@@ -152,6 +152,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  /**
+   * Ensures preview images are loaded if they don't exist yet.
+   * This function is called after state is loaded to fetch preview images
+   * that might be missing from the saved state.
+   */
+  const ensurePreviewLoaded = async () => {
+    // Only fetch if we have a generator ID but no preview URLs
+    if (!state.generatorId) {
+      return;
+    }
+
+    // If we already have a mock URL, we're good
+    if (state.lastMockUrl) {
+      return;
+    }
+
+    // If we have a draft URL but no mock URL, try to fetch mock
+    if (state.lastDraftUrl && !state.lastMockUrl) {
+      // We're in the process of generating, try to fetch mock
+      try {
+        await api.fetchSignOnce('mock');
+      } catch (error) {
+        // Silently fail - preview might not be ready yet
+      }
+      return;
+    }
+
+    // If we have neither URL but have a generator ID, we're in the creation process
+    // Try to fetch any available preview
+    if (!state.lastDraftUrl && !state.lastMockUrl) {
+      try {
+        await api.fetchSignOnce('any');
+      } catch (error) {
+        // Silently fail - preview might not be ready yet
+      }
+    }
+  };
+
   // ============================================================================
   // ! DOM Elements
   // ============================================================================
@@ -248,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     locked: false,
     generatorId: '',
     lastMockUrl: '',
-    lastEntUrl: '',
+    lastDraftUrl: '',
     priceReady: false,
     priceRequested: false,
     pendingPriceValue: '',
@@ -280,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
           current: state.current,
           generatorId: state.generatorId,
           lastMockUrl: state.lastMockUrl,
-          lastEntUrl: state.lastEntUrl,
+          lastDraftUrl: state.lastDraftUrl,
           priceReady: state.priceReady,
           pendingPriceValue: state.pendingPriceValue,
           previewDone: state.previewDone,
@@ -327,12 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadState() {
       try {
-        // Check if state has expired before loading
-        if (this.isStateExpired()) {
-          this.clearState();
-          return null;
-        }
-
         const saved = localStorage.getItem(STORAGE_KEY);
         if (!saved) return null;
         const parsed = JSON.parse(saved);
@@ -723,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           if (
             state.hasGeneratedDesign &&
-            (state.lastMockUrl || state.lastEntUrl)
+            (state.lastMockUrl || state.lastDraftUrl)
           ) {
             this.setCta('Weiter →', true);
             return;
@@ -836,7 +868,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Enable continue button when we have a preview
           if (elements.continueBtn) {
             elements.continueBtn.disabled =
-              !state.lastMockUrl && !state.lastEntUrl;
+              !state.lastMockUrl && !state.lastDraftUrl;
           }
 
           // If we manually navigate to page 3 while in 'creating', show Confirm button
@@ -1226,13 +1258,13 @@ document.addEventListener('DOMContentLoaded', () => {
           return { failed: true, json: j };
         }
 
-        if (mode === 'entwurf' || mode === 'any') {
-          const entUrl = normalizeImageUrl(extractField(j, 'Entwurf'));
-          if (entUrl) {
-            state.lastEntUrl = entUrl;
+        if (mode === 'draft' || mode === 'any') {
+          const draftUrl = normalizeImageUrl(extractField(j, 'Entwurf'));
+          if (draftUrl) {
+            state.lastDraftUrl = draftUrl;
             storageManager.saveState();
             ui.setPreviewLoading(false);
-            ui.showPreview(entUrl);
+            ui.showPreview(draftUrl);
           }
         }
 
@@ -1455,7 +1487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         locked: false,
         generatorId: '',
         lastMockUrl: '',
-        lastEntUrl: '',
+        lastDraftUrl: '',
         priceReady: false,
         priceRequested: false,
         pendingPriceValue: '',
@@ -1546,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check for draft preview after delay
         timers.draftCheck = setTimeout(async () => {
           try {
-            await this.fetchSignOnce('entwurf');
+            await this.fetchSignOnce('draft');
           } catch (error) {}
         }, TIMING.FIRST_DRAFT_CHECK_DELAY_MS);
 
@@ -1699,7 +1731,7 @@ document.addEventListener('DOMContentLoaded', () => {
         locked: false,
         generatorId: '',
         lastMockUrl: '',
-        lastEntUrl: '',
+        lastDraftUrl: '',
         priceReady: false,
         priceRequested: false,
         pendingPriceValue: '',
@@ -1784,7 +1816,7 @@ document.addEventListener('DOMContentLoaded', () => {
           locked: false,
           generatorId: '',
           lastMockUrl: '',
-          lastEntUrl: '',
+          lastDraftUrl: '',
           priceReady: false,
           previewDone: false,
           runStartedAt: 0,
@@ -1900,6 +1932,73 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
               const data = await res.json();
               ui.setPillState('ok', 'Im Warenkorb');
+
+              // Fetch full cart data to trigger tracking events
+              try {
+                const cartRes = await fetch('/cart.js');
+                if (cartRes.ok) {
+                  const cartData = await cartRes.json();
+                  
+                  // Publish cartUpdate event to trigger Analizify and Meta Pixel tracking
+                  // This is the same event that product-form.js publishes, which tracking scripts listen to
+                  if (typeof publish !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
+                    publish(PUB_SUB_EVENTS.cartUpdate, {
+                      source: 'steelmonks-sign-creator',
+                      productVariantId: state.generatedVariantId,
+                      cartData: cartData,
+                    });
+                  } else {
+                    console.warn('publish is not defined, source: fb29o3487ytr234rty2fbo3478yr28');
+                  }
+                  
+                  // Push to dataLayer for Google Tag Manager / Google Analytics
+                  if (window.dataLayer) {
+                    const addedItem = cartData.items?.find(item => item.variant_id === state.generatedVariantId);
+                    if (addedItem) {
+                      window.dataLayer.push({
+                        event: 'add_to_cart',
+                        ecommerce: {
+                          currency: cartData.currency || 'EUR',
+                          value: (addedItem.final_price / 100).toFixed(2),
+                          items: [{
+                            item_id: addedItem.variant_id?.toString(),
+                            item_name: addedItem.product_title || state.generatedProductName,
+                            item_variant: addedItem.variant_title || '',
+                            price: (addedItem.final_price / 100).toFixed(2),
+                            quantity: addedItem.quantity || 1
+                          }]
+                        }
+                      });
+                    }
+                  } else {
+                    console.warn('dataLayer is not defined, source: fb29o3487ytr234rty2fbo3478yr28');
+                  }
+                  
+                  // Trigger Meta Pixel AddToCart event if fbq is available
+                  if (typeof fbq !== 'undefined') {
+                    const addedItem = cartData.items?.find(item => item.variant_id === state.generatedVariantId);
+                    if (addedItem) {
+                      fbq('track', 'AddToCart', {
+                        content_name: addedItem.product_title || state.generatedProductName,
+                        content_ids: [addedItem.variant_id?.toString()],
+                        content_type: 'product',
+                        value: (addedItem.final_price / 100).toFixed(2),
+                        currency: cartData.currency || 'EUR'
+                      });
+                    }
+                  } else {
+                    console.warn('fbq is not defined, source: fb29o3487ytr234rty2fbo3478yr29');
+                  }
+                  
+                  // Also dispatch a custom event as fallback for any other tracking scripts
+                  document.dispatchEvent(new CustomEvent('cart:updated', {
+                    detail: { cart: cartData }
+                  }));
+                }
+              } catch (cartErr) {
+                console.warn('Failed to fetch cart data for tracking:', cartErr);
+                // Continue with redirect even if cart fetch fails
+              }
 
               // Redirect to checkout
               window.location.href = '/checkout';
@@ -2054,7 +2153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ui.navigateTo(2);
           } else if (
             state.current === 'init' &&
-            (state.lastMockUrl || state.lastEntUrl)
+            (state.lastMockUrl || state.lastDraftUrl)
           ) {
             // If on init but have preview, navigate to page 2
             ui.navigateTo(2);
@@ -2074,7 +2173,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.previewDownload) {
     elements.previewDownload.addEventListener('click', async () => {
       try {
-        const url = state.lastMockUrl || state.lastEntUrl;
+        const url = state.lastMockUrl || state.lastDraftUrl;
         if (!url) {
           return;
         }
@@ -2090,7 +2189,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.previewShare) {
     elements.previewShare.addEventListener('click', async () => {
       try {
-        const url = state.lastMockUrl || state.lastEntUrl;
+        const url = state.lastMockUrl || state.lastDraftUrl;
         if (!url) {
           return;
         }
@@ -2168,7 +2267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         current: savedState.current || 'init',
         generatorId: savedState.generatorId || '',
         lastMockUrl: savedState.lastMockUrl || '',
-        lastEntUrl: savedState.lastEntUrl || '',
+        lastDraftUrl: savedState.lastDraftUrl || '',
         priceReady: savedState.priceReady || false,
         pendingPriceValue: savedState.pendingPriceValue || '',
         previewDone: savedState.previewDone || false,
@@ -2199,8 +2298,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           ui.setPillState('work', 'Wird erstellt');
         }
-      } else if (state.lastEntUrl) {
-        ui.showPreview(state.lastEntUrl);
+      } else if (state.lastDraftUrl) {
+        ui.showPreview(state.lastDraftUrl);
         ui.setPillState('work', 'Wird erstellt');
       }
 
@@ -2243,6 +2342,10 @@ document.addEventListener('DOMContentLoaded', () => {
           bolts,
         );
       }
+
+      // Ensure preview images are loaded if they don't exist yet
+      // This runs after state is loaded to fetch any missing preview images
+      ensurePreviewLoaded();
 
       // Restore timer if available
       timerManager.restoreEta();
@@ -2291,3 +2394,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ui.setPillState('bad', 'Initialisierungsfehler');
   }
 });
+
+
+
+
