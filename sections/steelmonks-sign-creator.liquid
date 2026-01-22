@@ -4,32 +4,335 @@
   "name": "Steelmonks Sign Creator",
   "settings": [
     {
+      "type": "header",
+      "content": "General Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reset_button",
+      "label": "Show Reset Button",
+      "default": true,
+      "info": "Shows a reset button at the bottom of the sign creator if users get stuck."
+    },
+    {
+      "type": "header",
+      "content": "Open Button"
+    },
+    {
+      "type": "text",
+      "id": "open_button_text",
+      "label": "Open Button Text",
+      "default": "In die Werkstatt",
+      "info": "Text displayed on the button that opens the sign creator. Appears at the bottom of the page."
+    },
+    {
+      "type": "header",
+      "content": "Status Pill"
+    },
+    {
+      "type": "text",
+      "id": "status_pill_ready",
+      "label": "Status Pill - Ready Text",
+      "default": "Bereit",
+      "info": "Text displayed in the status pill when the creator is ready. Appears at the top of the creator interface."
+    },
+    {
+      "type": "header",
+      "content": "Page 1 - Configuration"
+    },
+    {
+      "type": "text",
+      "id": "page1_heading",
+      "label": "Page 1 Heading",
+      "default": "Design konfigurieren",
+      "info": "Main heading on the first page of the sign creator where users configure their design."
+    },
+    {
+      "type": "text",
+      "id": "motiv_description_label",
+      "label": "Motiv Description Label",
+      "default": "Motiv Beschreibung",
+      "info": "Label for the description textarea field on page 1."
+    },
+    {
+      "type": "text",
+      "id": "required_field_note",
+      "label": "Required Field Note",
+      "default": "Pflichtfeld",
+      "info": "Note text shown next to required fields (e.g., 'Pflichtfeld')."
+    },
+    {
+      "type": "text",
+      "id": "motiv_description_placeholder",
+      "label": "Motiv Description Placeholder",
+      "default": "Lass Deiner Vorstellung freien Lauf...",
+      "info": "Placeholder text in the description textarea field on page 1."
+    },
+    {
+      "type": "text",
+      "id": "upload_label",
+      "label": "Upload Label",
+      "default": "Motiv hochladen",
+      "info": "Label for the file upload field on page 1."
+    },
+    {
+      "type": "text",
+      "id": "upload_file_types_note",
+      "label": "Upload File Types Note",
+      "default": "PNG oder JPG",
+      "info": "Note text showing accepted file types for upload (e.g., 'PNG oder JPG')."
+    },
+    {
+      "type": "text",
+      "id": "file_choose_text",
+      "label": "File Choose Text",
+      "default": "Datei wählen",
+      "info": "Text displayed in the file upload UI when no file is selected (page 1)."
+    },
+    {
+      "type": "text",
+      "id": "file_no_upload_text",
+      "label": "File No Upload Text",
+      "default": "Noch kein Upload",
+      "info": "Text shown when no file has been uploaded yet (page 1)."
+    },
+    {
+      "type": "text",
+      "id": "file_upload_chip",
+      "label": "File Upload Chip Text",
+      "default": "Upload",
+      "info": "Text on the upload chip/button in the file upload UI (page 1)."
+    },
+    {
+      "type": "text",
+      "id": "finish_label",
+      "label": "Finish/Surface Label",
+      "default": "Oberfläche",
+      "info": "Label for the finish/surface select dropdown on page 1."
+    },
+    {
+      "type": "text",
+      "id": "type_label",
+      "label": "Type/Style Label",
+      "default": "Stil",
+      "info": "Label for the type/style select dropdown on page 1."
+    },
+    {
+      "type": "text",
+      "id": "create_design_button",
+      "label": "Create Design Button Text",
+      "default": "Entwurf erstellen",
+      "info": "Text on the main CTA button on page 1 that starts the design creation process."
+    },
+    {
+      "type": "header",
+      "content": "Page 2 - Preview"
+    },
+    {
+      "type": "text",
+      "id": "preview_empty_state",
+      "label": "Preview Empty State Text",
+      "default": "Starte zuerst den Entwurf",
+      "info": "Text shown in the preview area on page 2 when no design has been created yet."
+    },
+    {
+      "type": "text",
+      "id": "share_button_text",
+      "label": "Share Button Text",
+      "default": "Teilen",
+      "info": "Text on the share button in the preview actions on page 2."
+    },
+    {
+      "type": "text",
+      "id": "download_button_text",
+      "label": "Download Button Text",
+      "default": "Download",
+      "info": "Text on the download button in the preview actions on page 2."
+    },
+    {
+      "type": "text",
+      "id": "back_to_config_button",
+      "label": "Back to Configuration Button Text",
+      "default": "← Konfiguration",
+      "info": "Text on the back button that returns to page 1 from page 2."
+    },
+    {
+      "type": "text",
+      "id": "continue_button_text",
+      "label": "Continue Button Text",
+      "default": "Weiter →",
+      "info": "Text on the continue button that proceeds from page 2 to page 3."
+    },
+    {
+      "type": "header",
+      "content": "Page 3 - Result & Checkout"
+    },
+    {
+      "type": "text",
+      "id": "product_name",
+      "label": "Product Name",
+      "default": "Dein personalisiertes Schild",
+      "info": "Default product name displayed on page 3 in the result section."
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size Label",
+      "default": "Größe",
+      "info": "Label for the size select dropdown on page 3."
+    },
+    {
+      "type": "text",
+      "id": "mounting_label",
+      "label": "Mounting/Befestigung Label",
+      "default": "Befestigung: ",
+      "info": "Label for the mounting/fastening select dropdown on page 3."
+    },
+    {
+      "type": "text",
+      "id": "mounting_no_option",
+      "label": "Mounting - No Option Text",
+      "default": "Kein Befestigungssatz",
+      "info": "Text for the 'no mounting' option in the mounting select on page 3."
+    },
+    {
+      "type": "text",
+      "id": "mounting_with_option",
+      "label": "Mounting - With Option Text",
+      "default": "Unsichtbare Befestigung (+€9,45)",
+      "info": "Text for the 'with mounting' option in the mounting select on page 3."
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Note/Anmerkung Label",
+      "default": "Anmerkung zum Design",
+      "info": "Label for the note/comment textarea field on page 3."
+    },
+    {
+      "type": "text",
+      "id": "optional_note",
+      "label": "Optional Note Text",
+      "default": "Optional",
+      "info": "Note text shown next to optional fields (e.g., 'Optional')."
+    },
+    {
+      "type": "text",
+      "id": "note_placeholder",
+      "label": "Note Placeholder Text",
+      "default": "Hast du noch Wünsche oder Anmerkungen?",
+      "info": "Placeholder text in the note textarea field on page 3."
+    },
+    {
+      "type": "text",
+      "id": "price_label",
+      "label": "Price Label",
+      "default": "Preis",
+      "info": "Label for the price display on page 3."
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_button",
+      "label": "Add to Cart Button Text",
+      "default": "in den Warenkorb",
+      "info": "Text on the button that adds the product to cart on page 3."
+    },
+    {
+      "type": "text",
+      "id": "start_over_button",
+      "label": "Start Over Button Text",
+      "default": "Neu anfangen",
+      "info": "Text on the button that resets and starts over from page 3."
+    },
+    {
+      "type": "header",
+      "content": "Reset Button"
+    },
+    {
+      "type": "text",
+      "id": "reset_button_text",
+      "label": "Reset Button Text",
+      "default": "Hängt es? Neu anfangen",
+      "info": "Text on the reset button that appears at the bottom if 'Show Reset Button' is enabled."
+    },
+    {
+      "type": "header",
+      "content": "Confirmation Popup"
+    },
+    {
+      "type": "text",
+      "id": "confirmation_popup_heading",
+      "label": "Confirmation Popup Heading",
+      "default": "Dein Schild ist erstellt!",
+      "info": "Heading text in the confirmation popup that appears after adding to cart."
+    },
+    {
+      "type": "text",
+      "id": "confirmation_popup_text",
+      "label": "Confirmation Popup Text",
+      "default": "Dein Unikat wurde erfolgreich zum Warenkorb hinzugefügt.",
+      "info": "Body text in the confirmation popup that appears after adding to cart."
+    },
+    {
+      "type": "text",
+      "id": "continue_shopping_button",
+      "label": "Continue Shopping Button Text",
+      "default": "Weiter einkaufen",
+      "info": "Text on the 'continue shopping' button in the confirmation popup."
+    },
+    {
+      "type": "text",
+      "id": "go_to_cart_button",
+      "label": "Go to Cart Button Text",
+      "default": "Zum Warenkorb",
+      "info": "Text on the 'go to cart' button in the confirmation popup."
+    },
+    {
+      "type": "header",
+      "content": "Timer"
+    },
+    {
+      "type": "text",
+      "id": "timer_label",
+      "label": "Timer Label",
+      "default": "Geschätzte Zeit",
+      "info": "Label text for the estimated time timer that appears during design creation."
+    },
+    {
+      "type": "header",
+      "content": "Info Modal"
+    },
+    {
       "type": "text",
       "id": "info_modal_title",
       "label": "Info Modal Title",
-      "info": "The info modal will not be displayed if the title is blank."
+      "info": "The info modal will not be displayed if the title is blank. Title appears at the top of the info modal popup."
     },
     {
       "type": "richtext",
       "id": "info_modal_richtext_content1",
       "label": "Info Modal Richtext Content 1",
-      "default": "<p>Dies ist die Info-Modal.</p>"
+      "default": "<p>Dies ist die Info-Modal.</p>",
+      "info": "First richtext content block in the info modal. Appears after the title."
     },
     {
       "type": "image_picker",
       "id": "info_modal_image1",
-      "label": "Info Modal Image 1"
+      "label": "Info Modal Image 1",
+      "info": "First image in the info modal. Appears after the first richtext content block."
     },
     {
       "type": "richtext",
       "id": "info_modal_richtext_content2",
       "label": "Info Modal Richtext Content 2",
-      "default": "<p>Dies ist die Info-Modal.</p>"
+      "default": "<p>Dies ist die Info-Modal.</p>",
+      "info": "Second richtext content block in the info modal. Appears after the first image."
     },
     {
       "type": "image_picker",
       "id": "info_modal_image2",
-      "label": "Info Modal Image 2"
+      "label": "Info Modal Image 2",
+      "info": "Second image in the info modal. Appears after the second richtext content block."
     }
   ]
 }
@@ -56,7 +359,7 @@
       id='smc-open-btn'
       class='werkstatt-btn twcss-py-3 twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
     >
-      In die Werkstatt
+      {{ section.settings.open_button_text | default: 'In die Werkstatt' }}
     </button>
   </div>
   <span class='twcss-bg-brandblack/70 twcss-text-brandwhite twcss-py-3 twcss-px-4 twcss-rounded-full twcss-text-sm'
@@ -144,7 +447,7 @@
         aria-hidden='true'
         class='twcss-w-[10px] twcss-h-[10px] twcss-rounded-full twcss-bg-[var(--smc-gold)] twcss-shadow-[0_0_0_4px_rgba(200,164,93,0.22)] twcss-animate-pulse'
       ></span>
-      <span id='smc-pill-text'>Bereit</span>
+      <span id='smc-pill-text'>{{ section.settings.status_pill_ready | default: 'Bereit' }}</span>
       <span aria-hidden='true' class='twcss-hidden twcss-w-[18px] twcss-h-[10px]'></span>
     </div>
   </div>
@@ -166,44 +469,38 @@
       >
         <div class='smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
           <h2 class='twcss-text-3xl twcss-font-bold twcss-mb-8 twcss-text-center twcss-text-brandblack'>
-            Design konfigurieren
+            {{ section.settings.page1_heading | default: 'Design konfigurieren' }}
           </h2>
 
-          {%- assign base_product = section.settings.product -%}
-
-          {% comment %} Hidden form for data persistence {% endcomment %}
-          {% if base_product != blank %}
-            <form
-              method='post'
-              action='{{ routes.cart_add_url }}'
-              enctype='multipart/form-data'
-              class='smc__form'
-              id='smc-form'
-            >
-              <input type='hidden' name='id' value='{{ base_product.selected_or_first_available_variant.id }}'>
-          {% else %}
-            <div class='smc__form' id='smc-form'>
-          {% endif %}
+          {% comment %} Form container for data persistence and semantic HTML {% endcomment %}
+          {% comment %} Form submission is handled by JavaScript to show confirmation popup {% endcomment %}
+          <form
+            method='post'
+            action='{{ routes.cart_add_url }}'
+            enctype='multipart/form-data'
+            class='smc__form'
+            id='smc-form'
+          >
 
           {% comment %} ! Prompt Textarea Field {% endcomment %}
           <div class='smc__field'>
             <label class='smc__label twcss-block twcss-font-bold' for='smc-desc'>
-              Motiv Beschreibung
-              <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>Pflichtfeld</span>
+              {{ section.settings.motiv_description_label | default: 'Motiv Beschreibung' }}
+              <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>{{ section.settings.required_field_note | default: 'Pflichtfeld' }}</span>
             </label>
             <textarea
               id='smc-desc'
               class='smc__textarea twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-gray-300 twcss-min-h-[120px] twcss-max-h-[260px]'
               rows='5'
-              placeholder='Lass Deiner Vorstellung freien Lauf...'
+              placeholder='{{ section.settings.motiv_description_placeholder | default: "Lass Deiner Vorstellung freien Lauf..." }}'
             ></textarea>
           </div>
 
           {% comment %} ! Upload Field {% endcomment %}
           <div class='smc__field'>
             <label class='smc__label twcss-block twcss-font-bold' for='smc-upload'>
-              Motiv hochladen
-              <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>PNG oder JPG</span>
+              {{ section.settings.upload_label | default: 'Motiv hochladen' }}
+              <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>{{ section.settings.upload_file_types_note | default: 'PNG oder JPG' }}</span>
             </label>
 
             <div class='smc__file twcss-relative'>
@@ -236,16 +533,16 @@
                     </div>
                   </div>
                   <div class='smc__file-meta'>
-                    <div class='smc__file-title twcss-font-bold'>Datei wählen</div>
+                    <div class='smc__file-title twcss-font-bold'>{{ section.settings.file_choose_text | default: 'Datei wählen' }}</div>
                     <div
                       class='smc__file-sub twcss-text-sm twcss-text-gray-500 twcss-max-w-[75px] md:twcss-max-w-[150px]'
                       id='smc-upload-label'
                     >
-                      Noch kein Upload
+                      {{ section.settings.file_no_upload_text | default: 'Noch kein Upload' }}
                     </div>
                   </div>
                   <span class='smc__file-chip twcss-ml-auto twcss-bg-brandblack twcss-text-white twcss-px-3 twcss-py-1 twcss-rounded-full twcss-text-xs twcss-font-bold twcss-uppercase'
-                    >Upload</span
+                    >{{ section.settings.file_upload_chip | default: 'Upload' }}</span
                   >
                 </div>
               </label>
@@ -255,7 +552,7 @@
           <div class='twcss-flex twcss-flex-col twcss-gap-2 twcss-mb-6 md:twcss-flex-row'>
             {% comment %} ! Material select {% endcomment %}
             <div class='twcss-flex-1'>
-              <label class='smc__label twcss-block twcss-font-bold' for='smc-finish'>Oberfläche</label>
+              <label class='smc__label twcss-block twcss-font-bold' for='smc-finish'>{{ section.settings.finish_label | default: 'Oberfläche' }}</label>
               <div class='smc__select twcss-relative'>
                 <select
                   id='smc-finish'
@@ -277,7 +574,7 @@
             </div>
             {% comment %} ! Type select {% endcomment %}
             <div class='twcss-flex-1'>
-              <label class='smc__label twcss-block twcss-font-bold' for='smc-type'>Stil</label>
+              <label class='smc__label twcss-block twcss-font-bold' for='smc-type'>{{ section.settings.type_label | default: 'Stil' }}</label>
               <div class='smc__select twcss-relative'>
                 <select
                   id='smc-type'
@@ -308,12 +605,14 @@
                 id='smc-cta-btn'
                 disabled
               >
-                <span class='smc__btn-label' id='smc-cta-label'>Entwurf erstellen</span>
+                <span class='smc__btn-label' id='smc-cta-label'>{{ section.settings.create_design_button | default: 'Entwurf erstellen' }}</span>
               </button>
             </div>
           </div>
 
           {% comment %} Hidden inputs for cart {% endcomment %}
+          <input type='hidden' name='id' id='smc-variant-id' value=''>
+          <input type='hidden' name='quantity' value='1'>
           <input type='hidden' name='properties[Bild]' id='smc-prop-img'>
           <input type='hidden' name='properties[Beschreibung]' id='smc-prop-desc'>
           <input type='hidden' name='properties[Oberfläche]' id='smc-prop-finish'>
@@ -325,12 +624,8 @@
           <input type='hidden' name='properties[Type]' id='smc-prop-type'>
           <input type='hidden' name='properties[Befestigung]' id='smc-prop-bolts'>
 
-          {% if base_product != blank %}
-            {% comment %} Submit button is on page 3 {% endcomment %}
-            </form>
-          {% else %}
-            </div>
-          {% endif %}
+          {% comment %} Form is not actually submitted - JavaScript handles cart add via AJAX {% endcomment %}
+          </form>
         </div>
       </div>
 
@@ -354,7 +649,7 @@
                 ></div>
                 {% comment %} Empty State {% endcomment %}
                 <div id='smc-preview-empty' class='twcss-text-center twcss-text-gray-400 twcss-p-8'>
-                  <p class='twcss-text-lg twcss-font-medium'>Starte zuerst den Entwurf</p>
+                  <p class='twcss-text-lg twcss-font-medium'>{{ section.settings.preview_empty_state | default: 'Starte zuerst den Entwurf' }}</p>
                 </div>
               </div>
 
@@ -380,7 +675,7 @@
                   disabled
                   aria-label='Vorschau teilen'
                 >
-                  Teilen
+                  {{ section.settings.share_button_text | default: 'Teilen' }}
                 </button>
                 <button
                   type='button'
@@ -389,7 +684,7 @@
                   disabled
                   aria-label='Vorschau herunterladen'
                 >
-                  Download
+                  {{ section.settings.download_button_text | default: 'Download' }}
                 </button>
               </div>
 
@@ -400,7 +695,7 @@
                   data-back-to-config
                   class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
                 >
-                  ← Konfiguration
+                  {{ section.settings.back_to_config_button | default: '← Konfiguration' }}
                 </button>
 
                 {% comment %} Continue button {% endcomment %}
@@ -411,7 +706,7 @@
                     id='smc-continue-btn'
                     disabled
                   >
-                    <span class='smc__btn-label' id='smc-continue-label'>Weiter →</span>
+                    <span class='smc__btn-label' id='smc-continue-label'>{{ section.settings.continue_button_text | default: 'Weiter →' }}</span>
                   </button>
                 </div>
               </div>
@@ -443,12 +738,12 @@
               <div>
                 {% comment %} * Name {% endcomment %}
                 <h3 id='smc-product-name' class='twcss-text-xl twcss-font-bold twcss-mb-2'>
-                  Dein personalisiertes Schild
+                  {{ section.settings.product_name | default: 'Dein personalisiertes Schild' }}
                 </h3>
 
                 {% comment %} * Size select {% endcomment %}
                 <div class='smc__field'>
-                  <label class='smc__label twcss-block twcss-font-bold' for='smc-size'>Größe</label>
+                  <label class='smc__label twcss-block twcss-font-bold' for='smc-size'>{{ section.settings.size_label | default: 'Größe' }}</label>
                   <div class='smc__select twcss-relative'>
                     <select
                       id='smc-size'
@@ -469,14 +764,14 @@
 
                 {% comment %} * Bolts / Mounting set select {% endcomment %}
                 <div class='smc__field'>
-                  <label class='smc__label twcss-block twcss-font-bold' for='smc-bolts'>Befestigung: </label>
+                  <label class='smc__label twcss-block twcss-font-bold' for='smc-bolts'>{{ section.settings.mounting_label | default: 'Befestigung: ' }}</label>
                   <div class='smc__select twcss-relative'>
                     <select
                       id='smc-bolts'
                       class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
                     >
-                      <option value='Keine Befestigung'>Kein Befestigungssatz</option>
-                      <option value='Befestigung'>Unsichtbare Befestigung (+€9,45)</option>
+                      <option value='Keine Befestigung'>{{ section.settings.mounting_no_option | default: 'Kein Befestigungssatz' }}</option>
+                      <option value='Befestigung'>{{ section.settings.mounting_with_option | default: 'Unsichtbare Befestigung (+€9,45)' }}</option>
                     </select>
                     <span
                       class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'
@@ -491,20 +786,20 @@
             {% comment %} ! Note Field {% endcomment %}
             <div class='smc__field'>
               <label class='smc__label twcss-block twcss-font-bold' for='smc-note'>
-                Anmerkung zum Design
-                <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>Optional</span>
+                {{ section.settings.note_label | default: 'Anmerkung zum Design' }}
+                <span class='smc__label-note twcss-text-sm twcss-opacity-60 twcss-font-normal'>{{ section.settings.optional_note | default: 'Optional' }}</span>
               </label>
               <textarea
                 id='smc-note'
                 class='smc__textarea twcss-w-full twcss-p-4 twcss-rounded-xl twcss-border twcss-border-gray-300 twcss-min-h-[120px] twcss-max-h-[260px]'
                 rows='3'
-                placeholder='Hast du noch Wünsche oder Anmerkungen?'
+                placeholder='{{ section.settings.note_placeholder | default: "Hast du noch Wünsche oder Anmerkungen?" }}'
               ></textarea>
             </div>
 
             {% comment %} ! Price {% endcomment %}
             <div class='smc__price'>
-              <span class='smc__label twcss-block twcss-font-bold'>Preis</span>
+              <span class='smc__label twcss-block twcss-font-bold'>{{ section.settings.price_label | default: 'Preis' }}</span>
               <div class='smc__price-val twcss-text-2xl twcss-font-black twcss-text-brandblack' id='smc-price'></div>
             </div>
 
@@ -513,12 +808,13 @@
               {% comment %} Confirm button {% endcomment %}
               <div class='werkstatt-shadow-wrap twcss-flex-1' id='smc-confirm-btn-wrap'>
                 <button
-                  type='button'
+                  type='submit'
+                  form='smc-form'
                   class='werkstatt-btn twcss-py-3 twcss-w-full twcss-px-5 twcss-border-transparent twcss-bg-brandblack hover:twcss-bg-brandblack/50 twcss-transition-all twcss-duration-300 twcss-text-brandwhite twcss-shadow-xl hover:twcss-shadow-brandblack/25 twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10'
                   id='smc-confirm-btn'
                   disabled
                 >
-                  <span class='smc__btn-label' id='smc-continue-label'>Design bestätigen</span>
+                  <span class='smc__btn-label' id='smc-continue-label'>{{ section.settings.add_to_cart_button | default: 'in den Warenkorb' }}</span>
                 </button>
               </div>
 
@@ -527,7 +823,7 @@
                 class='twcss-flex-2 twcss-bg-gray-200 twcss-text-gray-700 twcss-border-2 twcss-border-gray-500 twcss-py-3 twcss-px-5 twcss-shadow-xl twcss-rounded-full twcss-text-lg twcss-relative twcss-z-10 twcss-transition-all twcss-duration-300 hover:twcss-bg-gray-300 hover:twcss-border-gray-600 hover:twcss-text-gray-600'
                 id='smc-back-btn'
               >
-                Neu anfangen
+                {{ section.settings.start_over_button | default: 'Neu anfangen' }}
               </button>
             </div>
           </div>
@@ -535,10 +831,45 @@
       </div>
     </div>
   </div>
+
+  {% comment %} ! Got stuck? Reset button (resets all state) {% endcomment %}
+  {% if section.settings.show_reset_button %}
+  <div id='smc-reset-btn' class='twcss-flex twcss-text-sm twcss-text-gray-800/60 twcss-italic twcss-font-bold twcss-underline twcss-bg-gray-300 twcss-rounded-full twcss-py-2 twcss-px-4 twcss-cursor-pointer twcss-shadow-[0_18px_42px_rgba(0,0,0,0.12)] twcss-border-[2px] twcss-border-[#666]'>{{ section.settings.reset_button_text | default: 'Hängt es? Neu anfangen' }}</div>
+  {% endif %}
+
+  
+  {% comment %} ! Confirmation Popup {% endcomment %}
+  <div
+    data-cart-confirmation-popup
+    class='twcss-fixed twcss-inset-0 twcss-flex twcss-items-center twcss-justify-center twcss-z-100 '
+    style='opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;'
+  >
+    <div style="display: block;" class='twcss-absolute twcss-inset-0 twcss-bg-brandblack/35' data-cart-confirmation-popup-backdrop></div>
+    <div class='twcss-relative twcss-size-4 twcss-bg-white twcss-p-8 twcss-max-w-md twcss-w-full twcss-mx-4 twcss-shadow-2xl smc__wrap twcss-rounded-[20px] twcss-px-6 twcss-py-12 md:twcss-p-16 twcss-bg-[#fafafff5] twcss-min-w-[300px] md:twcss-min-w-[460px]'>
+      <h3 class='twcss-text-2xl twcss-font-bold twcss-mb-4 twcss-text-brandblack twcss-text-center'>{{ section.settings.confirmation_popup_heading | default: 'Dein Schild ist erstellt!' }}</h3>
+      <p class='twcss-text-gray-700 twcss-text-sm twcss-mb-6 twcss-text-center'>{{ section.settings.confirmation_popup_text | default: 'Dein Unikat wurde erfolgreich zum Warenkorb hinzugefügt.' }}</p>
+      <div class='twcss-flex twcss-flex-col md:twcss-flex-row twcss-gap-4'>
+        <button
+          type='button'
+          data-cart-confirmation-popup-close
+          class='twcss-flex-1 twcss-bg-gray-200 twcss-text-gray-700 twcss-py-3 twcss-px-6 twcss-rounded-full twcss-text-center twcss-font-bold hover:twcss-bg-gray-300 twcss-transition-colors'
+        >
+          {{ section.settings.continue_shopping_button | default: 'Weiter einkaufen' }}
+        </button>
+        <a
+          href='{{ routes.cart_url }}'
+          class='twcss-flex-1 twcss-flex twcss-items-center twcss-justify-center twcss-bg-brandblack twcss-text-white twcss-py-3 twcss-px-6 twcss-rounded-full twcss-text-center twcss-font-bold hover:twcss-bg-brandblack/90 twcss-transition-colors'
+        >
+          {{ section.settings.go_to_cart_button | default: 'Zum Warenkorb' }}
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
+
 
 {% comment %} ! TIMER {% endcomment %}
 <div class='smc__eta werkstatt-btn' id='smc-eta' style='display:none'>
-  <span class='smc__eta-label' id='smc-eta-label'>Geschätzte Zeit</span>
+  <span class='smc__eta-label' id='smc-eta-label'>{{ section.settings.timer_label | default: 'Geschätzte Zeit' }}</span>
   <span class='smc__eta-time' id='smc-eta-time'>03:00</span>
 </div>

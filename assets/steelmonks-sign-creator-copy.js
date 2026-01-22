@@ -158,10 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
    * that might be missing from the saved state.
    */
   const ensurePreviewLoaded = async () => {
+    console.log('ensurePreviewLoaded');
     // Only fetch if we have a generator ID but no preview URLs
     if (!state.generatorId) {
       return;
     }
+
 
     // If we already have a mock URL, we're good
     if (state.lastMockUrl) {
@@ -199,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     page1: el('smc-page-1'),
     page2: el('smc-page-2'),
     page3: el('smc-page-3'),
+    resetBtn: el('smc-reset-btn'),
 
     // Form inputs
     upload: el('smc-upload'),
@@ -233,6 +236,13 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmBtn: el('smc-confirm-btn'),
     confirmBtnWrap: el('smc-confirm-btn-wrap'),
     backBtn: el('smc-back-btn'),
+
+    // Form and popup
+    form: el('smc-form'),
+    variantIdInput: el('smc-variant-id'),
+    confirmationPopup: document.querySelector('[data-cart-confirmation-popup]'),
+    confirmationPopupClose: document.querySelector('[data-cart-confirmation-popup-close]'),
+    confirmationPopupBackdrop: document.querySelector('[data-cart-confirmation-popup-backdrop]'),
 
     // ETA
     etaWrap: el('smc-eta'),
@@ -281,6 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================================
   // ! State Management
   // ============================================================================
+  // Skip preview loading in development and load preset generated state
+  let isDevelopment;
+  if (window.location.hostname.includes('localhost' || '127.0.0.1')) {
+    isDevelopment = true;
+  }
+
   const state = {
     current: 'init',
     locked: false,
@@ -1785,6 +1801,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Reset button handler
+  if (elements.resetBtn) {
+    elements.resetBtn.addEventListener('click', () => {
+      try {
+        let result = confirm('Hiermit fängst Du den Prozess von vorne an. Deinen bestehenden Entwurf können wir für Dich wiederherstellen, schreib und einfach an diese Email: Info@Steelmonks.com');
+        if (result) {
+          resetAll();
+        // Update UI based on state
+        ui.updateUIFromState();
+        }
+      } catch (error) {}
+    });
+  }
+
   // Close button handlers (using data-close-button attribute)
   // These will close the modal
   const closeButtons = document.querySelectorAll('[data-close-button]');
@@ -1876,9 +1906,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBackBtnState();
   }, 1000);
 
-  // Confirm button (Page 3)
-  if (elements.confirmBtn) {
-    elements.confirmBtn.addEventListener('click', async () => {
+  // Form submission handler (Page 3 confirm button submits the form)
+  if (elements.form) {
+    elements.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
       try {
         // DataLayer event for adding to cart
         window.dataLayer = window.dataLayer || [];
@@ -1891,21 +1923,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Show loading state on button
-        const originalText = elements.confirmBtn.textContent;
-        elements.confirmBtn.textContent = 'Produkt wird erstellt...';
-        elements.confirmBtn.disabled = true;
+        const originalText = elements.confirmBtn?.textContent;
+        if (elements.confirmBtn) {
+          elements.confirmBtn.textContent = 'Produkt wird erstellt...';
+          elements.confirmBtn.disabled = true;
+        }
 
         ui.setPillState('work', 'Produkt wird erstellt');
 
         // Check if product is already created to avoid duplication
-        if (state.generatedVariantId) {
-        } else {
+        if (!state.generatedVariantId) {
           // Call prepareProduct only if needed
           await api.prepareProduct();
         }
 
         // Check if product was created successfully (or already existed)
         if (state.generatedVariantId || state.generatedProductUrl) {
+          // Update variant ID in form before submission
+          if (elements.variantIdInput) {
+            elements.variantIdInput.value = state.generatedVariantId;
+          }
+
           // Transition to ready state and confirm design
           state.current = 'ready';
           state.designConfirmed = true;
@@ -1914,19 +1952,13 @@ document.addEventListener('DOMContentLoaded', () => {
           // Update UI to show/hide buttons based on new state
           ui.updateUIFromState();
 
-          const formData = {
-            id: state.generatedVariantId,
-            quantity: 1,
-          };
+          // Submit form data via AJAX
+          const formDataObj = new FormData(elements.form);
 
           try {
             const res = await fetch('/cart/add.js', {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-              },
-              body: JSON.stringify(formData),
+              body: formDataObj,
             });
 
             if (res.ok) {
@@ -1997,30 +2029,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               } catch (cartErr) {
                 console.warn('Failed to fetch cart data for tracking:', cartErr);
-                // Continue with redirect even if cart fetch fails
               }
 
-              // Redirect to checkout
-              window.location.href = '/checkout';
+              // Show confirmation popup instead of redirecting
+              if (elements.confirmationPopup) {
+                elements.confirmationPopup.style.opacity = '1';
+                elements.confirmationPopup.style.visibility = 'visible';
+              }
             } else {
               throw new Error('Failed to add to cart');
             }
           } catch (err) {
             ui.setPillState('bad', 'Fehler');
-            // If add to cart fails, we might want to re-enable the button?
-            // But design is confirmed. Maybe refresh page or contact support?
-            // For now, let's leave it disabled as per "should not be visible anymore"
+            if (elements.confirmBtn) {
+              elements.confirmBtn.textContent = originalText || 'Erneut versuchen';
+              elements.confirmBtn.disabled = false;
+            }
           }
         } else {
           // Handle failure
           ui.setPillState('bad', 'Fehler bei Erstellung');
-          elements.confirmBtn.textContent = 'Erneut versuchen';
-          elements.confirmBtn.disabled = false;
+          if (elements.confirmBtn) {
+            elements.confirmBtn.textContent = 'Erneut versuchen';
+            elements.confirmBtn.disabled = false;
+          }
         }
       } catch (error) {
         ui.setPillState('bad', 'Fehler');
-        elements.confirmBtn.textContent = 'Erneut versuchen';
-        elements.confirmBtn.disabled = false;
+        if (elements.confirmBtn) {
+          elements.confirmBtn.textContent = 'Erneut versuchen';
+          elements.confirmBtn.disabled = false;
+        }
+      }
+    });
+  }
+
+  // Confirmation popup close handlers
+  if (elements.confirmationPopupClose) {
+    elements.confirmationPopupClose.addEventListener('click', () => {
+      if (elements.confirmationPopup) {
+        elements.confirmationPopup.style.opacity = '0';
+        elements.confirmationPopup.style.visibility = 'hidden';
+      }
+    });
+  }
+
+  if (elements.confirmationPopupBackdrop) {
+    elements.confirmationPopupBackdrop.addEventListener('click', () => {
+      if (elements.confirmationPopup) {
+        elements.confirmationPopup.style.opacity = '0';
+        elements.confirmationPopup.style.visibility = 'hidden';
       }
     });
   }
