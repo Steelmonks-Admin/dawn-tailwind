@@ -56,7 +56,7 @@
       "name": "Steelmonks Hero Hub",
       "settings": {
         "top_spacing": 52,
-        "pixel_image": "shopify://shop_images/Steelmonks_2026_Banner.jpg",
+        "pixel_image": "shopify://shop_images/Steelmonks_Fruehlings_Banner_Bild.jpg",
         "badge_text": "Dein persönliches Unikat",
         "heading": "Jedes Stück ein Unikat",
         "kpi_title": "Geschenke aus Stahl",
@@ -93,7 +93,7 @@
         "text_C86W9k": {
           "type": "text",
           "settings": {
-            "text": "<p>Mit Hilfe von neuster Technologien haben wir ein einzigartiges Werkzeug entwickelt, das es Dir ermöglicht von einem Satz oder einem Bild in 2 Minuten ein wunderschönes Geschenk zu erstellen. Schau Dir hier die Beispiele an und probier unsere \"Werkstatt\" aus!</p>"
+            "text": "<p>Probier unsere \"Werkstatt\" aus!</p>"
           }
         }
       },
