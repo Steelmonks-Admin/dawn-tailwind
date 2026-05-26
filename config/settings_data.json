@@ -141,11 +141,6 @@
     },
     "content_for_index": [],
     "blocks": {
-      "7924418359578431505": {
-        "type": "shopify://apps/seoant-ai-seo/blocks/seoant-core/8e57283b-dcb0-4f7b-a947-fb5c57a0d59d",
-        "disabled": false,
-        "settings": {}
-      },
       "5017882195547572635": {
         "type": "shopify://apps/sc-easy-redirects/blocks/app/be3f8dbd-5d43-46b4-ba43-2d65046054c2",
         "disabled": false,
@@ -216,38 +211,20 @@
         "disabled": false,
         "settings": {}
       },
-      "10027001862550077959": {
-        "type": "shopify://apps/upsellplus/blocks/upsell-cart-drawer/553fb951-397c-4171-8b32-7056a23ffd82",
-        "disabled": true,
-        "settings": {
-          "upsell_cart_font": "sans_serif_n4",
-          "upsell_cart_font_color": "#000000",
-          "upsell_cart_title_font_size": 20,
-          "upsell_cart_title_font": "sans_serif_n4",
-          "upsell_cart_header_titles_font_size": 12,
-          "upsell_cart_product_font_size": 18,
-          "upsell_cart_product_price_normal_font_size": 14,
-          "upsell_cart_product_price_font_size": 18,
-          "upsell_cart_subtotal_font_size": 18,
-          "upsell_cart_footer_font_size": 16,
-          "upsell_cart_background_color": "#FFFFFF",
-          "upsell_cart_radius": 0,
-          "upsell_checkout_button_text_size": 20,
-          "upsell_checkout_button_font_color": "#FFFFFF",
-          "upsell_checkout_button_background_color": "#000000",
-          "upsell_checkout_button_border_radius": 15,
-          "upsell_free_shipping_enabled": false,
-          "upsell_free_shipping_font_size": 16,
-          "upsell_free_shipping_threshold": 100,
-          "upsell_free_shipping_text_before_goal": "",
-          "upsell_free_shipping_text_after_goal": "",
-          "upsell_free_shipping_progress_bar_color": "#000000"
-        }
-      },
       "7860399670564181960": {
         "type": "shopify://apps/profy-banner-countdown-timer/blocks/app_embed/243a639f-ca73-4afe-b6aa-3a23277fb424",
         "disabled": true,
         "settings": {}
+      },
+      "7008068068935494874": {
+        "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trstd-login/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+        "disabled": true,
+        "settings": {
+          "target_selector": "",
+          "position_desktop": "left",
+          "target_selector_mobile": "",
+          "position_mobile": "left"
+        }
       }
     },
     "color_schemes": {
