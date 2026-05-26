@@ -225,6 +225,11 @@
           "target_selector_mobile": "",
           "position_mobile": "left"
         }
+      },
+      "10031353204643366069": {
+        "type": "shopify://apps/zepto-sign-customizer/blocks/neon_customizer/92e24d64-81a1-4b3a-85e2-2a6187e4445e",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
