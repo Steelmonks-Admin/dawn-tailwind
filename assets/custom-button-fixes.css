@@ -79,3 +79,8 @@ etrusted-star-extension {
   min-width: 170px !important;
   min-height: 24px !important;
 }
+
+/* Prevent page width shift when modals open/close */
+html {
+  scrollbar-gutter: stable;
+}
