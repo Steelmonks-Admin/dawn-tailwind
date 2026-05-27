@@ -44,7 +44,7 @@
           }
         },
         "profy_banner_countdown_timer_app_block_jALVj7": {
-          "type": "shopify://apps/profy-banner-countdown-timer/blocks/app_block/243a639f-ca73-4afe-b6aa-3a23277fb424",
+          "type": "shopify://apps/profy-banner-timer/blocks/app_block/243a639f-ca73-4afe-b6aa-3a23277fb424",
           "settings": {
             "banner_id": "c9ffb917-cc34-11f0-b848-da56541e1029"
           }
@@ -64,6 +64,7 @@
         },
         "zepto_product_personalizer_product_personalizer_page_bj6dEi": {
           "type": "shopify://apps/zepto-product-personalizer/blocks/product_personalizer_page/7411210d-7b32-4c09-9455-e129e3be4729",
+          "disabled": true,
           "settings": {
             "product": "{{product}}"
           }
