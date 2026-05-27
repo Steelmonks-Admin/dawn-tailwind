@@ -454,8 +454,8 @@
 
  <script>
 (function() {
-  var pplrClosing = false;
-  var pplrOpenReady = false;
+  var pplrOutsideReady = false;
+  var pplrOutsideClosing = false;
 
   function getOverlay() {
     return document.querySelector('.pplr_crop-modal');
@@ -480,92 +480,62 @@
     );
   }
 
-  function closePplrOnce() {
-    if (pplrClosing) return;
-
-    if (typeof window.pplr_w_h === 'function') {
-      pplrClosing = true;
-      pplrOpenReady = false;
-
-      window.pplr_w_h();
-
-      setTimeout(function() {
-        pplrClosing = false;
-      }, 1000);
-    }
-  }
-
   function armOutsideClose() {
-    setTimeout(function() {
+    window.setTimeout(function() {
       var overlay = getOverlay();
       var popup = getPopup();
 
-      pplrOpenReady = !!(
+      pplrOutsideReady = !!(
         overlay &&
         popup &&
         isVisible(overlay) &&
         isVisible(popup)
       );
-    }, 600);
+    }, 700);
   }
 
-  /*
-    Intercept Zepto close button clicks before Zepto's duplicate handlers run.
-    This prevents the close animation from firing twice.
-  */
-  document.addEventListener('click', function(event) {
-    var closeButton = event.target.closest && event.target.closest('a.js-modal-close.pplr_close');
-
-    if (closeButton) {
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-
-      closePplrOnce();
-      return false;
-    }
-  }, true);
-
-  /*
-    Click outside popup frame to close.
-    This waits until after the popup has opened, so the original opening click
-    does not instantly close it again.
-  */
   document.addEventListener('click', function(event) {
     var overlay = getOverlay();
     var popup = getPopup();
 
-    if (!overlay || !popup || pplrClosing) {
-      pplrOpenReady = false;
+    if (!overlay || !popup || !isVisible(overlay) || !isVisible(popup)) {
+      pplrOutsideReady = false;
+      pplrOutsideClosing = false;
       return;
     }
 
-    if (!isVisible(overlay) || !isVisible(popup)) {
-      pplrOpenReady = false;
+    var clickedCloseButton =
+      event.target.closest &&
+      event.target.closest('a.js-modal-close.pplr_close');
+
+    /*
+      Let Zepto handle its own close button.
+      Do not call pplr_w_h() here, because the button already has inline onclick.
+    */
+    if (clickedCloseButton) {
+      pplrOutsideReady = false;
+      armOutsideClose();
       return;
     }
 
-    if (!pplrOpenReady) {
+    if (!pplrOutsideReady) {
       armOutsideClose();
       return;
     }
 
     var clickedInsidePopup = popup.contains(event.target);
-    var clickedCloseButton = event.target.closest && event.target.closest('a.js-modal-close.pplr_close');
 
-    if (!clickedInsidePopup && !clickedCloseButton) {
-      closePplrOnce();
+    if (!clickedInsidePopup && !pplrOutsideClosing && typeof window.pplr_w_h === 'function') {
+      pplrOutsideClosing = true;
+      pplrOutsideReady = false;
+
+      window.pplr_w_h();
+
+      window.setTimeout(function() {
+        pplrOutsideClosing = false;
+      }, 1200);
     }
   }, false);
-
-  /*
-    Optional: Escape key closes popup once.
-  */
-  document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && pplrOpenReady && !pplrClosing) {
-      closePplrOnce();
-    }
-  });
 })();
 </script>
   </body>
