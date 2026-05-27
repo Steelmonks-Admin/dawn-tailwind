@@ -280,8 +280,9 @@
 {%- if request.design_mode -%}
   <script src='{{ 'theme-editor.js' | asset_url }}' defer='defer'></script>
 {%- endif -%}
-
+{% comment %}
 <script src='{{ 'variant-selects.js' | asset_url }}' defer='defer'></script>
+{% endcomment %}
 <script src='{{ 'product-form.js' | asset_url }}' defer='defer'></script>
 
 {%- liquid
