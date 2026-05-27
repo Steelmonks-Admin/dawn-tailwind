@@ -121,8 +121,3 @@ body {
 .product__info .pplr-wrapper-button {
   min-height: 64px !important;
 }
-
-/* Reserve product app block space on load */
-.product__info [id^="shopify-block-"] {
-  min-height: 24px;
-}
