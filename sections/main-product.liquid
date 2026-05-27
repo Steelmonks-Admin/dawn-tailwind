@@ -169,6 +169,8 @@
               section: section,
               block: block
             %}
+          {%- when 'zunft_quantity_tiers' -%}
+            {% render 'zunft-quantity-tiers-block', product: product, block: block %}
           {%- when 'complementary_products' -%}
             <script src='{{ 'old_product-recommendations.js' | asset_url }}' defer='defer'></script>
 
@@ -280,9 +282,8 @@
 {%- if request.design_mode -%}
   <script src='{{ 'theme-editor.js' | asset_url }}' defer='defer'></script>
 {%- endif -%}
-{% comment %}
+
 <script src='{{ 'variant-selects.js' | asset_url }}' defer='defer'></script>
-{% endcomment %}
 <script src='{{ 'product-form.js' | asset_url }}' defer='defer'></script>
 
 {%- liquid
@@ -684,6 +685,32 @@
     {
       "type": "feature_list",
       "name": "Feature List"
+    },
+    {
+      "type": "zunft_quantity_tiers",
+      "name": "Zunft Quantity Tiers",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "product_handle", "label": "Product handle (safety gate)", "default": "zunft-anstecker", "info": "Block only renders if the current product matches this handle." },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Mengenrabatt — Nutze die Chance!" },
+        { "type": "text", "id": "subheading", "label": "Subheading" },
+        { "type": "text", "id": "hint", "label": "Footer hint", "default": "Wähle oben Deine Zunft. Der Rabatt wird im Warenkorb automatisch verrechnet." },
+        { "type": "header", "content": "Tier 1" },
+        { "type": "text",   "id": "tier1_label", "label": "Label", "default": "1 Anstecker" },
+        { "type": "number", "id": "tier1_qty", "label": "Quantity", "default": 1 },
+        { "type": "number", "id": "tier1_discount", "label": "Discount % (label only)", "default": 0 },
+        { "type": "text",   "id": "tier1_badge", "label": "Badge" },
+        { "type": "header", "content": "Tier 2" },
+        { "type": "text",   "id": "tier2_label", "label": "Label", "default": "3 Anstecker" },
+        { "type": "number", "id": "tier2_qty", "label": "Quantity", "default": 3 },
+        { "type": "number", "id": "tier2_discount", "label": "Discount % (label only)", "default": 5 },
+        { "type": "text",   "id": "tier2_badge", "label": "Badge", "default": "Beliebt" },
+        { "type": "header", "content": "Tier 3" },
+        { "type": "text",   "id": "tier3_label", "label": "Label", "default": "10 Anstecker" },
+        { "type": "number", "id": "tier3_qty", "label": "Quantity", "default": 10 },
+        { "type": "number", "id": "tier3_discount", "label": "Discount % (label only)", "default": 10 },
+        { "type": "text",   "id": "tier3_badge", "label": "Badge", "default": "Bester Preis" }
+      ]
     }
   ]
 }
