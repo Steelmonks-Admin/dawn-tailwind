@@ -601,21 +601,29 @@
       });
     }
 
-    startReminders() {
-      setInterval(() => {
-        Object.values(CONFIG.MILESTONES)
-          .filter(({ value }) => this.cartValue < value)
-          .forEach(({ index }, i) => {
-            setTimeout(() => {
-              const element = this.elements.tooltips[index].reminderWrapper;
-              element.classList.add("milestones__timeline__reminder-tooltip--animation");
-              setTimeout(() => {
-                element.classList.remove("milestones__timeline__reminder-tooltip--animation");
-              }, CONFIG.REMINDER.SHOW);
-            }, i * CONFIG.REMINDER.DURATION);
-          });
-      }, CONFIG.REMINDER.CYCLE);
-    }
+startReminders() {
+  setInterval(() => {
+    Object.values(CONFIG.MILESTONES)
+      .filter(({ value }) => this.cartValue < value)
+      .forEach(({ index }, i) => {
+        setTimeout(() => {
+          const tooltip = this.elements.tooltips[index];
+
+          if (!tooltip || !tooltip.reminderWrapper) return;
+
+          const element = tooltip.reminderWrapper;
+
+          element.classList.add("milestones__timeline__reminder-tooltip--animation");
+
+          setTimeout(() => {
+            if (!element || !element.classList) return;
+
+            element.classList.remove("milestones__timeline__reminder-tooltip--animation");
+          }, CONFIG.REMINDER.SHOW);
+        }, i * CONFIG.REMINDER.DURATION);
+      });
+  }, CONFIG.REMINDER.CYCLE);
+}
 
     async updateMilestones() {
       const cart = await CartAPI.fetchCart();
