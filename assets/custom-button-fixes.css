@@ -91,14 +91,15 @@ body {
   overflow-x: hidden !important;
 }
 
-/* Prevent 100vw/full-width sections from causing horizontal scrollbar/width jumps */
-.product__container,
-.product__wrapper,
-.header-wrapper,
-.announcement-bar,
-.announcement-bar-section,
-.shopify-section {
-  max-width: 100%;
+/* Global CLS fix: reserve scrollbar space consistently */
+html {
+  overflow-y: scroll !important;
+  scrollbar-gutter: stable !important;
+}
+
+body {
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
 }
 
 /* Reserve Zepto personalize button space to reduce page-load CLS */
@@ -113,4 +114,9 @@ body {
 .product__info .pplr_personalize_button,
 .product__info .pplr-wrapper-button {
   min-height: 64px !important;
+}
+
+/* Reserve product app block space on load */
+.product__info [id^="shopify-block-"] {
+  min-height: 24px;
 }
