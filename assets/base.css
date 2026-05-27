@@ -1,3 +1,13 @@
+/* Global CLS fix: reserve scrollbar space before first paint */
+html {
+  overflow-y: scroll !important;
+  scrollbar-gutter: stable both-edges !important;
+}
+
+body {
+  overflow-x: hidden !important;
+}
+
 :root {
   --alpha-button-background: 1;
   --alpha-button-border: 1;
