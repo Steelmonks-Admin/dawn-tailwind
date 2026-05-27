@@ -1,10 +1,11 @@
 /* ! custom_custom pplr modal styling */
 /* ! start section */
+
 #trustbadge-container-98e3dadd90eb493088abdc5597a70810 {
   z-index: 100000000 !important;
 }
 
-/* Center Zepto popup frame */
+/* Modal overlay */
 .pplr_crop-modal {
   left: 0 !important;
   right: 0 !important;
@@ -26,574 +27,7 @@
   overflow-y: auto !important;
 }
 
-/* Keep the popup centered inside the overlay */
-.pplr_crop-modal .pplr-popup.pplr-modal-box,
-.pplr_crop-modal .pplr-popup {
-  margin: auto !important;
-  max-width: 750px !important;
-  width: 92% !important;
-}
-
-.pplr_crop-modal .pplr-text {
-  position: relative !important;
-}
-.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown {
-  left: 50%;
-  transform: translateX(-50%);
-
-  border: 2px solid #04c;
-  border-radius: 10px;
-
-  width: 80%;
-
-  box-shadow: 0 0 8px 0 #0044cc47;
-}
-.pplr_crop-modal .pplr-wrapper:not(:first-child) .img_thumb_dropdown,
-.pplr_crop-modal .pplr-wrapper:not(nth-child(2)) .img_thumb_dropdown,
-.pplr_crop-modal .pplr-wrapper:not(nth-child(3)) .img_thumb_dropdown {
-  bottom: 100%;
-}
-.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown::before {
-  content: 'Wähle aus';
-  font-weight: 500;
-  line-height: 2;
-  padding-left: 16px;
-}
-.pplr_crop-modal .pplr-passender-zunft-anhnger .img_thumb_dropdown {
-  max-height: 150px !important;
-}
-
-.pplr_crop-modal .pplr_form > div,
-.pplr_crop-modal .pplr_preview_wrapper,
-.pplr_crop-modal .pplr_popup_image {
-  float: unset !important;
-
-  max-height: unset !important;
-  min-height: unset !important;
-  max-width: unset !important;
-  min-width: unset !important;
-  height: unset !important;
-  width: 100% !important;
-
-  margin: 0;
-
-  padding: 0;
-}
-/* Clean Zepto close button - use bottom close only */
-.pplr_crop-modal .pplr-popup.pplr-modal-box,
-.pplr_crop-modal .pplr-popup {
-  position: relative !important;
-}
-
-/* Hide the native/header close completely */
-.pplr_crop-modal header,
-.pplr_crop-modal header.p_h_d,
-.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close,
-.pplr_crop-modal header.p_h_d a.pplr_close,
-.pplr_crop-modal header.p_h_d a.p_r_c {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Position bottom close relative to popup */
-.pplr_crop-modal .pplr_ex_button,
-.pplr_crop-modal .pplr_ex_inner {
-  position: static !important;
-}
-
-/* Move only the bottom close button to the top-right */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
-  position: absolute !important;
-  top: 8px !important;
-  right: 10px !important;
-  bottom: auto !important;
-  left: auto !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  width: 38px !important;
-  height: 38px !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  z-index: 999999 !important;
-
-  color: #111 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  text-decoration: none !important;
-
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-
-  font-size: 0 !important;
-  line-height: 1 !important;
-
-  transform: none !important;
-  animation: none !important;
-  transition: none !important;
-}
-
-/* Remove animated pseudo-elements */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::before,
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::after {
-  content: none !important;
-  display: none !important;
-  border: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-  transform: none !important;
-  animation: none !important;
-  transition: none !important;
-}
-
-/* Inner icon holder */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
-  display: block !important;
-
-  width: 38px !important;
-  height: 38px !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  font-size: 0 !important;
-  line-height: 1 !important;
-
-  color: #111 !important;
-  background: transparent !important;
-
-  opacity: 1 !important;
-  visibility: visible !important;
-
-  transform: none !important;
-  animation: none !important;
-  transition: none !important;
-}
-
-/* One clean X */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
-  content: "×" !important;
-  display: block !important;
-
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 42px !important;
-  font-weight: 300 !important;
-  line-height: 38px !important;
-  text-align: center !important;
-
-  color: #111 !important;
-
-  opacity: 1 !important;
-  visibility: visible !important;
-
-  transform: none !important;
-  animation: none !important;
-  transition: none !important;
-}
-
-/* Kill extras/fallback */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::after,
-#pplr_fallback_close {
-  content: none !important;
-  display: none !important;
-}
-
-/* Mobile */
-@media screen and (max-width: 749px) {
-  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
-    top: 6px !important;
-    right: 8px !important;
-    width: 34px !important;
-    height: 34px !important;
-  }
-
-  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
-    width: 34px !important;
-    height: 34px !important;
-  }
-
-  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
-    font-size: 36px !important;
-    line-height: 34px !important;
-  }
-}
-
-.pplr_crop-modal {
-  /* top: 50% !important; NOT NEEDED */
-  left: unset !important;
-
-  max-height: unset !important;
-  min-height: unset !important;
-  max-height: 100dvh !important;
-  width: 100% !important;
-}
-
-.pplr_crop-modal .pplr-main {
-  height: 100% !important;
-}
-
-.pplr_crop-modal .pplr-popup {
-  padding: 0 !important;
-  overflow: hidden;
-
-  width: 92% !important;
-  height: 92% !important;
-  min-height: unset !important;
-  max-width: 750px !important;
-
-  margin: unset !important;
-
-  border-radius: 10px;
-}
-
-.pplr_crop-modal .pplr_form {
-  max-height: 100dvh;
-  height: 100%;
-  width: 100%;
-
-  display: flex !important;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column !important;
-
-  padding: 12px 0;
-}
-.pplr_crop-modal .pplr_ex_inner .pplr-btn {
-  max-width: 100%;
-  width: 100%;
-}
-@media (min-width: 768px) {
-  .pplr_crop-modal .pplr-popup {
-    border-radius: 10px;
-  }
-  .pplr_crop-modal .pplr_form {
-    padding: 20px 48px;
-  }
-  .pplr_crop-modal .pplr-p-right {
-    box-shadow: unset !important;
-  }
-}
-.pplr_crop-modal .pplr-p-left {
-  margin-top: auto !important;
-}
-.pplr_crop-modal .pplr-p-right {
-  position: relative;
-  max-height: 100% !important;
-}
-.pplr_crop-modal .pplr-p-right::before {
-  content: 'Personalisiere Dein Geschenk.';
-  font-size: 16px;
-  font-weight: 600;
-  color: #090a0c;
-}
-.pplr_crop-modal .pplr_popup_image,
-.pplr_crop-modal #pplr_canvas,
-.pplr_crop-modal .pplr_form > div:first-child {
-  max-height: 250px !important;
-}
-@media (min-width: 768px) {
-  .pplr_crop-modal .pplr_popup_image,
-  .pplr_crop-modal #pplr_canvas,
-  .pplr_crop-modal .pplr_form > div:first-child {
-    max-height: 400px !important;
-  }
-}
-
-.pplr_crop-modal #pplr_canvas {
-  border-radius: 10px;
-}
-
-.pplr_crop-modal
-  .pplr-diese-ansicht-dient-nur-zur-vorschau-dein-design-wird-persnlich-geprft-und-optimal-angepasst- {
-  display: none !important;
-}
-
-.pplr_crop-modal #pplr_html {
-  display: flex !important;
-  flex-wrap: wrap;
-  gap: 12px;
-
-  padding: 0 12px !important;
-}
-.pplr_crop-modal #pplr_html::after {
-  content: 'Diese Ansicht dient nur zur Vorschau. Dein Design wird persönlich geprüft und optimal angepasst.';
-  font-size: 12px;
-  color: #999;
-}
-
-.pplr_crop-modal #pplr_html .pplr-drop-item {
-  font-size: 1.3rem !important;
-  min-width: 100%;
-  border-radius: 10px;
-  padding: 8px 12px !important;
-  transition: background-color 0.3s ease-in-out !important;
-}
-
-.pplr_crop-modal #pplr_html .pplr-drop-item.active {
-  border-color: transparent !important;
-  background: #fafaff !important;
-  color: #090a0c !important;
-  box-shadow: 0 2px 5px 0 rgba(9, 10, 12, 0.25) !important;
-}
-.pplr_crop-modal .pplr-oberer-text,
-.pplr_crop-modal .pplr-mittlerer-text,
-.pplr_crop-modal .pplr-berufsbezeichnung-oder-wunschtext,
-.pplr_crop-modal .pplr-name-oder-wunschtext {
-  flex: 0.5;
-}
-
-.pplr_crop-modal .pplr-p-right {
-  flex-grow: 1;
-  border-top: unset !important;
-  box-shadow: inset 0px -8px 12px 0px rgba(9, 10, 12, 0.1);
-  scrollbar-color: #04c transparent;
-  border: unset !important;
-}
-.pplr_crop-modal .pplr-p-right > div {
-  margin: 0 !important;
-  max-height: unset !important;
-}
-
-.pplr-passendes--original-zippo-mit-persnlicher-gravur .pplrlabel {
-  font-size: 14px !important;
-  font-weight: 400 !important;
-}
-.pplr-passendes--original-zippo-mit-persnlicher-gravur .pplrcheckbox {
-  vertical-align: middle;
-  padding: 4px !important;
-}
-
-.pplr_crop-modal .dropdowncolor,
-.pplr_crop-modal .pplr_text {
-  border-radius: 10px;
-  padding: 8px calc(12px + 35px) 8px 12px;
-  border-color: #ddd !important;
-  transition: all 0.3s ease-in-out !important;
-  margin: 0 !important;
-}
-.pplr_crop-modal .dropdowncolor {
-  font-size: 16px;
-  font-weight: 400;
-}
-.pplr_crop-modal .pplr_select {
-  padding: 8px 12px !important;
-  margin: 0 !important;
-  border-radius: 10px;
-}
-
-.pplr_crop-modal .pplr_text:hover,
-.pplr_crop-modal .pplr_text:focus {
-  outline: unset !important;
-  border-color: rgba(9, 10, 12, 0.5) !important;
-  box-shadow: 0 2px 5px 0 rgba(9, 10, 12, 0.25) !important;
-}
-
-label:has(+ .pplr_text:hover),
-label:has(+ .pplr_text:focus) {
-  text-decoration: underline !important;
-  text-decoration-color: #ddd !important;
-  text-underline-offset: 2px !important;
-  text-decoration-thickness: 2px !important;
-}
-
-.pplr_crop-modal .pplr_ex_inner {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
-  width: 100%;
-}
-.pplr_crop-modal .pplr_ex_inner b {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-.pplr_crop-modal .pplr_ex_inner > .btn {
-  float: unset !important;
-}
-/* reminder to re-add pplr_h_title instead of showing this price */
-.pplr_crop-modal .pplr_ex_inner .money {
-  display: none;
-
-  font-size: 16px;
-  font-weight: 500;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-
-  background: #090a0c;
-  color: #fafaff;
-  padding: 8px 24px;
-  margin: 0 !important;
-  box-shadow: 0 2px 10px 0 rgba(9, 10, 12, 0.5);
-  border-bottom-right-radius: 15px;
-}
-/* 
-      .pplr_crop-modal .pplr_ex_inner::after {
-        content: 'Diese Ansicht dient nur zur Vorschau. Dein Design wird persönlich geprüft und optimal angepasst.';
-        font-size: 12px;
-        color: #999;
-      } */
-
-.pplr_crop-modal .pplr-btn {
-  z-index: 100000000 !important;
-  border-radius: 10px !important;
-  margin: 0 !important;
-
-  width: 100%;
-
-  border: 2px solid #090a0c;
-}
-.pplr_crop-modal .pplr-btn:hover,
-.pplr_crop-modal .pplr-btn:focus {
-  background: #090a0c !important;
-  color: #f5ae2e !important;
-}
-.pplr_crop-modal .pplr-btn:active {
-  background: #090a0c !important;
-  color: #fafaff !important;
-}
-
-.pplr_crop-modal .pplr_h_title {
-  display: none;
-
-  /* position: relative;
-      
-        visibility: hidden;
-        font-size: 16px;
-        font-weight: 600;
-      
-        margin: 8px 12px;
-        padding-bottom: 0 !important; */
-}
-
-/* .pplr_crop-modal .pplr_h_title::after {
-        content: 'Personalisiere Dein Geschenk.';
-        visibility: visible;
-      
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-      
-        color: #090a0c;
-      } */
-
-.pplr_crop-modal .pplr_ex_button {
-  padding: 0 12px !important;
-  margin-top: auto !important;
-}
-
-.pplr_crop-modal .pplrlabel:not(:has(.pplrcheckbox)) {
-  display: none;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  color: #090a0c;
-  padding: 8px 0 !important;
-}
-.pplr_crop-modal .pplr-befestigungsset .pplrlabel {
-  display: block !important;
-  font-size: 16px !important;
-}
-
-.pplr_crop-modal .pplr-character-count {
-  font-weight: 400;
-  letter-spacing: 0px;
-  text-align: unset !important;
-
-  top: 50% !important;
-  right: 8px !important;
-  transform: translateY(-50%);
-  float: unset !important;
-
-  padding: 0 !important;
-}
-
-.pplr_crop-modal .fileupload {
-  position: relative;
-  color: transparent;
-  padding: 12px 24px;
-  border-radius: 10px;
-}
-
-.pplr_crop-modal .fileupload::before {
-  content: 'Lade hier Dein Foto hoch';
-  position: absolute;
-  top: 0px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #fafaff;
-  color: #04c;
-  padding: 12px 24px;
-  border-radius: 10px;
-  text-align: center;
-
-  font-weight: 500;
-
-  border: 1px solid #04c;
-
-  transition: all 0.3s ease-in-out;
-}
-
-.pplr_crop-modal .fileupload:hover::before {
-  color: #fafaff;
-  background: #090a0c;
-  color: #f5ae2e;
-  border-color: #f5ae2e;
-}
-
-/* ? Keychain styling */
-.pplr_crop-modal .img_thumb_big_circle {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-.pplr_crop-modal .pplr-swatch-element {
-  margin: 0 !important;
-  width: 75px !important;
-  height: unset !important;
-  aspect-ratio: 1 / 1;
-}
-.pplr-btn {
-  width: 100%;
-}
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
-
-/* FINAL Zepto modal position + single close fix */
-.pplr_crop-modal {
-  left: 0 !important;
-  right: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-
-  width: 100vw !important;
-  height: 100dvh !important;
-  max-height: 100dvh !important;
-  min-height: 100dvh !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  background-color: rgba(0, 0, 0, 0.75) !important;
-  background-image: none !important;
-
-  overflow-y: auto !important;
-}
-
+/* Popup frame */
 .pplr_crop-modal .pplr-popup.pplr-modal-box,
 .pplr_crop-modal .pplr-popup {
   position: relative !important;
@@ -622,7 +56,12 @@ label:has(+ .pplr_text:focus) {
   pointer-events: none !important;
 }
 
-/* Keep only bottom close button, moved visually to top-right */
+/* Bottom close button moved to top-right */
+.pplr_crop-modal .pplr_ex_button,
+.pplr_crop-modal .pplr_ex_inner {
+  position: static !important;
+}
+
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
   position: absolute !important;
   top: 8px !important;
@@ -720,3 +159,353 @@ label:has(+ .pplr_text:focus) {
   content: none !important;
   display: none !important;
 }
+
+/* Main modal layout */
+.pplr_crop-modal .pplr-main {
+  height: 100% !important;
+}
+
+.pplr_crop-modal .pplr_form {
+  max-height: 100dvh;
+  height: 100%;
+  width: 100%;
+
+  display: flex !important;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column !important;
+
+  padding: 12px 0;
+}
+
+@media (min-width: 768px) {
+  .pplr_crop-modal .pplr_form {
+    padding: 20px 48px;
+  }
+
+  .pplr_crop-modal .pplr-p-right {
+    box-shadow: unset !important;
+  }
+}
+
+/* Image / preview sizing */
+.pplr_crop-modal .pplr_form > div,
+.pplr_crop-modal .pplr_preview_wrapper,
+.pplr_crop-modal .pplr_popup_image {
+  float: unset !important;
+
+  max-height: unset !important;
+  min-height: unset !important;
+  max-width: unset !important;
+  min-width: unset !important;
+  height: unset !important;
+  width: 100% !important;
+
+  margin: 0;
+  padding: 0;
+}
+
+.pplr_crop-modal .pplr-p-left {
+  margin-top: auto !important;
+}
+
+.pplr_crop-modal .pplr-p-right {
+  position: relative;
+  max-height: 100% !important;
+  flex-grow: 1;
+  border-top: unset !important;
+  box-shadow: inset 0px -8px 12px 0px rgba(9, 10, 12, 0.1);
+  scrollbar-color: #04c transparent;
+  border: unset !important;
+}
+
+.pplr_crop-modal .pplr-p-right::before {
+  content: 'Personalisiere Dein Geschenk.';
+  font-size: 16px;
+  font-weight: 600;
+  color: #090a0c;
+}
+
+.pplr_crop-modal .pplr-p-right > div {
+  margin: 0 !important;
+  max-height: unset !important;
+}
+
+.pplr_crop-modal .pplr_popup_image,
+.pplr_crop-modal #pplr_canvas,
+.pplr_crop-modal .pplr_form > div:first-child {
+  max-height: 250px !important;
+}
+
+@media (min-width: 768px) {
+  .pplr_crop-modal .pplr_popup_image,
+  .pplr_crop-modal #pplr_canvas,
+  .pplr_crop-modal .pplr_form > div:first-child {
+    max-height: 400px !important;
+  }
+}
+
+.pplr_crop-modal #pplr_canvas {
+  border-radius: 10px;
+}
+
+/* Form fields */
+.pplr_crop-modal .pplr-text {
+  position: relative !important;
+}
+
+.pplr_crop-modal #pplr_html {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 12px !important;
+}
+
+.pplr_crop-modal #pplr_html::after {
+  content: 'Diese Ansicht dient nur zur Vorschau. Dein Design wird persönlich geprüft und optimal angepasst.';
+  font-size: 12px;
+  color: #999;
+}
+
+.pplr_crop-modal
+  .pplr-diese-ansicht-dient-nur-zur-vorschau-dein-design-wird-persnlich-geprft-und-optimal-angepasst- {
+  display: none !important;
+}
+
+.pplr_crop-modal .dropdowncolor,
+.pplr_crop-modal .pplr_text {
+  border-radius: 10px;
+  padding: 8px calc(12px + 35px) 8px 12px;
+  border-color: #ddd !important;
+  transition: all 0.3s ease-in-out !important;
+  margin: 0 !important;
+}
+
+.pplr_crop-modal .dropdowncolor {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.pplr_crop-modal .pplr_select {
+  padding: 8px 12px !important;
+  margin: 0 !important;
+  border-radius: 10px;
+}
+
+.pplr_crop-modal .pplr_text:hover,
+.pplr_crop-modal .pplr_text:focus {
+  outline: unset !important;
+  border-color: rgba(9, 10, 12, 0.5) !important;
+  box-shadow: 0 2px 5px 0 rgba(9, 10, 12, 0.25) !important;
+}
+
+label:has(+ .pplr_text:hover),
+label:has(+ .pplr_text:focus) {
+  text-decoration: underline !important;
+  text-decoration-color: #ddd !important;
+  text-underline-offset: 2px !important;
+  text-decoration-thickness: 2px !important;
+}
+
+.pplr_crop-modal .pplrlabel:not(:has(.pplrcheckbox)) {
+  display: none;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  color: #090a0c;
+  padding: 8px 0 !important;
+}
+
+.pplr_crop-modal .pplr-befestigungsset .pplrlabel {
+  display: block !important;
+  font-size: 16px !important;
+}
+
+.pplr-passendes--original-zippo-mit-persnlicher-gravur .pplrlabel {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.pplr-passendes--original-zippo-mit-persnlicher-gravur .pplrcheckbox {
+  vertical-align: middle;
+  padding: 4px !important;
+}
+
+.pplr_crop-modal .pplr-character-count {
+  font-weight: 400;
+  letter-spacing: 0px;
+  text-align: unset !important;
+
+  top: 50% !important;
+  right: 8px !important;
+  transform: translateY(-50%);
+  float: unset !important;
+
+  padding: 0 !important;
+}
+
+/* Dropdown / swatches */
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown {
+  left: 50%;
+  transform: translateX(-50%);
+
+  border: 2px solid #04c;
+  border-radius: 10px;
+
+  width: 80%;
+
+  box-shadow: 0 0 8px 0 #0044cc47;
+}
+
+.pplr_crop-modal .pplr-wrapper:not(:first-child) .img_thumb_dropdown,
+.pplr_crop-modal .pplr-wrapper:not(nth-child(2)) .img_thumb_dropdown,
+.pplr_crop-modal .pplr-wrapper:not(nth-child(3)) .img_thumb_dropdown {
+  bottom: 100%;
+}
+
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown::before {
+  content: 'Wähle aus';
+  font-weight: 500;
+  line-height: 2;
+  padding-left: 16px;
+}
+
+.pplr_crop-modal .pplr-passender-zunft-anhnger .img_thumb_dropdown {
+  max-height: 150px !important;
+}
+
+.pplr_crop-modal .img_thumb_big_circle {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.pplr_crop-modal .pplr-swatch-element {
+  margin: 0 !important;
+  width: 75px !important;
+  height: unset !important;
+  aspect-ratio: 1 / 1;
+}
+
+/* Bottom action button */
+.pplr_crop-modal .pplr_ex_button {
+  padding: 0 12px !important;
+  margin-top: auto !important;
+}
+
+.pplr_crop-modal .pplr_ex_inner {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.pplr_crop-modal .pplr_ex_inner b {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.pplr_crop-modal .pplr_ex_inner > .btn {
+  float: unset !important;
+}
+
+.pplr_crop-modal .pplr_ex_inner .money {
+  display: none;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  background: #090a0c;
+  color: #fafaff;
+  padding: 8px 24px;
+  margin: 0 !important;
+  box-shadow: 0 2px 10px 0 rgba(9, 10, 12, 0.5);
+  border-bottom-right-radius: 15px;
+}
+
+.pplr_crop-modal .pplr-btn,
+.pplr-btn {
+  z-index: 100000000 !important;
+  border-radius: 10px !important;
+  margin: 0 !important;
+  width: 100%;
+  border: 2px solid #090a0c;
+}
+
+.pplr_crop-modal .pplr-btn:hover,
+.pplr_crop-modal .pplr-btn:focus {
+  background: #090a0c !important;
+  color: #f5ae2e !important;
+}
+
+.pplr_crop-modal .pplr-btn:active {
+  background: #090a0c !important;
+  color: #fafaff !important;
+}
+
+.pplr_crop-modal .pplr_h_title {
+  display: none;
+}
+
+/* Upload button */
+.pplr_crop-modal .fileupload {
+  position: relative;
+  color: transparent;
+  padding: 12px 24px;
+  border-radius: 10px;
+}
+
+.pplr_crop-modal .fileupload::before {
+  content: 'Lade hier Dein Foto hoch';
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fafaff;
+  color: #04c;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-align: center;
+
+  font-weight: 500;
+
+  border: 1px solid #04c;
+
+  transition: all 0.3s ease-in-out;
+}
+
+.pplr_crop-modal .fileupload:hover::before {
+  background: #090a0c;
+  color: #f5ae2e;
+  border-color: #f5ae2e;
+}
+
+/* Mobile close */
+@media screen and (max-width: 749px) {
+  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+    top: 6px !important;
+    right: 8px !important;
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
+    font-size: 36px !important;
+    line-height: 34px !important;
+  }
+}
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
