@@ -11,6 +11,15 @@
   "sections": {
     "17458178119bf2149e": {
       "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
       "custom_css": [
         "#etrusted-trusted_stars_service {margin-top: 3rem;}"
       ],
