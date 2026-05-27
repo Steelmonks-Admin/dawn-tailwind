@@ -1,7 +1,6 @@
-/* Global CLS fix: reserve scrollbar space before first paint */
+/* Global CLS fix: keep scrollbar present without creating side gutter gap */
 html {
   overflow-y: scroll !important;
-  scrollbar-gutter: stable !important;
 }
 
 body {
