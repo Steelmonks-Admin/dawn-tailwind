@@ -571,3 +571,152 @@ label:has(+ .pplr_text:focus) {
   width: 100%;
 }
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+/* FINAL Zepto modal position + single close fix */
+.pplr_crop-modal {
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  min-height: 100dvh !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  background-image: none !important;
+
+  overflow-y: auto !important;
+}
+
+.pplr_crop-modal .pplr-popup.pplr-modal-box,
+.pplr_crop-modal .pplr-popup {
+  position: relative !important;
+
+  width: 92% !important;
+  height: 92% !important;
+  max-width: 750px !important;
+  min-height: unset !important;
+
+  margin: auto !important;
+  padding: 0 !important;
+
+  overflow: hidden !important;
+  border-radius: 10px !important;
+}
+
+/* Hide header close completely */
+.pplr_crop-modal header,
+.pplr_crop-modal header.p_h_d,
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close,
+.pplr_crop-modal header.p_h_d a.pplr_close,
+.pplr_crop-modal header.p_h_d a.p_r_c {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Keep only bottom close button, moved visually to top-right */
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+  bottom: auto !important;
+  left: auto !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 38px !important;
+  height: 38px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  z-index: 999999 !important;
+
+  color: #111 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::before,
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
+  display: block !important;
+
+  width: 38px !important;
+  height: 38px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  color: #111 !important;
+  background: transparent !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
+  content: "×" !important;
+  display: block !important;
+
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 42px !important;
+  font-weight: 300 !important;
+  line-height: 38px !important;
+  text-align: center !important;
+
+  color: #111 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::after,
+#pplr_fallback_close {
+  content: none !important;
+  display: none !important;
+}
