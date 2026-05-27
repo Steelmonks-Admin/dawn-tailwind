@@ -80,7 +80,11 @@ etrusted-star-extension {
   min-height: 24px !important;
 }
 
-/* Prevent page width shift when modals open/close */
+/* Global CLS fix: reserve scrollbar space */
 html {
   scrollbar-gutter: stable;
+}
+
+body {
+  overflow-y: scroll;
 }
