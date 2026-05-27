@@ -5,42 +5,38 @@
   z-index: 100000000 !important;
 }
 
-/* Modal overlay */
+/* Modal overlay - stable version */
 .pplr_crop-modal {
-  left: 0 !important;
-  right: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-
-  width: 100vw !important;
-  height: 100dvh !important;
-  max-height: 100dvh !important;
-  min-height: 100dvh !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
   background-color: rgba(0, 0, 0, 0.75) !important;
   background-image: none !important;
 
-  overflow-y: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  left: unset !important;
+
+  max-height: unset !important;
+  min-height: unset !important;
+  max-height: 100dvh !important;
+  width: 100% !important;
 }
 
-/* Popup frame */
+/* Popup frame - stable version */
 .pplr_crop-modal .pplr-popup.pplr-modal-box,
 .pplr_crop-modal .pplr-popup {
   position: relative !important;
 
+  padding: 0 !important;
+  overflow: hidden !important;
+
   width: 92% !important;
   height: 92% !important;
-  max-width: 750px !important;
   min-height: unset !important;
+  max-width: 750px !important;
 
-  margin: auto !important;
-  padding: 0 !important;
+  margin: unset !important;
 
-  overflow: hidden !important;
   border-radius: 10px !important;
 }
 

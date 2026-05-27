@@ -1,0 +1,135 @@
+/* Zunft Quantity Tiers — scoped under .zunft-tiers to avoid theme conflicts. */
+.zunft-tiers {
+  margin: 2.5rem auto;
+  padding: 1.5rem 1rem;
+  max-width: 64rem;
+}
+.zunft-tiers__header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.zunft-tiers__title {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+.zunft-tiers__subheading {
+  color: #555;
+  margin: 0;
+}
+.zunft-tiers__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .zunft-tiers__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.zunft-tiers__card {
+  position: relative;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #fff;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.zunft-tiers__card:hover {
+  border-color: #111827;
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.2);
+}
+.zunft-tiers__card--featured {
+  border-color: #111827;
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.25);
+}
+.zunft-tiers__badge {
+  position: absolute;
+  top: -0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+.zunft-tiers__card-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.zunft-tiers__discount {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #059669;
+}
+.zunft-tiers__discount--muted {
+  color: #6b7280;
+  font-weight: 400;
+}
+.zunft-tiers__button {
+  appearance: none;
+  border: 0;
+  background: #111827;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  position: relative;
+  min-height: 2.75rem;
+  transition: background 0.15s ease;
+}
+.zunft-tiers__button:hover:not(:disabled) {
+  background: #000;
+}
+.zunft-tiers__button:disabled {
+  cursor: progress;
+  opacity: 0.85;
+}
+.zunft-tiers__spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  animation: zunft-tiers-spin 0.8s linear infinite;
+}
+@keyframes zunft-tiers-spin {
+  to { transform: rotate(360deg); }
+}
+.zunft-tiers__status {
+  margin: 1rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.zunft-tiers__status--ok {
+  background: #ecfdf5;
+  color: #065f46;
+}
+.zunft-tiers__status--error {
+  background: #fef2f2;
+  color: #991b1b;
+}
+.zunft-tiers__hint {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+}

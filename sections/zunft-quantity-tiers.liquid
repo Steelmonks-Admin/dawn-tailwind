@@ -1,0 +1,112 @@
+{% comment %}
+  Zunft-Anstecker Quantity Tiers — static-HTML replacement for Pumper Bundles.
+  Three tier cards (1/3/10) call /cart/add.js with the variant currently
+  selected in the existing PDP picker. Discounts are Shopify-native
+  automatic discounts applied at checkout — this widget only sends
+  {id, quantity}.
+{% endcomment %}
+
+{%- liquid
+  assign target_handle = section.settings.product_handle | default: 'zunft-anstecker'
+  assign is_target = false
+  if product != blank and product.handle == target_handle
+    assign is_target = true
+  endif
+-%}
+
+{%- if is_target -%}
+  <link rel="stylesheet" href="{{ 'zunft-tiers.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'zunft-tiers.css' | asset_url | stylesheet_tag }}</noscript>
+
+  <section
+    class="zunft-tiers shopify-section page-width"
+    data-zunft-tiers
+    data-product-id="{{ product.id }}"
+    data-product-handle="{{ product.handle }}"
+    aria-labelledby="ZunftTiers-Heading-{{ section.id }}"
+    {{ section.shopify_attributes }}
+  >
+    <header class="zunft-tiers__header">
+      <h2 id="ZunftTiers-Heading-{{ section.id }}" class="zunft-tiers__title">
+        {{ section.settings.heading | escape }}
+      </h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="zunft-tiers__subheading">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="zunft-tiers__grid" role="list">
+      {%- for i in (1..3) -%}
+        {%- liquid
+          assign qty_key = 'tier' | append: i | append: '_qty'
+          assign label_key = 'tier' | append: i | append: '_label'
+          assign discount_key = 'tier' | append: i | append: '_discount'
+          assign badge_key = 'tier' | append: i | append: '_badge'
+          assign qty = section.settings[qty_key]
+          assign label = section.settings[label_key]
+          assign discount = section.settings[discount_key]
+          assign badge = section.settings[badge_key]
+          assign card_class = 'zunft-tiers__card'
+          if i == 2
+            assign card_class = 'zunft-tiers__card zunft-tiers__card--featured'
+          endif
+        -%}
+        <article class="{{ card_class }}" role="listitem">
+          {%- if badge != blank -%}
+            <span class="zunft-tiers__badge">{{ badge | escape }}</span>
+          {%- endif -%}
+          <h3 class="zunft-tiers__card-title">{{ label | escape }}</h3>
+          {%- if discount > 0 -%}
+            <p class="zunft-tiers__discount">{{ discount }}% Rabatt im Warenkorb</p>
+          {%- else -%}
+            <p class="zunft-tiers__discount zunft-tiers__discount--muted">Einzelpreis</p>
+          {%- endif -%}
+          <button type="button" class="zunft-tiers__button"
+            data-zunft-tier-button
+            data-tier-qty="{{ qty }}"
+            data-tier-label="{{ label | escape }}">
+            <span class="zunft-tiers__button-text">In den Warenkorb</span>
+            <span class="zunft-tiers__spinner" aria-hidden="true" hidden></span>
+          </button>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    <p class="zunft-tiers__status" data-zunft-tiers-status role="status" aria-live="polite" hidden></p>
+    <p class="zunft-tiers__hint">{{ section.settings.hint | escape }}</p>
+  </section>
+
+  <script src="{{ 'zunft-tiers.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Zunft Quantity Tiers",
+  "tag": "section",
+  "class": "section-zunft-tiers",
+  "limit": 1,
+  "settings": [
+    { "type": "text", "id": "product_handle", "label": "Product handle (safety gate)", "default": "zunft-anstecker", "info": "Section only renders if the current product matches this handle." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Mengenrabatt — Nutze die Chance!" },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "hint", "label": "Footer hint", "default": "Wähle oben Deine Zunft. Der Rabatt wird im Warenkorb automatisch verrechnet." },
+    { "type": "header", "content": "Tier 1" },
+    { "type": "text",   "id": "tier1_label", "label": "Label", "default": "1 Anstecker" },
+    { "type": "number", "id": "tier1_qty", "label": "Quantity", "default": 1 },
+    { "type": "number", "id": "tier1_discount", "label": "Discount % (label only)", "default": 0 },
+    { "type": "text",   "id": "tier1_badge", "label": "Badge" },
+    { "type": "header", "content": "Tier 2" },
+    { "type": "text",   "id": "tier2_label", "label": "Label", "default": "3 Anstecker" },
+    { "type": "number", "id": "tier2_qty", "label": "Quantity", "default": 3 },
+    { "type": "number", "id": "tier2_discount", "label": "Discount % (label only)", "default": 5 },
+    { "type": "text",   "id": "tier2_badge", "label": "Badge", "default": "Beliebt" },
+    { "type": "header", "content": "Tier 3" },
+    { "type": "text",   "id": "tier3_label", "label": "Label", "default": "10 Anstecker" },
+    { "type": "number", "id": "tier3_qty", "label": "Quantity", "default": 10 },
+    { "type": "number", "id": "tier3_discount", "label": "Discount % (label only)", "default": 10 },
+    { "type": "text",   "id": "tier3_badge", "label": "Badge", "default": "Bester Preis" }
+  ],
+  "presets": [{ "name": "Zunft Quantity Tiers", "category": "Product" }],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}
