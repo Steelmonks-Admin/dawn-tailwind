@@ -43,41 +43,48 @@
 /* Main Trusted Shops service widget */
 etrusted-widget {
   display: block !important;
-  min-height: 72px !important;
+  min-height: 82px !important;
   width: 100% !important;
+  contain: layout paint !important;
 }
 
 /* Inner service widget shell */
 etrusted-trusted-stars-service-widget {
   display: block !important;
-  min-height: 72px !important;
+  min-height: 82px !important;
+  contain: layout paint !important;
+}
+
+/* Product page-specific service widget spacing */
+.product__info etrusted-widget {
+  min-height: 82px !important;
+  margin: 8px 0 !important;
 }
 
 /* Product star rating widget */
 etrusted-product-review-list-widget-product-star-extension {
-  display: inline-block !important;
-  min-width: 170px !important;
-  min-height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  min-width: 185px !important;
+  min-height: 26px !important;
   vertical-align: middle !important;
+  contain: layout paint !important;
 }
 
 /* Inner product star widget shell */
 etrusted-star-extension {
-  display: inline-block !important;
-  min-width: 170px !important;
-  min-height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  min-width: 185px !important;
+  min-height: 26px !important;
   vertical-align: middle !important;
+  contain: layout paint !important;
 }
 
-/* Product page-specific spacing */
-.product__info etrusted-widget {
-  min-height: 72px !important;
-  margin: 8px 0 !important;
-}
-
+/* Product page-specific star spacing */
 .product__info etrusted-product-review-list-widget-product-star-extension {
-  min-width: 170px !important;
-  min-height: 24px !important;
+  min-width: 185px !important;
+  min-height: 26px !important;
 }
 
 /* Global CLS fix: reserve scrollbar space consistently */
