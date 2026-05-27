@@ -65,55 +65,120 @@
 
   padding: 0;
 }
-.pplr_crop-modal .pplr_close {
-  position: absolute;
-  top: 16px !important;
-  right: 16px !important;
+/* Clean Zepto close button - no duplicate/rotating animation */
+.pplr_crop-modal .pplr-popup.pplr-modal-box {
+  position: relative !important;
+}
 
-  width: 44px;
-  height: 44px;
+.pplr_crop-modal form.pplr_form,
+.pplr_crop-modal .pplr-main,
+.pplr_crop-modal .pplr_ex_button,
+.pplr_crop-modal .pplr_ex_inner {
+  position: static !important;
+}
 
-  font-size: 2.5rem !important;
-  font-weight: 400 !important;
+/* Keep header hidden since we use the bottom close button moved to the corner */
+.pplr_crop-modal header {
+  display: none !important;
+}
 
-  color: #838185;
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+  bottom: auto !important;
+  left: auto !important;
 
-  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 38px !important;
+  height: 38px !important;
+
   margin: 0 !important;
+  padding: 0 !important;
 
-  border: 2px solid transparent;
+  z-index: 999999 !important;
 
-  transform: rotate(0deg);
+  color: #111 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
 }
-.pplr_crop-modal .pplr_close i {
-  vertical-align: middle;
+
+/* Kill the old animated pseudo-elements */
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::before,
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
 }
-.pplr_crop-modal .pplr_close::before {
-  content: '';
-  border: 2px solid transparent;
-  width: 44px;
-  height: 44px;
-  position: absolute;
-  top: 0px;
-  left: -3px;
-  transform: rotate(0);
-  border-radius: 0;
-  transition: all 0.5s ease;
+
+/* Use one clean X from the inner icon */
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
+  display: block !important;
+
+  width: 38px !important;
+  height: 38px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  color: #111 !important;
+  background: transparent !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
 }
-.pplr_crop-modal .pplr_close.c_h_m {
-  display: initial !important;
+
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
+  content: "×" !important;
+
+  display: block !important;
+
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 42px !important;
+  font-weight: 300 !important;
+  line-height: 38px !important;
+  text-align: center !important;
+
+  color: #111 !important;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
 }
-/* Not working */
-.pplr_crop-modal .pplr_close:hover::before {
-  border-color: #04c;
-  transform: rotate(180deg);
-  border-radius: 50px;
-}
-.pplr_crop-modal .pplr_close .fa-close::before {
-  content: '\2715' !important;
-  font-size: 22px;
-  font-weight: 700;
-  vertical-align: middle;
+
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::after,
+#pplr_fallback_close {
+  content: none !important;
+  display: none !important;
 }
 
 .pplr_crop-modal {
