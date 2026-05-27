@@ -94,11 +94,10 @@ body {
 /* Global CLS fix: reserve scrollbar space consistently */
 html {
   overflow-y: scroll !important;
-  scrollbar-gutter: stable !important;
+  scrollbar-gutter: stable both-edges !important;
 }
 
 body {
-  overflow-y: visible !important;
   overflow-x: hidden !important;
 }
 
