@@ -171,11 +171,6 @@
         "disabled": false,
         "settings": {}
       },
-      "1692329972272007824": {
-        "type": "shopify://apps/zepto-product-personalizer/blocks/product_personalizer_main/7411210d-7b32-4c09-9455-e129e3be4729",
-        "disabled": false,
-        "settings": {}
-      },
       "11945366711752539959": {
         "type": "shopify://apps/zendesk/blocks/zendesk_web_widget/c0b417b1-b90b-4754-baaf-f55627e6acd4",
         "disabled": false,
@@ -228,6 +223,11 @@
       },
       "10031353204643366069": {
         "type": "shopify://apps/zepto-sign-customizer/blocks/neon_customizer/92e24d64-81a1-4b3a-85e2-2a6187e4445e",
+        "disabled": true,
+        "settings": {}
+      },
+      "1692329972272007824": {
+        "type": "shopify://apps/zepto-product-personalizer/blocks/product_personalizer_main/7411210d-7b32-4c09-9455-e129e3be4729",
         "disabled": true,
         "settings": {}
       }
