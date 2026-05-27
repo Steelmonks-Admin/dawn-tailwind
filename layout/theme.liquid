@@ -454,42 +454,64 @@
 
  <script>
 (function() {
+  var pplrReadyForOutsideClose = false;
   var pplrClosing = false;
 
-  function isPplrCloseButton(target) {
-    return !!(
-      target &&
-      target.closest &&
-      target.closest('a.js-modal-close.pplr_close')
-    );
+  function getPplrOverlay() {
+    return document.querySelector('.pplr_crop-modal');
   }
 
-  function isPplrPopupOpen(overlay) {
-    if (!overlay) return false;
+  function getPplrPopup() {
+    return document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
+  }
 
-    var style = window.getComputedStyle(overlay);
+  function isVisible(el) {
+    if (!el) return false;
+    var style = window.getComputedStyle(el);
+    var rect = el.getBoundingClientRect();
 
     return (
       style.display !== 'none' &&
       style.visibility !== 'hidden' &&
-      style.opacity !== '0'
+      style.opacity !== '0' &&
+      rect.width > 0 &&
+      rect.height > 0
     );
   }
 
+  function armOutsideClose() {
+    setTimeout(function() {
+      var overlay = getPplrOverlay();
+      var popup = getPplrPopup();
+
+      pplrReadyForOutsideClose = !!(overlay && popup && isVisible(overlay) && isVisible(popup));
+    }, 500);
+  }
+
   document.addEventListener('click', function(event) {
-    var overlay = document.querySelector('.pplr_crop-modal');
-    var popup = document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
+    var overlay = getPplrOverlay();
+    var popup = getPplrPopup();
 
-    if (!overlay || !popup || pplrClosing || !isPplrPopupOpen(overlay)) return;
+    if (!overlay || !popup) {
+      pplrReadyForOutsideClose = false;
+      return;
+    }
 
-    /* Let Zepto handle its own close button click. Do not call pplr_w_h() again. */
-    if (isPplrCloseButton(event.target)) {
+    var clickedCloseButton = event.target.closest && event.target.closest('a.js-modal-close.pplr_close');
+
+    if (clickedCloseButton) {
       pplrClosing = true;
+      pplrReadyForOutsideClose = false;
 
       setTimeout(function() {
         pplrClosing = false;
-      }, 900);
+      }, 1000);
 
+      return;
+    }
+
+    if (!pplrReadyForOutsideClose || pplrClosing || !isVisible(overlay) || !isVisible(popup)) {
+      armOutsideClose();
       return;
     }
 
@@ -497,13 +519,26 @@
 
     if (!clickedInsidePopup && typeof window.pplr_w_h === 'function') {
       pplrClosing = true;
+      pplrReadyForOutsideClose = false;
       window.pplr_w_h();
 
       setTimeout(function() {
         pplrClosing = false;
-      }, 900);
+      }, 1000);
     }
   }, false);
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && pplrReadyForOutsideClose && !pplrClosing && typeof window.pplr_w_h === 'function') {
+      pplrClosing = true;
+      pplrReadyForOutsideClose = false;
+      window.pplr_w_h();
+
+      setTimeout(function() {
+        pplrClosing = false;
+      }, 1000);
+    }
+  });
 })();
 </script>
   </body>
