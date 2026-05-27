@@ -451,6 +451,63 @@
     {% unless request.path contains 'pages/werkstatt' %}
       {% render 'steelmonks-sign-creator-reminder' %}
     {% endunless %}
+<script>
+(function() {
+  var pplrCloseLocked = false;
 
+  function isVisible(el) {
+    if (!el) return false;
+    var style = window.getComputedStyle(el);
+    var rect = el.getBoundingClientRect();
+
+    return (
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      style.opacity !== '0' &&
+      rect.width > 0 &&
+      rect.height > 0
+    );
+  }
+
+  function getVisiblePplrCloseButton(target) {
+    var button =
+      target &&
+      target.closest &&
+      target.closest('.pplr_crop-modal a.pplr_close.c_h_m');
+
+    if (!button || !isVisible(button)) return null;
+
+    return button;
+  }
+
+  document.addEventListener(
+    'click',
+    function(event) {
+      var closeButton = getVisiblePplrCloseButton(event.target);
+
+      if (!closeButton) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      if (pplrCloseLocked) return false;
+
+      pplrCloseLocked = true;
+
+      if (typeof window.pplr_w_h === 'function') {
+        window.pplr_w_h();
+      }
+
+      setTimeout(function() {
+        pplrCloseLocked = false;
+      }, 1200);
+
+      return false;
+    },
+    true
+  );
+})();
+</script>
   </body>
 </html>
