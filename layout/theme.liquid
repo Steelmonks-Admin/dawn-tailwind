@@ -469,24 +469,38 @@
     return button;
   }
 
-  function hidePopupFrameOnly() {
+  function hidePopupVisualsOnly() {
+    var modal = document.querySelector('.pplr_crop-modal');
     var popup = document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
 
-    if (!popup) return;
+    if (modal) {
+      modal.style.setProperty('background-color', 'transparent', 'important');
+      modal.style.setProperty('background-image', 'none', 'important');
+      modal.style.setProperty('pointer-events', 'none', 'important');
+    }
 
-    popup.style.setProperty('opacity', '0', 'important');
-    popup.style.setProperty('visibility', 'hidden', 'important');
-    popup.style.setProperty('pointer-events', 'none', 'important');
+    if (popup) {
+      popup.style.setProperty('opacity', '0', 'important');
+      popup.style.setProperty('visibility', 'hidden', 'important');
+      popup.style.setProperty('pointer-events', 'none', 'important');
+    }
   }
 
-  function resetPopupFrameForNextOpen() {
+  function resetPopupVisualsForNextOpen() {
+    var modal = document.querySelector('.pplr_crop-modal');
     var popup = document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
 
-    if (!popup) return;
+    if (modal) {
+      modal.style.removeProperty('background-color');
+      modal.style.removeProperty('background-image');
+      modal.style.removeProperty('pointer-events');
+    }
 
-    popup.style.removeProperty('opacity');
-    popup.style.removeProperty('visibility');
-    popup.style.removeProperty('pointer-events');
+    if (popup) {
+      popup.style.removeProperty('opacity');
+      popup.style.removeProperty('visibility');
+      popup.style.removeProperty('pointer-events');
+    }
   }
 
   document.addEventListener(
@@ -504,14 +518,14 @@
 
       pplrCloseLocked = true;
 
-      hidePopupFrameOnly();
+      hidePopupVisualsOnly();
 
       if (typeof window.pplr_w_h === 'function') {
         window.pplr_w_h();
       }
 
       setTimeout(function() {
-        resetPopupFrameForNextOpen();
+        resetPopupVisualsForNextOpen();
         pplrCloseLocked = false;
       }, 900);
 
