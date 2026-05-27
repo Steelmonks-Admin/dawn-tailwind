@@ -1,3 +1,4 @@
+/* cache-bust 2026-05-27 16:47:57 UTC */
 /**
  * Zunft Quantity Tiers — vanilla JS.
  * Reads variant_id from the live PDP <input name="id"> at click time.
