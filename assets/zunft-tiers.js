@@ -9,17 +9,45 @@
   const ADD_URL = ROOT.replace(/\/$/, '') + '/cart/add.js';
 
   function readVariantId() {
+    // Strategy 1: URL ?variant= param (most reliable across themes, works in Customizer preview).
+    try {
+      const fromUrl = new URLSearchParams(window.location.search).get('variant');
+      if (fromUrl && /^\d+$/.test(fromUrl)) {
+        console.debug('[zunft-tiers] variant_id from URL:', fromUrl);
+        return fromUrl;
+      }
+    } catch (e) {}
+
+    // Strategy 2: hidden <input name="id"> in any cart-add form.
+    // Customizer preview may set disabled=true → we now accept disabled inputs too.
     const sels = [
       'product-form form[action*="/cart/add"] input[name="id"]',
       'form[action*="/cart/add"] input[name="id"]',
+      'form[action$="/cart/add"] input[name="id"]',
     ];
     for (const s of sels) {
       for (const n of document.querySelectorAll(s)) {
-        if (n.disabled) continue;
         const v = (n.value || '').trim();
-        if (v && /^\d+$/.test(v)) return v;
+        if (v && /^\d+$/.test(v)) {
+          if (n.disabled) console.debug('[zunft-tiers] variant_id from disabled input:', v);
+          else console.debug('[zunft-tiers] variant_id from input:', v, 'via', s);
+          return v;
+        }
       }
     }
+
+    // Strategy 3: <select name='id'> fallback (some themes use a select instead of radios).
+    for (const sel of document.querySelectorAll('select')) {
+      if (sel.name === 'id' || /\[id\]$/.test(sel.name || '')) {
+        const v = (sel.value || '').trim();
+        if (v && /^\d+$/.test(v)) {
+          console.debug('[zunft-tiers] variant_id from <select>:', v);
+          return v;
+        }
+      }
+    }
+
+    console.warn('[zunft-tiers] could not read variant_id from URL, inputs, or selects');
     return null;
   }
 
