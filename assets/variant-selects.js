@@ -231,7 +231,7 @@ if (!customElements.get('variant-selects')) {
   customElements.define('variant-selects', VariantSelects);
 }
 
-const VariantSelectsElement = customElements.get('variant-selects');
+var VariantSelectsElement = customElements.get('variant-selects');
 
 if (VariantSelectsElement && !customElements.get('variant-radios')) {
   class VariantRadios extends VariantSelectsElement {
@@ -253,3 +253,4 @@ if (VariantSelectsElement && !customElements.get('variant-radios')) {
 
   customElements.define('variant-radios', VariantRadios);
 }
+
