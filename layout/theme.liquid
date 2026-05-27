@@ -454,7 +454,8 @@
 
  <script>
 (function() {
-  var pplrClosing = false;
+  var pplrOutsideClosing = false;
+  var pplrArmed = false;
 
   function getOverlay() {
     return document.querySelector('.pplr_crop-modal');
@@ -466,6 +467,7 @@
 
   function isVisible(el) {
     if (!el) return false;
+
     var style = window.getComputedStyle(el);
     var rect = el.getBoundingClientRect();
 
@@ -478,86 +480,50 @@
     );
   }
 
-  function closePplrOnce() {
-    if (pplrClosing) return;
-
-    if (typeof window.pplr_w_h === 'function') {
-      pplrClosing = true;
-      window.pplr_w_h();
-
-      window.setTimeout(function() {
-        pplrClosing = false;
-      }, 1200);
-    }
+  function armPplrOutsideClose() {
+    setTimeout(function() {
+      var overlay = getOverlay();
+      var popup = getPopup();
+      pplrArmed = !!(overlay && popup && isVisible(overlay) && isVisible(popup));
+    }, 800);
   }
 
-  function preparePplrCloseButtons() {
-    var buttons = document.querySelectorAll('a.js-modal-close.pplr_close');
-
-    buttons.forEach(function(button) {
-      if (button.dataset.pplrCloseFixed === 'true') return;
-
-      /*
-        Remove inline onclick to prevent:
-        1. inline onclick="pplr_w_h();"
-        2. Zepto's own delegated .js-modal-close handler
-        from firing together.
-      */
-      button.removeAttribute('onclick');
-      button.dataset.pplrCloseFixed = 'true';
-
-      button.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-
-        closePplrOnce();
-
-        return false;
-      }, true);
-    });
-  }
-
-  /*
-    Watch for Zepto popup being injected/re-rendered.
-  */
-  var observer = new MutationObserver(function() {
-    preparePplrCloseButtons();
-  });
-
-  observer.observe(document.documentElement, {
-    childList: true,
-    subtree: true
-  });
-
-  document.addEventListener('DOMContentLoaded', preparePplrCloseButtons);
-  window.addEventListener('load', preparePplrCloseButtons);
-
-  /*
-    Click outside the white popup frame to close.
-    This only fires when the click is on the overlay/background,
-    not inside the popup and not on the close button.
-  */
   document.addEventListener('click', function(event) {
     var overlay = getOverlay();
     var popup = getPopup();
 
-    if (!overlay || !popup || !isVisible(overlay) || !isVisible(popup)) return;
+    if (!overlay || !popup || !isVisible(overlay) || !isVisible(popup)) {
+      pplrArmed = false;
+      pplrOutsideClosing = false;
+      return;
+    }
 
     var clickedCloseButton =
       event.target.closest &&
       event.target.closest('a.js-modal-close.pplr_close');
 
-    if (clickedCloseButton) return;
-
-    var clickedInsidePopup = popup.contains(event.target);
-
-    if (!clickedInsidePopup) {
-      event.preventDefault();
-      event.stopPropagation();
-      closePplrOnce();
+    if (clickedCloseButton) {
+      pplrArmed = false;
+      armPplrOutsideClose();
+      return;
     }
-  }, true);
+
+    if (!pplrArmed) {
+      armPplrOutsideClose();
+      return;
+    }
+
+    if (!popup.contains(event.target) && !pplrOutsideClosing && typeof window.pplr_w_h === 'function') {
+      pplrOutsideClosing = true;
+      pplrArmed = false;
+
+      window.pplr_w_h();
+
+      setTimeout(function() {
+        pplrOutsideClosing = false;
+      }, 1200);
+    }
+  });
 })();
 </script>
   </body>
