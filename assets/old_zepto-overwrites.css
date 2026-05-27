@@ -16,10 +16,6 @@
   align-items: center;
 }
 
-.pplr_crop-modal header {
-  display: none;
-}
-
 .pplr_crop-modal .pplr-text {
   position: relative !important;
 }
