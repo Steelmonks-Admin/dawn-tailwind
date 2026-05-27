@@ -454,19 +454,20 @@
 
  <script>
 (function() {
-  var pplrReadyForOutsideClose = false;
   var pplrClosing = false;
+  var pplrOpenReady = false;
 
-  function getPplrOverlay() {
+  function getOverlay() {
     return document.querySelector('.pplr_crop-modal');
   }
 
-  function getPplrPopup() {
+  function getPopup() {
     return document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
   }
 
   function isVisible(el) {
     if (!el) return false;
+
     var style = window.getComputedStyle(el);
     var rect = el.getBoundingClientRect();
 
@@ -479,64 +480,90 @@
     );
   }
 
-  function armOutsideClose() {
-    setTimeout(function() {
-      var overlay = getPplrOverlay();
-      var popup = getPplrPopup();
+  function closePplrOnce() {
+    if (pplrClosing) return;
 
-      pplrReadyForOutsideClose = !!(overlay && popup && isVisible(overlay) && isVisible(popup));
-    }, 500);
-  }
-
-  document.addEventListener('click', function(event) {
-    var overlay = getPplrOverlay();
-    var popup = getPplrPopup();
-
-    if (!overlay || !popup) {
-      pplrReadyForOutsideClose = false;
-      return;
-    }
-
-    var clickedCloseButton = event.target.closest && event.target.closest('a.js-modal-close.pplr_close');
-
-    if (clickedCloseButton) {
+    if (typeof window.pplr_w_h === 'function') {
       pplrClosing = true;
-      pplrReadyForOutsideClose = false;
+      pplrOpenReady = false;
+
+      window.pplr_w_h();
 
       setTimeout(function() {
         pplrClosing = false;
       }, 1000);
+    }
+  }
 
+  function armOutsideClose() {
+    setTimeout(function() {
+      var overlay = getOverlay();
+      var popup = getPopup();
+
+      pplrOpenReady = !!(
+        overlay &&
+        popup &&
+        isVisible(overlay) &&
+        isVisible(popup)
+      );
+    }, 600);
+  }
+
+  /*
+    Intercept Zepto close button clicks before Zepto's duplicate handlers run.
+    This prevents the close animation from firing twice.
+  */
+  document.addEventListener('click', function(event) {
+    var closeButton = event.target.closest && event.target.closest('a.js-modal-close.pplr_close');
+
+    if (closeButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      closePplrOnce();
+      return false;
+    }
+  }, true);
+
+  /*
+    Click outside popup frame to close.
+    This waits until after the popup has opened, so the original opening click
+    does not instantly close it again.
+  */
+  document.addEventListener('click', function(event) {
+    var overlay = getOverlay();
+    var popup = getPopup();
+
+    if (!overlay || !popup || pplrClosing) {
+      pplrOpenReady = false;
       return;
     }
 
-    if (!pplrReadyForOutsideClose || pplrClosing || !isVisible(overlay) || !isVisible(popup)) {
+    if (!isVisible(overlay) || !isVisible(popup)) {
+      pplrOpenReady = false;
+      return;
+    }
+
+    if (!pplrOpenReady) {
       armOutsideClose();
       return;
     }
 
     var clickedInsidePopup = popup.contains(event.target);
+    var clickedCloseButton = event.target.closest && event.target.closest('a.js-modal-close.pplr_close');
 
-    if (!clickedInsidePopup && typeof window.pplr_w_h === 'function') {
-      pplrClosing = true;
-      pplrReadyForOutsideClose = false;
-      window.pplr_w_h();
-
-      setTimeout(function() {
-        pplrClosing = false;
-      }, 1000);
+    if (!clickedInsidePopup && !clickedCloseButton) {
+      closePplrOnce();
     }
   }, false);
 
+  /*
+    Optional: Escape key closes popup once.
+  */
   document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && pplrReadyForOutsideClose && !pplrClosing && typeof window.pplr_w_h === 'function') {
-      pplrClosing = true;
-      pplrReadyForOutsideClose = false;
-      window.pplr_w_h();
-
-      setTimeout(function() {
-        pplrClosing = false;
-      }, 1000);
+    if (event.key === 'Escape' && pplrOpenReady && !pplrClosing) {
+      closePplrOnce();
     }
   });
 })();
