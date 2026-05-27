@@ -34,3 +34,48 @@
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   }
 }
+
+/* 
+ * Trusted Shops / eTrusted CLS prevention
+ * Reserves space before the widgets hydrate so the product page does not jump
+ */
+
+/* Main Trusted Shops service widget */
+etrusted-widget {
+  display: block !important;
+  min-height: 72px !important;
+  width: 100% !important;
+}
+
+/* Inner service widget shell */
+etrusted-trusted-stars-service-widget {
+  display: block !important;
+  min-height: 72px !important;
+}
+
+/* Product star rating widget */
+etrusted-product-review-list-widget-product-star-extension {
+  display: inline-block !important;
+  min-width: 170px !important;
+  min-height: 24px !important;
+  vertical-align: middle !important;
+}
+
+/* Inner product star widget shell */
+etrusted-star-extension {
+  display: inline-block !important;
+  min-width: 170px !important;
+  min-height: 24px !important;
+  vertical-align: middle !important;
+}
+
+/* Product page-specific spacing */
+.product__info etrusted-widget {
+  min-height: 72px !important;
+  margin: 8px 0 !important;
+}
+
+.product__info etrusted-product-review-list-widget-product-star-extension {
+  min-width: 170px !important;
+  min-height: 24px !important;
+}
