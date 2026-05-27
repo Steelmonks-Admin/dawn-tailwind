@@ -87,27 +87,6 @@ etrusted-star-extension {
   min-height: 26px !important;
 }
 
-/* Global CLS fix: reserve scrollbar space consistently */
-html {
-  overflow-y: scroll !important;
-  scrollbar-gutter: stable !important;
-}
-
-body {
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
-}
-
-/* Global CLS fix: reserve scrollbar space consistently */
-html {
-  overflow-y: scroll !important;
-  scrollbar-gutter: stable both-edges !important;
-}
-
-body {
-  overflow-x: hidden !important;
-}
-
 /* Reserve Zepto personalize button space to reduce page-load CLS */
 .product__info .pplr_add_to_cart,
 .product__info .pplr-c-button,
@@ -121,3 +100,4 @@ body {
 .product__info .pplr-wrapper-button {
   min-height: 64px !important;
 }
+
