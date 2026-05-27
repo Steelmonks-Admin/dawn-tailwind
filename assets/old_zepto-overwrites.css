@@ -641,4 +641,44 @@ label:has(+ .pplr_text:focus) {
   display: none !important;
 }
 
+/* FINAL: stop Zepto modal close flicker/double animation */
+.pplr_crop-modal,
+.pplr_crop-modal *,
+.pplr_crop-modal .pplr-popup,
+.pplr_crop-modal .pplr-popup.pplr-modal-box,
+.pplr_crop-modal .pplr-main,
+.pplr_crop-modal .pplr_form,
+.pplr_crop-modal .pplr_ex_button,
+.pplr_crop-modal .pplr_ex_inner,
+.pplr_crop-modal a.js-modal-close.pplr_close,
+.pplr_crop-modal a.js-modal-close.pplr_close *,
+.pplr_crop-modal a.js-modal-close.pplr_close::before,
+.pplr_crop-modal a.js-modal-close.pplr_close::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Prevent Zepto's opacity animation from visually replaying */
+.pplr_crop-modal .pplr-popup.pplr-modal-box {
+  opacity: 1 !important;
+}
+
+/* Ensure hidden header close stays hidden */
+.pplr_crop-modal header,
+.pplr_crop-modal header *,
+.pplr_crop-modal a.js-modal-close.pplr_close:not(.c_h_m) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure only the bottom/moved close remains visible */
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
