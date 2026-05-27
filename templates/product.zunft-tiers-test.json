@@ -77,7 +77,7 @@
           "settings": {
             "product_handle": "zunft-anstecker-test-sprint-1-bundle-widget",
             "heading": "Mengenrabatt — Nutze die Chance!",
-            "subheading": "Drei Pins = 5% Rabatt, zehn Pins = 10% Rabatt",
+            "subheading": "",
             "hint": "Wähle oben Deine Zunft. Der Rabatt wird im Warenkorb automatisch verrechnet.",
             "tier1_label": "1 Anstecker",
             "tier1_qty": 1,

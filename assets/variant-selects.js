@@ -253,5 +253,3 @@ if (VariantSelectsElement && !customElements.get('variant-radios')) {
 
   customElements.define('variant-radios', VariantRadios);
 }
-
-}
