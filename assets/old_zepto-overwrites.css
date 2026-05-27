@@ -4,6 +4,36 @@
   z-index: 100000000 !important;
 }
 
+/* Center Zepto popup frame */
+.pplr_crop-modal {
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  min-height: 100dvh !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background-color: rgba(0, 0, 0, 0.75) !important;
+  background-image: none !important;
+
+  overflow-y: auto !important;
+}
+
+/* Keep the popup centered inside the overlay */
+.pplr_crop-modal .pplr-popup.pplr-modal-box,
+.pplr_crop-modal .pplr-popup {
+  margin: auto !important;
+  max-width: 750px !important;
+  width: 92% !important;
+}
+
 .pplr_crop-modal .pplr-text {
   position: relative !important;
 }
