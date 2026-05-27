@@ -452,10 +452,42 @@
       {% render 'steelmonks-sign-creator-reminder' %}
     {% endunless %}
 
-    <script>
+ <script>
 (function() {
+  function unlockPageScroll() {
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.position = '';
+    document.documentElement.style.height = '';
+
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.height = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+
+    document.body.classList.remove(
+      'pplr-open',
+      'pplr_modal_open',
+      'modal-open',
+      'overflow-hidden',
+      'no-scroll',
+      'noscroll'
+    );
+
+    document.documentElement.classList.remove(
+      'pplr-open',
+      'pplr_modal_open',
+      'modal-open',
+      'overflow-hidden',
+      'no-scroll',
+      'noscroll'
+    );
+  }
+
   function closePplrModalInstantly(event) {
-    var closeButton = event.target.closest && event.target.closest('.pplr_crop-modal a.js-modal-close.pplr_close.c_h_m');
+    var closeButton =
+      event.target.closest &&
+      event.target.closest('.pplr_crop-modal a.js-modal-close.pplr_close.c_h_m');
 
     if (!closeButton) return;
 
@@ -469,10 +501,13 @@
       modal.style.display = 'none';
       modal.style.visibility = 'hidden';
       modal.style.opacity = '0';
+      modal.classList.remove('active', 'open', 'show');
     }
 
-    document.body.classList.remove('pplr-open', 'pplr_modal_open', 'modal-open');
-    document.documentElement.classList.remove('pplr-open', 'pplr_modal_open', 'modal-open');
+    unlockPageScroll();
+
+    setTimeout(unlockPageScroll, 50);
+    setTimeout(unlockPageScroll, 250);
 
     return false;
   }
@@ -480,6 +515,5 @@
   document.addEventListener('click', closePplrModalInstantly, true);
 })();
 </script>
-
   </body>
 </html>
