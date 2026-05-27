@@ -87,6 +87,23 @@ etrusted-star-extension {
   min-height: 26px !important;
 }
 
+/* Trusted Shops product review/list widget CLS prevention */
+etrusted-product-review-list-widget,
+etrusted-product-review-list-widget-product-star-extension,
+etrusted-product-review-list-widget-product-grade-extension {
+  display: block !important;
+  min-height: 32px !important;
+  min-width: 185px !important;
+  contain: layout paint !important;
+}
+
+/* If Trusted Shops injects a larger review carousel/list lower on the page */
+.product__container etrusted-product-review-list-widget,
+.product__info etrusted-product-review-list-widget {
+  min-height: 180px !important;
+  width: 100% !important;
+}
+
 /* Reserve Zepto personalize button space to reduce page-load CLS */
 .product__info .pplr_add_to_cart,
 .product__info .pplr-c-button,
