@@ -58,33 +58,50 @@
 
   padding: 0;
 }
-/* Clean Zepto close button - single source of truth */
+/* Clean Zepto close button - use native header close */
 .pplr_crop-modal .pplr-popup.pplr-modal-box,
 .pplr_crop-modal .pplr-popup {
   position: relative !important;
 }
 
-/* Keep header hidden, because Zepto renders another close there */
-.pplr_crop-modal header,
-.pplr_crop-modal header.p_h_d,
-.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close {
-  display: none !important;
-}
-
-/* Do NOT make these static; it can break Zepto's internal positioning */
-.pplr_crop-modal .pplr_ex_button,
-.pplr_crop-modal .pplr_ex_inner {
-  position: static !important;
-}
-
-/* Move only the bottom close button to the top-right of the popup */
-.pplr_crop-modal .pplr_ex_button .pplr_ex_inner > a.js-modal-close.pplr_close.c_h_m,
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+/* Show the header only as a close-button holder */
+.pplr_crop-modal header.p_h_d {
+  display: block !important;
   position: absolute !important;
   top: 8px !important;
   right: 10px !important;
-  bottom: auto !important;
   left: auto !important;
+  bottom: auto !important;
+
+  width: 38px !important;
+  height: 38px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  z-index: 999999 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Hide any header text/left placeholder */
+.pplr_crop-modal header.p_h_d .pplrhleft {
+  display: none !important;
+}
+
+/* Hide the bottom close button completely */
+.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Style the native header close button */
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c {
+  position: static !important;
 
   display: flex !important;
   align-items: center !important;
@@ -92,10 +109,9 @@
 
   width: 38px !important;
   height: 38px !important;
+
   margin: 0 !important;
   padding: 0 !important;
-
-  z-index: 999999 !important;
 
   color: #111 !important;
   background: transparent !important;
@@ -115,9 +131,9 @@
   transition: none !important;
 }
 
-/* Remove old animated ring / pseudo-elements */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::before,
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::after {
+/* Remove animated pseudo-elements */
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c::before,
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c::after {
   content: none !important;
   display: none !important;
   border: 0 !important;
@@ -129,7 +145,7 @@
 }
 
 /* Inner icon holder */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c i.pfa.fa-close {
   display: block !important;
 
   width: 38px !important;
@@ -152,7 +168,7 @@
 }
 
 /* One clean X */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c i.pfa.fa-close::before {
   content: "×" !important;
   display: block !important;
 
@@ -173,7 +189,7 @@
 }
 
 /* Kill extras/fallback */
-.pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::after,
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c i.pfa.fa-close::after,
 #pplr_fallback_close {
   content: none !important;
   display: none !important;
@@ -181,20 +197,20 @@
 
 /* Mobile */
 @media screen and (max-width: 749px) {
-  .pplr_crop-modal .pplr_ex_button .pplr_ex_inner > a.js-modal-close.pplr_close.c_h_m,
-  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+  .pplr_crop-modal header.p_h_d {
     top: 6px !important;
     right: 8px !important;
     width: 34px !important;
     height: 34px !important;
   }
 
-  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
+  .pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c,
+  .pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c i.pfa.fa-close {
     width: 34px !important;
     height: 34px !important;
   }
 
-  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
+  .pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close.p_r_c i.pfa.fa-close::before {
     font-size: 36px !important;
     line-height: 34px !important;
   }
