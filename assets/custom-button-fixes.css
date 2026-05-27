@@ -100,3 +100,21 @@ etrusted-star-extension {
 .product__info .pplr-wrapper-button {
   min-height: 64px !important;
 }
+
+/* Product media nav CLS prevention */
+.product__media__image-nav {
+  min-height: 127px !important;
+}
+
+.product__media__image-nav .product-media__item {
+  min-height: 121px !important;
+}
+
+/* Stabilize old product media slider width during initialization */
+.product__wrapper {
+  align-items: flex-start;
+}
+
+.product__info {
+  flex-shrink: 0;
+}
