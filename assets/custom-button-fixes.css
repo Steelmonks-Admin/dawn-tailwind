@@ -100,3 +100,17 @@ body {
 .shopify-section {
   max-width: 100%;
 }
+
+/* Reserve Zepto personalize button space to reduce page-load CLS */
+.product__info .pplr_add_to_cart,
+.product__info .pplr-c-button,
+.product__info .pplr-btn.ptc_button {
+  min-height: 52px !important;
+}
+
+/* Reserve the full Zepto button row area before app hydration */
+.product__info .pplr_add_to_cart,
+.product__info .pplr_personalize_button,
+.product__info .pplr-wrapper-button {
+  min-height: 64px !important;
+}
