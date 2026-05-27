@@ -7,6 +7,25 @@ body {
   overflow-x: hidden !important;
 }
 
+/* Prevent 100vw elements from causing right-side overflow/gap */
+body,
+.page-width,
+.shopify-section,
+.section,
+.product__container,
+.product__wrapper,
+.header-wrapper,
+.announcement-bar,
+.announcement-bar-section {
+  max-width: 100%;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
 :root {
   --alpha-button-background: 1;
   --alpha-button-border: 1;
