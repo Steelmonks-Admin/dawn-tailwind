@@ -454,105 +454,32 @@
 
     <script>
 (function() {
-  if (window.__smPplrCloseFixInstalled) return;
-  window.__smPplrCloseFixInstalled = true;
+  function closePplrModalInstantly(event) {
+    var closeButton = event.target.closest && event.target.closest('.pplr_crop-modal a.js-modal-close.pplr_close.c_h_m');
 
-  var lastPplrCloseCall = 0;
-  var installed = false;
+    if (!closeButton) return;
 
-  function getOverlay() {
-    return document.querySelector('.pplr_crop-modal');
-  }
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
 
-  function getPopup() {
-    return document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
-  }
+    var modal = document.querySelector('.pplr_crop-modal');
 
-  function isVisible(el) {
-    if (!el) return false;
-
-    var style = window.getComputedStyle(el);
-    var rect = el.getBoundingClientRect();
-
-    return (
-      style.display !== 'none' &&
-      style.visibility !== 'hidden' &&
-      style.opacity !== '0' &&
-      rect.width > 0 &&
-      rect.height > 0
-    );
-  }
-
-  function isPplrOpen() {
-    var overlay = getOverlay();
-    var popup = getPopup();
-
-    return !!(
-      overlay &&
-      popup &&
-      isVisible(overlay) &&
-      isVisible(popup)
-    );
-  }
-
-  function installPplrDebounce() {
-    if (installed) return true;
-    if (typeof window.pplr_w_h !== 'function') return false;
-
-    var originalPplrWH = window.pplr_w_h;
-
-    window.pplr_w_h = function() {
-      var now = Date.now();
-
-      /*
-        Zepto can trigger pplr_w_h() twice from inline onclick + app listener.
-        If the popup is currently open, ignore duplicate close calls fired
-        within a short window.
-      */
-      if (isPplrOpen() && now - lastPplrCloseCall < 900) {
-        return false;
-      }
-
-      lastPplrCloseCall = now;
-      return originalPplrWH.apply(this, arguments);
-    };
-
-    installed = true;
-    return true;
-  }
-
-  var installTimer = setInterval(function() {
-    if (installPplrDebounce()) {
-      clearInterval(installTimer);
+    if (modal) {
+      modal.style.display = 'none';
+      modal.style.visibility = 'hidden';
+      modal.style.opacity = '0';
     }
-  }, 200);
 
-  window.addEventListener('load', installPplrDebounce);
-  document.addEventListener('DOMContentLoaded', installPplrDebounce);
+    document.body.classList.remove('pplr-open', 'pplr_modal_open', 'modal-open');
+    document.documentElement.classList.remove('pplr-open', 'pplr_modal_open', 'modal-open');
 
-  /*
-    Click outside the white popup frame to close.
-    This calls the debounced pplr_w_h(), so it should not double-fire.
-  */
-  document.addEventListener('click', function(event) {
-    var overlay = getOverlay();
-    var popup = getPopup();
+    return false;
+  }
 
-    if (!overlay || !popup || !isVisible(overlay) || !isVisible(popup)) return;
-
-    var clickedCloseButton =
-      event.target.closest &&
-      event.target.closest('a.js-modal-close.pplr_close');
-
-    if (clickedCloseButton) return;
-
-    var clickedInsidePopup = popup.contains(event.target);
-
-    if (!clickedInsidePopup && overlay.contains(event.target) && typeof window.pplr_w_h === 'function') {
-      window.pplr_w_h();
-    }
-  }, false);
+  document.addEventListener('click', closePplrModalInstantly, true);
 })();
 </script>
+
   </body>
 </html>
