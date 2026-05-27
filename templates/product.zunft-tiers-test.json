@@ -76,9 +76,9 @@
           "type": "zunft_quantity_tiers",
           "settings": {
             "product_handle": "zunft-anstecker-test-sprint-1-bundle-widget",
-            "heading": "Mengenrabatt — Nutze die Chance!",
+            "heading": "Mengenrabatt — Stückzahl wählen",
             "subheading": "",
-            "hint": "Wähle oben Deine Zunft. Der Rabatt wird im Warenkorb automatisch verrechnet.",
+            "hint": "Wähle oben Deine Zunft und die gewünschte Stückzahl. Der Rabatt wird im Warenkorb automatisch verrechnet.",
             "tier1_label": "1 Anstecker",
             "tier1_qty": 1,
             "tier1_discount": 0,
