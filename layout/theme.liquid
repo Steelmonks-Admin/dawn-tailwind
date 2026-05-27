@@ -452,20 +452,50 @@
       {% render 'steelmonks-sign-creator-reminder' %}
     {% endunless %}
 
-    <script>
+ <script>
 (function() {
   var pplrClosing = false;
+
+  function isPplrCloseButton(target) {
+    return !!(
+      target &&
+      target.closest &&
+      target.closest('a.js-modal-close.pplr_close')
+    );
+  }
+
+  function isPplrPopupOpen(overlay) {
+    if (!overlay) return false;
+
+    var style = window.getComputedStyle(overlay);
+
+    return (
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      style.opacity !== '0'
+    );
+  }
 
   document.addEventListener('click', function(event) {
     var overlay = document.querySelector('.pplr_crop-modal');
     var popup = document.querySelector('.pplr_crop-modal .pplr-popup.pplr-modal-box');
 
-    if (!overlay || !popup || pplrClosing) return;
+    if (!overlay || !popup || pplrClosing || !isPplrPopupOpen(overlay)) return;
+
+    /* Let Zepto handle its own close button click. Do not call pplr_w_h() again. */
+    if (isPplrCloseButton(event.target)) {
+      pplrClosing = true;
+
+      setTimeout(function() {
+        pplrClosing = false;
+      }, 900);
+
+      return;
+    }
 
     var clickedInsidePopup = popup.contains(event.target);
-    var clickedCloseButton = event.target.closest('a.js-modal-close.pplr_close');
 
-    if (!clickedInsidePopup && !clickedCloseButton && typeof window.pplr_w_h === 'function') {
+    if (!clickedInsidePopup && typeof window.pplr_w_h === 'function') {
       pplrClosing = true;
       window.pplr_w_h();
 
@@ -473,7 +503,7 @@
         pplrClosing = false;
       }, 900);
     }
-  }, true);
+  }, false);
 })();
 </script>
   </body>
