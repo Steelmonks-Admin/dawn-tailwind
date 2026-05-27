@@ -80,11 +80,23 @@ etrusted-star-extension {
   min-height: 24px !important;
 }
 
-/* Global CLS fix: reserve scrollbar space */
+/* Global CLS fix: reserve scrollbar space consistently */
 html {
-  scrollbar-gutter: stable;
+  overflow-y: scroll !important;
+  scrollbar-gutter: stable !important;
 }
 
 body {
-  overflow-y: scroll;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+}
+
+/* Prevent 100vw/full-width sections from causing horizontal scrollbar/width jumps */
+.product__container,
+.product__wrapper,
+.header-wrapper,
+.announcement-bar,
+.announcement-bar-section,
+.shopify-section {
+  max-width: 100%;
 }
