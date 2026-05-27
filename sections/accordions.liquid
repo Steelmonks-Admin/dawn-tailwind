@@ -91,6 +91,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     if (window.customElements.get('sm-accordions')) return;
+
     class Accordions extends HTMLElement {
       connectedCallback() {
         this.tabs = [...this.querySelectorAll('.accordions__wrapper ul.navigation > li')];
@@ -109,21 +110,32 @@
       }
 
       init() {
+        if (!this.tabs.length || !this.accordions.length) {
+          this.addBorder(this.accordions);
+          return;
+        }
+
         const firstTab = this.tabs[0];
         const firstTabId = firstTab.dataset.groupTarget;
+
+        if (!firstTabId) {
+          this.addBorder(this.accordions);
+          return;
+        }
+
         firstTab.classList.add('active');
 
         this.accordions.forEach((accordion) => {
-          const accordionId = accordion.dataset.groupId;
+          const accordionId = accordion.dataset.groupId || '';
 
           if (accordionId.includes(firstTabId)) {
             accordion.classList.remove('visually-hidden');
-            this.addBorder(this.accordions);
           } else {
             accordion.classList.add('visually-hidden');
-            this.addBorder(this.accordions);
           }
         });
+
+        this.addBorder(this.accordions);
       }
 
       addBorder(accordions) {
@@ -132,9 +144,7 @@
         );
 
         accordions.forEach((accordion) => {
-          if (accordion.classList.contains('has-border-bottom')) {
-            accordion.classList.remove('has-border-bottom');
-          }
+          accordion.classList.remove('has-border-bottom');
         });
 
         if (accordionsWithoutVisuallyHidden.length) {
@@ -145,10 +155,13 @@
       }
 
       toggleAccordion(e) {
-        const target = e.target;
+        const target = e.currentTarget;
         const targetId = target.dataset.groupTarget;
 
+        if (!targetId) return;
+
         target.classList.add('active');
+
         this.tabs.forEach((tab) => {
           if (tab !== target) {
             tab.classList.remove('active');
@@ -156,18 +169,18 @@
         });
 
         this.accordions.forEach((accordion) => {
-          const accordionId = accordion.dataset.groupId;
+          const accordionId = accordion.dataset.groupId || '';
 
-          accordion.classList?.contains('has-border-bottom') && accordion.classList.remove('has-border-bottom');
+          accordion.classList.remove('has-border-bottom');
 
           if (accordionId.includes(targetId)) {
             accordion.classList.remove('visually-hidden');
-            this.addBorder(this.accordions);
           } else {
             accordion.classList.add('visually-hidden');
-            this.addBorder(this.accordions);
           }
         });
+
+        this.addBorder(this.accordions);
       }
     }
 
