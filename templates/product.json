@@ -71,6 +71,27 @@
         "trusted_shops_reviews_and_more_trusted_stars_aNyqUW": {
           "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
           "settings": {}
+        },
+        "zunft_quantity_tiers_block": {
+          "type": "zunft_quantity_tiers",
+          "settings": {
+            "product_handle": "zunft-anstecker",
+            "heading": "Stückzahl wählen:",
+            "subheading": "",
+            "hint": "",
+            "tier1_label": "1 Anstecker",
+            "tier1_qty": 1,
+            "tier1_discount": 0,
+            "tier1_badge": "",
+            "tier2_label": "3 Anstecker",
+            "tier2_qty": 3,
+            "tier2_discount": 5,
+            "tier2_badge": "Beliebt",
+            "tier3_label": "10 Anstecker",
+            "tier3_qty": 10,
+            "tier3_discount": 10,
+            "tier3_badge": "Bester Preis"
+          }
         }
       },
       "block_order": [
@@ -80,6 +101,7 @@
         "price",
         "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf",
         "variant_picker",
+        "zunft_quantity_tiers_block",
         "profy_banner_countdown_timer_app_block_jALVj7",
         "buy_buttons",
         "description",
