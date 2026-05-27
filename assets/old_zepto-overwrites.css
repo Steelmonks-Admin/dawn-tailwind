@@ -65,23 +65,27 @@
 
   padding: 0;
 }
-/* Clean Zepto close button - no duplicate/rotating animation */
-.pplr_crop-modal .pplr-popup.pplr-modal-box {
+/* Clean Zepto close button - single source of truth */
+.pplr_crop-modal .pplr-popup.pplr-modal-box,
+.pplr_crop-modal .pplr-popup {
   position: relative !important;
 }
 
-.pplr_crop-modal form.pplr_form,
-.pplr_crop-modal .pplr-main,
+/* Keep header hidden, because Zepto renders another close there */
+.pplr_crop-modal header,
+.pplr_crop-modal header.p_h_d,
+.pplr_crop-modal header.p_h_d a.js-modal-close.pplr_close {
+  display: none !important;
+}
+
+/* Do NOT make these static; it can break Zepto's internal positioning */
 .pplr_crop-modal .pplr_ex_button,
 .pplr_crop-modal .pplr_ex_inner {
   position: static !important;
 }
 
-/* Keep header hidden since we use the bottom close button moved to the corner */
-.pplr_crop-modal header {
-  display: none !important;
-}
-
+/* Move only the bottom close button to the top-right of the popup */
+.pplr_crop-modal .pplr_ex_button .pplr_ex_inner > a.js-modal-close.pplr_close.c_h_m,
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
   position: absolute !important;
   top: 8px !important;
@@ -95,7 +99,6 @@
 
   width: 38px !important;
   height: 38px !important;
-
   margin: 0 !important;
   padding: 0 !important;
 
@@ -119,24 +122,25 @@
   transition: none !important;
 }
 
-/* Kill the old animated pseudo-elements */
+/* Remove old animated ring / pseudo-elements */
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::before,
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m::after {
   content: none !important;
   display: none !important;
   border: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
   transform: none !important;
   animation: none !important;
   transition: none !important;
 }
 
-/* Use one clean X from the inner icon */
+/* Inner icon holder */
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
   display: block !important;
 
   width: 38px !important;
   height: 38px !important;
-
   margin: 0 !important;
   padding: 0 !important;
 
@@ -154,9 +158,9 @@
   transition: none !important;
 }
 
+/* One clean X */
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
   content: "×" !important;
-
   display: block !important;
 
   font-family: Arial, Helvetica, sans-serif !important;
@@ -175,10 +179,32 @@
   transition: none !important;
 }
 
+/* Kill extras/fallback */
 .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::after,
 #pplr_fallback_close {
   content: none !important;
   display: none !important;
+}
+
+/* Mobile */
+@media screen and (max-width: 749px) {
+  .pplr_crop-modal .pplr_ex_button .pplr_ex_inner > a.js-modal-close.pplr_close.c_h_m,
+  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m {
+    top: 6px !important;
+    right: 8px !important;
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .pplr_crop-modal .pplr_ex_button a.js-modal-close.pplr_close.c_h_m i.pfa.fa-close::before {
+    font-size: 36px !important;
+    line-height: 34px !important;
+  }
 }
 
 .pplr_crop-modal {
