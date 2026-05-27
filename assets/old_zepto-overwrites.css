@@ -6,10 +6,7 @@
 /* Close button and header container */
 .pplr_crop-modal {
   background-color: rgba(0, 0, 0, 0.75) !important;
-  background-image: url('https://cdn.shopify.com/s/files/1/0472/6420/2901/files/web-loading-fight.gif?v=1733816061') !important;
-  background-size: 250px;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-image: none !important;
 
   display: flex !important;
   justify-content: center;
