@@ -1,19 +1,24 @@
-/* Zunft Quantity Tiers — quantity-setter pills, scoped under .zunft-tiers. */
+/* Zunft Quantity Tiers — inline compact pills + free input. Scoped under .zunft-tiers. */
 .zunft-tiers {
-  margin: 1rem 0;
-  padding: 0;
+  margin: 0.75rem 0;
 }
-.zunft-tiers__label {
-  margin: 0 0 0.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #111827;
-}
-.zunft-tiers__pills {
+.zunft-tiers__row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
-  align-items: stretch;
+}
+.zunft-tiers__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+}
+.zunft-tiers__pills {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
 }
 .zunft-tiers__pill {
   appearance: none;
@@ -21,20 +26,16 @@
   color: #111827;
   border: 1.5px solid #d1d5db;
   border-radius: 999px;
-  padding: 0.55rem 0.9rem 0.55rem 0.7rem;
+  min-width: 2.5rem;
+  height: 2.25rem;
+  padding: 0 0.7rem;
   font-size: 0.9rem;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-  line-height: 1.1;
-  min-height: 2.5rem;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 .zunft-tiers__pill:hover {
   border-color: #111827;
-  box-shadow: 0 2px 8px -3px rgba(0, 0, 0, 0.15);
 }
 .zunft-tiers__pill:focus-visible {
   outline: 2px solid #0044cc;
@@ -48,43 +49,45 @@
 .zunft-tiers__pill--active:hover {
   background: #000;
 }
-.zunft-tiers__pill-qty {
-  background: rgba(0, 0, 0, 0.06);
+.zunft-tiers__free {
+  appearance: textfield;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  background: #fff;
+  color: #111827;
+  border: 1.5px solid #d1d5db;
   border-radius: 999px;
-  min-width: 1.5rem;
-  height: 1.5rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 0 0.4rem;
+  width: 4rem;
+  height: 2.25rem;
+  padding: 0 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.15s ease;
 }
-.zunft-tiers__pill--active .zunft-tiers__pill-qty {
-  background: rgba(255, 255, 255, 0.18);
+.zunft-tiers__free::-webkit-outer-spin-button,
+.zunft-tiers__free::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.zunft-tiers__free:hover,
+.zunft-tiers__free:focus {
+  border-color: #111827;
+  outline: none;
+}
+.zunft-tiers__free.is-active {
+  background: #111827;
   color: #fff;
+  border-color: #111827;
 }
-.zunft-tiers__pill-text {
-  font-size: 0.88rem;
-}
-.zunft-tiers__pill-discount {
-  background: #ecfdf5;
-  color: #047857;
-  border-radius: 999px;
-  padding: 0.1rem 0.45rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin-left: 0.15rem;
-}
-.zunft-tiers__pill--active .zunft-tiers__pill-discount {
-  background: rgba(255, 255, 255, 0.18);
-  color: #d1fae5;
+.zunft-tiers__hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  color: #6b7280;
+  line-height: 1.4;
 }
 .zunft-tiers__status {
-  margin: 0.6rem 0 0;
-  padding: 0.45rem 0.6rem;
+  margin: 0.4rem 0 0;
+  padding: 0.35rem 0.55rem;
   border-radius: 0.4rem;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 .zunft-tiers__status--ok {
   background: #ecfdf5;
@@ -93,10 +96,4 @@
 .zunft-tiers__status--error {
   background: #fef2f2;
   color: #991b1b;
-}
-.zunft-tiers__hint {
-  margin: 0.5rem 0 0;
-  font-size: 0.78rem;
-  color: #6b7280;
-  line-height: 1.4;
 }

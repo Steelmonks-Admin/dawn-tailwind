@@ -1,8 +1,8 @@
 {% comment %}
-  Zunft-Anstecker Quantity Tiers — quantity-setter variant.
-  Three pills set the cart-form's quantity input. Add-to-cart is handled by the
-  existing main "In den Warenkorb legen" button. Discounts apply via Shopify
-  native automatic discount rules at checkout.
+  Zunft-Anstecker Quantity Tiers — inline compact variant.
+  One horizontal line: label + 3 preset pills + free-input.
+  Discount hints below in a single line.
+  Sets the cart-form's quantity input directly — no add-to-cart here.
 {% endcomment %}
 
 {%- liquid
@@ -18,51 +18,58 @@
   <noscript>{{ 'zunft-tiers.css' | asset_url | stylesheet_tag }}</noscript>
 
   <div
-    class="zunft-tiers zunft-tiers--quantity"
+    class="zunft-tiers zunft-tiers--inline"
     data-zunft-tiers
     data-product-id="{{ product.id }}"
     data-product-handle="{{ product.handle }}"
-    aria-labelledby="ZunftTiersBlock-Heading-{{ block.id }}"
+    aria-labelledby="ZunftTiersBlock-Label-{{ block.id }}"
     {{ block.shopify_attributes }}
   >
-    {%- if block.settings.heading != blank -%}
-      <p id="ZunftTiersBlock-Heading-{{ block.id }}" class="zunft-tiers__label">
-        {{ block.settings.heading | escape }}
+    <div class="zunft-tiers__row">
+      <span id="ZunftTiersBlock-Label-{{ block.id }}" class="zunft-tiers__label">
+        {{ block.settings.heading | default: 'Stückzahl wählen:' | escape }}
+      </span>
+
+      <div class="zunft-tiers__pills" role="group" aria-label="Stückzahl">
+        {%- for i in (1..3) -%}
+          {%- liquid
+            assign qty_key = 'tier' | append: i | append: '_qty'
+            assign discount_key = 'tier' | append: i | append: '_discount'
+            assign qty = block.settings[qty_key]
+            assign discount = block.settings[discount_key]
+          -%}
+          <button type="button"
+            class="zunft-tiers__pill"
+            data-zunft-tier-button
+            data-tier-qty="{{ qty }}"
+            data-tier-discount="{{ discount }}"
+            aria-pressed="false">{{ qty }}</button>
+        {%- endfor -%}
+        <input type="number"
+          class="zunft-tiers__free"
+          data-zunft-tier-free
+          min="1"
+          step="1"
+          placeholder="…"
+          aria-label="Eigene Stückzahl eingeben">
+      </div>
+    </div>
+
+    {%- if block.settings.tier2_discount > 0 or block.settings.tier3_discount > 0 -%}
+      <p class="zunft-tiers__hint">
+        {%- if block.settings.tier2_discount > 0 -%}
+          {{ block.settings.tier2_discount }}% Rabatt ab {{ block.settings.tier2_qty }} Stück
+        {%- endif -%}
+        {%- if block.settings.tier2_discount > 0 and block.settings.tier3_discount > 0 -%}
+          {{ '&nbsp;·&nbsp;' }}
+        {%- endif -%}
+        {%- if block.settings.tier3_discount > 0 -%}
+          {{ block.settings.tier3_discount }}% Rabatt ab {{ block.settings.tier3_qty }} Stück
+        {%- endif -%}
       </p>
     {%- endif -%}
 
-    <div class="zunft-tiers__pills" role="group" aria-label="{{ block.settings.heading | default: 'Mengenrabatt' | escape }}">
-      {%- for i in (1..3) -%}
-        {%- liquid
-          assign qty_key = 'tier' | append: i | append: '_qty'
-          assign label_key = 'tier' | append: i | append: '_label'
-          assign discount_key = 'tier' | append: i | append: '_discount'
-          assign qty = block.settings[qty_key]
-          assign label = block.settings[label_key]
-          assign discount = block.settings[discount_key]
-        -%}
-        <button type="button"
-          class="zunft-tiers__pill"
-          data-zunft-tier-button
-          data-tier-qty="{{ qty }}"
-          data-tier-discount="{{ discount }}"
-          aria-pressed="false">
-          <span class="zunft-tiers__pill-qty">{{ qty }}</span>
-          <span class="zunft-tiers__pill-text">
-            {%- if qty == 1 -%}Anstecker{%- else -%}Anstecker{%- endif -%}
-          </span>
-          {%- if discount > 0 -%}
-            <span class="zunft-tiers__pill-discount">−{{ discount }}%</span>
-          {%- endif -%}
-        </button>
-      {%- endfor -%}
-    </div>
-
     <p class="zunft-tiers__status" data-zunft-tiers-status role="status" aria-live="polite" hidden></p>
-
-    {%- if block.settings.hint != blank -%}
-      <p class="zunft-tiers__hint">{{ block.settings.hint | escape }}</p>
-    {%- endif -%}
   </div>
 
   <script src="{{ 'zunft-tiers.js' | asset_url }}" defer="defer"></script>

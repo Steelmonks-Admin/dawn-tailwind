@@ -76,9 +76,9 @@
           "type": "zunft_quantity_tiers",
           "settings": {
             "product_handle": "zunft-anstecker-test-sprint-1-bundle-widget",
-            "heading": "Mengenrabatt — Stückzahl wählen",
+            "heading": "Stückzahl wählen:",
             "subheading": "",
-            "hint": "Wähle oben Deine Zunft und die gewünschte Stückzahl. Der Rabatt wird im Warenkorb automatisch verrechnet.",
+            "hint": "",
             "tier1_label": "1 Anstecker",
             "tier1_qty": 1,
             "tier1_discount": 0,
@@ -101,9 +101,9 @@
         "price",
         "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf",
         "variant_picker",
+        "zunft_quantity_tiers_block",
         "profy_banner_countdown_timer_app_block_jALVj7",
         "buy_buttons",
-        "zunft_quantity_tiers_block",
         "description",
         "zepto_product_personalizer_product_personalizer_page_bj6dEi",
         "trusted_shops_reviews_and_more_trusted_stars_aNyqUW"
