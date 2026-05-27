@@ -507,5 +507,143 @@ label:has(+ .pplr_text:focus) {
     line-height: 34px !important;
   }
 }
+/* FINAL Zepto dropdown option layout fix */
+
+/* Dropdown panel: vertical, scrollable, readable */
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.img_thumb_dropdown,
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.pplr_thumb_image.img_thumb_dropdown,
+.pplr_crop-modal .pplr-wrapper .pplr-swatch-main.img_thumb_dropdown {
+  position: absolute !important;
+
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+
+  width: 100% !important;
+  max-width: 100% !important;
+
+  max-height: 260px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+  display: block !important;
+
+  padding: 12px !important;
+  margin-top: 6px !important;
+
+  background: #fff !important;
+  border: 2px solid #0044cc !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 18px rgba(0, 68, 204, 0.18) !important;
+
+  z-index: 999999 !important;
+}
+
+/* Dropdown title */
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.img_thumb_dropdown::before,
+.pplr_crop-modal .pplr-wrapper .pplr-swatch-main.img_thumb_dropdown::before {
+  content: "Wähle aus" !important;
+  display: block !important;
+
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+
+  color: #090a0c !important;
+
+  padding: 0 0 10px 0 !important;
+  margin: 0 0 8px 0 !important;
+
+  border-bottom: 1px solid #e5e5e5 !important;
+}
+
+/* Each option: stacked underneath each other */
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.img_thumb_dropdown .pplr-swatch-element,
+.pplr_crop-modal .pplr-wrapper .pplr-swatch-main.img_thumb_dropdown .pplr-swatch-element {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  width: 100% !important;
+  height: auto !important;
+  min-height: 46px !important;
+  aspect-ratio: auto !important;
+
+  margin: 0 0 8px 0 !important;
+  padding: 8px 10px !important;
+
+  background-image: none !important;
+  background-color: #fafaff !important;
+
+  border: 1px solid #e1e1e1 !important;
+  border-radius: 8px !important;
+
+  cursor: pointer !important;
+}
+
+/* Last option spacing */
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.img_thumb_dropdown .pplr-swatch-element:last-child,
+.pplr_crop-modal .pplr-wrapper .pplr-swatch-main.img_thumb_dropdown .pplr-swatch-element:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Selected/hover option */
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.img_thumb_dropdown .pplr-swatch-element:hover,
+.pplr_crop-modal .pplr-wrapper .pplr-swatch-main.img_thumb_dropdown .pplr-swatch-element:hover,
+.pplr_crop-modal .pplr-wrapper .pplrgcolor.img_thumb_dropdown .pplr-swatch-element.selected,
+.pplr_crop-modal .pplr-wrapper .pplr-swatch-main.img_thumb_dropdown .pplr-swatch-element.selected {
+  border-color: #0044cc !important;
+  box-shadow: 0 2px 8px rgba(0, 68, 204, 0.18) !important;
+}
+
+/* Inner dropdown row */
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown .img_dropdown {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  width: 100% !important;
+}
+
+/* Thumbnail image */
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown .ppsrc {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 34px !important;
+  height: 34px !important;
+
+  flex: 0 0 34px !important;
+}
+
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown .ppsrc img {
+  display: block !important;
+
+  width: 34px !important;
+  height: 34px !important;
+
+  object-fit: contain !important;
+}
+
+/* Option text */
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown .ppdata {
+  display: block !important;
+
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+
+  color: #090a0c !important;
+
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* Hide tooltip inside dropdown list */
+.pplr_crop-modal .pplr-wrapper .img_thumb_dropdown .swtooltip {
+  display: none !important;
+}
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
