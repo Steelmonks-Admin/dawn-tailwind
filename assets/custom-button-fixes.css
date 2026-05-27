@@ -17,7 +17,7 @@
 }
 
 /* 
- * Making sure zepto personalizer doesn't hide our add to cart buttons 
+ * Making sure Zepto personalizer doesn't hide our add to cart buttons 
  * Zepto may hide the product form for non-personalizable products, this ensures it stays visible
  */
 .product-form {
@@ -89,7 +89,6 @@ etrusted-star-extension {
 
 /* Trusted Shops product review/list widget CLS prevention */
 etrusted-product-review-list-widget,
-etrusted-product-review-list-widget-product-star-extension,
 etrusted-product-review-list-widget-product-grade-extension {
   display: block !important;
   min-height: 32px !important;
@@ -116,22 +115,4 @@ etrusted-product-review-list-widget-product-grade-extension {
 .product__info .pplr_personalize_button,
 .product__info .pplr-wrapper-button {
   min-height: 64px !important;
-}
-
-/* Product media nav CLS prevention */
-.product__media__image-nav {
-  min-height: 127px !important;
-}
-
-.product__media__image-nav .product-media__item {
-  min-height: 121px !important;
-}
-
-/* Stabilize old product media slider width during initialization */
-.product__wrapper {
-  align-items: flex-start;
-}
-
-.product__info {
-  flex-shrink: 0;
 }
