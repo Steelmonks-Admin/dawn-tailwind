@@ -41,7 +41,7 @@
 
           <div class="sm-hero-hub__pixel-img-wrap">
             {% if section.settings.pixel_image %}
-              {{ section.settings.pixel_image | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'sm-hero-hub__pixel-img' }}
+              {{ section.settings.pixel_image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', class: 'sm-hero-hub__pixel-img' }}
             {% else %}
               <div class="sm-hero-hub__pixel-placeholder">Pixel-Visual hochladen</div>
             {% endif %}
