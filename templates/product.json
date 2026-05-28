@@ -43,12 +43,6 @@
             "options_threshold": 10
           }
         },
-        "profy_banner_countdown_timer_app_block_jALVj7": {
-          "type": "shopify://apps/profy-banner-timer/blocks/app_block/243a639f-ca73-4afe-b6aa-3a23277fb424",
-          "settings": {
-            "banner_id": "c9ffb917-cc34-11f0-b848-da56541e1029"
-          }
-        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -102,7 +96,6 @@
         "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf",
         "variant_picker",
         "zunft_quantity_tiers_block",
-        "profy_banner_countdown_timer_app_block_jALVj7",
         "buy_buttons",
         "description",
         "zepto_product_personalizer_product_personalizer_page_bj6dEi",
