@@ -228,7 +228,7 @@
       },
       "1692329972272007824": {
         "type": "shopify://apps/zepto-product-personalizer/blocks/product_personalizer_main/7411210d-7b32-4c09-9455-e129e3be4729",
-        "disabled": true,
+        "disabled": false,
         "settings": {}
       }
     },
