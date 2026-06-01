@@ -462,6 +462,10 @@
       <h1 style='display:none'>{{ article.title }}</h1>
     {% endif %}
 
+    {% if template.name == 'index' %}
+      <h1 style='display:none'>Handgefertigte, personalisierte Geschenke aus Stahl</h1>
+    {% endif %}
+
     {% comment %} ! GLOBAL SIGN CREATOR TIMER {% endcomment %}
     {% unless request.path contains 'pages/werkstatt' %}
       {% render 'steelmonks-sign-creator-reminder' %}
