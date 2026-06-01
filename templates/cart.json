@@ -42,16 +42,11 @@
         "buttons": {
           "type": "buttons",
           "settings": {}
-        },
-        "upsellplus_upsell_app_block_C9DYrt": {
-          "type": "shopify://apps/upsellplus/blocks/upsell-app-block/553fb951-397c-4171-8b32-7056a23ffd82",
-          "settings": {}
         }
       },
       "block_order": [
         "subtotal",
-        "buttons",
-        "upsellplus_upsell_app_block_C9DYrt"
+        "buttons"
       ],
       "settings": {
         "color_scheme": "",
