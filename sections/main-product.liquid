@@ -337,6 +337,24 @@
               }
 </script>
 
+  {%- comment -%} BreadcrumbList structured data — additive, for SERP breadcrumb-snippets {%- endcomment -%}
+<script type='application/ld+json'>
+  {
+    "@context": "https://schema.org/",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Startseite", "item": {{ shop.url | json }} }
+      {%- assign first_col = product.collections.first -%}
+      {%- if first_col != blank -%}
+      ,{ "@type": "ListItem", "position": 2, "name": {{ first_col.title | json }}, "item": "{{ shop.url }}{{ first_col.url }}" }
+      ,{ "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
+      {%- else -%}
+      ,{ "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
+      {%- endif -%}
+    ]
+  }
+</script>
+
 {% schema %}
 {
   "name": "Old Main Product",
