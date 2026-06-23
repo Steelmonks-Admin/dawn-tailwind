@@ -11,6 +11,19 @@ class DetailsDisclosure extends HTMLElement {
     );
     this.mainDetailsToggle.addEventListener('toggle', this.onToggle.bind(this));
 
+    // Close when clicking/tapping outside the menu. This replaces the part
+    // of the focusout behaviour that previously handled outside clicks —
+    // pointerdown fires before any focus change, so it cannot race the
+    // link-click navigation the way focusout did.
+    document.addEventListener('pointerdown', (event) => {
+      if (
+        this.mainDetailsToggle.hasAttribute('open') &&
+        !this.contains(event.target)
+      ) {
+        this.close();
+      }
+    });
+
     // Add overlay click handler
     const overlay = this.content.querySelector('.mega-menu__overlay');
     if (overlay) {
@@ -22,7 +35,14 @@ class DetailsDisclosure extends HTMLElement {
 
   onFocusOut() {
     setTimeout(() => {
-      if (!this.contains(document.activeElement)) this.close();
+      const active = document.activeElement;
+      // In Safari and Firefox, clicking an <a> does NOT move focus to it —
+      // document.activeElement falls back to <body> mid-click. Closing the
+      // menu in that window hides the link between mousedown and mouseup
+      // and swallows the navigation entirely (menu closes, nothing happens).
+      // Only close on real focus departures (e.g. tabbing out); outside
+      // clicks are handled by the document pointerdown listener.
+      if (active !== document.body && !this.contains(active)) this.close();
     });
   }
 
