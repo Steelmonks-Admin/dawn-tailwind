@@ -1,17 +1,11 @@
 /**
  * SteelMonks — Zepto Personalizer → Cart-Drawer Sync (J.1f, 2026-07)
  *
- * Problem: Zepto (Product Personalizer) adds items via jQuery XHR under
- * "Stay on page" mode, but never re-renders the theme cart drawer. The
- * drawer keeps its server-rendered state from page load (often empty).
- *
- * Fix: intercept XMLHttpRequest calls to /cart/add. After the last add
- * settles (debounced, Zepto may fire several adds for add-ons), fetch the
- * cart-drawer + cart-icon-bubble sections fresh, swap them in, close the
- * Zepto modal and open the drawer.
- *
- * Scope: only XHR (jQuery/Zepto). The theme's own product-form uses fetch
- * and keeps rendering the drawer itself — no double handling.
+ * After a Zepto (jQuery/XHR) /cart/add succeeds: close the personalizer
+ * modal, re-fetch the cart-drawer + cart-icon-bubble sections and open the
+ * drawer. Retries when the freshly rendered drawer lags behind /cart.js
+ * (Safari cache / propagation races). Only intercepts XHR — the theme's
+ * own fetch-based product-form keeps handling itself.
  */
 (function () {
   'use strict';
@@ -40,33 +34,45 @@
     } catch (e) { /* non-critical */ }
   }
 
-  function refreshDrawer() {
-    fetch('/?sections=cart-drawer,cart-icon-bubble')
-      .then(function (res) { return res.json(); })
-      .then(function (sections) {
-        var drawerHost = document.querySelector('cart-drawer');
-        var drawerInner = document.getElementById('CartDrawer');
-        var freshHost = parseSection(sections['cart-drawer'], 'cart-drawer');
-        var freshInner = parseSection(sections['cart-drawer'], '#CartDrawer');
-        if (drawerInner && freshInner) drawerInner.innerHTML = freshInner.innerHTML;
-        if (drawerHost && freshHost) {
-          drawerHost.className = freshHost.className;
-        }
-        var bubble = document.getElementById('cart-icon-bubble');
-        var freshBubbleRoot = parseSection(sections['cart-icon-bubble'], 'div.shopify-section, div');
-        if (bubble && freshBubbleRoot) bubble.innerHTML = freshBubbleRoot.innerHTML;
+  function applySections(sections) {
+    var drawerHost = document.querySelector('cart-drawer');
+    var drawerInner = document.getElementById('CartDrawer');
+    var freshHost = parseSection(sections['cart-drawer'], 'cart-drawer');
+    var freshInner = parseSection(sections['cart-drawer'], '#CartDrawer');
+    if (drawerInner && freshInner) drawerInner.innerHTML = freshInner.innerHTML;
+    if (drawerHost && freshHost) drawerHost.className = freshHost.className;
+    var bubble = document.getElementById('cart-icon-bubble');
+    var freshBubbleRoot = parseSection(sections['cart-icon-bubble'], 'div.shopify-section, div');
+    if (bubble && freshBubbleRoot) bubble.innerHTML = freshBubbleRoot.innerHTML;
+  }
 
-        closeZeptoModal();
-        if (drawerHost && typeof drawerHost.open === 'function') {
-          drawerHost.open();
-        }
-      })
-      .catch(function (e) { console.warn('[sm-drawer-sync]', e); });
+  function refreshDrawer(attempt) {
+    attempt = attempt || 0;
+    var bust = 'sm_ts=' + Date.now();
+    Promise.all([
+      fetch('/cart.js?' + bust, { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { return r.json(); }),
+      fetch('/?sections=cart-drawer,cart-icon-bubble&' + bust, { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { return r.json(); })
+    ]).then(function (results) {
+      var cart = results[0];
+      var sections = results[1];
+      var freshInner = parseSection(sections['cart-drawer'], '#CartDrawer');
+      var renderedItems = freshInner ? freshInner.querySelectorAll('.cart-item').length : 0;
+
+      if (cart.item_count > 0 && renderedItems === 0 && attempt < 3) {
+        setTimeout(function () { refreshDrawer(attempt + 1); }, 800);
+        return;
+      }
+
+      applySections(sections);
+      closeZeptoModal();
+      var drawerHost = document.querySelector('cart-drawer');
+      if (drawerHost && typeof drawerHost.open === 'function') drawerHost.open();
+    }).catch(function (e) { console.warn('[sm-drawer-sync]', e); });
   }
 
   function scheduleRefresh() {
     if (refreshTimer) clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(refreshDrawer, 600);
+    refreshTimer = setTimeout(function () { refreshDrawer(0); }, 600);
   }
 
   var origOpen = XMLHttpRequest.prototype.open;

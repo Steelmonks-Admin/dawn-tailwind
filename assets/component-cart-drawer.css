@@ -540,3 +540,31 @@ details[open] .dropdown-content {
 .drawer__footer details#Details-CartDrawer {
   margin-top: 12px;
 }
+
+
+/* J.1g — drawer item spacing + footer breathing room */
+cart-drawer .cart-item__details {
+  padding-bottom: 4px;
+}
+cart-drawer .cart-item__details > * {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+cart-drawer .cart-item td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+cart-drawer .cart-item__price-wrapper .price.price--end {
+  font-size: 1.3rem;
+}
+.drawer__footer .totals {
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+.drawer__footer .tax-note {
+  margin: 4px 0 12px;
+  line-height: 1.5;
+}
+.drawer__footer .cart-freeship-confirm {
+  margin: 12px 0 10px;
+}
