@@ -82,6 +82,20 @@
     refreshTimer = setTimeout(function () { refreshDrawer(0); }, 600);
   }
 
+  // eTrusted injects star widgets into cart items via script (forces 82px
+  // height, CSS cannot win against its injected !important styles).
+  // Cleanest fix pending app-config change: remove them on sight.
+  function killCartItemRatings() {
+    document.querySelectorAll('.cart-item__details etrusted-widget').forEach(function (el) {
+      el.remove();
+    });
+  }
+  killCartItemRatings();
+  new MutationObserver(killCartItemRatings).observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+
   var origOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function (method, url) {
     this.__smIsCartAdd = typeof url === 'string' && url.indexOf('/cart/add') !== -1;
