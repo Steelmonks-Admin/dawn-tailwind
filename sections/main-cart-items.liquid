@@ -82,7 +82,7 @@
 
               <tbody>
                 {%- for item in cart.items -%}
-                  <tr class='cart-item' id='CartItem-{{ item.index | plus: 1 }}'>
+                  <tr class='cart-item{% if item.final_price == 0 %} cart-item--reward{% endif %}' id='CartItem-{{ item.index | plus: 1 }}'>
                     <td class='cart-item__media'>
                       {% if item.image %}
                         {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}

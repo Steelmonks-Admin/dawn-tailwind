@@ -340,3 +340,49 @@ cart-items {
   text-decoration: none;
   font-weight: 600;
 }
+
+
+/* J.1d — Gamification/reward items (price 0) compact single-line */
+.cart-item--reward .cart-item__media img,
+.cart-item--reward .cart-item__media .cart-item__image-container {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px;
+}
+.cart-item--reward .cart-item__details {
+  font-size: 1.2rem;
+}
+.cart-item--reward .cart-item__details .product-option,
+.cart-item--reward .cart-item__details details,
+.cart-item--reward .cart-item__details .cart-item__discounted-prices,
+.cart-item--reward .jdgm-widget,
+.cart-item--reward .cart-item__details > a + * {
+  display: none !important;
+}
+.cart-item--reward .cart-item__quantity-wrapper,
+.cart-item--reward quantity-popover .quantity {
+  display: none !important;
+}
+.cart-item--reward td {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.cart-item--reward .cart-item__name {
+  font-size: 1.25rem;
+}
+
+/* J.1d — sticky bar: one-line, smaller button text */
+@media screen and (max-width: 749px) {
+  .cart-sticky-checkout__btn {
+    font-size: 1.3rem;
+    white-space: nowrap;
+    padding: 0 12px;
+    min-height: 44px;
+  }
+  .cart-sticky-checkout__value {
+    font-size: 1.4rem;
+  }
+  .cart-sticky-checkout__label {
+    font-size: 1.0rem;
+  }
+}

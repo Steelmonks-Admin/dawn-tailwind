@@ -122,7 +122,7 @@
                         Ensure the product is not hidden or a reward product
                       {% endcomment %}
                       {% unless item.product.metafields.custom.reward_product %}
-                        <tr id='CartDrawer-Item-{{ item.index | plus: 1 }}' class='cart-item' role='row'>
+                        <tr id='CartDrawer-Item-{{ item.index | plus: 1 }}' class='cart-item{% if item.final_price == 0 %} cart-item--reward{% endif %}' role='row'>
                           <td class='cart-item__media' role='cell' headers='CartDrawer-ColumnProductImage'>
                             {% if item.image %}
                               {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
