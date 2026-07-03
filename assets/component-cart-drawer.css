@@ -568,3 +568,31 @@ cart-drawer .cart-item__price-wrapper .price.price--end {
 .drawer__footer .cart-freeship-confirm {
   margin: 12px 0 10px;
 }
+
+
+/* J.1j — desktop drawer: kill stretched rows + tighten gaps */
+.cart-drawer .cart-item {
+  gap: 0.5rem 1rem !important;
+  margin-bottom: 0 !important;
+}
+.cart-drawer .cart-item__totals {
+  justify-content: flex-start !important;
+  gap: 0.4rem !important;
+}
+.cart-drawer .cart-item__details {
+  min-height: 0 !important;
+}
+.cart-drawer .cart-items .cart-item__quantity {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+.cart-drawer .cart-item > td {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.drawer__footer {
+  padding: 1rem 0 0.6rem !important;
+}
+.drawer__footer .cart-freeship-confirm {
+  margin: 6px 0 8px !important;
+}
