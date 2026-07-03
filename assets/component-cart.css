@@ -386,3 +386,31 @@ cart-items {
     font-size: 1.0rem;
   }
 }
+
+
+/* J.1e — mobile whitespace tightening on /cart */
+@media screen and (max-width: 749px) {
+  #main-cart-items [class*='-padding'] {
+    padding-top: 10px;
+    padding-bottom: 16px;
+  }
+  #main-cart-footer [class*='-padding'] {
+    padding-top: 8px;
+  }
+  .title-wrapper-with-link {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+  .title-wrapper-with-link .title--primary {
+    margin: 2px 0 4px;
+  }
+  .cart-items th {
+    padding-bottom: 10px;
+  }
+  .cart-item > td {
+    padding-top: 14px !important;
+  }
+  .cart-item__media img {
+    max-width: 88px;
+  }
+}
