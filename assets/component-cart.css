@@ -515,3 +515,11 @@ cart-items {
     margin-top: 10px !important;
   }
 }
+
+
+/* J.1k — eTrusted stars widget reserves 82px for a 20px row: clamp it */
+.cart-item__details etrusted-widget {
+  display: block !important;
+  max-height: 26px !important;
+  overflow: hidden !important;
+}
