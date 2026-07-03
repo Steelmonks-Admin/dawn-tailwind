@@ -5,6 +5,59 @@
 {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 
+{% style %}
+  /* J.1l — inline mobile compact rules (cache-proof) */
+  @media screen and (max-width: 749px) {
+    #main-cart-items [class*='-padding'] {
+      padding-top: 2px !important;
+      padding-bottom: 8px !important;
+    }
+    .title-wrapper-with-link {
+      margin: 2px 0 4px !important;
+      row-gap: 0 !important;
+    }
+    .title-wrapper-with-link .title--primary {
+      margin: 0 !important;
+      font-size: 2.6rem !important;
+    }
+    .cart-items thead th {
+      padding-top: 4px !important;
+      padding-bottom: 6px !important;
+    }
+    .cart-item {
+      gap: 0.8rem !important;
+      margin-bottom: 1.4rem !important;
+    }
+    .cart-item > td {
+      padding-top: 10px !important;
+      padding-bottom: 6px !important;
+    }
+    .cart-item__media {
+      width: 8.4rem !important;
+    }
+    .cart-item__image-container,
+    .cart-item__image {
+      width: 76px !important;
+      max-width: 76px !important;
+      height: auto !important;
+    }
+    .cart-item__details {
+      padding-left: 10px !important;
+      font-size: 1.3rem;
+    }
+    .cart-item__details > * {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+    }
+    .cart-item__details etrusted-widget {
+      display: none !important;
+    }
+    .cart-item .cart-item__quantity {
+      padding-top: 4px !important;
+    }
+  }
+{% endstyle %}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
