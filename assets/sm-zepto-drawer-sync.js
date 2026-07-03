@@ -47,6 +47,13 @@
   }
 
   function refreshDrawer(attempt) {
+    // Mobile: the drawer open/refresh path is flaky in iOS WebKit.
+    // Send users to the (optimized) cart page instead - server-rendered, always correct.
+    if (window.matchMedia('(max-width: 749px)').matches) {
+      closeZeptoModal();
+      window.location.href = '/cart';
+      return;
+    }
     attempt = attempt || 0;
     var bust = 'sm_ts=' + Date.now();
     Promise.all([
