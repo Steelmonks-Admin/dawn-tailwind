@@ -515,3 +515,28 @@ details[open] .dropdown-content {
 .cart-item__error-text:empty + .svg-wrapper {
   display: none;
 }
+
+
+/* Cart-Sprint 2026-07 — free-shipping confirm, express checkout, trust line */
+.cart-freeship-confirm {
+  background: #e8f6ec;
+  color: #116329;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 8px 0 4px;
+  text-align: center;
+}
+.drawer__footer .cart__dynamic-checkout-buttons {
+  margin-top: 10px;
+}
+.drawer__footer .cart-trust-line {
+  text-align: center;
+  font-size: 1.1rem;
+  color: rgba(var(--color-foreground), 0.65);
+  margin-top: 10px;
+}
+.drawer__footer details#Details-CartDrawer {
+  margin-top: 12px;
+}

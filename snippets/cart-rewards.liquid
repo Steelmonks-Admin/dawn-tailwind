@@ -3,26 +3,16 @@
 <tr style='padding: 0;'>
   <td colspan='4' class='cart-item__reward-images'>
     <div class='cart-rewards__container'>
-      <div class='cart-reward cart-reward--1'>
-        <img
-          src='https://cdn.shopify.com/s/files/1/0472/6420/2901/files/gratisversand.jpg?v=1731505889'
-          width='100'
-          height='auto'
-          alt='Reward item 1'
-          class='cart-reward__image'
-        >
-        <h3 class='cart-reward__title'>Gratisversand</h3>
-      </div>
-
       <div class='cart-reward cart-reward--2'>
         <img
           src='https://cdn.shopify.com/s/files/1/0472/6420/2901/files/Discount_96a411b4-37b3-48a3-b100-c6a28dbd20af.jpg?v=1708351214'
           width='100'
           height='auto'
-          alt='Reward item 2'
+          alt='10 Euro Rabatt ab 149 Euro Bestellwert'
           class='cart-reward__image'
         >
-        <h3 class='cart-reward__title'>10€ Rabatt</h3>
+        <h3 class='cart-reward__title'>10&euro; Rabatt</h3>
+        <span class='cart-reward__threshold'>ab 149&euro;</span>
       </div>
 
       <div class='cart-reward cart-reward--3'>
@@ -30,10 +20,11 @@
           src='https://cdn.shopify.com/s/files/1/0472/6420/2901/files/Mystery-Gift.jpg?v=1731506220'
           width='100'
           height='auto'
-          alt='Reward item 3'
+          alt='Mystery Gift ab 199 Euro Bestellwert'
           class='cart-reward__image'
         >
         <h3 class='cart-reward__title'>Mystery Gift</h3>
+        <span class='cart-reward__threshold'>ab 199&euro;</span>
       </div>
     </div>
   </td>
@@ -44,9 +35,8 @@
   rewardCartTotal = parseFloat(rewardCartTotal);
   let rewardItems = document.querySelectorAll('.cart-reward');
 
-  {% comment %} Check if the cart total is greater than the reward threshold and remove the class  {% endcomment %}
+  {% comment %} Unlock tiles when cart total reaches the threshold {% endcomment %}
   const rewardThresholds = {
-    'cart-reward--1': 99,
     'cart-reward--2': 149,
     'cart-reward--3': 199
   };
@@ -78,26 +68,20 @@
     box-shadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.1);
   }
 
-  /* Reward text */
   .cart-reward {
     position: relative;
-
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 8px;
-
+    gap: 4px;
     font-size: 12px;
-
     transition: transform 0.3s ease-in-out;
   }
-  .cart-reward--1 img,
   .cart-reward--2 img,
   .cart-reward--3 img {
     filter: grayscale(100%);
   }
 
-  .cart-reward--1::after,
   .cart-reward--2::after,
   .cart-reward--3::after {
     content: '';
@@ -120,65 +104,15 @@
     font-size: 12px;
     font-weight: 600;
   }
-  .cart-reward__title::after {
-    content: '';
-    position: absolute;
-    top: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-
-    opacity: 0;
-
-    width: 200px;
-
-    padding: 8px;
-    padding-top: 20px;
-    font-weight: 400;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-
-    clip-path: polygon(0 12px, 45% 12px, 50% 0, 55% 12px, 100% 12px, 100% 100%, 0 100%);
-
-    color: #fafaff;
-    background-color: rgba(0, 0, 0, 0.75);
-
+  .cart-reward__threshold {
+    font-size: 11px;
+    color: #555;
+    background: #f2f2f2;
     border-radius: 10px;
-
-    transition: opacity 0.3s ease-in-out;
-  }
-  .cart-reward:nth-child(1) .cart-reward__title::after {
-    content: 'Spare Versandkosten ab 99€!';
-    transform: unset;
-    left: 0;
-    clip-path: polygon(0 12px, 20% 12px, 25% 0, 30% 12px, 100% 12px, 100% 100%, 0 100%);
-  }
-  .cart-reward:nth-child(2) .cart-reward__title::after {
-    content: 'Spare 10€ bei einem Bestellwert von 149€!';
-  }
-  .cart-reward:nth-child(3) .cart-reward__title::after {
-    content: 'Ab 199€ gibts ein kostenloses Mystery Geschenk für Dich!';
-    right: 0;
-    left: auto;
-    transform: unset;
-    clip-path: polygon(0 12px, 70% 12px, 75% 0, 80% 12px, 100% 12px, 100% 100%, 0 100%);
-  }
-
-  .cart-reward:hover .cart-reward__title::after {
-    opacity: 1;
+    padding: 1px 8px;
   }
 
   .cart-reward:hover {
     transform: scale(1.05);
   }
-  /* 
-  @media screen and (max-width: 768px) {
-    .cart-reward:nth-child(1) .cart-reward__title::after {
-      left: 100%;
-      clip-path: polygon(0 12px, 20% 12px, 25% 0, 30% 12px, 100% 12px, 100% 100%, 0 100%);
-    }
-    .cart-reward:nth-child(3) .cart-reward__title::after {
-      left: 0;
-      clip-path: polygon(0 12px, 70% 12px, 75% 0, 80% 12px, 100% 12px, 100% 100%, 0 100%);
-    }
-  } */
 {% endstyle %}
