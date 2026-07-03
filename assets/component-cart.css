@@ -517,11 +517,8 @@ cart-items {
 }
 
 
-/* J.1k — eTrusted stars widget reserves 82px (min-height) for a 20px row: clamp it */
+/* J.1k — eTrusted stars widget forces 82px via injected !important styles.
+   Redundant inside cart items (trust line sits at checkout) — hide it. */
 .cart-item__details etrusted-widget {
-  display: block !important;
-  min-height: 0 !important;
-  height: 22px !important;
-  max-height: 22px !important;
-  overflow: hidden !important;
+  display: none !important;
 }
