@@ -147,17 +147,6 @@
                               {{- item.product.title | escape -}}
                             </a>
 
-                            {% comment %} ! eTrusted widget {% endcomment %}
-                            <!-- Begin eTrusted widget tag -->
-                            {% if item.sku != blank %}
-                              <etrusted-widget
-                                style='font-size: 14px;'
-                                data-etrusted-widget-id='wdg-7e981e7c-c798-40cb-9c30-e695d0aa36ea'
-                                data-sku='{%- for variant in item.product.variants -%}{{ variant.sku -}},{%- endfor -%}{% if item.sku == 'PIN-BE-2000' or item.sku == 'PIN-BE-2000X' %}PIN-BE-2000X,PIN-BE-2000{% endif %}'
-                              ></etrusted-widget>
-                            {% endif %}
-                            <!-- End eTrusted widget tag -->
-
                             {%- if item.original_price != item.final_price -%}
                               <div class='cart-item__discounted-prices'>
                                 <span class='visually-hidden'>
