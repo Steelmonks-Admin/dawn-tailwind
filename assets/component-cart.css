@@ -469,3 +469,49 @@ cart-items {
     margin-bottom: 0 !important;
   }
 }
+
+
+/* J.1i — counter the mobile grid rules from component-cart-items.css */
+@media screen and (max-width: 749px) {
+  .cart-item {
+    gap: 0.8rem !important;
+    margin-bottom: 1.4rem !important;
+  }
+  .cart-item__media {
+    width: 8.4rem !important;
+  }
+  .cart-items thead th {
+    padding-bottom: 4px !important;
+  }
+  .cart__items {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  /* footer blocks: kill dead space between item list, note, totals */
+  .cart__footer {
+    padding-top: 0 !important;
+    row-gap: 0 !important;
+  }
+  .cart__footer > * {
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+  }
+  .cart__blocks > * {
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
+  }
+  .cart__note-details {
+    margin: 4px 0 !important;
+  }
+  /* sticky-bar clearance belongs at the true page end, not mid-page */
+  #main-cart-footer {
+    padding-bottom: 12px !important;
+  }
+  .footer {
+    padding-bottom: 96px !important;
+  }
+  /* featured collection: don't glue to the brand footer */
+  .collection .title-wrapper-with-link {
+    margin-top: 10px !important;
+  }
+}
