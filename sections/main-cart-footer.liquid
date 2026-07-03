@@ -27,7 +27,7 @@
       {%- if settings.show_cart_note -%}
         <details id="Details-CartPageNote" class="cart__note-details">
           <summary>
-            <span class="summary__title">{{ 'sections.cart.note' | t }}</span>
+            <span class="summary__title">&#43; {{ 'sections.cart.note' | t }} <span class="cart__note-optional">(optional)</span></span>
           </summary>
           <cart-note class="cart__note field">
             <label class="visually-hidden" for="Cart-note">{{ 'sections.cart.note' | t }}</label>

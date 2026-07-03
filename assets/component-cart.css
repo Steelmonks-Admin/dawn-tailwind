@@ -300,3 +300,43 @@ cart-items {
     margin-bottom: 4px;
   }
 }
+
+
+/* J.1c — note toggle as clear link, not box */
+.cart__note-details {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 2px 0 6px;
+}
+.cart__note-details summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+.cart__note-details summary::-webkit-details-marker {
+  display: none;
+}
+.cart__note-details summary::marker {
+  content: '';
+}
+.cart__note-details summary .summary__title {
+  font-size: 1.3rem;
+  color: rgba(var(--color-foreground), 0.75);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cart__note-optional {
+  color: rgba(var(--color-foreground), 0.5);
+  text-decoration: none;
+}
+.cart__note-details[open] summary .summary__title {
+  text-decoration: none;
+  font-weight: 600;
+}
