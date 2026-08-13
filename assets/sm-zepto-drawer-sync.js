@@ -71,7 +71,10 @@
       }
 
       applySections(sections);
-      closeZeptoModal();
+      // Zepto closes its own modal after a successful add. Closing it here too
+      // races that and makes the modal flash open again. Only clean up if the
+      // modal is still open after Zepto had time to close it itself.
+      setTimeout(closeZeptoModal, 1200);
       var drawerHost = document.querySelector('cart-drawer');
       if (drawerHost && typeof drawerHost.open === 'function') drawerHost.open();
     }).catch(function (e) { console.warn('[sm-drawer-sync]', e); });
