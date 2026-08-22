@@ -910,6 +910,36 @@
   }
 }
 
+/* Desktop: let the creator page scroll when the modal is taller than the viewport,
+   instead of centring it and clipping top and bottom. Vertical auto-margins keep it
+   centred whenever it fits. Mobile layout is left untouched. */
+@media (min-width: 769px) {
+  #smc {
+    height: 100%;
+    width: 100%;
+  }
+  #smc-page-1,
+  #smc-page-2,
+  #smc-page-3 {
+    height: 100%;
+    align-items: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    box-sizing: border-box;
+  }
+  #smc-page-1 > .smc__wrap,
+  #smc-page-2 > .smc__wrap,
+  #smc-page-3 > .smc__wrap {
+    margin-top: auto;
+    margin-bottom: auto;
+    max-height: none;
+    flex-shrink: 0;
+  }
+}
+
 /* Rights confirmation — appears only once a file is uploaded.
    contain:inline-size keeps the long text from inflating the content-sized modal (.smc__wrap). */
 .smc__rights {
@@ -917,8 +947,8 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  margin-top: 4px;
-  padding: 10px 12px;
+  margin-top: 2px;
+  padding: 8px 12px;
   border-radius: 18px;
   background: rgba(0, 68, 204, 0.05);
   border: 1px solid rgba(0, 68, 204, 0.18);
@@ -957,9 +987,9 @@
 }
 .smc__rights-text {
   display: block;
-  margin-top: 2px;
-  font-size: 0.84rem;
-  line-height: 1.45;
+  margin-top: 1px;
+  font-size: 0.8rem;
+  line-height: 1.4;
   color: rgba(11, 11, 13, 0.72);
   overflow-wrap: anywhere;
 }

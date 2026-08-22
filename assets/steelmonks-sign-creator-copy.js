@@ -1559,7 +1559,12 @@ document.addEventListener('DOMContentLoaded', () => {
       ui.setPreviewLoading(false);
       ui.showPlaceholder('Fehlgeschlagen. Bitte Neu anfangen');
       state.current = 'init';
+      // Unlock the form again — otherwise every input (and the CTA) stays dead
+      // after a failed run until a full reset
+      ui.lockInputs(false);
+      ui.setPillState('bad', 'Fehlgeschlagen – bitte erneut versuchen');
       ui.updateUIFromState();
+      ui.setCtaFromState();
     },
 
     startCheckingForFinalMock() {
