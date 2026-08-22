@@ -13,7 +13,7 @@
       "type": "steelmonks-werkstatt-pop-up",
       "name": "Werkstatt Hinweis Popup",
       "settings": {
-        "enabled": true,
+        "enabled": false,
         "show_trigger": false,
         "pill_label": "Werkstatt Hinweis",
         "auto_open": true,
