@@ -221,6 +221,22 @@
       "info": "Text for the 'with mounting' option in the mounting select on page 3."
     },
     {
+      "type": "header",
+      "content": "Befestigungsset als eigener Artikel (optional)"
+    },
+    {
+      "type": "product",
+      "id": "mounting_product",
+      "label": "Befestigungsset Produkt",
+      "info": "OFF while empty (current behaviour: the set's price is folded into the sign price by the creator backend). When a product is selected, the set is added to the cart as its OWN line item and its price is no longer included in the sign price. The backend (n8n) must then NOT add the set price to the sign variant — the payload field 'Befestigung_separat' is 'true' in that case."
+    },
+    {
+      "type": "text",
+      "id": "mounting_variant_id",
+      "label": "Befestigungsset Varianten-ID",
+      "info": "Numeric variant ID of the set to add (e.g. the 'Für alle Motivschilder' variant). Leave empty to use the product's first available variant."
+    },
+    {
       "type": "text",
       "id": "note_label",
       "label": "Note/Anmerkung Label",
@@ -361,8 +377,32 @@
 
 {% comment %} * Assets {% endcomment %}
 {{ 'steelmonks-sign-creator.css' | asset_url | stylesheet_tag }}
+{% liquid
+  # Optional: Befestigungsset as its own cart line (see schema 'mounting_product')
+  assign mounting_variant = blank
+  assign mounting_product = section.settings.mounting_product
+  if mounting_product != blank
+    assign want_id = section.settings.mounting_variant_id | strip
+    for v in mounting_product.variants
+      assign vid = v.id | append: ''
+      if want_id != blank and vid == want_id
+        assign mounting_variant = v
+        break
+      endif
+    endfor
+    if mounting_variant == blank and want_id == blank
+      for v in mounting_product.variants
+        if v.available
+          assign mounting_variant = v
+          break
+        endif
+      endfor
+    endif
+  endif
+%}
 <script>
   var sid = '{{ sid }}';
+  window.SMC_MOUNTING = {% if mounting_variant != blank %}{ "variantId": {{ mounting_variant.id }}, "priceCents": {{ mounting_variant.price }}, "price": {{ mounting_variant.price | money | json }}, "title": {{ mounting_product.title | json }} }{% else %}null{% endif %};
 </script>
 <script src='{{ 'steelmonks-sign-creator-copy.js' | asset_url }}' defer='defer'></script>
 
@@ -842,6 +882,7 @@
             <div class='smc__price'>
               <span class='smc__label twcss-block twcss-font-bold'>{{ section.settings.price_label | default: 'Preis' }}</span>
               <div class='smc__price-val twcss-text-2xl twcss-font-black twcss-text-brandblack' id='smc-price'></div>
+              <div class='smc__price-extra' id='smc-price-extra' hidden></div>
             </div>
 
             {% comment %} ! Actions buttons {% endcomment %}

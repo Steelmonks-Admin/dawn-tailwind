@@ -34,6 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return merged;
   })();
 
+  // Optional Befestigungsset as its own cart line (configured in the section; null = off)
+  const MOUNTING =
+    window.SMC_MOUNTING && window.SMC_MOUNTING.variantId
+      ? window.SMC_MOUNTING
+      : null;
+
   const STATUS_TEXTS = {
     FAILED: 'Fehlgeschlagen',
     PREVIEW_READY: 'Vorschau ist fertig',
@@ -221,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Price
     priceVal: el('smc-price'), // Moved to Page 3
+    priceExtra: el('smc-price-extra'), // Befestigungsset line when sold separately
 
     // Preview (Page 2)
     previewLoading: el('smc-preview-loading'),
@@ -1014,6 +1021,15 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.priceVal.textContent =
           'Den Preis berechnen wir nach dem Entwurf.';
       }
+
+      // Befestigungsset sold separately: show it as its own line under the price
+      if (elements.priceExtra) {
+        const withSet = MOUNTING && elements.bolts?.value === 'Befestigung';
+        elements.priceExtra.hidden = !withSet;
+        elements.priceExtra.textContent = withSet
+          ? `+ ${MOUNTING.title}: ${MOUNTING.price} (separater Artikel im Warenkorb)`
+          : '';
+      }
     },
   };
 
@@ -1083,6 +1099,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Append boolean value for mounting set
       const hasMountingSet = bolts === 'Befestigung';
       fd.append('Befestigung', String(hasMountingSet));
+      // 'true' when the set is added as its own cart line — the backend must then
+      // NOT add the set price to the sign variant
+      fd.append('Befestigung_separat', String(!!MOUNTING));
 
       // Rights confirmation for the uploaded file (false when nothing was uploaded)
       fd.append(
@@ -1221,9 +1240,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return null; // Return null to indicate custom pricing needed
       }
 
-      // Add mounting set cost if "Befestigung" is selected
+      // Add mounting set cost if "Befestigung" is selected — unless the set is
+      // sold as its own cart line (MOUNTING), in which case its price stays separate
       let totalPrice = price;
-      if (bolts === 'Befestigung') {
+      if (bolts === 'Befestigung' && !MOUNTING) {
         totalPrice += 9.45;
       }
 
@@ -2059,6 +2079,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
               const data = await res.json();
               ui.setPillState('ok', 'Im Warenkorb');
+
+              // Befestigungsset as its own line item (only when configured + selected)
+              if (MOUNTING && elements.bolts?.value === 'Befestigung') {
+                try {
+                  const setRes = await fetch('/cart/add.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      items: [
+                        {
+                          id: MOUNTING.variantId,
+                          quantity: 1,
+                          properties: { 'Generator ID': state.generatorId || '' },
+                        },
+                      ],
+                    }),
+                  });
+                  if (!setRes.ok) {
+                    console.warn('Befestigungsset could not be added to cart', setRes.status);
+                  }
+                } catch (setErr) {
+                  console.warn('Befestigungsset add failed', setErr);
+                }
+              }
 
               // Fetch full cart data to trigger tracking events
               try {

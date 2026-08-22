@@ -957,3 +957,15 @@
 .smc__rights-hint[hidden] {
   display: none;
 }
+
+/* Befestigungsset shown as its own line under the price (only when sold separately) */
+.smc__price-extra {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--smc-ink);
+  opacity: 0.8;
+}
+.smc__price-extra[hidden] {
+  display: none;
+}
