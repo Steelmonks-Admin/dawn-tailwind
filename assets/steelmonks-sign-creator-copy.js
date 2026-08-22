@@ -280,6 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
     rightsWrap: el('smc-rights'),
     rightsCheck: el('smc-rights-check'),
     rightsHint: el('smc-rights-hint'),
+    rightsInfoBtn: el('smc-rights-info'),
+    rightsModal: el('smc-rights-modal'),
 
     // Info modal
     smcInfoModal: el('smc-info-modal'),
@@ -2238,6 +2240,28 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.updateProps();
         storageManager.saveFormData();
       } catch (error) {}
+    });
+  }
+
+  // Rights info popup (the (i) next to the checkbox)
+  if (elements.rightsInfoBtn && elements.rightsModal) {
+    const openRights = () => {
+      elements.rightsModal.hidden = false;
+      elements.rightsModal.querySelector('.smc__rights-modal-close')?.focus();
+    };
+    const closeRights = () => {
+      elements.rightsModal.hidden = true;
+      elements.rightsInfoBtn.focus();
+    };
+    elements.rightsInfoBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openRights();
+    });
+    elements.rightsModal
+      .querySelectorAll('[data-rights-modal-close]')
+      .forEach((b) => b.addEventListener('click', closeRights));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !elements.rightsModal.hidden) closeRights();
     });
   }
 

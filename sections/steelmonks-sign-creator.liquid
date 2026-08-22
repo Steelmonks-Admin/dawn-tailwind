@@ -109,24 +109,30 @@
     },
     {
       "type": "text",
-      "id": "rights_checkbox_title",
-      "label": "Rights Confirmation Title",
-      "default": "Nutzungsrechte bestätigen",
-      "info": "Short bold title above the confirmation text."
-    },
-    {
-      "type": "richtext",
       "id": "rights_checkbox_text",
-      "label": "Rights Confirmation Text",
-      "default": "<p>Ich besitze alle Rechte (Urheber-, Marken- und Persönlichkeitsrechte) an dieser Datei bzw. darf sie nutzen, bin für ihren Inhalt allein verantwortlich und stelle Steelmonks von Ansprüchen Dritter frei.</p>",
-      "info": "Required checkbox that appears as soon as a file is uploaded. Not shown without an upload."
+      "label": "Checkbox Label (one line)",
+      "default": "Ich besitze alle Rechte an dieser Datei.",
+      "info": "Short label next to the checkbox. Appears only once a file is uploaded; required to continue."
     },
     {
       "type": "text",
       "id": "rights_checkbox_hint",
-      "label": "Rights Confirmation Hint",
+      "label": "Hint (unchecked)",
       "default": "Bitte bestätige die Nutzungsrechte an deiner Datei, um fortzufahren.",
       "info": "Shown under the checkbox while it is unchecked and the user could otherwise continue."
+    },
+    {
+      "type": "text",
+      "id": "rights_details_title",
+      "label": "Info Popup Title",
+      "default": "Nutzungsrechte an deiner Datei"
+    },
+    {
+      "type": "richtext",
+      "id": "rights_details_text",
+      "label": "Info Popup Text (legal)",
+      "default": "<p><strong>Mit dem Haken bestätigst du:</strong></p><p>Du besitzt alle erforderlichen Rechte an der hochgeladenen Datei – insbesondere Urheber-, Marken-, Design- und Persönlichkeitsrechte – oder bist vom Rechteinhaber ausdrücklich zur Nutzung berechtigt. Das gilt auch für Logos, Vereinswappen, Markenzeichen, Schriftzüge und Abbildungen von Personen.</p><p>Du bist für den Inhalt der Datei allein verantwortlich. Steelmonks prüft hochgeladene Dateien nicht auf Rechte Dritter und fertigt das Schild ausschließlich nach deiner Vorgabe. Du stellst Steelmonks von sämtlichen Ansprüchen Dritter frei, die aus der Verwendung der Datei entstehen – einschließlich der Kosten einer angemessenen Rechtsverteidigung.</p>",
+      "info": "Opens via the (i) button next to the checkbox."
     },
     {
       "type": "text",
@@ -499,6 +505,23 @@
     </div>
   {% endunless %}
 
+  {% comment %} ! RIGHTS INFO POPUP (opened from the (i) next to the rights checkbox) {% endcomment %}
+  <div class='smc__rights-modal' id='smc-rights-modal' role='dialog' aria-modal='true' aria-labelledby='smc-rights-modal-title' hidden>
+    <div class='smc__rights-modal-backdrop' data-rights-modal-close></div>
+    <div class='smc__rights-modal-card'>
+      <button type='button' class='smc__rights-modal-close' data-rights-modal-close aria-label='Schließen'>&times;</button>
+      <h3 class='smc__rights-modal-title' id='smc-rights-modal-title'>{{ section.settings.rights_details_title | default: 'Nutzungsrechte an deiner Datei' }}</h3>
+      <div class='smc__rights-modal-body'>
+        {%- if section.settings.rights_details_text != blank -%}
+          {{ section.settings.rights_details_text }}
+        {%- else -%}
+          <p><strong>Mit dem Haken bestätigst du:</strong></p><p>Du besitzt alle erforderlichen Rechte an der hochgeladenen Datei – insbesondere Urheber-, Marken-, Design- und Persönlichkeitsrechte – oder bist vom Rechteinhaber ausdrücklich zur Nutzung berechtigt. Das gilt auch für Logos, Vereinswappen, Markenzeichen, Schriftzüge und Abbildungen von Personen.</p><p>Du bist für den Inhalt der Datei allein verantwortlich. Steelmonks prüft hochgeladene Dateien nicht auf Rechte Dritter und fertigt das Schild ausschließlich nach deiner Vorgabe. Du stellst Steelmonks von sämtlichen Ansprüchen Dritter frei, die aus der Verwendung der Datei entstehen – einschließlich der Kosten einer angemessenen Rechtsverteidigung.</p>
+        {%- endif -%}
+      </div>
+      <button type='button' class='smc__rights-modal-ok' data-rights-modal-close>Verstanden</button>
+    </div>
+  </div>
+
   {% comment %} ! Navigation & Status Pill {% endcomment %}
   <div class='twcss-flex twcss-gap-4 twcss-justify-center twcss-relative twcss-z-20'>
     {% comment %} ! STATUS PILL {% endcomment %}
@@ -615,24 +638,27 @@
 
             {% comment %} ! Rights confirmation — only shown once a file is uploaded {% endcomment %}
             <div class='smc__rights' id='smc-rights' hidden>
-              <label class='smc__rights-label' for='smc-rights-check'>
-                <input
-                  type='checkbox'
-                  id='smc-rights-check'
-                  class='smc__rights-check'
-                  aria-describedby='smc-rights-hint'
+              <div class='smc__rights-row'>
+                <label class='smc__rights-label' for='smc-rights-check'>
+                  <input
+                    type='checkbox'
+                    id='smc-rights-check'
+                    class='smc__rights-check'
+                    aria-describedby='smc-rights-hint'
+                  >
+                  <span class='smc__rights-text'>{{ section.settings.rights_checkbox_text | default: 'Ich besitze alle Rechte an dieser Datei.' }}</span>
+                </label>
+                <button
+                  type='button'
+                  class='smc__rights-info'
+                  id='smc-rights-info'
+                  aria-label='Mehr zu den Nutzungsrechten'
+                  aria-haspopup='dialog'
+                  aria-controls='smc-rights-modal'
                 >
-                <span class='smc__rights-body'>
-                  <span class='smc__rights-title'>{{ section.settings.rights_checkbox_title | default: 'Nutzungsrechte bestätigen' }}</span>
-                  <span class='smc__rights-text'>
-                    {%- if section.settings.rights_checkbox_text != blank -%}
-                      {{ section.settings.rights_checkbox_text }}
-                    {%- else -%}
-                      <p>Ich besitze alle Rechte (Urheber-, Marken- und Persönlichkeitsrechte) an dieser Datei bzw. darf sie nutzen, bin für ihren Inhalt allein verantwortlich und stelle Steelmonks von Ansprüchen Dritter frei.</p>
-                    {%- endif -%}
-                  </span>
-                </span>
-              </label>
+                  i
+                </button>
+              </div>
               <p class='smc__rights-hint' id='smc-rights-hint' role='alert' hidden>
                 {{ section.settings.rights_checkbox_hint | default: 'Bitte bestätige die Nutzungsrechte an deiner Datei, um fortzufahren.' }}
               </p>
