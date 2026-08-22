@@ -502,6 +502,7 @@
 {% assign maxCartValue = 298 %}
 
 <!-- Timeline Javascript // CUSTOM_CUSTOM -->
+{% unless request.path contains '/pages/werkstatt' %}
 <script>
   const CONFIG = {
     MILESTONES: {
@@ -665,6 +666,7 @@ startReminders() {
     {% endif %}
   });
 </script>
+{% endunless %}
 
 <!-- *** END OF CUSTOM_CUSTOM *** -->
 
