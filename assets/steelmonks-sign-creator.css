@@ -909,3 +909,51 @@
     transition: none;
   }
 }
+
+/* Rights confirmation — appears only once a file is uploaded */
+.smc__rights {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--smc-line);
+  border-left: 3px solid var(--smc-gold);
+  border-radius: 0.75rem;
+  background: rgba(200, 164, 93, 0.06);
+}
+.smc__rights[hidden] {
+  display: none;
+}
+.smc__rights-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0;
+  cursor: pointer;
+}
+.smc__rights-check {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+  accent-color: var(--smc-blue);
+  cursor: pointer;
+}
+.smc__rights-text {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--smc-ink);
+}
+.smc__rights-text p {
+  margin: 0;
+}
+.smc__rights-text p + p {
+  margin-top: 0.35rem;
+}
+.smc__rights-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--smc-red);
+}
+.smc__rights-hint[hidden] {
+  display: none;
+}

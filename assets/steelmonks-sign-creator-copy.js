@@ -267,6 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
     propNote: el('smc-prop-note'), // New prop for note
     propType: el('smc-prop-type'), // New prop for type
     propBolts: el('smc-prop-bolts'), // New prop for bolts/mounting
+    propRights: el('smc-prop-rights'), // Rights confirmation for uploads
+
+    // Rights confirmation (upload)
+    rightsWrap: el('smc-rights'),
+    rightsCheck: el('smc-rights-check'),
+    rightsHint: el('smc-rights-hint'),
 
     // Info modal
     smcInfoModal: el('smc-info-modal'),
@@ -445,6 +451,8 @@ document.addEventListener('DOMContentLoaded', () => {
           bolts: elements.bolts?.value || '',
           uploadFileName: elements.upload?.files?.[0]?.name || '',
           uploadDataUrl: null, // Will be set if file exists
+          rightsConfirmed: rightsManager.isChecked(),
+          rightsConfirmedAt: rightsManager.confirmedAt,
         };
 
         // Save file as data URL if it exists
@@ -529,6 +537,14 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.uploadLabel.textContent =
               formDataObj.uploadFileName || 'Bild hochgeladen';
           }
+        }
+
+        // Restore rights confirmation (only meaningful if an upload was restored too)
+        rightsManager.confirmedAt = formDataObj.rightsConfirmedAt || null;
+        rightsManager.sync();
+        if (formDataObj.rightsConfirmed && rightsManager.hasUpload()) {
+          rightsManager.setChecked(true);
+          rightsManager.updateHint();
         }
 
         formData.updateProps();
@@ -777,7 +793,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
 
-          const ok = elements.desc?.value?.trim().length >= 5;
+          const ok =
+            elements.desc?.value?.trim().length >= 5 &&
+            rightsManager.isSatisfied();
+          rightsManager.updateHint();
 
           // Check for cooldown
           const cooldownInfo = this.checkCooldown();
@@ -1030,6 +1049,14 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.propType.value = elements.type.value || '';
       if (elements.propBolts && elements.bolts)
         elements.propBolts.value = elements.bolts.value || '';
+      if (elements.propRights) {
+        // Only submitted (enabled) when a file was uploaded and the rights were confirmed
+        const confirmed = rightsManager.hasUpload() && rightsManager.isChecked();
+        elements.propRights.disabled = !confirmed;
+        elements.propRights.value = confirmed
+          ? `Ja (${rightsManager.confirmedAt || new Date().toISOString()})`
+          : '';
+      }
     },
 
     createPayload(extra = {}) {
@@ -1056,6 +1083,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Append boolean value for mounting set
       const hasMountingSet = bolts === 'Befestigung';
       fd.append('Befestigung', String(hasMountingSet));
+
+      // Rights confirmation for the uploaded file (false when nothing was uploaded)
+      fd.append(
+        'Nutzungsrechte_bestaetigt',
+        String(rightsManager.hasUpload() && rightsManager.isChecked()),
+      );
 
       // Pass the calculated price to the API
       if (state.pendingPriceValue) {
@@ -1108,6 +1141,61 @@ document.addEventListener('DOMContentLoaded', () => {
           elements.uploadPrevEmpty.style.display = 'flex';
         }
       }
+      rightsManager.sync();
+    },
+  };
+
+  // ============================================================================
+  // ! Rights Confirmation (upload)
+  // ============================================================================
+  const rightsManager = {
+    confirmedAt: null,
+
+    hasUpload() {
+      if (elements.upload?.files?.[0]) return true;
+      // Restored preview from a previous session (the file input itself can't be restored)
+      return !!(
+        elements.uploadPrevImg &&
+        elements.uploadPrevImg.style.display === 'block' &&
+        elements.uploadPrevImg.getAttribute('src')
+      );
+    },
+
+    isChecked() {
+      return !!elements.rightsCheck?.checked;
+    },
+
+    // True when there is no upload, or the upload has been confirmed
+    isSatisfied() {
+      return !this.hasUpload() || this.isChecked();
+    },
+
+    setChecked(on) {
+      if (!elements.rightsCheck) return;
+      elements.rightsCheck.checked = !!on;
+      this.confirmedAt = on
+        ? this.confirmedAt || new Date().toISOString()
+        : null;
+    },
+
+    // Show the checkbox only while an upload exists; uncheck when the upload goes away
+    sync() {
+      if (!elements.rightsWrap) return;
+      const show = this.hasUpload();
+      elements.rightsWrap.hidden = !show;
+      if (!show) this.setChecked(false);
+      this.updateHint();
+    },
+
+    // Hint only while the user could otherwise continue but hasn't confirmed
+    updateHint() {
+      if (!elements.rightsHint) return;
+      const descOk = (elements.desc?.value?.trim().length || 0) >= 5;
+      elements.rightsHint.hidden = !(
+        this.hasUpload() &&
+        !this.isChecked() &&
+        descOk
+      );
     },
   };
 
@@ -1487,6 +1575,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async startRunCreator() {
       const descText = elements.desc?.value?.trim() || '';
       if (descText.length < 5) {
+        return;
+      }
+
+      // An uploaded file requires the rights confirmation
+      if (!rightsManager.isSatisfied()) {
+        rightsManager.updateHint();
+        elements.rightsCheck?.focus();
         return;
       }
 
@@ -2090,6 +2185,20 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         formData.handleUploadUI();
+        ui.setCtaFromState();
+        formData.updateProps();
+        storageManager.saveFormData();
+      } catch (error) {}
+    });
+  }
+
+  if (elements.rightsCheck) {
+    elements.rightsCheck.addEventListener('change', () => {
+      try {
+        if (state.locked) return;
+        rightsManager.setChecked(elements.rightsCheck.checked);
+        rightsManager.updateHint();
+        ui.setCtaFromState();
         formData.updateProps();
         storageManager.saveFormData();
       } catch (error) {}

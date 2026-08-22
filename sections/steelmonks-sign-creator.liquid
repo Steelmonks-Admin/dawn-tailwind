@@ -104,6 +104,24 @@
       "info": "Text on the upload chip/button in the file upload UI (page 1)."
     },
     {
+      "type": "header",
+      "content": "Rights Confirmation (Upload)"
+    },
+    {
+      "type": "richtext",
+      "id": "rights_checkbox_text",
+      "label": "Rights Confirmation Text",
+      "default": "<p>Ich bestätige, dass ich alle erforderlichen Rechte (insbesondere Urheber-, Marken- und Persönlichkeitsrechte) an der hochgeladenen Datei besitze oder zu ihrer Nutzung berechtigt bin. Für den Inhalt der Datei bin ich allein verantwortlich und stelle Steelmonks von sämtlichen Ansprüchen Dritter frei.</p>",
+      "info": "Required checkbox that appears as soon as a file is uploaded. Not shown without an upload."
+    },
+    {
+      "type": "text",
+      "id": "rights_checkbox_hint",
+      "label": "Rights Confirmation Hint",
+      "default": "Bitte bestätige die Nutzungsrechte an deiner Datei, um fortzufahren.",
+      "info": "Shown under the checkbox while it is unchecked and the user could otherwise continue."
+    },
+    {
       "type": "text",
       "id": "finish_label",
       "label": "Finish/Surface Label",
@@ -547,6 +565,28 @@
                 </div>
               </label>
             </div>
+
+            {% comment %} ! Rights confirmation — only shown once a file is uploaded {% endcomment %}
+            <div class='smc__rights' id='smc-rights' hidden>
+              <label class='smc__rights-label' for='smc-rights-check'>
+                <input
+                  type='checkbox'
+                  id='smc-rights-check'
+                  class='smc__rights-check'
+                  aria-describedby='smc-rights-hint'
+                >
+                <span class='smc__rights-text'>
+                  {%- if section.settings.rights_checkbox_text != blank -%}
+                    {{ section.settings.rights_checkbox_text }}
+                  {%- else -%}
+                    <p>Ich bestätige, dass ich alle erforderlichen Rechte (insbesondere Urheber-, Marken- und Persönlichkeitsrechte) an der hochgeladenen Datei besitze oder zu ihrer Nutzung berechtigt bin. Für den Inhalt der Datei bin ich allein verantwortlich und stelle Steelmonks von sämtlichen Ansprüchen Dritter frei.</p>
+                  {%- endif -%}
+                </span>
+              </label>
+              <p class='smc__rights-hint' id='smc-rights-hint' role='alert' hidden>
+                {{ section.settings.rights_checkbox_hint | default: 'Bitte bestätige die Nutzungsrechte an deiner Datei, um fortzufahren.' }}
+              </p>
+            </div>
           </div>
 
           <div class='twcss-flex twcss-flex-col twcss-gap-2 twcss-mb-6 md:twcss-flex-row'>
@@ -623,6 +663,7 @@
           <input type='hidden' name='properties[Anmerkung]' id='smc-prop-note'>
           <input type='hidden' name='properties[Type]' id='smc-prop-type'>
           <input type='hidden' name='properties[Befestigung]' id='smc-prop-bolts'>
+          <input type='hidden' name='properties[Nutzungsrechte bestätigt]' id='smc-prop-rights' disabled>
 
           {% comment %} Form is not actually submitted - JavaScript handles cart add via AJAX {% endcomment %}
           </form>
