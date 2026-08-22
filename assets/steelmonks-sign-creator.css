@@ -910,14 +910,19 @@
   }
 }
 
-/* Rights confirmation — appears only once a file is uploaded */
+/* Rights confirmation — appears only once a file is uploaded.
+   contain:inline-size keeps the long text from inflating the content-sized modal (.smc__wrap). */
 .smc__rights {
-  margin-top: 0.75rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--smc-line);
-  border-left: 3px solid var(--smc-gold);
-  border-radius: 0.75rem;
-  background: rgba(200, 164, 93, 0.06);
+  contain: inline-size;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(0, 68, 204, 0.05);
+  border: 1px solid rgba(0, 68, 204, 0.18);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 .smc__rights[hidden] {
   display: none;
@@ -925,33 +930,49 @@
 .smc__rights-label {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 12px;
   margin: 0;
   cursor: pointer;
+  min-width: 0;
 }
 .smc__rights-check {
   flex: 0 0 auto;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: 0.15rem;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  border-radius: 6px;
   accent-color: var(--smc-blue);
   cursor: pointer;
 }
+.smc__rights-body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.smc__rights-title {
+  display: block;
+  font-weight: 950;
+  font-size: 0.98rem;
+  color: var(--smc-blue);
+  line-height: 1.2;
+}
 .smc__rights-text {
-  font-size: 0.875rem;
+  display: block;
+  margin-top: 2px;
+  font-size: 0.84rem;
   line-height: 1.45;
-  color: var(--smc-ink);
+  color: rgba(11, 11, 13, 0.72);
+  overflow-wrap: anywhere;
 }
 .smc__rights-text p {
   margin: 0;
 }
 .smc__rights-text p + p {
-  margin-top: 0.35rem;
+  margin-top: 4px;
 }
 .smc__rights-hint {
-  margin: 0.5rem 0 0;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  margin: 8px 0 0 32px;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--smc-red);
 }
 .smc__rights-hint[hidden] {

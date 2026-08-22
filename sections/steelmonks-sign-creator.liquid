@@ -108,6 +108,13 @@
       "content": "Rights Confirmation (Upload)"
     },
     {
+      "type": "text",
+      "id": "rights_checkbox_title",
+      "label": "Rights Confirmation Title",
+      "default": "Nutzungsrechte bestätigen",
+      "info": "Short bold title above the confirmation text."
+    },
+    {
       "type": "richtext",
       "id": "rights_checkbox_text",
       "label": "Rights Confirmation Text",
@@ -615,12 +622,15 @@
                   class='smc__rights-check'
                   aria-describedby='smc-rights-hint'
                 >
-                <span class='smc__rights-text'>
-                  {%- if section.settings.rights_checkbox_text != blank -%}
-                    {{ section.settings.rights_checkbox_text }}
-                  {%- else -%}
-                    <p>Ich bestätige, dass ich alle erforderlichen Rechte (insbesondere Urheber-, Marken- und Persönlichkeitsrechte) an der hochgeladenen Datei besitze oder zu ihrer Nutzung berechtigt bin. Für den Inhalt der Datei bin ich allein verantwortlich und stelle Steelmonks von sämtlichen Ansprüchen Dritter frei.</p>
-                  {%- endif -%}
+                <span class='smc__rights-body'>
+                  <span class='smc__rights-title'>{{ section.settings.rights_checkbox_title | default: 'Nutzungsrechte bestätigen' }}</span>
+                  <span class='smc__rights-text'>
+                    {%- if section.settings.rights_checkbox_text != blank -%}
+                      {{ section.settings.rights_checkbox_text }}
+                    {%- else -%}
+                      <p>Ich bestätige, dass ich alle erforderlichen Rechte (insbesondere Urheber-, Marken- und Persönlichkeitsrechte) an der hochgeladenen Datei besitze oder zu ihrer Nutzung berechtigt bin. Für den Inhalt der Datei bin ich allein verantwortlich und stelle Steelmonks von sämtlichen Ansprüchen Dritter frei.</p>
+                    {%- endif -%}
+                  </span>
                 </span>
               </label>
               <p class='smc__rights-hint' id='smc-rights-hint' role='alert' hidden>
