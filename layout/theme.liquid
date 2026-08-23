@@ -454,7 +454,11 @@
       <h1 class='visually-hidden'>{{ collection.title }}</h1>
     {% endif %}
 
-    {% if template.name == 'page' %}
+    {% comment %}
+      Das clanker-Template (Werkstatt) liefert ein eigenes, sichtbares H1 ueber
+      den rich-text-Block. Hier kein zweites ausgeben.
+    {% endcomment %}
+    {% if template.name == 'page' and page.template_suffix != 'clanker' %}
       <h1 class='visually-hidden'>{{ page.title }}</h1>
     {% endif %}
 

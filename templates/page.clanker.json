@@ -45,7 +45,8 @@
           "type": "heading",
           "settings": {
             "heading": "Zu Deinem Einzelstück mit nur einem Satz.",
-            "heading_size": "h1"
+            "heading_size": "h1",
+            "heading_tag": "h1"
           }
         },
         "text_c6tJGH": {
