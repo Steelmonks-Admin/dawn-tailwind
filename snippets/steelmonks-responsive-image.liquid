@@ -1,0 +1,40 @@
+{%- comment -%}
+  Responsives <img> für die Steelmonks-Sektionen.
+
+  Rendert srcset + sizes, damit der Browser die passende Größe wählt, statt immer
+  die größte Datei zu laden. Kandidatenbreiten werden auf die echte Bildbreite
+  begrenzt — Shopify skaliert nicht hoch, ein zu großer w-Deskriptor würde den
+  Browser sonst falsch wählen lassen.
+
+  Parameter:
+    image   (erforderlich) Bild-Objekt (z.B. block.settings.base_image)
+    sizes   (erforderlich) sizes-Attribut, z.B. '(max-width: 742px) 62vw, 460px'
+    class   (optional)     CSS-Klassen
+    alt     (optional)     Alternativtext
+    loading (optional)     'lazy' (Standard) oder 'eager'
+{%- endcomment -%}
+
+{%- liquid
+  assign candidates = '320,480,640,800,1000,1200,1600' | split: ','
+  assign max_width = image.width
+-%}
+{%- capture img_srcset -%}
+  {%- for candidate in candidates -%}
+    {%- assign candidate_width = candidate | times: 1 -%}
+    {%- if candidate_width < max_width -%}
+      {{ image | image_url: width: candidate_width }} {{ candidate_width }}w,
+    {%- endif -%}
+  {%- endfor -%}
+  {{ image | image_url: width: max_width }} {{ max_width }}w
+{%- endcapture -%}
+<img
+  class="{{ class }}"
+  src="{{ image | image_url: width: 800 }}"
+  srcset="{{ img_srcset | strip_newlines | strip }}"
+  sizes="{{ sizes }}"
+  alt="{{ alt | escape }}"
+  loading="{{ loading | default: 'lazy' }}"
+  decoding="async"
+  width="{{ max_width }}"
+  height="{{ image.height }}"
+>

@@ -415,7 +415,7 @@
             <article class="smwc2__card" data-smwc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
               <div class="smwc2__frame" data-smwc-frame role="button" tabindex="0" aria-label="Slide auswählen">
                 {% if block.settings.base_image != blank %}
-                  <img class="smwc2__img" src="{{ block.settings.base_image | image_url: width: 1600 }}" alt="{{ block.settings.base_image.alt | escape }}" loading="lazy" width="1600" height="1600">
+                  {% render 'steelmonks-responsive-image', image: block.settings.base_image, class: 'smwc2__img', alt: block.settings.base_image.alt, sizes: '(max-width: 742px) 62vw, 500px' %}
                 {% elsif base_fallback != blank %}
                   <img class="smwc2__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
                 {% else %}
@@ -423,7 +423,7 @@
                 {% endif %}
 
                 {% if block.settings.overlay_image != blank %}
-                  <img class="smwc2__overlay" src="{{ block.settings.overlay_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="1600">
+                  {% render 'steelmonks-responsive-image', image: block.settings.overlay_image, class: 'smwc2__overlay', alt: '', sizes: '(max-width: 742px) 62vw, 500px' %}
                 {% elsif over_fallback != blank %}
                   <img class="smwc2__overlay" src="{{ over_fallback }}" alt="" loading="lazy" width="1600" height="1600">
                 {% else %}

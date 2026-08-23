@@ -451,19 +451,19 @@
     {%- endif -%}
 
     {% if template.name == 'collection' %}
-      <h1 style='display:none'>{{ collection.title }}</h1>
+      <h1 class='visually-hidden'>{{ collection.title }}</h1>
     {% endif %}
 
     {% if template.name == 'page' %}
-      <h1 style='display:none'>{{ page.title }}</h1>
+      <h1 class='visually-hidden'>{{ page.title }}</h1>
     {% endif %}
 
     {% if template.name == 'article' %}
-      <h1 style='display:none'>{{ article.title }}</h1>
+      <h1 class='visually-hidden'>{{ article.title }}</h1>
     {% endif %}
 
     {% if template.name == 'index' %}
-      <h1 style='display:none'>Handgefertigte, personalisierte Geschenke aus Stahl</h1>
+      <h1 class='visually-hidden'>Handgefertigte, personalisierte Geschenke aus Stahl</h1>
     {% endif %}
 
     {% comment %} ! GLOBAL SIGN CREATOR TIMER {% endcomment %}
