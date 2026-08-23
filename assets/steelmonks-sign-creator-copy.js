@@ -1927,7 +1927,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.resetBtn) {
     elements.resetBtn.addEventListener('click', () => {
       try {
-        let result = confirm('Hiermit fängst Du den Prozess von vorne an. Deinen bestehenden Entwurf können wir für Dich wiederherstellen, schreib und einfach an diese Email: Info@Steelmonks.com');
+        let result = confirm('Hiermit fängst Du den Prozess von vorne an. Deinen bestehenden Entwurf können wir für Dich wiederherstellen, schreib uns einfach an diese E-Mail: Info@Steelmonks.com');
         if (result) {
           resetAll();
         // Update UI based on state

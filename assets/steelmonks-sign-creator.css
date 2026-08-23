@@ -6,7 +6,7 @@
   --smc-orange: #ff9800;
   --smc-gold: #c8a45d;
   --smc-green: #16a34a;
-  --smc-red: #dc2626;
+  --smc-red: #c50f0f; /* brandred */
 
   --custom-scroll-margin-top-offset: 120px;
 }
@@ -913,37 +913,46 @@
 /* Desktop: let the creator page scroll when the modal is taller than the viewport,
    instead of centring it and clipping top and bottom. Vertical auto-margins keep it
    centred whenever it fits. Mobile layout is left untouched. */
-@media (min-width: 769px) {
-  /* a little air so the status pill / reset pill don't touch the viewport edges */
-  .smc {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    box-sizing: border-box;
-  }
-  #smc {
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-  }
-  #smc-page-1,
-  #smc-page-2,
-  #smc-page-3 {
-    height: 100%;
-    align-items: flex-start;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    box-sizing: border-box;
-  }
+/* Creator-Layout (alle Breakpoints): Die Seiten scrollen, sobald der Inhalt höher
+   als der Rahmen ist. Dadurch bleiben Statuspille und "Neu anfangen" immer im Bild
+   — vorher wurden beide bei kleinen Viewports aus dem Rahmen gedrückt. */
+.smc {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+#smc {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+#smc-page-1,
+#smc-page-2,
+#smc-page-3 {
+  height: 100%;
+  align-items: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+#smc-page-1 > .smc__wrap,
+#smc-page-2 > .smc__wrap,
+#smc-page-3 > .smc__wrap {
+  margin-top: auto;
+  margin-bottom: auto;
+  max-height: none;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  /* Auf Mobil dürfen die Innenabstände kleiner sein — der Platz wird gebraucht */
   #smc-page-1 > .smc__wrap,
   #smc-page-2 > .smc__wrap,
   #smc-page-3 > .smc__wrap {
-    margin-top: auto;
-    margin-bottom: auto;
-    max-height: none;
-    flex-shrink: 0;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
@@ -979,10 +988,13 @@
   flex: 1 1 auto;
   cursor: pointer;
 }
-.smc__rights-check {
+/* Spezifität bewusst erhöht: Dawns input[type='checkbox'] überschreibt sonst die Höhe */
+.smc__rights .smc__rights-check {
   flex: 0 0 auto;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
   margin: 0;
   accent-color: var(--smc-blue);
   cursor: pointer;
