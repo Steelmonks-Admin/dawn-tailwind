@@ -462,7 +462,11 @@
       <h1 class='visually-hidden'>{{ page.title }}</h1>
     {% endif %}
 
-    {% if template.name == 'article' %}
+    {% comment %}
+      Artikel: sm-new-main-article rendert den Titel selbst als H1 (vorher doppeltes H1
+      auf 3.300+ Artikeln). Nur das alte 'formatted-blog-post'-Template hat kein eigenes H1.
+    {% endcomment %}
+    {% if template.name == 'article' and article.template_suffix == 'formatted-blog-post' %}
       <h1 class='visually-hidden'>{{ article.title }}</h1>
     {% endif %}
 
