@@ -5,6 +5,9 @@ This file can be re-written at any time.
 
 {% assign template_suffix = template.suffix %}
 
+{% assign template_prefix = template | slice: 0, 37 %}
+
+
 {% if article %}
   {% assign content = article %}
 {% elsif page %}
@@ -14,7 +17,7 @@ This file can be re-written at any time.
 {% elsif collection %}
   {% assign content = collection %}
 
-{% elsif template == 'index' or template | starts_with: 'index.shogun-635176ed17231e00db3bee60' %}
+{% elsif template == 'index' or template_prefix == 'index.shogun-635176ed17231e00db3bee60' %}
   {% assign content = pages['homepage2'] %}
 
   {% if template == 'index' %}
