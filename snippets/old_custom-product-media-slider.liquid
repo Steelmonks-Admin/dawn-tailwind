@@ -9,6 +9,8 @@
     <img
       id='productMainImage'
       src='{{ product.featured_image | image_url: width: 750 }}'
+            srcset='{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 750 }} 750w, {{ product.featured_image | image_url: width: 1100 }} 1100w, {{ product.featured_image | image_url: width: 1500 }} 1500w'
+            sizes='(max-width: 749px) 100vw, 620px'
       alt='{{ product.title }}'
       loading='lazy'
       width='750'
@@ -25,6 +27,8 @@
         <div class='mobile-carousel__slide active'>
           <img
             src='{{ product.featured_image | image_url: width: 750 }}'
+            srcset='{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 750 }} 750w, {{ product.featured_image | image_url: width: 1100 }} 1100w, {{ product.featured_image | image_url: width: 1500 }} 1500w'
+            sizes='(max-width: 749px) 100vw, 620px'
             alt='{{ product.featured_image.alt | escape }}'
             loading='lazy'
             width='750'
@@ -37,6 +41,8 @@
             <div class='mobile-carousel__slide'>
               <img
                 src='{{ media | image_url: width: 750 }}'
+            srcset='{{ media | image_url: width: 400 }} 400w, {{ media | image_url: width: 750 }} 750w, {{ media | image_url: width: 1100 }} 1100w, {{ media | image_url: width: 1500 }} 1500w'
+            sizes='(max-width: 749px) 100vw, 620px'
                 alt='{{ media.alt | escape }}'
                 loading='lazy'
                 width='750'

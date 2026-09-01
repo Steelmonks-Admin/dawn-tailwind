@@ -17,13 +17,13 @@
       }
     },
     "anfrage_form": {
-      "type": "sm-contact-page",
-      "name": "Anfrage",
+      "type": "contact-form",
       "settings": {
         "heading": "Deine Anfrage",
-        "description": "Beschreibe uns deine Idee – gerne mit Maßen, Material und Wunschtermin. Du bekommst innerhalb von zwei Werktagen ein unverbindliches Angebot. Fotos oder Dateien schickst du am einfachsten per E-Mail an info@steelmonks.com.",
-        "background_color": "#0044cc",
-        "padding": 40
+        "heading_size": "h1",
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 48
       }
     }
   },
