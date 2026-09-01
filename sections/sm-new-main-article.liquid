@@ -71,6 +71,85 @@
           {{ article.content }}
         </div>
 
+      {%- when 'products' -%}
+        {%- liquid
+          # Passende Produkte: Regeln nach Titel/Tags, sonst nach Blog. Handles sind Bestseller.
+          assign t = article.title | downcase | append: ' ' | append: article.tags | join: ' ' | downcase
+          assign picks = blank
+          if t contains 'hausnummer' or t contains 'klingelschild' or t contains 'einzug' or t contains 'einweihung'
+            assign picks = 'hausnummer-mit-namen-einweihungsgeschenk,modernes-strassenschild-einweihungsgeschenk,hausschild-geschenke-zum-einzug'
+          elsif t contains 'feuerwehr' or t contains 'retter' or t contains 'einsatz'
+            assign picks = 'feuerwehr-schlusselanhanger-dfv-signet,signet-feuerwehr-schild,retter-notiz-feuerwehr-schluesselanhaenger'
+          elsif t contains 'wappen' or t contains 'heraldik' or t contains 'familienwappen'
+            assign picks = 'familienwappen,modernes-wappen,baum-des-lebens-einweihungsgeschenk'
+          elsif t contains 'hochzeit' or t contains 'paar' or t contains 'monogramm' or t contains 'valentin'
+            assign picks = 'geschwungenes-monogramm,metallschild-ringe-im-herz,baum-des-lebens-einweihungsgeschenk'
+          elsif t contains 'familie' or t contains 'baum' or t contains 'eltern' or t contains 'oma' or t contains 'opa' or t contains 'großeltern'
+            assign picks = 'baum-des-lebens-einweihungsgeschenk,hausnummer-mit-namen-einweihungsgeschenk,geschwungenes-monogramm'
+          elsif t contains 'handwerk' or t contains 'meister' or t contains 'geselle' or t contains 'zunft' or t contains 'azubi' or t contains 'lehrling' or blog.handle == 'nutzliches-fur-handwerker'
+            assign picks = 'zunftschild-geschenk-fur-handwerker-personalisiert,zunft-anhanger-geschenk-fur-handwerker,klempner-heizungsbauer-sanitar-zunftschild'
+          elsif blog.handle == 'nutzliches-fur-die-feuerwehr'
+            assign picks = 'feuerwehr-schlusselanhanger-dfv-signet,signet-feuerwehr-schild,retter-notiz-feuerwehr-schluesselanhaenger'
+          else
+            assign picks = 'zunftschild-geschenk-fur-handwerker-personalisiert,hausnummer-mit-namen-einweihungsgeschenk,baum-des-lebens-einweihungsgeschenk'
+          endif
+          assign pick_handles = picks | split: ','
+        -%}
+        <aside class='sma-products twcss-my-10' {{ block.shopify_attributes }} aria-labelledby='sma-products-heading-{{ section.id }}'>
+          <h2 id='sma-products-heading-{{ section.id }}' class='twcss-text-2xl twcss-font-bold twcss-mb-2 twcss-text-gray-900'>{{ block.settings.heading | default: 'Passende Geschenke aus Stahl' }}</h2>
+          {%- if block.settings.text != blank -%}<p class='twcss-text-gray-600 twcss-mb-5'>{{ block.settings.text }}</p>{%- endif -%}
+          <ul class='sma-products__grid twcss-grid twcss-grid-cols-1 sm:twcss-grid-cols-3 twcss-gap-5 twcss-list-none twcss-p-0 twcss-m-0' role='list'>
+            {%- for h in pick_handles -%}
+              {%- assign pr = all_products[h] -%}
+              {%- if pr and pr != empty and pr.available -%}
+                <li class='twcss-m-0'>{% render 'card-product', card_product: pr, media_aspect_ratio: 'square', show_secondary_image: false, show_vendor: false, show_rating: false, lazy_load: true, section_id: section.id %}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+          {%- if block.settings.show_werkstatt -%}
+            <p class='twcss-mt-5 twcss-text-gray-700'>Eigenes Motiv im Kopf? <a class='twcss-font-semibold twcss-underline' href='/pages/werkstatt'>In der Werkstatt gestaltest du dein Schild in wenigen Minuten selbst.</a></p>
+          {%- endif -%}
+        </aside>
+
+      {%- when 'related' -%}
+        {%- liquid
+          # Ähnliche Artikel: gleicher Blog, bevorzugt gemeinsamer Tag; Auffüllen mit neuesten Artikeln des Blogs
+          assign limit = block.settings.limit | default: 3
+          assign shown = 0
+        -%}
+        <aside class='sma-related twcss-my-10' {{ block.shopify_attributes }} aria-labelledby='sma-related-heading-{{ section.id }}'>
+          <h2 id='sma-related-heading-{{ section.id }}' class='twcss-text-2xl twcss-font-bold twcss-mb-5 twcss-text-gray-900'>{{ block.settings.heading | default: 'Weiterlesen' }}</h2>
+          <ul class='twcss-grid twcss-grid-cols-1 sm:twcss-grid-cols-3 twcss-gap-5 twcss-list-none twcss-p-0 twcss-m-0' role='list'>
+            {%- for a in blog.articles limit: 50 -%}
+              {%- if shown >= limit -%}{% break %}{%- endif -%}
+              {%- if a.id == article.id -%}{% continue %}{%- endif -%}
+              {%- assign common = false -%}
+              {%- for tg in article.tags -%}{%- if a.tags contains tg -%}{%- assign common = true -%}{%- break -%}{%- endif -%}{%- endfor -%}
+              {%- if common or article.tags.size == 0 -%}
+                <li class='twcss-m-0'>
+                  <a href='{{ a.url }}' class='twcss-block twcss-no-underline twcss-text-gray-900 hover:twcss-underline'>
+                    {%- if a.image -%}<img src='{{ a.image | image_url: width: 600 }}' srcset='{{ a.image | image_url: width: 400 }} 400w, {{ a.image | image_url: width: 600 }} 600w, {{ a.image | image_url: width: 900 }} 900w' sizes='(max-width: 749px) 92vw, 300px' alt='{{ a.image.alt | default: a.title | escape }}' loading='lazy' width='600' height='{{ 600 | divided_by: a.image.aspect_ratio | round }}' class='twcss-w-full twcss-rounded-xl twcss-mb-3 twcss-object-cover twcss-aspect-[3/2]'>{%- endif -%}
+                    <span class='twcss-font-semibold twcss-leading-snug'>{{ a.title | escape }}</span>
+                  </a>
+                </li>
+                {%- assign shown = shown | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if shown < limit -%}
+              {%- for a in blog.articles limit: 6 -%}
+                {%- if shown >= limit -%}{% break %}{%- endif -%}
+                {%- if a.id == article.id -%}{% continue %}{%- endif -%}
+                {%- assign common = false -%}
+                {%- for tg in article.tags -%}{%- if a.tags contains tg -%}{%- assign common = true -%}{%- break -%}{%- endif -%}{%- endfor -%}
+                {%- if common == false and article.tags.size > 0 -%}
+                  <li class='twcss-m-0'><a href='{{ a.url }}' class='twcss-block twcss-no-underline twcss-text-gray-900 hover:twcss-underline'>{%- if a.image -%}<img src='{{ a.image | image_url: width: 600 }}' alt='{{ a.image.alt | default: a.title | escape }}' loading='lazy' width='600' height='400' class='twcss-w-full twcss-rounded-xl twcss-mb-3 twcss-object-cover twcss-aspect-[3/2]'>{%- endif -%}<span class='twcss-font-semibold twcss-leading-snug'>{{ a.title | escape }}</span></a></li>
+                  {%- assign shown = shown | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        </aside>
+
       {%- when 'share' -%}
         <div class='twcss-flex twcss-justify-center twcss-items-center twcss-my-6' {{ block.shopify_attributes }}>
           {% assign share_url = request.origin | append: article.url %}
@@ -368,7 +447,9 @@
     }
   ],
   "blocks": [
-    { "type": "@app" },
+    {
+      "type": "@app"
+    },
     {
       "type": "featured_image",
       "name": "Featured Image",
@@ -378,10 +459,22 @@
           "type": "select",
           "id": "image_height",
           "options": [
-            { "value": "adapt", "label": "Adapt" },
-            { "value": "small", "label": "Small" },
-            { "value": "medium", "label": "Medium" },
-            { "value": "large", "label": "Large" }
+            {
+              "value": "adapt",
+              "label": "Adapt"
+            },
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            }
           ],
           "default": "adapt",
           "label": "Image Height",
@@ -394,35 +487,133 @@
       "name": "Title",
       "limit": 1,
       "settings": [
-        { "type": "checkbox", "id": "blog_show_date", "default": true, "label": "Show Date" },
-        { "type": "checkbox", "id": "blog_show_author", "default": false, "label": "Show Author" }
+        {
+          "type": "checkbox",
+          "id": "blog_show_date",
+          "default": true,
+          "label": "Show Date"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_author",
+          "default": false,
+          "label": "Show Author"
+        }
       ]
     },
-    { "type": "content", "name": "Content", "limit": 1 },
+    {
+      "type": "content",
+      "name": "Content",
+      "limit": 1
+    },
     {
       "type": "share",
       "name": "Share",
       "limit": 1,
       "settings": [
-        { "type": "text", "id": "share_label", "label": "Share Label", "default": "Share this article" },
-        { "type": "paragraph", "content": "Share button info." },
-        { "type": "paragraph", "content": "Title info." }
+        {
+          "type": "text",
+          "id": "share_label",
+          "label": "Share Label",
+          "default": "Share this article"
+        },
+        {
+          "type": "paragraph",
+          "content": "Share button info."
+        },
+        {
+          "type": "paragraph",
+          "content": "Title info."
+        }
       ]
     },
-    { "type": "excerpt", "name": "Excerpt", "limit": 1 },
-    { "type": "back-to-blog", "name": "Back to Blog Button", "limit": 1 },
-    { "type": "custom_breadcrumbs", "name": "Breadcrumbs", "limit": 1 },
-    { "type": "hero_side_by_side", "name": "Hero Side by Side", "limit": 1 }
+    {
+      "type": "excerpt",
+      "name": "Excerpt",
+      "limit": 1
+    },
+    {
+      "type": "back-to-blog",
+      "name": "Back to Blog Button",
+      "limit": 1
+    },
+    {
+      "type": "custom_breadcrumbs",
+      "name": "Breadcrumbs",
+      "limit": 1
+    },
+    {
+      "type": "hero_side_by_side",
+      "name": "Hero Side by Side",
+      "limit": 1
+    },
+    {
+      "type": "products",
+      "name": "Passende Produkte",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Überschrift",
+          "default": "Passende Geschenke aus Stahl"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Handgefertigt in Deutschland, personalisiert mit deinem Wunschtext."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_werkstatt",
+          "label": "Werkstatt-Hinweis zeigen",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "related",
+      "name": "Ähnliche Artikel",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Überschrift",
+          "default": "Weiterlesen"
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "min": 2,
+          "max": 6,
+          "step": 1,
+          "label": "Anzahl",
+          "default": 3
+        }
+      ]
+    }
   ],
   "presets": [
     {
       "name": "SM New Main Article",
       "blocks": [
-        { "type": "custom_breadcrumbs" },
-        { "type": "hero_side_by_side" },
-        { "type": "content" },
-        { "type": "back-to-blog" },
-        { "type": "share" }
+        {
+          "type": "custom_breadcrumbs"
+        },
+        {
+          "type": "hero_side_by_side"
+        },
+        {
+          "type": "content"
+        },
+        {
+          "type": "back-to-blog"
+        },
+        {
+          "type": "share"
+        }
       ]
     }
   ]
