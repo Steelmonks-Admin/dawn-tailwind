@@ -6,9 +6,9 @@
 {%- endcomment -%}
 
 {%- liquid
-  # Steelmonks: Nur die fünf Länder mit Bestellungen anzeigen (DE 91 %, AT 7 %, CH 1,5 %, dann FR, NL).
+  # Steelmonks: Nur die zehn Länder mit Bestellungen anzeigen (Top 10 nach Bestellungen Sep 2024 – Sep 2026).
   # Shopify Markets liefert 39 Länder; die Auswahl hier ist eine Anzeige-Filterung, der Checkout bleibt unverändert.
-  assign allowed_countries = 'DE,AT,CH,FR,NL' | split: ','
+  assign allowed_countries = 'DE,AT,CH,FR,NL,BE,IT,LU,ES,US' | split: ','
   assign currencies = localization.available_countries | map: 'currency' | map: 'iso_code' | uniq
   assign popular_countries = localization.available_countries | where: 'popular?' | sort: 'name'
 
