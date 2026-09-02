@@ -41,7 +41,8 @@
 
           <div class="sm-hero-hub__pixel-img-wrap">
             {% if section.settings.pixel_image %}
-              {{ section.settings.pixel_image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', class: 'sm-hero-hub__pixel-img' }}
+              {%- assign hero_alt = section.settings.pixel_image.alt | default: section.settings.heading | default: 'Steelmonks – personalisierte Geschenke aus Stahl' -%}
+              {{ section.settings.pixel_image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', class: 'sm-hero-hub__pixel-img', alt: hero_alt }}
             {% else %}
               <div class="sm-hero-hub__pixel-placeholder">Pixel-Visual hochladen</div>
             {% endif %}
@@ -101,7 +102,8 @@
                   {% endif %}
 
                   {% if block.settings.image %}
-                    {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', class: 'sm-hero-hub__category-img' }}
+                    {%- assign cat_alt = block.settings.image.alt | default: block.settings.title | default: block.settings.heading | default: 'Steelmonks Kategorie' -%}
+                    {{ block.settings.image | image_url: width: 700 | image_tag: loading: 'lazy', class: 'sm-hero-hub__category-img', alt: cat_alt }}
                   {% else %}
                     <div class="sm-hero-hub__category-placeholder">Bild wählen</div>
                   {% endif %}
