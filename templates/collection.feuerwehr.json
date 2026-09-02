@@ -17,8 +17,12 @@
           "settings": {}
         }
       },
-      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
-      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "custom_css": [
+        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
+      ],
       "settings": {
         "include_margins": true
       }
@@ -41,7 +45,7 @@
         "image_shape": "default",
         "show_secondary_image": false,
         "show_vendor": false,
-        "show_rating": false,
+        "show_rating": true,
         "quick_add": "none",
         "enable_filtering": false,
         "filter_type": "horizontal",
@@ -53,5 +57,9 @@
       }
     }
   },
-  "order": ["17458178119bf2149e", "banner", "product-grid"]
+  "order": [
+    "17458178119bf2149e",
+    "banner",
+    "product-grid"
+  ]
 }

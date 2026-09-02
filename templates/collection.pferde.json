@@ -2,7 +2,9 @@
   "sections": {
     "sm_grill_hero_HBXCim": {
       "type": "sm-grill-hero",
-      "custom_css": ["div img {padding-top: 500px;}"],
+      "custom_css": [
+        "div img {padding-top: 500px;}"
+      ],
       "settings": {
         "parallax_image": "shopify://shop_images/pfedefreunde.webp",
         "foreground_image": "shopify://shop_images/white-border.webp",
@@ -28,9 +30,15 @@
           "settings": {}
         }
       },
-      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_EwH9nD"],
-      "custom_css": ["#etrusted-trusted_stars_service {margin-top: 3rem;}"],
-      "settings": { "include_margins": true }
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "custom_css": [
+        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     },
     "featured_collection_87LmCi": {
       "type": "featured-collection",
@@ -81,7 +89,7 @@
         "image_shape": "default",
         "show_secondary_image": false,
         "show_vendor": false,
-        "show_rating": false,
+        "show_rating": true,
         "quick_add": "none",
         "enable_filtering": false,
         "filter_type": "horizontal",
@@ -100,8 +108,12 @@
           "settings": {}
         }
       },
-      "block_order": ["trusted_shops_reviews_and_more_trusted_stars_ntrBxd"],
-      "settings": { "include_margins": true }
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_ntrBxd"
+      ],
+      "settings": {
+        "include_margins": true
+      }
     },
     "accordions_rwVQyT": {
       "type": "accordions",
@@ -120,7 +132,9 @@
           }
         }
       },
-      "block_order": ["accordion_NbL6t7"],
+      "block_order": [
+        "accordion_NbL6t7"
+      ],
       "name": "Accordions",
       "settings": {
         "heading": "",

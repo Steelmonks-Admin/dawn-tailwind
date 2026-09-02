@@ -311,6 +311,20 @@
           "@type": "Brand",
           "name": {{ product.vendor | json }}
         },
+        {%- liquid
+          # Produktbewertungen aus Trusted Shops (eTrusted) – synchronisiert in reviews.rating / reviews.rating_count
+          assign smk_rating = product.metafields.reviews.rating.value
+          assign smk_rating_count = product.metafields.reviews.rating_count.value | default: 0
+        -%}
+        {%- if smk_rating and smk_rating_count > 0 -%}
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": {{ smk_rating.rating | json }},
+          "bestRating": {{ smk_rating.scale_max | json }},
+          "worstRating": {{ smk_rating.scale_min | json }},
+          "ratingCount": {{ smk_rating_count | json }}
+        },
+        {%- endif -%}
         "offers": [
                   {%- for variant in product.variants -%}
             {
