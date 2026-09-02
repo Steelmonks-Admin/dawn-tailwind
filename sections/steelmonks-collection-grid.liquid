@@ -40,14 +40,16 @@
               src='/cdn/shop/files/placeholder-image.webp?v=1715096222'
             {% else %}
               {% if block.settings.show_collection %}
-                src='{{ block.settings.image | image_url }}'
+                src='{{ block.settings.image | image_url: width: 600 }}' srcset='{{ block.settings.image | image_url: width: 300 }} 300w, {{ block.settings.image | image_url: width: 600 }} 600w, {{ block.settings.image | image_url: width: 900 }} 900w' sizes='(max-width: 749px) 50vw, 25vw'
               {% else %}
-                src='{{ block.settings.product.featured_image | image_url }}'
+                src='{{ block.settings.product.featured_image | image_url: width: 600 }}' srcset='{{ block.settings.product.featured_image | image_url: width: 300 }} 300w, {{ block.settings.product.featured_image | image_url: width: 600 }} 600w, {{ block.settings.product.featured_image | image_url: width: 900 }} 900w' sizes='(max-width: 749px) 50vw, 25vw'
               {% endif %}
             {% endif %}
-            alt='{{ block.settings.title }}'
-            width='100%'
-            height='100%'
+            alt='{{ block.settings.title | escape }}'
+            loading='lazy'
+            decoding='async'
+            width='600'
+            height='600'
           >
         </a>
       </li>

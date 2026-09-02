@@ -11,11 +11,15 @@
       class='twcss-border-[1px] twcss-aspect-square twcss-border-brandblack twcss-shadow-md twcss-rounded-lg'
     >
       <img
-        src='{{ block.settings.item1.image | image_url }}'
+        src='{{ block.settings.item1.image | image_url: width: 800 }}'
+        srcset='{{ block.settings.item1.image | image_url: width: 400 }} 400w, {{ block.settings.item1.image | image_url: width: 800 }} 800w, {{ block.settings.item1.image | image_url: width: 1200 }} 1200w'
+        sizes='(max-width: 749px) 50vw, 25vw'
+        loading='lazy'
+        decoding='async'
         alt='{{ block.settings.item1.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
-        width='auto'
-        height='auto'
+        width='800'
+        height='800'
       >
     </a>
     <a
@@ -23,11 +27,15 @@
       class='twcss-border-[1px] twcss-aspect-square twcss-border-brandblack twcss-shadow-md twcss-rounded-lg'
     >
       <img
-        src='{{ block.settings.item2.image | image_url }}'
+        src='{{ block.settings.item2.image | image_url: width: 800 }}'
+        srcset='{{ block.settings.item2.image | image_url: width: 400 }} 400w, {{ block.settings.item2.image | image_url: width: 800 }} 800w, {{ block.settings.item2.image | image_url: width: 1200 }} 1200w'
+        sizes='(max-width: 749px) 50vw, 25vw'
+        loading='lazy'
+        decoding='async'
         alt='{{ block.settings.item2.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
-        width='auto'
-        height='auto'
+        width='800'
+        height='800'
       >
     </a>
     <a
@@ -35,11 +43,15 @@
       class='twcss-border-[1px] twcss-aspect-square twcss-border-brandblack twcss-shadow-md twcss-rounded-lg'
     >
       <img
-        src='{{ block.settings.item3.image | image_url }}'
+        src='{{ block.settings.item3.image | image_url: width: 800 }}'
+        srcset='{{ block.settings.item3.image | image_url: width: 400 }} 400w, {{ block.settings.item3.image | image_url: width: 800 }} 800w, {{ block.settings.item3.image | image_url: width: 1200 }} 1200w'
+        sizes='(max-width: 749px) 50vw, 25vw'
+        loading='lazy'
+        decoding='async'
         alt='{{ block.settings.item3.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
-        width='auto'
-        height='auto'
+        width='800'
+        height='800'
       >
     </a>
     <a
@@ -47,11 +59,15 @@
       class='twcss-border-[1px] twcss-aspect-square twcss-border-brandblack twcss-shadow-md twcss-rounded-lg'
     >
       <img
-        src='{{ block.settings.item4.image | image_url }}'
+        src='{{ block.settings.item4.image | image_url: width: 800 }}'
+        srcset='{{ block.settings.item4.image | image_url: width: 400 }} 400w, {{ block.settings.item4.image | image_url: width: 800 }} 800w, {{ block.settings.item4.image | image_url: width: 1200 }} 1200w'
+        sizes='(max-width: 749px) 50vw, 25vw'
+        loading='lazy'
+        decoding='async'
         alt='{{ block.settings.item4.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
-        width='auto'
-        height='auto'
+        width='800'
+        height='800'
       >
     </a>
   </div>

@@ -320,9 +320,11 @@
         {% for i in (1..8) %}
           <img
             src=''
-            alt='Vom Benutzer erstellte Bilder von Steelmonks-Kunden (Kundenfotos / UGC)'
-            width='auto'
-            height='auto'
+            alt='Kundenfoto: Steelmonks-Schild im Einsatz'
+            loading='lazy'
+            decoding='async'
+            width='600'
+            height='338'
           >
         {% endfor %}
       </div>
@@ -621,8 +623,13 @@
     row.querySelectorAll('img').forEach((img, imgIndex) => {
       // Calculate index based on row and image position
       const linkIndex = rowIndex * 8 + imgIndex;
-      img.src = allImageLinks[linkIndex];
-      img.srcset = allImageLinks[linkIndex];
+      // Kundenfotos in Kachelgröße statt Originaldatei (Shopify-CDN skaliert per ?width=)
+      const link = allImageLinks[linkIndex];
+      img.src = link + '?width=600';
+      img.srcset = link + '?width=400 400w, ' + link + '?width=800 800w';
+      img.sizes = '(max-width: 749px) 45vw, 22vw';
+      img.loading = 'lazy';
+      img.decoding = 'async';
     });
   });
 </script>
