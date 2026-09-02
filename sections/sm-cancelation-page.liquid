@@ -25,25 +25,58 @@
     {% endfor %}
   </section>
 
-  <section class='twcss-flex twcss-flex-col twcss-gap-4 twcss-p-10 twcss-rounded-lg'>
-    <!-- Toggle Button -->
-    <button
-      type='button'
-      class='twcss-w-full twcss-text-left twcss-bg-white twcss-p-4 twcss-rounded-lg twcss-shadow twcss-font-bold twcss-text-lg twcss-text-brandblack twcss-border twcss-border-gray-200'
-      style='background-color: #fff !important;'
-      onclick="document.getElementById('contact-form-container').classList.toggle('twcss-hidden')"
-    >
-      Zum Formular
-    </button>
-
-    <!-- Collapsible Form Container -->
-    <div
-      id='contact-form-container'
-      class='twcss-mt-4 twcss-bg-white twcss-rounded-lg twcss-shadow twcss-p-4 twcss-hidden'
-    >
-      <div class='powr-form-builder' id='4dd3d542_1659935817'></div>
-      <script src='https://www.powr.io/powr.js?platform=shopify' defer></script>
-    </div>
+  <section class='twcss-flex twcss-flex-col twcss-gap-4 twcss-p-4 md:twcss-p-10 twcss-rounded-lg' id='widerrufsformular'>
+    <h3 class='twcss-text-2xl twcss-font-bold'>Widerrufsformular</h3>
+    <p class='twcss-text-base'>Fülle das Formular aus, wenn Du einen Vertrag widerrufen möchtest. Wir bestätigen den Eingang per E-Mail.</p>
+    {%- form 'contact', id: 'WiderrufForm', class: 'smk-widerruf twcss-flex twcss-flex-col twcss-gap-4' -%}
+      {%- if form.posted_successfully? -%}
+        <p class='form-status form-status-list form__message' tabindex='-1' autofocus role='status'>
+          {% render 'icon-success' %} Dein Widerruf ist bei uns eingegangen. Du erhältst in Kürze eine Bestätigung per E-Mail.
+        </p>
+      {%- elsif form.errors -%}
+        <p class='form__message' role='alert'>
+          {% render 'icon-error' %} Bitte prüfe Deine E-Mail-Adresse: {{ form.errors.messages['email'] }}
+        </p>
+      {%- endif -%}
+      <input type='hidden' name='contact[Formular]' value='Widerruf'>
+      <div class='twcss-grid twcss-gap-4 md:twcss-grid-cols-2'>
+        <div class='field'>
+          <input class='field__input' type='text' id='Widerruf-name' name='contact[Name]' autocomplete='name' placeholder='Vor- und Nachname' required value='{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}'>
+          <label class='field__label' for='Widerruf-name'>Vor- und Nachname <span aria-hidden='true'>*</span></label>
+        </div>
+        <div class='field'>
+          <input class='field__input' type='email' id='Widerruf-email' name='contact[email]' autocomplete='email' spellcheck='false' autocapitalize='off' placeholder='E-Mail' required value='{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}' aria-required='true'>
+          <label class='field__label' for='Widerruf-email'>E-Mail <span aria-hidden='true'>*</span></label>
+        </div>
+        <div class='field'>
+          <input class='field__input' type='text' id='Widerruf-order' name='contact[Bestellnummer]' placeholder='Bestellnummer' required inputmode='numeric'>
+          <label class='field__label' for='Widerruf-order'>Bestellnummer <span aria-hidden='true'>*</span></label>
+        </div>
+        <div class='field'>
+          <input class='field__input' type='date' id='Widerruf-date' name='contact[Bestellt am]' placeholder='Bestellt am'>
+          <label class='field__label' for='Widerruf-date'>Bestellt am</label>
+        </div>
+      </div>
+      <div class='field'>
+        <textarea class='text-area field__input' id='Widerruf-items' name='contact[Artikel]' rows='3' placeholder='Artikel' required></textarea>
+        <label class='form__label field__label' for='Widerruf-items'>Welche Artikel möchtest Du widerrufen? <span aria-hidden='true'>*</span></label>
+      </div>
+      <div class='field'>
+        <textarea class='text-area field__input' id='Widerruf-address' name='contact[Anschrift]' rows='3' placeholder='Anschrift' autocomplete='street-address'></textarea>
+        <label class='form__label field__label' for='Widerruf-address'>Deine Anschrift</label>
+      </div>
+      <div class='field'>
+        <textarea class='text-area field__input' id='Widerruf-body' name='contact[body]' rows='4' placeholder='Nachricht'></textarea>
+        <label class='form__label field__label' for='Widerruf-body'>Nachricht (optional)</label>
+      </div>
+      <label class='twcss-flex twcss-items-start twcss-gap-3 twcss-text-base' for='Widerruf-confirm'>
+        <input type='checkbox' id='Widerruf-confirm' name='contact[Erklärung]' value='Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der genannten Waren.' required class='twcss-mt-1'>
+        <span>Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der oben genannten Waren. <span aria-hidden='true'>*</span></span>
+      </label>
+      <div>
+        <button type='submit' class='button'>Widerruf absenden</button>
+      </div>
+    {%- endform -%}
   </section>
 
   <section class='twcss-flex twcss-flex-col twcss-p-10'>

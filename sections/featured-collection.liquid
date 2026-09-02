@@ -193,7 +193,6 @@
         <button
           type='button'
           class='{% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}'
-          aria-label='{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | escape }}'
           data-featured-collection-show-more
           aria-controls='Slider-{{ section.id }}'
         >
