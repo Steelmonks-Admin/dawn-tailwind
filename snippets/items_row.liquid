@@ -12,7 +12,7 @@
     >
       <img
         src='{{ block.settings.item1.image | image_url }}'
-        alt='{{ block.settings.item1.title | default: "Steelmonks Kollektion" | escape }}'
+        alt='{{ block.settings.item1.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
         width='auto'
         height='auto'
@@ -24,7 +24,7 @@
     >
       <img
         src='{{ block.settings.item2.image | image_url }}'
-        alt='{{ block.settings.item2.title | default: "Steelmonks Kollektion" | escape }}'
+        alt='{{ block.settings.item2.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
         width='auto'
         height='auto'
@@ -36,7 +36,7 @@
     >
       <img
         src='{{ block.settings.item3.image | image_url }}'
-        alt='{{ block.settings.item3.title | default: "Steelmonks Kollektion" | escape }}'
+        alt='{{ block.settings.item3.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
         width='auto'
         height='auto'
@@ -48,7 +48,7 @@
     >
       <img
         src='{{ block.settings.item4.image | image_url }}'
-        alt='{{ block.settings.item4.title | default: "Steelmonks Kollektion" | escape }}'
+        alt='{{ block.settings.item4.alt | default: block.settings.title | default: "Steelmonks Kollektion" | escape }}'
         class='twcss-w-full'
         width='auto'
         height='auto'
