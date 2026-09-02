@@ -1,1 +1,245 @@
-{"sections":{"custom_pin_action_tpbXGP":{"type":"custom_pin-action","name":"Custom - Pin Action","settings":{"image":"shopify:\/\/shop_images\/Keine_Gewalt_gegen_Retter_Anstecker.png","heading":"Keine Gewalt gegen Retter","subheading":"","description":"<p>Wir verschenken den Pin als tragbares Zeichen, um die Botschaft zu verbreiten und das Bewusstsein zu fördern.<\/p>","same_image_on_desktop_and_mobile":true,"cta_text":"Menschen unterstützen unsere Rettungskräfte. - Was ist mit Dir?","supporter_count":"0","button_link1":"","button_link2":"","button_text":"Kostenlos bestellen","small_text":"Um ein Zeichen zu setzen. Nur solange der Vorrat reicht."}},"accordions_AQU3ef":{"type":"accordions","blocks":{"accordion_M7H4gz":{"type":"accordion","settings":{"parent":"","heading":"Kann ich mehr als 1 Anstecker bekommen?","content":"<p>Bei so einem wichtigem Thema verstehen wir, dass man gerne sein Umfeld mit einbeziehen möchte.<br\/><br\/> Wenn Du diese Aktion zusätzlich unterstützen willst und mehrere Anstecker für Dich, Deine Familie, Deine Truppe, Deine Fußballmannschaft, usw. erwerben möchtest, kannst Du hier Deine Wunschanzahl auswählen und zusätzliche Pins für den geringen Deckungsbeitrag von €0,95 \/stk bestellen. <br\/><br\/><br\/>Deinen Kostenfreien Pin erhältst Du natürlich dazu!<\/p>","content_liquid":"{% render 'custom_pin-quantity-form' %}","featured":true,"featured_content_gradient":"#090a0c,#ad091f,#ad091f,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_6dCD8f":{"type":"accordion","settings":{"parent":"","heading":"Den passende Bügel-Patch zur Aktion","content":"<p>Setze ein klares Zeichen gegen Gewalt an unseren Rettern – einfach und stilvoll!<br\/><br\/><br\/>Der Patch ist mit einer speziellen Bügelfläche versehen und kann leicht auf Kleidung, Taschen oder andere Textilien aufgebügelt werden.<br\/><br\/><br\/>Zeige deine Unterstützung für Einsatzkräfte und trage dazu bei, mehr Bewusstsein für Respekt und Zusammenhalt zu schaffen. <\/p>","content_liquid":"{% render 'custom_pin-quantity-form-2' %}","featured":true,"featured_image":"shopify:\/\/shop_images\/PATCH-BE-2000-S.png","featured_content_gradient":"#090a0c,#ad091f,#ad091f,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_M7H4gz","accordion_6dCD8f"],"name":"Accordions","settings":{"heading":"","subheading":"","padding_top":24,"padding_bottom":24}},"custom_pin_action_hero_7VeMeL":{"type":"custom_pin-action_hero","blocks":{"partner_LxhwWm":{"type":"partner","settings":{"partner_logo":"shopify:\/\/shop_images\/web-THW_Bundesvereinigung_Logo.png","partner_url":""}},"partner_HY9TKn":{"type":"partner","settings":{"partner_logo":"shopify:\/\/shop_images\/web-Feuerwehr_magazin.svg","partner_url":""}},"partner_nTwiUN":{"type":"partner","settings":{"partner_logo":"shopify:\/\/shop_images\/web-rettung_magazin.svg","partner_url":""}},"partner_4XixHj":{"type":"partner","settings":{"partner_logo":"shopify:\/\/shop_images\/web-Signet.svg","partner_url":""}},"partner_Mih8BW":{"type":"partner","settings":{"partner_logo":"shopify:\/\/shop_images\/web-Blaulicht_Magazin_Logo.png","partner_url":""}}},"block_order":["partner_LxhwWm","partner_HY9TKn","partner_nTwiUN","partner_4XixHj","partner_Mih8BW"],"name":"Custom - Pin Action Hero","settings":{"title":"","desktop_hero_image":"shopify:\/\/shop_images\/Banner-new-final-final-2.0-final-sigur.png","mobile_hero_image":"shopify:\/\/shop_images\/Mobile-Banner-2.0.jpg","description_image":"shopify:\/\/shop_images\/Area_1-1-2.svg","description_image_url":"https:\/\/www.area112.de\/?utm_campaign=fw-event-aer_steelmonks-pins_coop_steelmonks_20241111&utm_medium=referral&utm_source=steelmonks#steelmonks","description":"<p><strong>Partner & Unterstützende<\/strong><\/p><p>Gemeinsam mit unseren Partnern und unterstützenden Organisationen können wir national ein Zeichen gegen Gewalt an Rettern setzen.<\/p>","hero_partners_desktop":"shopify:\/\/shop_images\/Banner-logos-website.svg","hero_partners_mobile":"shopify:\/\/shop_images\/mobile-version-LOGOS.svg","influencer_instagram_account_url1":"https:\/\/www.instagram.com\/sina_setale\/","influencer_instagram_account_button_text1":"@sina_setale","influencer_instagram_account_url2":"https:\/\/www.instagram.com\/74_locke","influencer_instagram_account_button_text2":"@74_locke","influencer_instagram_account_url3":"https:\/\/www.instagram.com\/jasminchen.b","influencer_instagram_account_button_text3":"@jasminchen.b","influencer_instagram_account_url4":"https:\/\/www.instagram.com\/berliner.retterherz\/","influencer_instagram_account_button_text4":"@berliner.retterherz"}},"custom_pin_action_social_media_yFqcWq":{"type":"custom_pin-action_social-media","name":"Custom - Socials","settings":{"heading":"Follow Us on Social Media","link":"","button_text":"Follow Us","button_image_width":24}},"accordions_gUhLmg":{"type":"accordions","blocks":{"accordion_RDYXqm":{"type":"accordion","disabled":true,"settings":{"parent":"","heading":"Wann wird mein Anstecker ankommen?","content":"<p>Wir bedanken uns für die enorme Resonanz zu dieser wichtigen Aktion, wir arbeiten mit Hochdruck an der Ausführung aller Bestellungen.<br\/><br\/> Wir tun unser bestes und packen fleißig Anstecker. :) <br\/><br\/><br\/>Du wirst Deinen kostenlosen Pin vorraussichtlich in der ersten Dezember Woche erhalten.<br\/><\/p>","content_liquid":"","featured":true,"featured_content_gradient":"#090a0c,#ad091f,#ad091f,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_VDHx7k":{"type":"accordion","settings":{"parent":"","heading":"Worum geht es hier?","content":"<p>Leider kommt es immer wieder zu Übergriffen auf Einsatzkräfte wie Feuerwehrleute und Rettungsdienste – Menschen, die da sind, um Leben zu retten und Hilfe zu leisten. Ob durch verbale Angriffe oder sogar körperliche Gewalt, solche Vorfälle sind bedauerlicherweise keine Seltenheit und stellen eine große Belastung für die Betroffenen dar. Es ist erschütternd, dass diejenigen, die täglich ihr Leben riskieren, um anderen zu helfen, selbst gefährdet werden. Genau deshalb ist dieses Thema so wichtig und verdient die volle Aufmerksamkeit unserer Gesellschaft.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_xYWtBg":{"type":"accordion","settings":{"parent":"","heading":"Was hat es mit dem Anstecker auf sich?","content":"<p>Der Anstecker ist ein Symbol unserer Aktion „Keine Gewalt gegen Retter.“ Er steht für Solidarität und vereint die Stimmen aller, die sich gegen Gewalt an Einsatzkräften starkmachen. Durch das Tragen des Pins zeigst Du sichtbar Deine Unterstützung und machst auf das wichtige Thema aufmerksam. Der Anstecker wird kostenlos im Rahmen der Aktion verteilt – eine kleine Geste, die Großes bewirken kann.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_BNr8FP":{"type":"accordion","settings":{"parent":"","heading":"Was kann ich noch tun?","content":"<p>Du kannst aktiv dazu beitragen, unsere Aktion „Keine Gewalt gegen Retter“ zu unterstützen! Trage den Pin, um ein sichtbares Zeichen gegen Gewalt an Einsatzkräften zu setzen und Solidarität zu zeigen. Teile das Video und die Beiträge unserer Partner, um das Bewusstsein weiter zu verbreiten – je mehr Menschen erreicht werden, desto stärker ist die Botschaft. Jeder Beitrag zählt!<\/p>","content_liquid":"","featured":true,"featured_content_gradient":"#090a0c,#ad091f,#ad091f,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_RDYXqm","accordion_VDHx7k","accordion_xYWtBg","accordion_BNr8FP"],"name":"Accordions","settings":{"heading":"","subheading":"","padding_top":24,"padding_bottom":24}},"custom_pin_action_goals_jGmM8L":{"type":"custom_pin-action_goals","name":"Custom - Pin Action Goals","settings":{"heading":"Was wir erreichen wollen","description":"Mit dieser Aktion \"Keine Gewalt gegen Retter\" setzen wir ein Zeichen für Respekt und Schutz unserer Einsatzkräfte.\n\nEs ist erschreckend, dass Gewalt gegen diejenigen, die täglich ihr Leben für uns riskieren, überhaupt ein Thema ist.\n\nDurch diese Kampagne schaffen wir Aufmerksamkeit und rufen die Öffentlichkeit zu einem Umdenken auf.\n\nUnser Ziel ist es, Dankbarkeit und Bewusstsein zu fördern und den Respekt für alle Retter in unserer Gesellschaft zu stärken.","image1":"shopify:\/\/shop_images\/web_pin-action-violence.jpg","image1_description":"Keine Gewalt gegen Retter!","image2":"shopify:\/\/shop_images\/web_pin-action-peace.jpg","image2_description":"Fördern von Respekt und  Zusammenhalt.","image3":"shopify:\/\/shop_images\/web_pin-action-community.jpg","image3_description":"Diejenigen schützen, die für uns da sind.","quote":"\"Gewalt gegen Rettungskräfte ist absolut inakzeptabel. Es ist unbegreiflich, wie man auf die Idee kommen kann, diejenigen anzugreifen oder zu beleidigen, die ihr Leben riskieren, um uns zu helfen. Als Gesellschaft, als Menschen können und müssen wir besser sein.\""}},"custom_pin_action_press_W8RNpN":{"type":"custom_pin-action_press","name":"Custom - Pin Action Press","settings":{"heading_1":"","text1":"","heading_2":"Unterstützen","text2":"👉 Teile unser Video in deiner Instagram Story oder auf anderen Platformen - so können wir noch mehr Menschen erreichen.\n<br><br>\n👉 Teile die Beiträge der Influencer, die ihre Stimme für unsere Retter erheben.\n<br><br>\n👉 Bleib informiert mit dem Feuerwehr, Rettungs und Blaulicht Magazin – gemeinsam können wir ein Umdenken in der Gesellschaft bewirken."}},"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}}},"order":["custom_pin_action_tpbXGP","accordions_AQU3ef","custom_pin_action_hero_7VeMeL","custom_pin_action_social_media_yFqcWq","accordions_gUhLmg","custom_pin_action_goals_jGmM8L","custom_pin_action_press_W8RNpN","main"]}
+{
+  "sections": {
+    "custom_pin_action_tpbXGP": {
+      "type": "custom_pin-action",
+      "name": "Custom - Pin Action",
+      "settings": {
+        "image": "shopify://shop_images/Keine_Gewalt_gegen_Retter_Anstecker.png",
+        "heading": "Keine Gewalt gegen Retter",
+        "subheading": "",
+        "description": "<p>Wir verschenken den Pin als tragbares Zeichen, um die Botschaft zu verbreiten und das Bewusstsein zu fördern.</p>",
+        "same_image_on_desktop_and_mobile": true,
+        "cta_text": "Menschen unterstützen unsere Rettungskräfte. - Was ist mit Dir?",
+        "supporter_count": "0",
+        "button_link1": "",
+        "button_link2": "",
+        "button_text": "Kostenlos bestellen",
+        "small_text": "Um ein Zeichen zu setzen. Nur solange der Vorrat reicht."
+      }
+    },
+    "accordions_AQU3ef": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_M7H4gz": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Kann ich mehr als 1 Anstecker bekommen?",
+            "content": "<p>Bei so einem wichtigem Thema verstehen wir, dass man gerne sein Umfeld mit einbeziehen möchte.<br/><br/> Wenn Du diese Aktion zusätzlich unterstützen willst und mehrere Anstecker für Dich, Deine Familie, Deine Truppe, Deine Fußballmannschaft, usw. erwerben möchtest, kannst Du hier Deine Wunschanzahl auswählen und zusätzliche Pins für den geringen Deckungsbeitrag von €0,95 /stk bestellen. <br/><br/><br/>Deinen Kostenfreien Pin erhältst Du natürlich dazu!</p>",
+            "content_liquid": "{% render 'custom_pin-quantity-form' %}",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#ad091f,#ad091f,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_6dCD8f": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Den passende Bügel-Patch zur Aktion",
+            "content": "<p>Setze ein klares Zeichen gegen Gewalt an unseren Rettern – einfach und stilvoll!<br/><br/><br/>Der Patch ist mit einer speziellen Bügelfläche versehen und kann leicht auf Kleidung, Taschen oder andere Textilien aufgebügelt werden.<br/><br/><br/>Zeige deine Unterstützung für Einsatzkräfte und trage dazu bei, mehr Bewusstsein für Respekt und Zusammenhalt zu schaffen. </p>",
+            "content_liquid": "{% render 'custom_pin-quantity-form-2' %}",
+            "featured": true,
+            "featured_image": "shopify://shop_images/PATCH-BE-2000-S.png",
+            "featured_content_gradient": "#090a0c,#ad091f,#ad091f,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_M7H4gz",
+        "accordion_6dCD8f"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "custom_pin_action_hero_7VeMeL": {
+      "type": "custom_pin-action_hero",
+      "blocks": {
+        "partner_LxhwWm": {
+          "type": "partner",
+          "settings": {
+            "partner_logo": "shopify://shop_images/web-THW_Bundesvereinigung_Logo.png",
+            "partner_url": ""
+          }
+        },
+        "partner_HY9TKn": {
+          "type": "partner",
+          "settings": {
+            "partner_logo": "shopify://shop_images/web-Feuerwehr_magazin.svg",
+            "partner_url": ""
+          }
+        },
+        "partner_nTwiUN": {
+          "type": "partner",
+          "settings": {
+            "partner_logo": "shopify://shop_images/web-rettung_magazin.svg",
+            "partner_url": ""
+          }
+        },
+        "partner_4XixHj": {
+          "type": "partner",
+          "settings": {
+            "partner_logo": "shopify://shop_images/web-Signet.svg",
+            "partner_url": ""
+          }
+        },
+        "partner_Mih8BW": {
+          "type": "partner",
+          "settings": {
+            "partner_logo": "shopify://shop_images/web-Blaulicht_Magazin_Logo.png",
+            "partner_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "partner_LxhwWm",
+        "partner_HY9TKn",
+        "partner_nTwiUN",
+        "partner_4XixHj",
+        "partner_Mih8BW"
+      ],
+      "name": "Custom - Pin Action Hero",
+      "settings": {
+        "title": "",
+        "desktop_hero_image": "shopify://shop_images/Banner-new-final-final-2.0-final-sigur.png",
+        "mobile_hero_image": "shopify://shop_images/Mobile-Banner-2.0.jpg",
+        "description_image": "shopify://shop_images/Area_1-1-2.svg",
+        "description_image_url": "https://www.area112.de/?utm_campaign=fw-event-aer_steelmonks-pins_coop_steelmonks_20241111&utm_medium=referral&utm_source=steelmonks#steelmonks",
+        "description": "<p><strong>Partner & Unterstützende</strong></p><p>Gemeinsam mit unseren Partnern und unterstützenden Organisationen können wir national ein Zeichen gegen Gewalt an Rettern setzen.</p>",
+        "hero_partners_desktop": "shopify://shop_images/Banner-logos-website.svg",
+        "hero_partners_mobile": "shopify://shop_images/mobile-version-LOGOS.svg",
+        "influencer_instagram_account_url1": "https://www.instagram.com/sina_setale/",
+        "influencer_instagram_account_button_text1": "@sina_setale",
+        "influencer_instagram_account_url2": "https://www.instagram.com/74_locke",
+        "influencer_instagram_account_button_text2": "@74_locke",
+        "influencer_instagram_account_url3": "https://www.instagram.com/jasminchen.b",
+        "influencer_instagram_account_button_text3": "@jasminchen.b",
+        "influencer_instagram_account_url4": "https://www.instagram.com/berliner.retterherz/",
+        "influencer_instagram_account_button_text4": "@berliner.retterherz"
+      }
+    },
+    "custom_pin_action_social_media_yFqcWq": {
+      "type": "custom_pin-action_social-media",
+      "name": "Custom - Socials",
+      "settings": {
+        "heading": "Follow Us on Social Media",
+        "link": "",
+        "button_text": "Follow Us",
+        "button_image_width": 24
+      }
+    },
+    "accordions_gUhLmg": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_RDYXqm": {
+          "type": "accordion",
+          "disabled": true,
+          "settings": {
+            "parent": "",
+            "heading": "Wann wird mein Anstecker ankommen?",
+            "content": "<p>Wir bedanken uns für die enorme Resonanz zu dieser wichtigen Aktion, wir arbeiten mit Hochdruck an der Ausführung aller Bestellungen.<br/><br/> Wir tun unser bestes und packen fleißig Anstecker. :) <br/><br/><br/>Du wirst Deinen kostenlosen Pin vorraussichtlich in der ersten Dezember Woche erhalten.<br/></p>",
+            "content_liquid": "",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#ad091f,#ad091f,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_VDHx7k": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Worum geht es hier?",
+            "content": "<p>Leider kommt es immer wieder zu Übergriffen auf Einsatzkräfte wie Feuerwehrleute und Rettungsdienste – Menschen, die da sind, um Leben zu retten und Hilfe zu leisten. Ob durch verbale Angriffe oder sogar körperliche Gewalt, solche Vorfälle sind bedauerlicherweise keine Seltenheit und stellen eine große Belastung für die Betroffenen dar. Es ist erschütternd, dass diejenigen, die täglich ihr Leben riskieren, um anderen zu helfen, selbst gefährdet werden. Genau deshalb ist dieses Thema so wichtig und verdient die volle Aufmerksamkeit unserer Gesellschaft.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_xYWtBg": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Was hat es mit dem Anstecker auf sich?",
+            "content": "<p>Der Anstecker ist ein Symbol unserer Aktion „Keine Gewalt gegen Retter.“ Er steht für Solidarität und vereint die Stimmen aller, die sich gegen Gewalt an Einsatzkräften starkmachen. Durch das Tragen des Pins zeigst Du sichtbar Deine Unterstützung und machst auf das wichtige Thema aufmerksam. Der Anstecker wird kostenlos im Rahmen der Aktion verteilt – eine kleine Geste, die Großes bewirken kann.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_BNr8FP": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Was kann ich noch tun?",
+            "content": "<p>Du kannst aktiv dazu beitragen, unsere Aktion „Keine Gewalt gegen Retter“ zu unterstützen! Trage den Pin, um ein sichtbares Zeichen gegen Gewalt an Einsatzkräften zu setzen und Solidarität zu zeigen. Teile das Video und die Beiträge unserer Partner, um das Bewusstsein weiter zu verbreiten – je mehr Menschen erreicht werden, desto stärker ist die Botschaft. Jeder Beitrag zählt!</p>",
+            "content_liquid": "",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#ad091f,#ad091f,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_RDYXqm",
+        "accordion_VDHx7k",
+        "accordion_xYWtBg",
+        "accordion_BNr8FP"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    },
+    "custom_pin_action_goals_jGmM8L": {
+      "type": "custom_pin-action_goals",
+      "name": "Custom - Pin Action Goals",
+      "settings": {
+        "heading": "Was wir erreichen wollen",
+        "description": "Mit dieser Aktion \"Keine Gewalt gegen Retter\" setzen wir ein Zeichen für Respekt und Schutz unserer Einsatzkräfte.\n\nEs ist erschreckend, dass Gewalt gegen diejenigen, die täglich ihr Leben für uns riskieren, überhaupt ein Thema ist.\n\nDurch diese Kampagne schaffen wir Aufmerksamkeit und rufen die Öffentlichkeit zu einem Umdenken auf.\n\nUnser Ziel ist es, Dankbarkeit und Bewusstsein zu fördern und den Respekt für alle Retter in unserer Gesellschaft zu stärken.",
+        "image1": "shopify://shop_images/web_pin-action-violence.jpg",
+        "image1_description": "Keine Gewalt gegen Retter!",
+        "image2": "shopify://shop_images/web_pin-action-peace.jpg",
+        "image2_description": "Fördern von Respekt und  Zusammenhalt.",
+        "image3": "shopify://shop_images/web_pin-action-community.jpg",
+        "image3_description": "Diejenigen schützen, die für uns da sind.",
+        "quote": "\"Gewalt gegen Rettungskräfte ist absolut inakzeptabel. Es ist unbegreiflich, wie man auf die Idee kommen kann, diejenigen anzugreifen oder zu beleidigen, die ihr Leben riskieren, um uns zu helfen. Als Gesellschaft, als Menschen können und müssen wir besser sein.\""
+      }
+    },
+    "custom_pin_action_press_W8RNpN": {
+      "type": "custom_pin-action_press",
+      "name": "Custom - Pin Action Press",
+      "settings": {
+        "heading_1": "",
+        "text1": "",
+        "heading_2": "Unterstützen",
+        "text2": "👉 Teile unser Video in deiner Instagram Story oder auf anderen Platformen - so können wir noch mehr Menschen erreichen.\n<br><br>\n👉 Teile die Beiträge der Influencer, die ihre Stimme für unsere Retter erheben.\n<br><br>\n👉 Bleib informiert mit dem Feuerwehr, Rettungs und Blaulicht Magazin – gemeinsam können wir ein Umdenken in der Gesellschaft bewirken."
+      }
+    }
+  },
+  "order": [
+    "custom_pin_action_tpbXGP",
+    "accordions_AQU3ef",
+    "custom_pin_action_hero_7VeMeL",
+    "custom_pin_action_social_media_yFqcWq",
+    "accordions_gUhLmg",
+    "custom_pin_action_goals_jGmM8L",
+    "custom_pin_action_press_W8RNpN"
+  ]
+}

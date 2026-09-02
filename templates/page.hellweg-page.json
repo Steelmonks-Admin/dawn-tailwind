@@ -1,1 +1,79 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"sm_hellweg_hero_MhxCwW":{"type":"sm-hellweg-hero","settings":{"hero_image_1":"shopify:\/\/shop_images\/mustermann-icon.webp","hero_image_2":"shopify:\/\/shop_images\/zunftschilder-icon.webp","hero_image_3":"shopify:\/\/shop_images\/holzbau-icon.webp","mobile_hero_image":"shopify:\/\/shop_images\/mobile-hero-banner.webp"}},"sm_hellweg_page_QeBJwh":{"type":"sm-hellweg-page","blocks":{"image_text_7HXNpR":{"type":"image_text","settings":{"icon":"shopify:\/\/shop_images\/web-germany-flag-icon.webp","description":"Unschlagbar schnelle Abwicklung"}},"image_text_TniiFJ":{"type":"image_text","settings":{"icon":"shopify:\/\/shop_images\/web-medal-icon.webp","description":"50,000+ zufriedene Kunden"}},"image_text_Ljfx7Q":{"type":"image_text","settings":{"icon":"shopify:\/\/shop_images\/web-stars-icon.webp","description":"3000+ verifizierte Bewertungen"}}},"block_order":["image_text_7HXNpR","image_text_TniiFJ","image_text_Ljfx7Q"],"settings":{"padding_top":16,"padding_bottom":0,"padding_left":0,"padding_right":0,"blue_text":"Exklusive 10% mit \"KH-HL10\"","text_size":"twcss-text-4xl","hellweg_lippe_image":"shopify:\/\/shop_images\/hellweg-image.webp","highlights_heading":"Zunft-Highlights","highlight_image_1":"shopify:\/\/shop_images\/U-1000-Thumbnail_60e0aa71-03aa-4e4b-87a8-90f88a13d698.jpg","highlight_image_2":"shopify:\/\/shop_images\/KU-1000-Thumbnail_c4d36afc-bd37-4e8c-a5b4-34e6168a620a.jpg","highlight_image_3":"shopify:\/\/shop_images\/Zunftzeichen-Cardholder-Thumbnail.jpg","highlight_image_4":"shopify:\/\/shop_images\/Zunftzeichen-Zippo.jpg","highlights_button_text":"Mehr entdecken"}},"1748444191be88e260":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_trusted_stars_UDmweW":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_trusted_stars_UDmweW"],"settings":{"include_margins":true}}},"order":["main","sm_hellweg_hero_MhxCwW","sm_hellweg_page_QeBJwh","1748444191be88e260"]}
+{
+  "sections": {
+    "sm_hellweg_hero_MhxCwW": {
+      "type": "sm-hellweg-hero",
+      "settings": {
+        "hero_image_1": "shopify://shop_images/mustermann-icon.webp",
+        "hero_image_2": "shopify://shop_images/zunftschilder-icon.webp",
+        "hero_image_3": "shopify://shop_images/holzbau-icon.webp",
+        "mobile_hero_image": "shopify://shop_images/mobile-hero-banner.webp"
+      }
+    },
+    "sm_hellweg_page_QeBJwh": {
+      "type": "sm-hellweg-page",
+      "blocks": {
+        "image_text_7HXNpR": {
+          "type": "image_text",
+          "settings": {
+            "icon": "shopify://shop_images/web-germany-flag-icon.webp",
+            "description": "Unschlagbar schnelle Abwicklung"
+          }
+        },
+        "image_text_TniiFJ": {
+          "type": "image_text",
+          "settings": {
+            "icon": "shopify://shop_images/web-medal-icon.webp",
+            "description": "50,000+ zufriedene Kunden"
+          }
+        },
+        "image_text_Ljfx7Q": {
+          "type": "image_text",
+          "settings": {
+            "icon": "shopify://shop_images/web-stars-icon.webp",
+            "description": "3000+ verifizierte Bewertungen"
+          }
+        }
+      },
+      "block_order": [
+        "image_text_7HXNpR",
+        "image_text_TniiFJ",
+        "image_text_Ljfx7Q"
+      ],
+      "settings": {
+        "padding_top": 16,
+        "padding_bottom": 0,
+        "padding_left": 0,
+        "padding_right": 0,
+        "blue_text": "Exklusive 10% mit \"KH-HL10\"",
+        "text_size": "twcss-text-4xl",
+        "hellweg_lippe_image": "shopify://shop_images/hellweg-image.webp",
+        "highlights_heading": "Zunft-Highlights",
+        "highlight_image_1": "shopify://shop_images/U-1000-Thumbnail_60e0aa71-03aa-4e4b-87a8-90f88a13d698.jpg",
+        "highlight_image_2": "shopify://shop_images/KU-1000-Thumbnail_c4d36afc-bd37-4e8c-a5b4-34e6168a620a.jpg",
+        "highlight_image_3": "shopify://shop_images/Zunftzeichen-Cardholder-Thumbnail.jpg",
+        "highlight_image_4": "shopify://shop_images/Zunftzeichen-Zippo.jpg",
+        "highlights_button_text": "Mehr entdecken"
+      }
+    },
+    "1748444191be88e260": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_UDmweW": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_UDmweW"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "sm_hellweg_hero_MhxCwW",
+    "sm_hellweg_page_QeBJwh",
+    "1748444191be88e260"
+  ]
+}

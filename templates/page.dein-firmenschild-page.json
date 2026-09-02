@@ -9,17 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "disabled": true,
-      "custom_css": [],
-      "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28,
-        "enable_gutter": false,
-        "show_title": false
-      }
-    },
     "steelmonks_parallax_richtext_4pXMQx": {
       "type": "steelmonks-parallax-richtext",
       "name": "Parallax Rich Text",
@@ -297,7 +286,6 @@
     }
   },
   "order": [
-    "main",
     "steelmonks_parallax_richtext_4pXMQx",
     "custom_header_W4hxnw",
     "custom_image_slider_AVW7CX",

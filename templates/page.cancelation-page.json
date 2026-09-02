@@ -1,1 +1,65 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"sm_cancelation_page_d8PjfM":{"type":"sm-cancelation-page","blocks":{"feature_k77man":{"type":"feature","settings":{"icon":"shopify:\/\/shop_images\/web-icon-timeclock.png","title":"Komplettes Wiederrufsrecht für 24 Stunden","description":"Du hast das Recht Deine Bestellung ohne Angabe von Gründen zu widerrufen. Dieses Recht ist befristet auf 24 Stunden, da wir das Schild dann herstellen."}},"feature_YBcMaD":{"type":"feature","settings":{"icon":"shopify:\/\/shop_images\/web-icon-great-support.svg","title":"Freundlicher Kundenservice","description":"Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns, so schnell wie möglich auf Deine Nachricht einzugehen."}},"feature_3Y8k9X":{"type":"feature","settings":{"icon":"shopify:\/\/shop_images\/web-icon-free-shipping.svg","title":"Kostenloser Ersatz","description":"Wir sind auch nur Menschen :) Es kann vorkommen, dass Dein Schild nicht genau Deiner Bestellung entspricht. In diesen Fällen kümmern wir uns natürlich schleunigst um den Ersatz."}}},"block_order":["feature_k77man","feature_YBcMaD","feature_3Y8k9X"],"name":"Cancelation Page","settings":{"heading":"Widerrufsbelehrung","subheading":"wir helfen Dir gerne weiter.","description":"Hast Du Fragen zu Deiner Bestellung? Oder möchtest Du Deine Bestellung stornieren? Hier findest Du alle Informationen und unser übersichtliches Wiederrufsformular. ","padding":40,"content":"<p><strong>Widerrufsrecht<\/strong>sobald Deine Bestellung bei uns eingeht, versuchen wir sie so schnell wie möglich zu bearbeiten. Du hast aber das Recht, binnen <strong>24 Stunden<\/strong> ohne Angabe von Gründen diesen Vertrag zu widerrufen. <br\/><br\/>Um Dein Widerrufsrecht auszuüben, bitten wir Dich, uns (Harald Wester, Uracherstr. 3, 50739 Köln, Deutschland, Info@Steelmonks.com, Telefon: 0221630603790) mittels einer eindeutigen Erklärung (z. B. per Telefonat oder E-Mail) über Deinen Entschluss, diesen Vertrag zu widerrufen, zu informieren. <br\/><br\/>Zur Wahrung der Widerrufsfrist reicht es aus, dass Du die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absendest.<br\/><br\/><strong>Folgen des Widerrufs: <\/strong>Wenn Du Deinen Vertrag widerrufen hast, werden wir Deine Bestellung stornieren und Dir alle Zahlungen, die wir von Dir erhalten haben, einschließlich der Lieferkosten unverzüglich zurück erstatten. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Du bei der ursprünglichen Transaktion eingesetzt hast, es sei denn, mit Dir wurde ausdrücklich etwas Anderes vereinbart; in keinem Fall werden Dir wegen dieser Rückzahlung Entgelte berechnet. <br\/><br\/><strong>Das Widerrufsrecht besteht nicht mehr<\/strong>, sobald Deine personalisierte Ware bereits erstellt wurde, da sie individuell und maßgeblich auf Deine Wünsche und persönlichen Bedürfnisse zugeschnitten wurde. <br\/>Dies bezieht sich auf personalisierte Schilder und Sonderanfertigungen.<br\/><br\/>Bestellungen über <strong>Artikel aus unserer Kategorie der Standard Motivschilder<\/strong>, können innerhalb von 10 Tagen nach Erhalt der Ware widerrufen werden. Wir bitten Dich, die Informationen in unserem Widerrufsformular auszufüllen und uns zuzusenden. <br\/><br\/>Desweiteren bitten wir Dich, Deine Bestellung in der Originalverpackung und ausreichend frankiert an unsere im Formular angegebene Adresse zu senden.<br\/><br\/>Sofort nach Erhalt Deiner Ware werden wir Dir umgehend den Betrag Deiner originalen Bestellung zurückerstatten. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Du bei der ursprünglichen Transaktion eingesetzt hast, es sei denn, mit Dir wurde ausdrücklich etwas Anderes vereinbart; in keinem Fall werden Dir wegen dieser Rückzahlung Entgelte berechnet. <br\/><br\/><strong>Liebe Kunden:<\/strong>Alle unsere Artikel werden auf Kundenwunsch individuell und persönlich erstellt. Deshalb bitten wir um Verständnis für unser rechts striktes Widerrufsrecht.<br\/><br\/>Wir sind Montag bis Donnerstag von 9.00 bis 16.00 Uhr und Freitag von 9.00 bis 14.00 Uhr telefonisch erreichbar unter <strong>+ 49-221-630603790.<\/strong>Oder schreib uns eine Email an <strong>info@steelmonks.com<\/strong><br\/><br\/>* Bitte beachte: Wenn Du innerhalb von 2 Werktagen keine Antwort auf Deine E-Mail erhalten hast, überprüfe bitte unbedingt Deinen Spam-Ordner.<br\/><br\/><br\/><\/p>"}},"174677959895a721c5":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_trusted_stars_FP9KNM":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_trusted_stars_FP9KNM"],"settings":{"include_margins":true}}},"order":["main","sm_cancelation_page_d8PjfM","174677959895a721c5"]}
+{
+  "sections": {
+    "sm_cancelation_page_d8PjfM": {
+      "type": "sm-cancelation-page",
+      "blocks": {
+        "feature_k77man": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-timeclock.png",
+            "title": "Komplettes Wiederrufsrecht für 24 Stunden",
+            "description": "Du hast das Recht Deine Bestellung ohne Angabe von Gründen zu widerrufen. Dieses Recht ist befristet auf 24 Stunden, da wir das Schild dann herstellen."
+          }
+        },
+        "feature_YBcMaD": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-great-support.svg",
+            "title": "Freundlicher Kundenservice",
+            "description": "Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns, so schnell wie möglich auf Deine Nachricht einzugehen."
+          }
+        },
+        "feature_3Y8k9X": {
+          "type": "feature",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-free-shipping.svg",
+            "title": "Kostenloser Ersatz",
+            "description": "Wir sind auch nur Menschen :) Es kann vorkommen, dass Dein Schild nicht genau Deiner Bestellung entspricht. In diesen Fällen kümmern wir uns natürlich schleunigst um den Ersatz."
+          }
+        }
+      },
+      "block_order": [
+        "feature_k77man",
+        "feature_YBcMaD",
+        "feature_3Y8k9X"
+      ],
+      "name": "Cancelation Page",
+      "settings": {
+        "heading": "Widerrufsbelehrung",
+        "subheading": "wir helfen Dir gerne weiter.",
+        "description": "Hast Du Fragen zu Deiner Bestellung? Oder möchtest Du Deine Bestellung stornieren? Hier findest Du alle Informationen und unser übersichtliches Wiederrufsformular. ",
+        "padding": 40,
+        "content": "<p><strong>Widerrufsrecht</strong>sobald Deine Bestellung bei uns eingeht, versuchen wir sie so schnell wie möglich zu bearbeiten. Du hast aber das Recht, binnen <strong>24 Stunden</strong> ohne Angabe von Gründen diesen Vertrag zu widerrufen. <br/><br/>Um Dein Widerrufsrecht auszuüben, bitten wir Dich, uns (Harald Wester, Uracherstr. 3, 50739 Köln, Deutschland, Info@Steelmonks.com, Telefon: 0221630603790) mittels einer eindeutigen Erklärung (z. B. per Telefonat oder E-Mail) über Deinen Entschluss, diesen Vertrag zu widerrufen, zu informieren. <br/><br/>Zur Wahrung der Widerrufsfrist reicht es aus, dass Du die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absendest.<br/><br/><strong>Folgen des Widerrufs: </strong>Wenn Du Deinen Vertrag widerrufen hast, werden wir Deine Bestellung stornieren und Dir alle Zahlungen, die wir von Dir erhalten haben, einschließlich der Lieferkosten unverzüglich zurück erstatten. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Du bei der ursprünglichen Transaktion eingesetzt hast, es sei denn, mit Dir wurde ausdrücklich etwas Anderes vereinbart; in keinem Fall werden Dir wegen dieser Rückzahlung Entgelte berechnet. <br/><br/><strong>Das Widerrufsrecht besteht nicht mehr</strong>, sobald Deine personalisierte Ware bereits erstellt wurde, da sie individuell und maßgeblich auf Deine Wünsche und persönlichen Bedürfnisse zugeschnitten wurde. <br/>Dies bezieht sich auf personalisierte Schilder und Sonderanfertigungen.<br/><br/>Bestellungen über <strong>Artikel aus unserer Kategorie der Standard Motivschilder</strong>, können innerhalb von 10 Tagen nach Erhalt der Ware widerrufen werden. Wir bitten Dich, die Informationen in unserem Widerrufsformular auszufüllen und uns zuzusenden. <br/><br/>Desweiteren bitten wir Dich, Deine Bestellung in der Originalverpackung und ausreichend frankiert an unsere im Formular angegebene Adresse zu senden.<br/><br/>Sofort nach Erhalt Deiner Ware werden wir Dir umgehend den Betrag Deiner originalen Bestellung zurückerstatten. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Du bei der ursprünglichen Transaktion eingesetzt hast, es sei denn, mit Dir wurde ausdrücklich etwas Anderes vereinbart; in keinem Fall werden Dir wegen dieser Rückzahlung Entgelte berechnet. <br/><br/><strong>Liebe Kunden:</strong>Alle unsere Artikel werden auf Kundenwunsch individuell und persönlich erstellt. Deshalb bitten wir um Verständnis für unser rechts striktes Widerrufsrecht.<br/><br/>Wir sind Montag bis Donnerstag von 9.00 bis 16.00 Uhr und Freitag von 9.00 bis 14.00 Uhr telefonisch erreichbar unter <strong>+ 49-221-630603790.</strong>Oder schreib uns eine Email an <strong>info@steelmonks.com</strong><br/><br/>* Bitte beachte: Wenn Du innerhalb von 2 Werktagen keine Antwort auf Deine E-Mail erhalten hast, überprüfe bitte unbedingt Deinen Spam-Ordner.<br/><br/><br/></p>"
+      }
+    },
+    "174677959895a721c5": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_FP9KNM": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_FP9KNM"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "sm_cancelation_page_d8PjfM",
+    "174677959895a721c5"
+  ]
+}

@@ -1,1 +1,66 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"sm_shipping_page_rNezbV":{"type":"sm-shipping-page","blocks":{"info_grid_item_hKXj4T":{"type":"info_grid_item","settings":{"icon":"shopify:\/\/shop_images\/web-icon-timeclock.png","title":"<p><strong>Unschlagbar schnelle Abwicklung.(durchschnittl. 7 Tage)<\/strong><\/p>","description":"Unserer Bestellungen werden mit DHL  verschickt. Unsere Lieferfrist beträgt 15 Tage."}},"info_grid_item_7TTAw8":{"type":"info_grid_item","settings":{"icon":"shopify:\/\/shop_images\/web-icon-great-support.svg","title":"<p><strong>Freundlicher Kundenservice<\/strong><\/p>","description":"Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns, während des ganzen Bestellvorgangs an Deiner Seite zu sein."}},"info_grid_item_YwHCw9":{"type":"info_grid_item","settings":{"icon":"shopify:\/\/shop_images\/web-icon-free-shipping.svg","title":"<p><strong>Kostenloser Versand ab € 99,-<\/strong><\/p>","description":"Wir verschicken alle in unserem Shop verkauften Schilder versandkostenfrei ab einem Wert von €99,-"}}},"block_order":["info_grid_item_hKXj4T","info_grid_item_7TTAw8","info_grid_item_YwHCw9"],"name":"Shipping Page","settings":{"heading":"Versandbedingungen","first_text":"wir helfen Dir gerne weiter.","second_text":"Hast Du Fragen zu unserem Versand? Oder möchtest Du wissen, wie wir Deine Bestellung versenden? Hier findest Du alle Informationen. ","first_image":"shopify:\/\/shop_images\/web-icon-greendot.png","content":"<p>Wir versenden mit <strong>DHL<\/strong> innerhalb Deutschlands.<\/p><p>Die Bearbeitungszeit beträgt <strong>7-10 Werktage<\/strong>.<\/p><p>Die Versandzeit beträgt <strong>3-5 Werktage<\/strong>.<\/p><p>Wir können Deinen Artikel erst produzieren, wenn wir Deine Bestellung, Dein endgültiges Design und Deine Zahlung erhalten haben. <\/p><p> <\/p><p><strong>Bei Sonderanfertigungen wird der Versand individuell behandelt und zusätzlich berechnet.<\/strong><\/p><p> <\/p><p>(Die Bearbeitungszeiten können abhängig von den beliebten Bestellzeiten und der Anzahl der produzierten Bestellungen etwas schwanken.)<\/p><p> <\/p><p>Sollte Dich Deine Sendung verspäten können wir von unserer Seite alles tun, um etwas über den Verbleib herauszufinden. <\/p><p>Wenn mehr als 15 Tage seit Deiner Bestellung vergangen sind und Du Dein Schild noch nicht erhalten hast, kontaktiere uns bitte <a href=\"https:\/\/steelmonks.com\/pages\/kontakt\">hier<\/a>. (<a href=\"https:\/\/steelmonks.com\/pages\/kontakt\">https:\/\/steelmonks.com\/pages\/kontakt<\/a>)<\/p><p> <\/p><p>Nachforschungsaufträge dauern erfahrungsgemäß immer mindestens 2 Wochen. Vielleicht kannst Du Dich in diesem Fall untertützend auch mit Deiner Sendungsnummer an DHL wenden, manchmal liegen die Pakete dann einfach in einer Postfiliale und warten auf Abholung.<br\/><br\/>Wir sind Montag bis Freitag von 8.00 bis 16.00 Uhr erreichbar, schreib uns eine Email an <strong>info@steelmonks.com<\/strong><\/p><p><br\/>* Bitte beachte: Wenn Du innerhalb von 2 Werktagen keine Antwort auf Deine E-Mail erhalten hast, überprüfe bitte unbedingt Deinen Spam-Ordner.<\/p>","padding":40}},"1746702114207e6da9":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_trusted_stars_bAHxeH":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_trusted_stars_bAHxeH"],"settings":{"include_margins":true}}},"order":["main","sm_shipping_page_rNezbV","1746702114207e6da9"]}
+{
+  "sections": {
+    "sm_shipping_page_rNezbV": {
+      "type": "sm-shipping-page",
+      "blocks": {
+        "info_grid_item_hKXj4T": {
+          "type": "info_grid_item",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-timeclock.png",
+            "title": "<p><strong>Unschlagbar schnelle Abwicklung.(durchschnittl. 7 Tage)</strong></p>",
+            "description": "Unserer Bestellungen werden mit DHL  verschickt. Unsere Lieferfrist beträgt 15 Tage."
+          }
+        },
+        "info_grid_item_7TTAw8": {
+          "type": "info_grid_item",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-great-support.svg",
+            "title": "<p><strong>Freundlicher Kundenservice</strong></p>",
+            "description": "Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns, während des ganzen Bestellvorgangs an Deiner Seite zu sein."
+          }
+        },
+        "info_grid_item_YwHCw9": {
+          "type": "info_grid_item",
+          "settings": {
+            "icon": "shopify://shop_images/web-icon-free-shipping.svg",
+            "title": "<p><strong>Kostenloser Versand ab € 99,-</strong></p>",
+            "description": "Wir verschicken alle in unserem Shop verkauften Schilder versandkostenfrei ab einem Wert von €99,-"
+          }
+        }
+      },
+      "block_order": [
+        "info_grid_item_hKXj4T",
+        "info_grid_item_7TTAw8",
+        "info_grid_item_YwHCw9"
+      ],
+      "name": "Shipping Page",
+      "settings": {
+        "heading": "Versandbedingungen",
+        "first_text": "wir helfen Dir gerne weiter.",
+        "second_text": "Hast Du Fragen zu unserem Versand? Oder möchtest Du wissen, wie wir Deine Bestellung versenden? Hier findest Du alle Informationen. ",
+        "first_image": "shopify://shop_images/web-icon-greendot.png",
+        "content": "<p>Wir versenden mit <strong>DHL</strong> innerhalb Deutschlands.</p><p>Die Bearbeitungszeit beträgt <strong>7-10 Werktage</strong>.</p><p>Die Versandzeit beträgt <strong>3-5 Werktage</strong>.</p><p>Wir können Deinen Artikel erst produzieren, wenn wir Deine Bestellung, Dein endgültiges Design und Deine Zahlung erhalten haben. </p><p> </p><p><strong>Bei Sonderanfertigungen wird der Versand individuell behandelt und zusätzlich berechnet.</strong></p><p> </p><p>(Die Bearbeitungszeiten können abhängig von den beliebten Bestellzeiten und der Anzahl der produzierten Bestellungen etwas schwanken.)</p><p> </p><p>Sollte Dich Deine Sendung verspäten können wir von unserer Seite alles tun, um etwas über den Verbleib herauszufinden. </p><p>Wenn mehr als 15 Tage seit Deiner Bestellung vergangen sind und Du Dein Schild noch nicht erhalten hast, kontaktiere uns bitte <a href=\"https://steelmonks.com/pages/kontakt\">hier</a>. (<a href=\"https://steelmonks.com/pages/kontakt\">https://steelmonks.com/pages/kontakt</a>)</p><p> </p><p>Nachforschungsaufträge dauern erfahrungsgemäß immer mindestens 2 Wochen. Vielleicht kannst Du Dich in diesem Fall untertützend auch mit Deiner Sendungsnummer an DHL wenden, manchmal liegen die Pakete dann einfach in einer Postfiliale und warten auf Abholung.<br/><br/>Wir sind Montag bis Freitag von 8.00 bis 16.00 Uhr erreichbar, schreib uns eine Email an <strong>info@steelmonks.com</strong></p><p><br/>* Bitte beachte: Wenn Du innerhalb von 2 Werktagen keine Antwort auf Deine E-Mail erhalten hast, überprüfe bitte unbedingt Deinen Spam-Ordner.</p>",
+        "padding": 40
+      }
+    },
+    "1746702114207e6da9": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_bAHxeH": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_bAHxeH"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "sm_shipping_page_rNezbV",
+    "1746702114207e6da9"
+  ]
+}

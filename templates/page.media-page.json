@@ -1,1 +1,55 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"sm_media_page_ibYnJC":{"type":"sm-media-page","name":"Media Page","settings":{"section_padding":60,"title":"Nützliches und Hilfreiches zu Deinem Produkt","hero_image1":"shopify:\/\/shop_images\/web-media-img1.jpg","hero_image1_title":"Befestigung","hero_image1_text":"Die Anleitung zur Befestigung Deines Schildes findest Du hier.","hero_image2":"shopify:\/\/shop_images\/web-media-img2.jpg","hero_image2_title":"Cortenstahl","hero_image2_text":"Pflegeanweisungen und Rostpatina","hero_image3":"shopify:\/\/shop_images\/web-media-img3.jpg","hero_image3_title":"Kontakt","hero_image3_text":"Wir sind für Dich da. Hier findest Du unsere Konaktdaten.","button1_text":"Befestigung","button1_heading":"So befestigst Du Dein Schild","button1_subheading":"<p>Der Prozess beginnt mit Deiner Anfrage und den Informationen, die Du uns zur Verfügung stellst. Bei dem folgenden Formular, kannst Du ein Photo von Deinem Wappen, eine fertige Datei oder einen Kommentar zu einem eigenen, neuen Design abgeben.<br\/>Unser Anfrageformular findest Du, indem Du auf den schwarzen, runden Knopf unten rechts in Deinem Fenster drückst. :)<\/p>","button1_img1":"shopify:\/\/shop_images\/web-media-img4.jpg","button1_img1_title":"BoltBolzen","button1_img1_richtext":"<p>An der Rückseite deines Schildes sind bereits Gewinde für die Befestigung angeschweißt.<br\/><br\/><\/p>","button1_img2":"shopify:\/\/shop_images\/web-media-img5.jpg","button1_img2_title":"Gewindestifte","button1_img2_richtext":"<p>Das Set beinhaltet passende Gewindestifte, die mit der geschlossenen Seite in die Bolzen eingedreht werden.<\/p><p>Du kannst Das Schild mit den Gewindestiften an die Wandhalten und die hrmarkierungen anzeichnen.<\/p>","button1_img3":"shopify:\/\/shop_images\/web-media-img6.jpg","button1_img3_title":"Befestigen","button1_img3_richtext":"<p>De Befestigung ist einfach, Du musst lediglich Löcher (5mm Durchmesser) bohren und das Schild frt einsetzen.<\/p><p> <\/p><p>Du kannst Zement oder Silikonkleber in die Löcher eingeben um es noch stabiler zu befestigen.<\/p>","button1_bottom_text":"Durch diese Technik steht das Schild ungefähr 8mm von der Wand ab, was einen schwebenden Effekt erzeugt und so besonders edel wirkt.","button2_text":"Cortenstahl","button2_heading":"Cortenstahl ist wie ein feiner Wein","button2_subheading":"<p>Cortenstahl verhält sich genau wie guter Wein. Man benötigt einen guten Rohstoff und beste Vorraussetzungen. Die gewünschte Rostpatina entwickelt sich im Laufe der Zeit, wenn das Schild den Elementen Wasser und Sonne ausgesetzt ist. Die Patina Deines Schildes wird sich im Laufe der Zeit weiter enwtwickeln bis dieser Rost eine Schutzschicht bildet der den darunter liegended Stahl bedeckt.<br\/><br\/><\/p>","button2_img1":"shopify:\/\/shop_images\/web-media-img7.jpg","button2_img1_title":"So geht's","button2_img1_richtext":"<p>Cortenstahl, der König der Gartendekoration, ist ein Material, das für seine Robustheit und seine unverwechselbare, wunderschöne rostrote Patina bekannt ist.<\/p><p> <\/p><p>Dieser Stahl beginnt seine Entwicklung genau so wie \"normaler\" Stahl.<\/p>","button2_img2":"shopify:\/\/shop_images\/web-media-img8.jpg","button2_img2_title":"Entwicklung","button2_img2_richtext":"<p>Der Entwicklungsprozess findet durch Nässe und Trockenheit statt.<\/p><p> <\/p><p>Der Cortenrost-Prozess dauert in der Regel etwa 18 Monate. Während dieser Zeit solltest Du Dein Cortenstahlprodukt möglichst nicht stören.<\/p>","button2_img3":"shopify:\/\/shop_images\/web-media-img9.jpg","button2_img3_title":"Pflege","button2_img3_richtext":"<p>Wenn Du dem Rostprozess seinen natürlichen Lauf läßt, bleibt das Material selbst auch Jahrzehnte lang bestehen.<\/p><p> <\/p><p>Die orangegelbe Rostoptik könnte aber im Laufe der Zeit immer dunkler bis hin zu einem schwarzbraunem Rostton werden.<\/p>","button3_text":"Kontakt","button3_richtext":"<p>Hast Du Fragen zu Deiner Bestellung? Oder möchtest Du vielleicht ein Feedback hinterlassen?<br\/>Wir freuen uns zu hören wie glücklich Du mit Deinem Schild oder Anhänger bist! :)<br\/>Wir sind Montag bis Freitags von 8.00 bis 16.00 Uhr telefonisch erreichbar unter <strong>+49 221 956 73422.<br\/><\/strong>Oder schreib uns eine Email an <strong>info@steelmonks.com<\/strong><\/p>","button3_heading":"So kannst Du uns erreichen","button3_button1_text":"Jetzt anrufen","button3_button2_text":"Email schicken","button3_bottom_text":"Wir sind Montag bis Freitag von 8.00 bis 16.00 Uhr für Dich da."}}},"order":["main","sm_media_page_ibYnJC"]}
+{
+  "sections": {
+    "sm_media_page_ibYnJC": {
+      "type": "sm-media-page",
+      "name": "Media Page",
+      "settings": {
+        "section_padding": 60,
+        "title": "Nützliches und Hilfreiches zu Deinem Produkt",
+        "hero_image1": "shopify://shop_images/web-media-img1.jpg",
+        "hero_image1_title": "Befestigung",
+        "hero_image1_text": "Die Anleitung zur Befestigung Deines Schildes findest Du hier.",
+        "hero_image2": "shopify://shop_images/web-media-img2.jpg",
+        "hero_image2_title": "Cortenstahl",
+        "hero_image2_text": "Pflegeanweisungen und Rostpatina",
+        "hero_image3": "shopify://shop_images/web-media-img3.jpg",
+        "hero_image3_title": "Kontakt",
+        "hero_image3_text": "Wir sind für Dich da. Hier findest Du unsere Konaktdaten.",
+        "button1_text": "Befestigung",
+        "button1_heading": "So befestigst Du Dein Schild",
+        "button1_subheading": "<p>Der Prozess beginnt mit Deiner Anfrage und den Informationen, die Du uns zur Verfügung stellst. Bei dem folgenden Formular, kannst Du ein Photo von Deinem Wappen, eine fertige Datei oder einen Kommentar zu einem eigenen, neuen Design abgeben.<br/>Unser Anfrageformular findest Du, indem Du auf den schwarzen, runden Knopf unten rechts in Deinem Fenster drückst. :)</p>",
+        "button1_img1": "shopify://shop_images/web-media-img4.jpg",
+        "button1_img1_title": "BoltBolzen",
+        "button1_img1_richtext": "<p>An der Rückseite deines Schildes sind bereits Gewinde für die Befestigung angeschweißt.<br/><br/></p>",
+        "button1_img2": "shopify://shop_images/web-media-img5.jpg",
+        "button1_img2_title": "Gewindestifte",
+        "button1_img2_richtext": "<p>Das Set beinhaltet passende Gewindestifte, die mit der geschlossenen Seite in die Bolzen eingedreht werden.</p><p>Du kannst Das Schild mit den Gewindestiften an die Wandhalten und die hrmarkierungen anzeichnen.</p>",
+        "button1_img3": "shopify://shop_images/web-media-img6.jpg",
+        "button1_img3_title": "Befestigen",
+        "button1_img3_richtext": "<p>De Befestigung ist einfach, Du musst lediglich Löcher (5mm Durchmesser) bohren und das Schild frt einsetzen.</p><p> </p><p>Du kannst Zement oder Silikonkleber in die Löcher eingeben um es noch stabiler zu befestigen.</p>",
+        "button1_bottom_text": "Durch diese Technik steht das Schild ungefähr 8mm von der Wand ab, was einen schwebenden Effekt erzeugt und so besonders edel wirkt.",
+        "button2_text": "Cortenstahl",
+        "button2_heading": "Cortenstahl ist wie ein feiner Wein",
+        "button2_subheading": "<p>Cortenstahl verhält sich genau wie guter Wein. Man benötigt einen guten Rohstoff und beste Vorraussetzungen. Die gewünschte Rostpatina entwickelt sich im Laufe der Zeit, wenn das Schild den Elementen Wasser und Sonne ausgesetzt ist. Die Patina Deines Schildes wird sich im Laufe der Zeit weiter enwtwickeln bis dieser Rost eine Schutzschicht bildet der den darunter liegended Stahl bedeckt.<br/><br/></p>",
+        "button2_img1": "shopify://shop_images/web-media-img7.jpg",
+        "button2_img1_title": "So geht's",
+        "button2_img1_richtext": "<p>Cortenstahl, der König der Gartendekoration, ist ein Material, das für seine Robustheit und seine unverwechselbare, wunderschöne rostrote Patina bekannt ist.</p><p> </p><p>Dieser Stahl beginnt seine Entwicklung genau so wie \"normaler\" Stahl.</p>",
+        "button2_img2": "shopify://shop_images/web-media-img8.jpg",
+        "button2_img2_title": "Entwicklung",
+        "button2_img2_richtext": "<p>Der Entwicklungsprozess findet durch Nässe und Trockenheit statt.</p><p> </p><p>Der Cortenrost-Prozess dauert in der Regel etwa 18 Monate. Während dieser Zeit solltest Du Dein Cortenstahlprodukt möglichst nicht stören.</p>",
+        "button2_img3": "shopify://shop_images/web-media-img9.jpg",
+        "button2_img3_title": "Pflege",
+        "button2_img3_richtext": "<p>Wenn Du dem Rostprozess seinen natürlichen Lauf läßt, bleibt das Material selbst auch Jahrzehnte lang bestehen.</p><p> </p><p>Die orangegelbe Rostoptik könnte aber im Laufe der Zeit immer dunkler bis hin zu einem schwarzbraunem Rostton werden.</p>",
+        "button3_text": "Kontakt",
+        "button3_richtext": "<p>Hast Du Fragen zu Deiner Bestellung? Oder möchtest Du vielleicht ein Feedback hinterlassen?<br/>Wir freuen uns zu hören wie glücklich Du mit Deinem Schild oder Anhänger bist! :)<br/>Wir sind Montag bis Freitags von 8.00 bis 16.00 Uhr telefonisch erreichbar unter <strong>+49 221 956 73422.<br/></strong>Oder schreib uns eine Email an <strong>info@steelmonks.com</strong></p>",
+        "button3_heading": "So kannst Du uns erreichen",
+        "button3_button1_text": "Jetzt anrufen",
+        "button3_button2_text": "Email schicken",
+        "button3_bottom_text": "Wir sind Montag bis Freitag von 8.00 bis 16.00 Uhr für Dich da."
+      }
+    }
+  },
+  "order": [
+    "sm_media_page_ibYnJC"
+  ]
+}

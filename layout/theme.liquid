@@ -33,12 +33,25 @@
     <title>
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; Seite {{ current_page }}{% endif -%}
       {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
-    {% if page_description %}
-      <meta name='description' content='{{ page_description | escape }}'>
+    {%- liquid
+      # Meta-Description: Startseite aus Theme-Einstellung (Shop-Beschreibung ist zu lang),
+      # Blog-Übersichten haben in Shopify keine eigene Beschreibung -> Fallback je Blog
+      assign smk_description = page_description
+      if template.name == 'index' and settings.homepage_meta_description != blank
+        assign smk_description = settings.homepage_meta_description
+      elsif template.name == 'blog' and smk_description == blank
+        assign smk_description = blog.title | append: ' – Ratgeber von Steelmonks: Ideen, Anlässe und Tipps rund um personalisierte Geschenke aus Stahl.'
+      endif
+      if current_page > 1 and smk_description != blank
+        assign smk_description = smk_description | append: ' (Seite ' | append: current_page | append: ')'
+      endif
+    -%}
+    {% if smk_description != blank %}
+      <meta name='description' content='{{ smk_description | escape }}'>
     {% endif %}
 
     {% if template contains 'noindexnofollow' %}

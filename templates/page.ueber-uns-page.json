@@ -1,1 +1,167 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"image_with_text_nHge6i":{"type":"image-with-text","blocks":{"heading_e8RCLw":{"type":"heading","settings":{"heading":"<strong>\"Inspired by Life\"<\/strong>","heading_size":"h1"}},"text_CKtdGA":{"type":"text","settings":{"text":"<p>Luis und Jakob gründeten uns im Jahr 2020 und waren von den Möglichkeiten begeistert, die die neuesten Maschinen und Technologien bieten. Seitdem ist Steelmonks gewachsen und hat sich zu einer professionellen Firma entwickelt, die das Leben inspiriert.<\/p><p>Wir sind stolz darauf, unsere Kunden bei der Verwirklichung ihrer Visionen zu unterstützen und dabei das Beste aus Kunst und Technologie zu verbinden. Durch unsere harte Arbeit und Leidenschaft für das, was wir tun, sind wir zu einem Experten in der Metallkunst geworden. Unser Motto <em><strong>\"inspired by life<\/strong><\/em>\" drückt aus, dass alles, was uns umgibt, eine Inspiration für uns ist.<\/p><p>Mit Spaß und Tatendrang und ohne Angst vor neuen Entdeckungen und Experimenten, gestalten wir wunderschöne Schilder und personalisierte Geschenke für Deine Liebsten, für allerlei Anlässe, für Dein Zuhause oder Büro.<\/p>","text_style":"body"}}},"block_order":["heading_e8RCLw","text_CKtdGA"],"settings":{"image":"shopify:\/\/shop_images\/sm-brothers.webp","height":"medium","desktop_image_width":"medium","layout":"text_first","desktop_content_position":"top","desktop_content_alignment":"center","content_layout":"no-overlap","section_color_scheme":"","color_scheme":"","image_behavior":"none","mobile_content_alignment":"center","padding_top":36,"padding_bottom":36}},"steelmonks_parallax_richtext_VMhcjX":{"type":"steelmonks-parallax-richtext","settings":{"image":"shopify:\/\/shop_images\/sm-monks.webp","title":"","link_text":"","link":""}},"multirow_3Vtaat":{"type":"multirow","blocks":{"row_44XjCg":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-statuete.webp","caption":"","heading":"<strong>Tradition und Innovation<\/strong>","text":"<p>Schau dir unseren Mönch hier an, der es sich vor seinem Computer gemütlich gemacht hat. Aber weißt du was das Beste ist? <br\/><br\/>Er nutzt sein tech-savviness nicht nur, um spirituelle Texte zu schreiben, sondern auch, um atemberaubende Kunstwerke zu erschaffen. <\/p><p> <\/p><p>Das ist genau das, was Steelmonks ausmacht: die Verbindung von altem Wissen und modernster Technologie.<br\/>(Den Mönch haben wir mit KI erstellt)<\/p>","button_label":"","button_link":""}},"row_yJdkgh":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-sign.webp","caption":"","heading":"<strong>Einzigartig und Ästhetisch<\/strong>","text":"<p>Wir kombinieren handgefertigte Technik mit einzigartigen Designs, um dir ein Produkt zu bieten, das nicht nur einzigartig, sondern auch ästhetisch ansprechend ist.<br\/><br\/>Schau dir das Bild an und lass dich von unserer Kreativität inspirieren!<\/p>","button_label":"","button_link":""}},"row_iW6JDi":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-workshop.webp","caption":"","heading":"<strong>Wie ein Phoenix aus der \"Flut.\"<\/strong>","text":"<p>Nach dem Jahr 2021 sind wir gewappnet für alle Herausforderungen!<\/p><p>Am 14. Juli wurde unsere komplette Steelmonks Produktion durch die Flutkatastrophe zerstört. Der Schock war groß, aber der Aufbauwille war größer! Wir haben die Gelegenheit genutzt, uns zu verbessern und zu vergrößern.<\/p>","button_label":"","button_link":""}},"row_LVjgkr":{"type":"row","settings":{"image":"shopify:\/\/shop_images\/sm-factory.webp","caption":"","heading":"<strong>Das Abenteuer geht weiter.<\/strong>","text":"<p>Wir sind stolz auf unsere neuen Maschinen, zwei brandneuen 3 KW Laser und tolle neue Kollegen. <\/p><p>Anstelle des individuellen Erfolgs steht die Freude zu designen und die Ergebnisse mit Menschen zu teilen, die ähnlich empfinden.<\/p><p>It´s Sign Time!<\/p>","button_label":"","button_link":""}}},"block_order":["row_44XjCg","row_yJdkgh","row_iW6JDi","row_LVjgkr"],"settings":{"image_height":"medium","desktop_image_width":"medium","heading_size":"h1","text_style":"body","button_style":"secondary","desktop_content_position":"middle","desktop_content_alignment":"left","image_layout":"alternate-right","section_color_scheme":"","row_color_scheme":"","mobile_content_alignment":"center","padding_top":36,"padding_bottom":36}},"steelmonks_parallax_richtext_kPMXDf":{"type":"steelmonks-parallax-richtext","settings":{"image":"shopify:\/\/shop_images\/sm-team.webp","title":"","link_text":"","link":""}},"rich_text_BtKCkK":{"type":"rich-text","blocks":{"heading_AQhEUy":{"type":"heading","settings":{"heading":"<strong>Nichts ist persönlicher als personalisiert.<\/strong>","heading_size":"h2"}},"text_Dw3DAC":{"type":"text","settings":{"text":"<p>- Deine Steelmonks<\/p>"}}},"block_order":["heading_AQhEUy","text_Dw3DAC"],"settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"scheme-1","full_width":true,"padding_top":40,"padding_bottom":40}}},"order":["main","image_with_text_nHge6i","steelmonks_parallax_richtext_VMhcjX","multirow_3Vtaat","steelmonks_parallax_richtext_kPMXDf","rich_text_BtKCkK"]}
+{
+  "sections": {
+    "image_with_text_nHge6i": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_e8RCLw": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>\"Inspired by Life\"</strong>",
+            "heading_size": "h1"
+          }
+        },
+        "text_CKtdGA": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Luis und Jakob gründeten uns im Jahr 2020 und waren von den Möglichkeiten begeistert, die die neuesten Maschinen und Technologien bieten. Seitdem ist Steelmonks gewachsen und hat sich zu einer professionellen Firma entwickelt, die das Leben inspiriert.</p><p>Wir sind stolz darauf, unsere Kunden bei der Verwirklichung ihrer Visionen zu unterstützen und dabei das Beste aus Kunst und Technologie zu verbinden. Durch unsere harte Arbeit und Leidenschaft für das, was wir tun, sind wir zu einem Experten in der Metallkunst geworden. Unser Motto <em><strong>\"inspired by life</strong></em>\" drückt aus, dass alles, was uns umgibt, eine Inspiration für uns ist.</p><p>Mit Spaß und Tatendrang und ohne Angst vor neuen Entdeckungen und Experimenten, gestalten wir wunderschöne Schilder und personalisierte Geschenke für Deine Liebsten, für allerlei Anlässe, für Dein Zuhause oder Büro.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_e8RCLw",
+        "text_CKtdGA"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/sm-brothers.webp",
+        "height": "medium",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "center",
+        "content_layout": "no-overlap",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "steelmonks_parallax_richtext_VMhcjX": {
+      "type": "steelmonks-parallax-richtext",
+      "settings": {
+        "image": "shopify://shop_images/sm-monks.webp",
+        "title": "",
+        "link_text": "",
+        "link": ""
+      }
+    },
+    "multirow_3Vtaat": {
+      "type": "multirow",
+      "blocks": {
+        "row_44XjCg": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-statuete.webp",
+            "caption": "",
+            "heading": "<strong>Tradition und Innovation</strong>",
+            "text": "<p>Schau dir unseren Mönch hier an, der es sich vor seinem Computer gemütlich gemacht hat. Aber weißt du was das Beste ist? <br/><br/>Er nutzt sein tech-savviness nicht nur, um spirituelle Texte zu schreiben, sondern auch, um atemberaubende Kunstwerke zu erschaffen. </p><p> </p><p>Das ist genau das, was Steelmonks ausmacht: die Verbindung von altem Wissen und modernster Technologie.<br/>(Den Mönch haben wir mit KI erstellt)</p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "row_yJdkgh": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-sign.webp",
+            "caption": "",
+            "heading": "<strong>Einzigartig und Ästhetisch</strong>",
+            "text": "<p>Wir kombinieren handgefertigte Technik mit einzigartigen Designs, um dir ein Produkt zu bieten, das nicht nur einzigartig, sondern auch ästhetisch ansprechend ist.<br/><br/>Schau dir das Bild an und lass dich von unserer Kreativität inspirieren!</p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "row_iW6JDi": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-workshop.webp",
+            "caption": "",
+            "heading": "<strong>Wie ein Phoenix aus der \"Flut.\"</strong>",
+            "text": "<p>Nach dem Jahr 2021 sind wir gewappnet für alle Herausforderungen!</p><p>Am 14. Juli wurde unsere komplette Steelmonks Produktion durch die Flutkatastrophe zerstört. Der Schock war groß, aber der Aufbauwille war größer! Wir haben die Gelegenheit genutzt, uns zu verbessern und zu vergrößern.</p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        },
+        "row_LVjgkr": {
+          "type": "row",
+          "settings": {
+            "image": "shopify://shop_images/sm-factory.webp",
+            "caption": "",
+            "heading": "<strong>Das Abenteuer geht weiter.</strong>",
+            "text": "<p>Wir sind stolz auf unsere neuen Maschinen, zwei brandneuen 3 KW Laser und tolle neue Kollegen. </p><p>Anstelle des individuellen Erfolgs steht die Freude zu designen und die Ergebnisse mit Menschen zu teilen, die ähnlich empfinden.</p><p>It´s Sign Time!</p>",
+            "button_label": "",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "row_44XjCg",
+        "row_yJdkgh",
+        "row_iW6JDi",
+        "row_LVjgkr"
+      ],
+      "settings": {
+        "image_height": "medium",
+        "desktop_image_width": "medium",
+        "heading_size": "h1",
+        "text_style": "body",
+        "button_style": "secondary",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "image_layout": "alternate-right",
+        "section_color_scheme": "",
+        "row_color_scheme": "",
+        "mobile_content_alignment": "center",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "steelmonks_parallax_richtext_kPMXDf": {
+      "type": "steelmonks-parallax-richtext",
+      "settings": {
+        "image": "shopify://shop_images/sm-team.webp",
+        "title": "",
+        "link_text": "",
+        "link": ""
+      }
+    },
+    "rich_text_BtKCkK": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_AQhEUy": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Nichts ist persönlicher als personalisiert.</strong>",
+            "heading_size": "h2"
+          }
+        },
+        "text_Dw3DAC": {
+          "type": "text",
+          "settings": {
+            "text": "<p>- Deine Steelmonks</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_AQhEUy",
+        "text_Dw3DAC"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "image_with_text_nHge6i",
+    "steelmonks_parallax_richtext_VMhcjX",
+    "multirow_3Vtaat",
+    "steelmonks_parallax_richtext_kPMXDf",
+    "rich_text_BtKCkK"
+  ]
+}

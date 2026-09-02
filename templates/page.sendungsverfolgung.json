@@ -1,1 +1,107 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"accordions_i7CWHH":{"type":"accordions","blocks":{"accordion_XKmmib":{"type":"accordion","settings":{"parent":"","heading":"Ich habe ein Produktionsupdate mit einer Sendungsnummer erhalten aber diese verändert sich schon seit Tagen nicht. Ist das normal?","content":"<p>Ja, das ist völlig normal. Wir benötigen für die Herstellung eines individuellen und persönlich angefertigten Artikels 5-7 Werktage zzgl ca. 3 Tage Versandzeit. Aus produktionstechnischen Gründen erstellen wir die Versandpapiere schon, wenn der Artikel in die Produktion aufgenommen wird. Sie laufen mit der Bestellung durch den gesamten Prozess. Deshalb verändert sich der Versandstatus in den ersten Tagen auch nicht.<\/p><p><br\/>Wir beeilen uns immer, alle Bestellungen möglichst schnell zu produzieren und zu versenden. Sobald Deine Bestellung an DHL übergeben und gescannt wurde wird sich die Sendungsnummer automatisch aktualisieren.<\/p>","content_liquid":"","featured":true,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_VBiehg":{"type":"accordion","settings":{"parent":"","heading":"Meine Bestellung wurde verschickt, aber ich sehe keine Updates im Tracking. Ist das korrekt?","content":"<p>Ja, das kann vorkommen! Tracking-Updates erscheinen oft erst, wenn das Paket im nächsten Verteilerzentrum gescannt wurde. Manche Sendungen wie Warenpost oder Kompaktbriefe haben auch nur eine reduzierte Sendungsverfolgung und werden nicht überall gescannt. Oft liegen sie plötzlich im Briefkasten obwohl die letzte Aktualisierung 1 Tag her ist. Bitte beachte, dass wir nach Übergabe an DHL keinen Einfluss mehr auf den Versand haben. Falls sich nach 3-4 Tagen nichts ändert, melde dich gerne bei uns und wir legen eine Laufzeitbeschwerde bei DHL ein.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_9XCH7a":{"type":"accordion","settings":{"parent":"","heading":"Meine Bestellung steckt seit mehreren Tagen am gleichen Ort fest. Was kann ich tun?","content":"<p>Das passiert manchmal, wenn ein Paket in einem Verteilerzentrum festhängt oder es sich durch den Zusteller selbst verzögert. Meistens geht es nach ein paar Tagen weiter. Manchmal fallen Pakete tatsächlich vom Band, verlieren ihr Etikett oder werden beschädigt. Das ist ärgerlich, kann aber leider vorkommen. Falls sich der Status deines Paketes länger als 3-4 Tage nicht verändert hat, schreib uns bitte eine Nachricht, damit wir eine Laufzeitbeschwerde einlegen können. Danach kann man nur noch eine Nachforschung einleiten, die aber leider oftmals 3-4 Woche dauern kann.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_6nq84p":{"type":"accordion","settings":{"parent":"","heading":"Mein Paket ist laut Tracking „zugestellt“, aber ich habe nichts bekommen.","content":"<p>Überprüfe bitte, ob es bei einem Nachbarn, Hausbewohner oder in einer Postfiliale abgegeben wurde. Falls du es dort nicht finden kannst, wende dich direkt an DHL mit deiner Sendungsnummer. Sollte es weiterhin unauffindbar sein, helfen wir dir natürlich gerne weiter. Manchmal kommt es vor, dass Sendungen als zugestellt markiert werden und tatsächlich erst am nächsten Tag ausgeliefert werden. Das scheinen Fehlmeldungen auf der DHL-Seite zu sein, auf die wir aber leider keinen Einfluss haben.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_JdETVQ":{"type":"accordion","settings":{"parent":"","heading":"Warum kann ich meine Sendung nicht verfolgen?","content":"<p>Manchmal dauert es ein paar Stunden, bis das Tracking aktualisiert wird. Falls dein Paket bereits länger unterwegs ist, sich das Tracking aber nicht aktualisiert, kann es sein, dass die Sendungsnummer erst beim nächsten Scan aktiviert wird. Dies ist üblich für Sendungen mit reduzierter Sendungsverfolgung. Falls es nach 24 Stunden noch immer nicht funktioniert, schreib uns einfach und wir versuchen mehr darüber herauszufinden.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}},"accordion_KpqjB4":{"type":"accordion","settings":{"parent":"","heading":"Wie lange dauert die Lieferung?","content":"<p>In der Regel dauert es innerhalb Deutschlands 2-4 Werktage, international 5-12 Werktage. Falls dein Paket länger unterwegs ist, überprüfe bitte das Tracking – manchmal gibt es Verzögerungen durch das Versandunternehmen. Generell ist es aber so, dass wir in den Versand nicht mehr eingreifen können, sobald wir die Sendungen an DHL übergeben haben.<\/p>","content_liquid":"","featured":false,"featured_content_gradient":"#090a0c,#04c,#04c,#090a0c","featured_image_alignment":"center","featured_image_aspect_ratio":"233 \/ 349"}}},"block_order":["accordion_XKmmib","accordion_VBiehg","accordion_9XCH7a","accordion_6nq84p","accordion_JdETVQ","accordion_KpqjB4"],"name":"Accordions","settings":{"heading":"Wo ist meine Bestellung?📦","subheading":"<p><em>Hier kannst Du den Status Deiner Bestellung prüfen und Antworten auf die häufigsten Fragen rund um den Versand finden.<\/em><\/p>","padding_top":60,"padding_bottom":24,"padding_left":24,"padding_right":24}}},"order":["main","accordions_i7CWHH"]}
+{
+  "sections": {
+    "accordions_i7CWHH": {
+      "type": "accordions",
+      "blocks": {
+        "accordion_XKmmib": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Ich habe ein Produktionsupdate mit einer Sendungsnummer erhalten aber diese verändert sich schon seit Tagen nicht. Ist das normal?",
+            "content": "<p>Ja, das ist völlig normal. Wir benötigen für die Herstellung eines individuellen und persönlich angefertigten Artikels 5-7 Werktage zzgl ca. 3 Tage Versandzeit. Aus produktionstechnischen Gründen erstellen wir die Versandpapiere schon, wenn der Artikel in die Produktion aufgenommen wird. Sie laufen mit der Bestellung durch den gesamten Prozess. Deshalb verändert sich der Versandstatus in den ersten Tagen auch nicht.</p><p><br/>Wir beeilen uns immer, alle Bestellungen möglichst schnell zu produzieren und zu versenden. Sobald Deine Bestellung an DHL übergeben und gescannt wurde wird sich die Sendungsnummer automatisch aktualisieren.</p>",
+            "content_liquid": "",
+            "featured": true,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_VBiehg": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Meine Bestellung wurde verschickt, aber ich sehe keine Updates im Tracking. Ist das korrekt?",
+            "content": "<p>Ja, das kann vorkommen! Tracking-Updates erscheinen oft erst, wenn das Paket im nächsten Verteilerzentrum gescannt wurde. Manche Sendungen wie Warenpost oder Kompaktbriefe haben auch nur eine reduzierte Sendungsverfolgung und werden nicht überall gescannt. Oft liegen sie plötzlich im Briefkasten obwohl die letzte Aktualisierung 1 Tag her ist. Bitte beachte, dass wir nach Übergabe an DHL keinen Einfluss mehr auf den Versand haben. Falls sich nach 3-4 Tagen nichts ändert, melde dich gerne bei uns und wir legen eine Laufzeitbeschwerde bei DHL ein.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_9XCH7a": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Meine Bestellung steckt seit mehreren Tagen am gleichen Ort fest. Was kann ich tun?",
+            "content": "<p>Das passiert manchmal, wenn ein Paket in einem Verteilerzentrum festhängt oder es sich durch den Zusteller selbst verzögert. Meistens geht es nach ein paar Tagen weiter. Manchmal fallen Pakete tatsächlich vom Band, verlieren ihr Etikett oder werden beschädigt. Das ist ärgerlich, kann aber leider vorkommen. Falls sich der Status deines Paketes länger als 3-4 Tage nicht verändert hat, schreib uns bitte eine Nachricht, damit wir eine Laufzeitbeschwerde einlegen können. Danach kann man nur noch eine Nachforschung einleiten, die aber leider oftmals 3-4 Woche dauern kann.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_6nq84p": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Mein Paket ist laut Tracking „zugestellt“, aber ich habe nichts bekommen.",
+            "content": "<p>Überprüfe bitte, ob es bei einem Nachbarn, Hausbewohner oder in einer Postfiliale abgegeben wurde. Falls du es dort nicht finden kannst, wende dich direkt an DHL mit deiner Sendungsnummer. Sollte es weiterhin unauffindbar sein, helfen wir dir natürlich gerne weiter. Manchmal kommt es vor, dass Sendungen als zugestellt markiert werden und tatsächlich erst am nächsten Tag ausgeliefert werden. Das scheinen Fehlmeldungen auf der DHL-Seite zu sein, auf die wir aber leider keinen Einfluss haben.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_JdETVQ": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Warum kann ich meine Sendung nicht verfolgen?",
+            "content": "<p>Manchmal dauert es ein paar Stunden, bis das Tracking aktualisiert wird. Falls dein Paket bereits länger unterwegs ist, sich das Tracking aber nicht aktualisiert, kann es sein, dass die Sendungsnummer erst beim nächsten Scan aktiviert wird. Dies ist üblich für Sendungen mit reduzierter Sendungsverfolgung. Falls es nach 24 Stunden noch immer nicht funktioniert, schreib uns einfach und wir versuchen mehr darüber herauszufinden.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        },
+        "accordion_KpqjB4": {
+          "type": "accordion",
+          "settings": {
+            "parent": "",
+            "heading": "Wie lange dauert die Lieferung?",
+            "content": "<p>In der Regel dauert es innerhalb Deutschlands 2-4 Werktage, international 5-12 Werktage. Falls dein Paket länger unterwegs ist, überprüfe bitte das Tracking – manchmal gibt es Verzögerungen durch das Versandunternehmen. Generell ist es aber so, dass wir in den Versand nicht mehr eingreifen können, sobald wir die Sendungen an DHL übergeben haben.</p>",
+            "content_liquid": "",
+            "featured": false,
+            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
+            "featured_image_alignment": "center",
+            "featured_image_aspect_ratio": "233 / 349"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_XKmmib",
+        "accordion_VBiehg",
+        "accordion_9XCH7a",
+        "accordion_6nq84p",
+        "accordion_JdETVQ",
+        "accordion_KpqjB4"
+      ],
+      "name": "Accordions",
+      "settings": {
+        "heading": "Wo ist meine Bestellung?📦",
+        "subheading": "<p><em>Hier kannst Du den Status Deiner Bestellung prüfen und Antworten auf die häufigsten Fragen rund um den Versand finden.</em></p>",
+        "padding_top": 60,
+        "padding_bottom": 24,
+        "padding_left": 24,
+        "padding_right": 24
+      }
+    }
+  },
+  "order": [
+    "accordions_i7CWHH"
+  ]
+}

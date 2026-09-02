@@ -185,34 +185,6 @@
       ],
       "settings": {}
     },
-    "17458178119bf2149e": {
-      "type": "apps",
-      "blocks": {
-        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD": {
-          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
-      ],
-      "disabled": true,
-      "custom_css": [
-        "#etrusted-trusted_stars_service {margin-top: 3rem;}"
-      ],
-      "settings": {
-        "include_margins": true
-      }
-    },
-    "banner": {
-      "type": "main-collection-banner",
-      "disabled": true,
-      "settings": {
-        "show_collection_description": false,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
-      }
-    },
     "featured_collection_NUC336": {
       "type": "featured-collection",
       "name": "t:sections.featured-collection.presets.name",
@@ -240,28 +212,6 @@
         "swipe_on_mobile": false,
         "padding_top": 36,
         "padding_bottom": 36
-      }
-    },
-    "product-grid": {
-      "type": "main-collection-product-grid",
-      "disabled": true,
-      "settings": {
-        "products_per_page": 16,
-        "columns_desktop": 4,
-        "color_scheme": "",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": true,
-        "quick_add": "none",
-        "enable_filtering": false,
-        "filter_type": "horizontal",
-        "enable_sorting": false,
-        "columns_mobile": "2",
-        "padding_top": 12,
-        "padding_bottom": 36,
-        "enable_search": true
       }
     },
     "1748939636340fa12c": {
@@ -316,10 +266,7 @@
     "17678852240e5b61e4",
     "17679594536d892333",
     "1767957390bd96ece4",
-    "17458178119bf2149e",
-    "banner",
     "featured_collection_NUC336",
-    "product-grid",
     "1748939636340fa12c",
     "accordions_8JABj6"
   ]

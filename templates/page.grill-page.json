@@ -9,17 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "disabled": true,
-      "custom_css": [],
-      "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28,
-        "enable_gutter": false,
-        "show_title": false
-      }
-    },
     "sm_grill_hero_faXHk9": {
       "type": "sm-grill-hero",
       "settings": {
@@ -74,7 +63,6 @@
     }
   },
   "order": [
-    "main",
     "sm_grill_hero_faXHk9",
     "1748515428ef26383f",
     "featured_collection_D4kxUH"

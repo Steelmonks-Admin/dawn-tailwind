@@ -9,11 +9,6 @@
  */
 {
   "sections": {
-    "steelmonks_hero_BFdthq": {
-      "type": "steelmonks-hero",
-      "disabled": true,
-      "settings": {}
-    },
     "steelmonks_hero_hub_7JR7Nz": {
       "type": "steelmonks-hero-hub",
       "blocks": {
@@ -810,43 +805,6 @@
         "include_margins": true
       }
     },
-    "collapsible_content_KktWWU": {
-      "type": "collapsible-content",
-      "blocks": {
-        "collapsible_row_RJJUTj": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Personalisierte Schlüsselanhänger und Metallschilder von Steelmonks.",
-            "icon": "clipboard",
-            "row_content": "<h2>Hausnummer</h2><p>Unsere <a href=\"https://steelmonks.com/products/hausnummer\" title=\"Hausnummer\"><strong>Hausnummer</strong></a> aus Edelstahl ist nicht nur praktisch, sondern auch ein echter Hingucker an deinem Zuhause. Jede Hausnummer wird individuell gefertigt und kann nach deinen Wünschen angepasst werden. Egal ob modern oder klassisch – unsere Hausnummer setzt ein stilvolles Statement und hält dank der hochwertigen Materialien jedem Wetter stand. Ideal kombiniert mit einem <a href=\"https://steelmonks.com/products/strassenschild-mit-hausnummer-1\" title=\"Straßenschild\"><strong>Straßenschild</strong></a> oder <a href=\"https://steelmonks.com/collections/hausschilder\" title=\"Hausschild\"><strong>Hausschild</strong></a>.</p><p>Erfahre mehr darüber, wie du deine Hausnummer optimal befestigst in unserem Blogpost <a href=\"https://steelmonks.com/de-cz/blogs/steelmonks-de/wie-befestige-ich-eine-hausnummer\">Wie befestige ich eine Hausnummer?</a></p><h2>Monogramm</h2><p>Ein <a href=\"https://steelmonks.com/products/ivy-monogramm\" title=\"Monogramm\"><strong>Monogramm</strong></a> ist eine elegante Möglichkeit, deinem Zuhause eine persönliche Note zu verleihen. Bei uns kannst du dein eigenes Monogramm erstellen und nach deinen Vorstellungen gestalten. Es eignet sich auch hervorragend als Geschenk für besondere Anlässe.</p><p>Entdecke die Vielfalt und Möglichkeiten unserer Monogramme und erfahre mehr darüber in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-ein-monogramm\">Was ist ein Monogramm?</a></p><h2>Geschenkideen für Handwerker</h2><p>Suchst du nach dem perfekten Geschenk für einen Handwerker? Bei uns findest du eine große Auswahl an individuellen Produkten wie <a href=\"https://steelmonks.com/products/zunftschild-geschenk-fuer-handwerker\" title=\"Zunftschild\"><strong>Zunftschild</strong></a>, <a href=\"https://steelmonks.com/products/zunftanhanger-geschenk-fuer-handwerker\" title=\"Zunft-Schlüsselanhänger\"><strong>Zunft-Schlüsselanhänger</strong></a>, <a href=\"https://steelmonks.com/products/zunft-feuerzeug-zippo%C2%AE-geschenk-fuer-handwerker\" title=\"Zunft Zippo Feuerzeug\"><strong>Zippo</strong></a>, <a href=\"https://steelmonks.com/products/zunft-kartenhalter-geschenk-fuer-handwerker\" title=\"Zunft Handwerker Kartenhalter\"><strong>Kartenhalter</strong></a> und unsere neuen <a href=\"https://steelmonks.com/products/zunft-anstecker\" title=\"Zunft Anstecker\"><strong>Zunft-Anstecker</strong></a>. Jedes Stück ist ein Zeichen der Wertschätzung für die Handwerkskunst.</p><p>Mehr Inspiration findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/ideales-meister-geschenk-einzigartige-ideen-fur-handwerker\">Ideales Meister Geschenk – Einzigartige Ideen für Handwerker</a></p><h2>Feuerwehr Geschenke</h2><p>Entdecke die einzigartigen <a href=\"https://steelmonks.com/collections/feuerwehr-geschenke\" title=\"Feuerwehr Geschenke\"><strong>Feuerwehr Geschenke</strong></a> von Steelmonks. Ob du ein Geschenk für einen Feuerwehrmann oder eine Feuerwehrfrau suchst – wir haben die passenden Ideen. Unsere <a href=\"https://steelmonks.com/products/signet-feuerwehr-schluesselanhaenger\" title=\"Personalisierter Feuerwehr Schlüsselanhänger\"><strong>personalisierbaren Schlüsselanhänger</strong></a> und <a href=\"https://steelmonks.com/products/signet-feuerwehr-schild\" title=\"Feuerwehr Signet Metallschild\"><strong>Feuerwehr Signet Schilder</strong></a> sind besonders gefragt.</p><p>Erfahre mehr über unsere exklusiven Angebote in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/feuerwehr-logo-symbolik-bedeutung-und-geschenkideen\">Feuerwehr Logo – Symbolik, Bedeutung und Geschenkideen</a></p><h2>Pferde Geschenke</h2><p>Für alle Pferdeliebhaber haben wir wunderschöne <a href=\"https://steelmonks.com/collections/pferde-geschenke\" title=\"Pferde Geschenke\"><strong>Pferde Geschenke</strong></a>. Unsere Kollektion bietet eine Vielzahl an Geschenkideen fürs Reiten und Geschenke für Pferdeliebhaber, die jedes Reiterherz höher schlagen lassen.</p><p>Mehr dazu findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/geschenkideen-fuer-reiter\">Geschenkideen für Reiter</a></p><h2>Gartendeko und Dekoideen für den Garten<br/></h2><p>Unsere <a href=\"https://steelmonks.com/collections/rost-gartendeko\" title=\"Rost Gartendeko\"><strong>Gartendeko</strong></a> umfasst eine breite Palette von Produkten, darunter <strong>Gartenstelen</strong>, <strong>Baumstecker</strong>, <strong>Blumenstecker</strong> und vieles mehr. Diese Deko verleiht deinem Garten einen zeitlosen Charakter und macht ihn zu einem echten Hingucker.</p><p>Lies mehr über unsere kreativen Ideen in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-cortenstahl-und-wofur-wird-es-verwendet\">Was ist Cortenstahl und wofür wird es verwendet?</a></p><h2>Firmenschild, Logo und Sonderanfertigungen</h2><p>Ein <strong>Firmenschild</strong> ist Dein Aushängeschild nach außen. Bei Steelmonks bieten wir maßgeschneiderte <strong>Sonderanfertigungen</strong> wie <strong>Stahlschilder</strong> und <strong>Logos</strong> für <strong>Geschäftskunden</strong>. Unsere hochwertigen Firmenschilder vermitteln Professionalität und schaffen Vertrauen bei Deinen Kunden.</p><p>Erfahre mehr darüber, was ein gutes Firmenschild ausmacht in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-schenkt-man-zur-einer-geschaftseroffnung\">Was schenkt man zur Geschäftseröffnung?</a></p>",
-            "page": ""
-          }
-        }
-      },
-      "block_order": [
-        "collapsible_row_RJJUTj"
-      ],
-      "disabled": true,
-      "custom_css": [
-        "h2 {margin-top: 12px; margin-bottom: 12px;}",
-        "a {color: #04c;}"
-      ],
-      "name": "t:sections.collapsible_content.presets.name",
-      "settings": {
-        "caption": "",
-        "heading": "",
-        "heading_size": "h1",
-        "heading_alignment": "center",
-        "layout": "none",
-        "color_scheme": "",
-        "container_color_scheme": "",
-        "open_first_collapsible_row": false,
-        "image_ratio": "adapt",
-        "desktop_layout": "image_second",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "accordions_U48wFK": {
       "type": "accordions",
       "blocks": {
@@ -879,7 +837,6 @@
     }
   },
   "order": [
-    "steelmonks_hero_BFdthq",
     "steelmonks_hero_hub_7JR7Nz",
     "custom_icon_grid_Ahzicm",
     "rich_text_xkqYLg",
@@ -902,7 +859,6 @@
     "steelmonks_deine_sm_GPbdxk",
     "custom_icon_grid_h6mTRm",
     "174478799976fe2d49",
-    "collapsible_content_KktWWU",
     "accordions_U48wFK"
   ]
 }

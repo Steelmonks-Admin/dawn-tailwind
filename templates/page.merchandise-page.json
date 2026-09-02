@@ -9,17 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "main-page",
-      "disabled": true,
-      "custom_css": [],
-      "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28,
-        "enable_gutter": false,
-        "show_title": false
-      }
-    },
     "custom_accordion_Fzjgbx": {
       "type": "custom-accordion",
       "name": "Custom Accordion",
@@ -39,110 +28,6 @@
         "accordion_5_content": "Steelmonks steht durch viele Partnerschaften an der Spitze der Industrie, nicht nur als Produzent sondern als eigene Marke mit einer hohen Sozialen Reichweite, Tausended Täglichen Webseitenbesuchern und Hunderten Bestellungen.Als Partner, geniessen sowohl ihr als auch wir die Vorteile die damit einhergehen.Las uns zusammen weiter wachsen!",
         "accordion_6_heading": "Welche Vorteile gibt es?",
         "accordion_6_content": "Provision, Kommission, usw. Werden individuell vereinbart und mit einem Handschlag und Vertrag gefestigt."
-      }
-    },
-    "accordions_hdyH3p": {
-      "type": "accordions",
-      "blocks": {
-        "accordion_UmaQYK": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Eigenes Merchandise",
-            "content": "<p>Unter Merchandise verstehen sich Produkte für Deine, ihre und eure Firma die wir für euch produzieren.<br/><br/>Speziell angefertigt, potentiell von uns direkt an den Kunden versandt, entsprechend unserer hohen Qualitätsstandarts.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_9BQFrG": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Was ist möglich?",
-            "content": "<p>Merchandise das wir erstellen können beinhaltet, aber ist nicht begrenzt auf:</p><p> </p><p>Halsketten</p><p>Anhänger</p><p>Kartenhalter</p><p>Wandschilder</p><p>Visitenkarten (Stahl)</p><p>Wappen</p><p>Zigarrenhalter</p><p>Einzigartiges</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_eXVdXD": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Produkte für Großkunden",
-            "content": "<p>Für den eigenen und weiterverkauf eignen sich speziell für euch entwickelte Produkte die ihr mit Staffelpreisen, leicht kaufen und dann selber vermarkten könnt.</p><p>Eine Mindestabnahmemenge ist notwendig die entsprechend der Komplexität des Projektes ist.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_AUnqHC": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Was ist möglich?",
-            "content": "<p>Mit unserem eigenen Team von Designern und \"Creatives\" ist der Produktentwicklung keine Grenzen gesetzt. Wir können dazu eure Wünsche in hohen Stückzahlen produzieren. </p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_jdFiYj": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Partnerschaften und Lizensen",
-            "content": "<p>Steelmonks steht durch viele Partnerschaften an der Spitze der Industrie, nicht nur als Produzent sondern als eigene Marke mit einer hohen Sozialen Reichweite, Tausended Täglichen Webseitenbesuchern und Hunderten Bestellungen.</p><p>Als Partner, geniessen sowohl ihr als auch wir die Vorteile die damit einhergehen.</p><p>Las uns zusammen weiter wachsen!</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_CkJadr": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Welche Vorteile gibt es?",
-            "content": "<p>Provision, Kommission, usw. Werden individuell vereinbart und mit einem Handschlag und Vertrag gefestigt. </p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        }
-      },
-      "block_order": [
-        "accordion_UmaQYK",
-        "accordion_9BQFrG",
-        "accordion_eXVdXD",
-        "accordion_AUnqHC",
-        "accordion_jdFiYj",
-        "accordion_CkJadr"
-      ],
-      "disabled": true,
-      "custom_css": [
-        "h1 {color: blue;}"
-      ],
-      "name": "Accordions",
-      "settings": {
-        "heading": "",
-        "subheading": "<h1><br/><strong>Merchandise aus Stahl.</strong><br/></h1>",
-        "padding_top": 24,
-        "padding_bottom": 24,
-        "padding_left": 24,
-        "padding_right": 24
       }
     },
     "custom_image_slider_ANjYDm": {
@@ -330,53 +215,6 @@
         "padding_bottom": 40
       }
     },
-    "custom_image_slider_rMw9cr": {
-      "type": "custom-image-slider",
-      "blocks": {
-        "slider_block_dnBwAA": {
-          "type": "slider_block",
-          "settings": {
-            "richtext": "",
-            "slide_count": 3
-          }
-        },
-        "slider_block_MpFbjk": {
-          "type": "slider_block",
-          "settings": {
-            "richtext": "<h1>Kunden & Partner</h1>",
-            "slide_count": 7,
-            "image_1": "shopify://shop_images/sm-part1.webp",
-            "image_2": "shopify://shop_images/sm-part2.webp",
-            "image_3": "shopify://shop_images/sm-part3.webp",
-            "image_4": "shopify://shop_images/sm-part4.webp",
-            "image_5": "shopify://shop_images/sm-part5.webp",
-            "image_6": "shopify://shop_images/sm-part6.webp",
-            "image_7": "shopify://shop_images/sm-part7.webp"
-          }
-        },
-        "slider_block_p7M9eU": {
-          "type": "slider_block",
-          "settings": {
-            "richtext": "",
-            "slide_count": 3
-          }
-        }
-      },
-      "block_order": [
-        "slider_block_dnBwAA",
-        "slider_block_MpFbjk",
-        "slider_block_p7M9eU"
-      ],
-      "disabled": true,
-      "custom_css": [
-        "div {background: black;}",
-        "button {width: 40px; height: 40px; margin-right: -20px; margin-left: -20px;}",
-        "h1 {color: white;}",
-        "img {padding: 20px;}"
-      ],
-      "name": "Custom Image Sliders",
-      "settings": {}
-    },
     "custom_gallery_gfc8PN": {
       "type": "custom-gallery",
       "blocks": {
@@ -437,14 +275,11 @@
     }
   },
   "order": [
-    "main",
     "custom_accordion_Fzjgbx",
-    "accordions_hdyH3p",
     "custom_image_slider_ANjYDm",
     "accordions_WmkYtb",
     "custom_liquid_f94awL",
     "custom_partners_PPtUwA",
-    "custom_image_slider_rMw9cr",
     "custom_gallery_gfc8PN"
   ]
 }

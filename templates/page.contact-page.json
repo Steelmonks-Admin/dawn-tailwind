@@ -1,1 +1,33 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"custom_css":[],"settings":{"padding_top":28,"padding_bottom":28,"enable_gutter":false,"show_title":false}},"sm_contact_page_wNC8Ai":{"type":"sm-contact-page","name":"Contact Page","settings":{"heading":"Wir helfen Dir gerne weiter.","description":"Hast Du Fragen zu Deiner Bestellung? Oder möchtest Du vielleicht ein Feedback hinterlassen? Fülle einfach das Formular aus und wir helfen Dir gerne weiter.","background_color":"#0044cc","padding":40}},"1746702678765f464f":{"type":"apps","blocks":{"trusted_shops_reviews_and_more_trusted_stars_iGNeEh":{"type":"shopify:\/\/apps\/trusted-shops-reviews-and-more\/blocks\/trusted-stars\/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2","settings":{}}},"block_order":["trusted_shops_reviews_and_more_trusted_stars_iGNeEh"],"settings":{"include_margins":true}}},"order":["main","sm_contact_page_wNC8Ai","1746702678765f464f"]}
+{
+  "sections": {
+    "sm_contact_page_wNC8Ai": {
+      "type": "sm-contact-page",
+      "name": "Contact Page",
+      "settings": {
+        "heading": "Wir helfen Dir gerne weiter.",
+        "description": "Hast Du Fragen zu Deiner Bestellung? Oder möchtest Du vielleicht ein Feedback hinterlassen? Fülle einfach das Formular aus und wir helfen Dir gerne weiter.",
+        "background_color": "#0044cc",
+        "padding": 40
+      }
+    },
+    "1746702678765f464f": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_iGNeEh": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_iGNeEh"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "sm_contact_page_wNC8Ai",
+    "1746702678765f464f"
+  ]
+}
