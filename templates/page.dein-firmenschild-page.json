@@ -129,23 +129,6 @@
         "padding_right": 24
       }
     },
-    "1748614557bd1b673a": {
-      "type": "apps",
-      "blocks": {
-        "powr_form_builder_app_block_RQieJP": {
-          "type": "shopify://apps/powr-form-builder/blocks/app-block/1412fe37-d89c-4706-a797-6e2b53cb4a69",
-          "settings": {
-            "app_id": "6ead4166_1659000100"
-          }
-        }
-      },
-      "block_order": [
-        "powr_form_builder_app_block_RQieJP"
-      ],
-      "settings": {
-        "include_margins": true
-      }
-    },
     "sm_scrolling_gallery_rCpCah": {
       "type": "sm-scrolling-gallery",
       "blocks": {
@@ -290,7 +273,6 @@
     "custom_header_W4hxnw",
     "custom_image_slider_AVW7CX",
     "accordions_xqfj73",
-    "1748614557bd1b673a",
     "sm_scrolling_gallery_rCpCah",
     "steelmonks_parallax_richtext_4UFHhE",
     "custom_gallery_nPaKq6",

@@ -178,7 +178,7 @@
       },
       "13375078075628245689": {
         "type": "shopify://apps/powr-form-builder/blocks/app-embed/1412fe37-d89c-4706-a797-6e2b53cb4a69",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       },
       "6544682535036668446": {
