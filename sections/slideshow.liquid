@@ -140,14 +140,12 @@
               {{
                 block.settings.image
                 | image_url: width: 3840
-                | image_tag: height: height, sizes: sizes, widths: widths, fetchpriority: fetch_priority
-              }}
+                | image_tag: height: height, sizes: sizes, widths: widths, fetchpriority: fetch_priority, alt: block.settings.heading | default: shop.name }}
             {%- else -%}
               {{
                 block.settings.image
                 | image_url: width: 3840
-                | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths
-              }}
+                | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths, alt: block.settings.heading | default: shop.name }}
             {%- endif -%}
           {%- else -%}
             {%- assign placeholder_slide = forloop.index | modulo: 2 -%}
