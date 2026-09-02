@@ -16,9 +16,9 @@
 
 <div class='{% if section.settings.enable_gutter %}page-width page-width--narrow{% endif %} section-{{ section.id }}-padding'>
   {% if section.settings.show_title %}
-    <h2 class='main-page-title page-title h0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}'>
+    <h1 class='main-page-title page-title h0{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}'>
       {{ page.title | escape }}
-    </h2>
+    </h1>
   {% endif %}
   <div class='rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}'>
     {{ page.content }}
