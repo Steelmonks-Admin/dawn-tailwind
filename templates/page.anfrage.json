@@ -13,7 +13,8 @@
       "type": "main-page",
       "settings": {
         "padding_top": 28,
-        "padding_bottom": 12
+        "padding_bottom": 12,
+        "show_title": true
       }
     },
     "anfrage_form": {
