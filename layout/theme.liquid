@@ -1,4 +1,3 @@
-{% include 'shogun-content-handler' %}
 <!doctype html>
 <html class='js' lang='{{ request.locale.iso_code }}'>
   <head>
@@ -361,7 +360,6 @@
       {{ 'steelmonks-fbp.css' | asset_url | stylesheet_tag }}
     {% endif %}
   
-  {% render 'shogun-head' %}
 </head>
 
   <body class='gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}'>
@@ -459,7 +457,7 @@
       Das clanker-Template (Werkstatt) liefert ein eigenes, sichtbares H1 ueber
       den rich-text-Block. Hier kein zweites ausgeben.
     {% endcomment %}
-    {% if template.name == 'page' and page.template_suffix != 'clanker' %}
+    {% if template.name == 'page' and page.template_suffix != 'clanker' and page.template_suffix != 'anfrage' %}
       <h1 class='visually-hidden'>{{ page.title }}</h1>
     {% endif %}
 
