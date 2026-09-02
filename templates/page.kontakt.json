@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 12,
+        "show_title": true
+      }
+    },
+    "kontakt_form": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Schreib uns",
+        "heading_size": "h1",
+        "padding_top": 12,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "kontakt_form"
+  ]
+}
