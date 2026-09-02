@@ -31,11 +31,11 @@
     {%- form 'contact', id: 'WiderrufForm', class: 'smk-widerruf twcss-flex twcss-flex-col twcss-gap-4' -%}
       {%- if form.posted_successfully? -%}
         <p class='form-status form-status-list form__message' tabindex='-1' autofocus role='status'>
-          {% render 'icon-success' %} Dein Widerruf ist bei uns eingegangen. Du erhältst in Kürze eine Bestätigung per E-Mail.
+          {{- 'icon-success.svg' | inline_asset_content -}} Dein Widerruf ist bei uns eingegangen. Du erhältst in Kürze eine Bestätigung per E-Mail.
         </p>
       {%- elsif form.errors -%}
         <p class='form__message' role='alert'>
-          {% render 'icon-error' %} Bitte prüfe Deine E-Mail-Adresse: {{ form.errors.messages['email'] }}
+          {{- 'icon-error.svg' | inline_asset_content -}} Bitte prüfe Deine E-Mail-Adresse: {{ form.errors.messages['email'] }}
         </p>
       {%- endif -%}
       <input type='hidden' name='contact[Formular]' value='Widerruf'>
