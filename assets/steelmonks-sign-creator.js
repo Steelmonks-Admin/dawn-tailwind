@@ -164,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
    * that might be missing from the saved state.
    */
   const ensurePreviewLoaded = async () => {
-    console.log('ensurePreviewLoaded');
     // Only fetch if we have a generator ID but no preview URLs
     if (!state.generatorId) {
       return;

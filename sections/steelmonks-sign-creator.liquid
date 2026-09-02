@@ -417,7 +417,7 @@
   var sid = '{{ sid }}';
   window.SMC_MOUNTING = {% if mounting_variant != blank %}{ "variantId": {{ mounting_variant.id }}, "priceCents": {{ mounting_variant.price }}, "price": {{ mounting_variant.price | money | json }}, "title": {{ mounting_product.title | json }} }{% else %}null{% endif %};
 </script>
-<script src='{{ 'steelmonks-sign-creator-copy.js' | asset_url }}' defer='defer'></script>
+<script src='{{ 'steelmonks-sign-creator.js' | asset_url }}' defer='defer'></script>
 
 {% comment %} * HTML Markup {% endcomment %}
 {% comment %} ! Open button {% endcomment %}

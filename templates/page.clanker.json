@@ -242,44 +242,6 @@
         "info_modal_image2": "shopify://shop_images/steelmonks-vorschau-mkfldskz-uh371q.jpg"
       }
     },
-    "steelmonks_announcement_9wcjnF": {
-      "type": "steelmonks-announcement",
-      "blocks": {
-        "announcement_PeCt8F": {
-          "type": "announcement",
-          "settings": {
-            "text": "<p>📯 100% Glücksgarantie</p>",
-            "font_weight": 600
-          }
-        }
-      },
-      "block_order": [
-        "announcement_PeCt8F"
-      ],
-      "disabled": true,
-      "name": "Custom Announcement Bar",
-      "settings": {
-        "background_color": "#0044cc",
-        "text_color": "#fafaff"
-      }
-    },
-    "steelmonks_horizontal_dropdowns_mFUgm3": {
-      "type": "steelmonks-horizontal-dropdowns",
-      "disabled": true,
-      "name": "Horizontal Dropdowns",
-      "settings": {}
-    },
-    "custom_liquid_EFXxGX": {
-      "type": "custom-liquid",
-      "disabled": true,
-      "name": "t:sections.custom-liquid.presets.name",
-      "settings": {
-        "custom_liquid": "{% comment %}\n  Werkstatt Creation Types (NO schema) — Mobile portrait carousel fix\n  - Mobile: portrait “phone-card” slides (taller than wide), centered, framed\n  - Desktop: 5 cards in a row (Personen & Tiere merged)\n  - Freestanding glass cards, no white hover backgrounds\n  - Hover: cool scale + glow (desktop + mobile tap focus)\n{% endcomment %}\n\n<section\n  id=\"smw-types\"\n  class=\"smwtypes\"\n  data-anim=\"true\"\n  style=\"padding-top: 28px; padding-bottom: 34px;\"\n  aria-label=\"Werkstatt Creation Types\"\n>\n  <style>\n    #smw-types{\n      --ink: rgba(9,10,12,0.92);\n      --muted: rgba(9,10,12,0.70);\n\n      --glass-dark: rgba(9,10,12,0.62);\n      --glass-dark-2: rgba(9,10,12,0.48);\n      --stroke: rgba(255,255,255,0.14);\n\n      --shadow2: 0 18px 44px rgba(15,23,42,0.16);\n      --shadow3: 0 26px 70px rgba(15,23,42,0.22);\n      --radius: 28px;\n\n      --gap: 18px;\n\n      /* Mobile portrait sizing */\n      --slide-w: min(76vw, 320px);\n      --slide-ar: 3 / 4; /* portrait */\n      --hover-scale: 1.05;\n    }\n\n    #smw-types{ background: transparent; color: var(--ink); }\n\n    #smw-types .smwtypes__wrap{\n      max-width: 1240px;\n      margin: 0 auto;\n      padding: 0 16px;\n    }\n\n    #smw-types .smwtypes__head{\n      text-align: center;\n      display: grid;\n      justify-items: center;\n      gap: 10px;\n      margin-bottom: 16px;\n    }\n\n    #smw-types .smwtypes__title{\n      margin: 0;\n      font-weight: 950;\n      letter-spacing: -0.02em;\n      font-size: clamp(22px, 2.9vw, 38px);\n      line-height: 1.08;\n      color: rgba(9,10,12,0.92);\n    }\n\n    #smw-types .smwtypes__sub{\n      margin: 0;\n      color: rgba(9,10,12,0.68);\n      font-size: 14px;\n      letter-spacing: 0.2px;\n      max-width: 760px;\n    }\n\n    /* ===== Card (shared) ===== */\n    #smw-types .smwtypes__card{\n      position: relative;\n      border-radius: var(--radius);\n      border: 1px solid var(--stroke);\n      background:\n        radial-gradient(120% 90% at 20% 0%, rgba(255,152,0,0.18) 0%, rgba(255,255,255,0) 46%),\n        radial-gradient(120% 90% at 80% 0%, rgba(0,68,204,0.18) 0%, rgba(255,255,255,0) 46%),\n        linear-gradient(180deg, var(--glass-dark) 0%, var(--glass-dark-2) 100%);\n      box-shadow: var(--shadow2);\n      overflow: hidden;\n      isolation: isolate;\n      text-decoration: none;\n      color: inherit;\n      display: grid;\n      gap: 12px;\n      padding: 16px 16px 14px;\n      transform: translateZ(0);\n      will-change: transform, box-shadow, filter;\n      backdrop-filter: blur(10px);\n      -webkit-backdrop-filter: blur(10px);\n      transition: transform 260ms cubic-bezier(0.2,0.8,0.2,1), box-shadow 260ms ease, filter 260ms ease;\n      transform-origin: center;\n      min-width: 0;\n    }\n\n    #smw-types .smwtypes__card:after{\n      content: \"\";\n      position: absolute;\n      inset: 0;\n      border-radius: var(--radius);\n      pointer-events: none;\n      background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));\n      opacity: 0.65;\n      z-index: 0;\n    }\n\n    #smw-types .smwtypes__card:before{\n      content: \"\";\n      position: absolute;\n      inset: -40px;\n      background:\n        radial-gradient(40% 38% at 30% 25%, rgba(255,152,0,0.22), rgba(255,255,255,0) 60%),\n        radial-gradient(44% 40% at 70% 30%, rgba(0,68,204,0.24), rgba(255,255,255,0) 62%),\n        radial-gradient(30% 30% at 50% 85%, rgba(255,255,255,0.10), rgba(255,255,255,0) 65%);\n      opacity: 0;\n      transition: opacity 260ms ease;\n      z-index: 0;\n      pointer-events: none;\n      filter: blur(2px);\n    }\n\n    #smw-types .smwtypes__card:hover{\n      transform: translateY(-4px) scale(var(--hover-scale));\n      box-shadow: var(--shadow3);\n      filter: saturate(1.02);\n    }\n    #smw-types .smwtypes__card:hover:before{ opacity: 1; }\n\n    #smw-types .smwtypes__card:focus-visible{\n      outline: 2px solid rgba(0,68,204,0.55);\n      outline-offset: 3px;\n    }\n\n    #smw-types .smwtypes__stripe{\n      position: absolute;\n      top: 0; left: 0; right: 0;\n      height: 3px;\n      background: linear-gradient(90deg, rgba(255,152,0,0), var(--accent), rgba(0,68,204,0));\n      opacity: 0.95;\n      z-index: 2;\n      pointer-events: none;\n    }\n\n    /* content */\n    #smw-types .smwtypes__top{\n      position: relative;\n      z-index: 1;\n      display: grid;\n      grid-template-columns: 64px 1fr;\n      gap: 14px;\n      align-items: center;\n      min-width: 0;\n    }\n\n    #smw-types .smwtypes__badge{\n      width: 64px;\n      height: 64px;\n      border-radius: 18px;\n      border: 1px solid rgba(255,255,255,0.16);\n      background: rgba(255,255,255,0.08);\n      box-shadow: 0 16px 34px rgba(0,0,0,0.18);\n      display: grid;\n      place-items: center;\n      position: relative;\n      overflow: hidden;\n      transform: translateZ(0);\n      transition: transform 260ms cubic-bezier(0.2,0.8,0.2,1);\n      will-change: transform;\n    }\n\n    #smw-types .smwtypes__badge:before{\n      content: \"\";\n      position: absolute;\n      inset: -2px;\n      background:\n        radial-gradient(60% 60% at 30% 25%, rgba(255,152,0,0.26), rgba(255,255,255,0) 58%),\n        radial-gradient(70% 70% at 70% 25%, rgba(0,68,204,0.24), rgba(255,255,255,0) 60%);\n      opacity: 0.9;\n      z-index: 0;\n    }\n\n    #smw-types .smwtypes__icon{\n      position: relative;\n      z-index: 1;\n      font-size: 26px;\n      line-height: 1;\n      filter: drop-shadow(0 10px 24px rgba(0,0,0,0.28));\n      transition: transform 260ms cubic-bezier(0.2,0.8,0.2,1);\n    }\n\n    #smw-types .smwtypes__card:hover .smwtypes__badge{ transform: translateY(-1px) scale(1.04); }\n    #smw-types .smwtypes__card:hover .smwtypes__icon{ transform: scale(1.06); }\n\n    #smw-types .smwtypes__txt{\n      position: relative;\n      z-index: 1;\n      display: grid;\n      gap: 6px;\n      min-width: 0;\n    }\n\n    #smw-types .smwtypes__name{\n      margin: 0;\n      font-weight: 950;\n      letter-spacing: -0.01em;\n      font-size: 18px;\n      line-height: 1.05;\n      color: rgba(255,255,255,0.96);\n      text-shadow: 0 14px 34px rgba(0,0,0,0.34);\n    }\n\n    #smw-types .smwtypes__desc{\n      margin: 0;\n      font-size: 13.5px;\n      line-height: 1.25;\n      color: rgba(255,255,255,0.84);\n      letter-spacing: 0.15px;\n      text-shadow: 0 14px 34px rgba(0,0,0,0.30);\n      overflow: hidden;\n      text-overflow: ellipsis;\n      display: -webkit-box;\n      -webkit-line-clamp: 2;\n      -webkit-box-orient: vertical;\n    }\n\n    #smw-types .smwtypes__cta{\n      position: relative;\n      z-index: 1;\n      display: inline-flex;\n      align-items: center;\n      justify-content: space-between;\n      gap: 10px;\n      padding-top: 10px;\n      margin-top: 2px;\n      border-top: 1px solid rgba(255,255,255,0.12);\n      color: rgba(255,255,255,0.90);\n      font-size: 12px;\n      letter-spacing: 0.2px;\n      user-select: none;\n    }\n\n    #smw-types .smwtypes__chev{\n      width: 18px;\n      height: 18px;\n      opacity: 0.95;\n      transform: translateX(0);\n      transition: transform 520ms cubic-bezier(0.2,0.8,0.2,1);\n      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.22));\n    }\n    #smw-types .smwtypes__card:hover .smwtypes__chev{ transform: translateX(4px); }\n\n    /* ===== Desktop row ===== */\n    #smw-types .smwtypes__row{\n      display: none;\n      gap: var(--gap);\n      grid-template-columns: repeat(5, minmax(0, 1fr));\n      align-items: stretch;\n      margin-top: 14px;\n    }\n    @media (min-width: 990px){\n      #smw-types .smwtypes__row{ display: grid; }\n      #smw-types .smwtypes__card{ min-height: 136px; }\n      #smw-types .smwtypes__top{ grid-template-columns: 60px 1fr; }\n      #smw-types .smwtypes__badge{ width: 60px; height: 60px; }\n    }\n\n    /* ===== Mobile portrait carousel ===== */\n    #smw-types .smwtypes__carousel{\n      margin-top: 14px;\n      display: grid;\n      gap: 12px;\n    }\n    @media (min-width: 990px){\n      #smw-types .smwtypes__carousel{ display: none; }\n    }\n\n    #smw-types .smwtypes__track{\n      display: flex;\n      gap: 16px;\n      overflow-x: auto;\n      -webkit-overflow-scrolling: touch;\n      scroll-snap-type: x mandatory;\n      padding: 6px 10px 16px;\n      scrollbar-width: none;\n      /* Center first and last card nicely */\n      scroll-padding-left: 10px;\n      scroll-padding-right: 10px;\n    }\n    #smw-types .smwtypes__track::-webkit-scrollbar{ display:none; }\n\n    #smw-types .smwtypes__slide{\n      scroll-snap-align: center;\n      flex: 0 0 var(--slide-w);\n      width: var(--slide-w);\n      aspect-ratio: var(--slide-ar); /* portrait */\n      display: grid;\n      align-items: stretch;\n    }\n\n    /* Make the card fill the portrait slide frame */\n    #smw-types .smwtypes__slide .smwtypes__card{\n      height: 100%;\n      padding: 18px 16px 16px;\n      gap: 14px;\n    }\n\n    /* Mobile: more “framed” feel */\n    #smw-types .smwtypes__slide .smwtypes__badge{\n      width: 68px;\n      height: 68px;\n      border-radius: 20px;\n    }\n    #smw-types .smwtypes__slide .smwtypes__icon{ font-size: 28px; }\n\n    #smw-types .smwtypes__slide .smwtypes__top{\n      grid-template-columns: 68px 1fr;\n      align-items: center;\n    }\n\n    #smw-types .smwtypes__slide .smwtypes__name{ font-size: 19px; }\n    #smw-types .smwtypes__slide .smwtypes__desc{\n      font-size: 14px;\n      -webkit-line-clamp: 3;\n    }\n\n    /* Add a little bottom breathing room so it feels portrait */\n    #smw-types .smwtypes__slide .smwtypes__cta{\n      margin-top: auto;\n      padding-top: 12px;\n    }\n\n    #smw-types .smwtypes__dots{\n      display: flex;\n      justify-content: center;\n      gap: 8px;\n      padding-bottom: 4px;\n      user-select: none;\n    }\n\n    #smw-types .smwtypes__dot{\n      width: 8px;\n      height: 8px;\n      border-radius: 999px;\n      border: 1px solid rgba(9,10,12,0.18);\n      background: rgba(9,10,12,0.10);\n      transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;\n      cursor: pointer;\n      padding: 0;\n    }\n\n    #smw-types .smwtypes__dot[aria-current=\"true\"]{\n      transform: scale(1.25);\n      background: rgba(0,68,204,0.34);\n      border-color: rgba(0,68,204,0.46);\n    }\n\n    /* ===== Animations ===== */\n    @keyframes smwtypesFloat{\n      0%{ transform: translateY(0); }\n      50%{ transform: translateY(-6px); }\n      100%{ transform: translateY(0); }\n    }\n\n    #smw-types[data-anim=\"true\"] .smwtypes__row .smwtypes__card{\n      animation: smwtypesFloat 8.5s ease-in-out infinite;\n    }\n    #smw-types[data-anim=\"true\"] .smwtypes__row .smwtypes__card:nth-child(1){ animation-delay: 0.00s; }\n    #smw-types[data-anim=\"true\"] .smwtypes__row .smwtypes__card:nth-child(2){ animation-delay: 0.18s; }\n    #smw-types[data-anim=\"true\"] .smwtypes__row .smwtypes__card:nth-child(3){ animation-delay: 0.36s; }\n    #smw-types[data-anim=\"true\"] .smwtypes__row .smwtypes__card:nth-child(4){ animation-delay: 0.54s; }\n    #smw-types[data-anim=\"true\"] .smwtypes__row .smwtypes__card:nth-child(5){ animation-delay: 0.72s; }\n\n    @media (max-width: 989px){\n      #smw-types[data-anim=\"true\"] .smwtypes__card{ animation: none; }\n    }\n\n    @media (prefers-reduced-motion: reduce){\n      #smw-types .smwtypes__card,\n      #smw-types .smwtypes__chev,\n      #smw-types .smwtypes__dot,\n      #smw-types .smwtypes__badge,\n      #smw-types .smwtypes__icon{\n        animation: none !important;\n        transition: none !important;\n      }\n    }\n  </style>\n\n  <div class=\"smwtypes__wrap\">\n    <div class=\"smwtypes__head\">\n      <h2 class=\"smwtypes__title\">Was möchtest du erstellen?</h2>\n      <p class=\"smwtypes__sub\">Wähle eine Kategorie, dann geht es direkt in die Werkstatt.</p>\n    </div>\n\n    <!-- Desktop -->\n    <div class=\"smwtypes__row\" role=\"list\" aria-label=\"Creation Types\">\n      <a class=\"smwtypes__card\" role=\"listitem\" href=\"javascript:void(0)\" style=\"--accent: #ff9800;\">\n        <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n        <div class=\"smwtypes__top\">\n          <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">✨</span></div>\n          <div class=\"smwtypes__txt\">\n            <p class=\"smwtypes__name\">Frei</p>\n            <p class=\"smwtypes__desc\">Von Foto oder Text zu Wandkunst</p>\n          </div>\n        </div>\n        <div class=\"smwtypes__cta\">\n          <span>Auswählen</span>\n          <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n      </a>\n\n      <a class=\"smwtypes__card\" role=\"listitem\" href=\"javascript:void(0)\" style=\"--accent: #7c3aed;\">\n        <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n        <div class=\"smwtypes__top\">\n          <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🧍‍♂️🐾</span></div>\n          <div class=\"smwtypes__txt\">\n            <p class=\"smwtypes__name\">Personen &amp; Tiere</p>\n            <p class=\"smwtypes__desc\">Porträts, Paare, Hund, Katze und mehr</p>\n          </div>\n        </div>\n        <div class=\"smwtypes__cta\">\n          <span>Auswählen</span>\n          <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n      </a>\n\n      <a class=\"smwtypes__card\" role=\"listitem\" href=\"javascript:void(0)\" style=\"--accent: #22c55e;\">\n        <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n        <div class=\"smwtypes__top\">\n          <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🏠</span></div>\n          <div class=\"smwtypes__txt\">\n            <p class=\"smwtypes__name\">Hausschild</p>\n            <p class=\"smwtypes__desc\">Adresse, Namen, Hausnummer</p>\n          </div>\n        </div>\n        <div class=\"smwtypes__cta\">\n          <span>Auswählen</span>\n          <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n      </a>\n\n      <a class=\"smwtypes__card\" role=\"listitem\" href=\"javascript:void(0)\" style=\"--accent: #f59e0b;\">\n        <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n        <div class=\"smwtypes__top\">\n          <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🛡️</span></div>\n          <div class=\"smwtypes__txt\">\n            <p class=\"smwtypes__name\">Wappen</p>\n            <p class=\"smwtypes__desc\">Wappen, Embleme, Logos</p>\n          </div>\n        </div>\n        <div class=\"smwtypes__cta\">\n          <span>Auswählen</span>\n          <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n      </a>\n\n      <a class=\"smwtypes__card\" role=\"listitem\" href=\"javascript:void(0)\" style=\"--accent: #06b6d4;\">\n        <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n        <div class=\"smwtypes__top\">\n          <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🔷</span></div>\n          <div class=\"smwtypes__txt\">\n            <p class=\"smwtypes__name\">Logo</p>\n            <p class=\"smwtypes__desc\">Firmen, Vereine, Marken</p>\n          </div>\n        </div>\n        <div class=\"smwtypes__cta\">\n          <span>Auswählen</span>\n          <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n          </svg>\n        </div>\n      </a>\n    </div>\n\n    <!-- Mobile -->\n    <div class=\"smwtypes__carousel\" aria-label=\"Creation Types Carousel\">\n      <div class=\"smwtypes__track\" id=\"smwtypes-track\">\n        <div class=\"smwtypes__slide\" data-index=\"0\">\n          <a class=\"smwtypes__card\" href=\"javascript:void(0)\" style=\"--accent: #ff9800;\">\n            <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n            <div class=\"smwtypes__top\">\n              <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">✨</span></div>\n              <div class=\"smwtypes__txt\">\n                <p class=\"smwtypes__name\">Frei</p>\n                <p class=\"smwtypes__desc\">Von Foto oder Text zu Wandkunst</p>\n              </div>\n            </div>\n            <div class=\"smwtypes__cta\">\n              <span>Auswählen</span>\n              <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              </svg>\n            </div>\n          </a>\n        </div>\n\n        <div class=\"smwtypes__slide\" data-index=\"1\">\n          <a class=\"smwtypes__card\" href=\"javascript:void(0)\" style=\"--accent: #7c3aed;\">\n            <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n            <div class=\"smwtypes__top\">\n              <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🧍‍♂️🐾</span></div>\n              <div class=\"smwtypes__txt\">\n                <p class=\"smwtypes__name\">Personen &amp; Tiere</p>\n                <p class=\"smwtypes__desc\">Porträts, Paare, Hund, Katze und mehr</p>\n              </div>\n            </div>\n            <div class=\"smwtypes__cta\">\n              <span>Auswählen</span>\n              <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              </svg>\n            </div>\n          </a>\n        </div>\n\n        <div class=\"smwtypes__slide\" data-index=\"2\">\n          <a class=\"smwtypes__card\" href=\"javascript:void(0)\" style=\"--accent: #22c55e;\">\n            <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n            <div class=\"smwtypes__top\">\n              <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🏠</span></div>\n              <div class=\"smwtypes__txt\">\n                <p class=\"smwtypes__name\">Hausschild</p>\n                <p class=\"smwtypes__desc\">Adresse, Namen, Hausnummer</p>\n              </div>\n            </div>\n            <div class=\"smwtypes__cta\">\n              <span>Auswählen</span>\n              <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              </svg>\n            </div>\n          </a>\n        </div>\n\n        <div class=\"smwtypes__slide\" data-index=\"3\">\n          <a class=\"smwtypes__card\" href=\"javascript:void(0)\" style=\"--accent: #f59e0b;\">\n            <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n            <div class=\"smwtypes__top\">\n              <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🛡️</span></div>\n              <div class=\"smwtypes__txt\">\n                <p class=\"smwtypes__name\">Wappen</p>\n                <p class=\"smwtypes__desc\">Wappen, Embleme, Logos</p>\n              </div>\n            </div>\n            <div class=\"smwtypes__cta\">\n              <span>Auswählen</span>\n              <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              </svg>\n            </div>\n          </a>\n        </div>\n\n        <div class=\"smwtypes__slide\" data-index=\"4\">\n          <a class=\"smwtypes__card\" href=\"javascript:void(0)\" style=\"--accent: #06b6d4;\">\n            <span class=\"smwtypes__stripe\" aria-hidden=\"true\"></span>\n            <div class=\"smwtypes__top\">\n              <div class=\"smwtypes__badge\" aria-hidden=\"true\"><span class=\"smwtypes__icon\">🔷</span></div>\n              <div class=\"smwtypes__txt\">\n                <p class=\"smwtypes__name\">Logo</p>\n                <p class=\"smwtypes__desc\">Firmen, Vereine, Marken</p>\n              </div>\n            </div>\n            <div class=\"smwtypes__cta\">\n              <span>Auswählen</span>\n              <svg class=\"smwtypes__chev\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 6L15 12L9 18\" stroke=\"rgba(255,255,255,0.92)\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              </svg>\n            </div>\n          </a>\n        </div>\n      </div>\n\n      <div class=\"smwtypes__dots\" id=\"smwtypes-dots\" aria-label=\"Carousel Pagination\">\n        <button type=\"button\" class=\"smwtypes__dot\" aria-label=\"Gehe zu Slide 1\" aria-current=\"true\" data-to=\"0\"></button>\n        <button type=\"button\" class=\"smwtypes__dot\" aria-label=\"Gehe zu Slide 2\" aria-current=\"false\" data-to=\"1\"></button>\n        <button type=\"button\" class=\"smwtypes__dot\" aria-label=\"Gehe zu Slide 3\" aria-current=\"false\" data-to=\"2\"></button>\n        <button type=\"button\" class=\"smwtypes__dot\" aria-label=\"Gehe zu Slide 4\" aria-current=\"false\" data-to=\"3\"></button>\n        <button type=\"button\" class=\"smwtypes__dot\" aria-label=\"Gehe zu Slide 5\" aria-current=\"false\" data-to=\"4\"></button>\n      </div>\n    </div>\n  </div>\n\n  <script>\n    (function(){\n      var root = document.getElementById('smw-types');\n      if(!root) return;\n\n      var track = document.getElementById('smwtypes-track');\n      var dotsWrap = document.getElementById('smwtypes-dots');\n      if(!track || !dotsWrap) return;\n\n      var dots = Array.prototype.slice.call(dotsWrap.querySelectorAll('.smwtypes__dot'));\n      var slides = Array.prototype.slice.call(track.querySelectorAll('.smwtypes__slide'));\n\n      function setActive(i){\n        dots.forEach(function(d, idx){\n          d.setAttribute('aria-current', idx === i ? 'true' : 'false');\n        });\n      }\n\n      dotsWrap.addEventListener('click', function(e){\n        var btn = e.target.closest('.smwtypes__dot');\n        if(!btn) return;\n        var idx = parseInt(btn.getAttribute('data-to') || '0', 10);\n        var slide = slides[idx];\n        if(!slide) return;\n        slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });\n        setActive(idx);\n      });\n\n      if('IntersectionObserver' in window){\n        var io = new IntersectionObserver(function(entries){\n          entries.forEach(function(entry){\n            if(entry.isIntersecting){\n              var idx = parseInt(entry.target.getAttribute('data-index') || '0', 10);\n              setActive(idx);\n            }\n          });\n        }, { root: track, threshold: 0.62 });\n\n        slides.forEach(function(s){ io.observe(s); });\n      }\n    })();\n  </script>\n</section>",
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 52
-      }
-    },
     "steelmonks_werkstatt_steps_bk7jyj": {
       "type": "steelmonks-werkstatt-steps",
       "name": "Werkstatt Steps",
@@ -296,17 +258,6 @@
         "caption_3": "Schild bestellen",
         "show_numbers": true,
         "enable_animations": true
-      }
-    },
-    "main": {
-      "type": "main-page",
-      "disabled": true,
-      "custom_css": [],
-      "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28,
-        "enable_gutter": false,
-        "show_title": false
       }
     },
     "accordions_EeXHEy": {
@@ -381,172 +332,6 @@
         "padding_right": 24
       }
     },
-    "masonry_gallery_yMJgLM": {
-      "type": "masonry-gallery",
-      "disabled": true,
-      "name": "Masonry Gallery",
-      "settings": {
-        "heading": "Galerie",
-        "image_1": "shopify://shop_images/cat_345ef27e-f001-4773-bf3c-1a9d90d71acc.jpg",
-        "prompt_1": "Placeholder prompt for Image 1, replace this with the prompt used to generate the image.",
-        "image_2": "shopify://shop_images/lion_schild.jpg",
-        "prompt_2": "Placeholder prompt for Image 2, replace this with the prompt used to generate the image.",
-        "image_3": "shopify://shop_images/castle_under_attack.jpg",
-        "prompt_3": "Placeholder prompt for Image 3, replace this with the prompt used to generate the image.",
-        "image_4": "shopify://shop_images/dragon-sign.jpg",
-        "prompt_4": "Placeholder prompt for Image 4, replace this with the prompt used to generate the image.",
-        "image_5": "shopify://shop_images/download_cb020dcd-7832-4fcd-b673-ac814e4a7f9b.jpg",
-        "prompt_5": "Placeholder prompt for Image 5, replace this with the prompt used to generate the image.",
-        "prompt_6": "Placeholder prompt for Image 6, replace this with the prompt used to generate the image.",
-        "prompt_7": "Placeholder prompt for Image 7, replace this with the prompt used to generate the image.",
-        "prompt_8": "Placeholder prompt for Image 8, replace this with the prompt used to generate the image.",
-        "prompt_9": "Placeholder prompt for Image 9, replace this with the prompt used to generate the image.",
-        "prompt_10": "Placeholder prompt for Image 10, replace this with the prompt used to generate the image."
-      }
-    },
-    "accordions_EWwRhh": {
-      "type": "accordions",
-      "blocks": {
-        "accordion_3dffKx": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Wie erstelle ich ein individuelles Schild?",
-            "content": "<p>In der Steelmonks Werkstatt kannst du dein persönliches Metallschild ganz einfach selbst gestalten. Lade dafür ein Foto, eine Skizze oder ein Motiv hoch und beschreibe kurz deine Idee. Unsere Werkstatt verwandelt deinen Entwurf automatisch in ein sauberes, schnittfähiges Design, das anschließend aus hochwertigem Stahl gefertigt wird. In wenigen Minuten siehst du bereits eine Vorschau deines individuellen Schildes.</p>",
-            "content_liquid": "",
-            "featured": true,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_tkaiN9": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Muss ich für die Erstellung eines Designs bezahlen?",
-            "content": "<p>Nein. Die Erstellung deines Entwurfs und die Vorschau sind komplett kostenlos. Du kannst dein Design ganz in Ruhe ausprobieren und erst dann entscheiden, ob du das Schild bestellen möchtest. Kosten entstehen erst, wenn du dein fertiges Design in den Warenkorb legst.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_mnr9yV": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Wie werden die Schilder hergestellt?",
-            "content": "<p>Unsere Schilder werden aus hochwertigem Stahl gefertigt und präzise gelasert. Dein Motiv wird so aufbereitet, dass es technisch perfekt umsetzbar ist. Anschließend wird das Schild je nach Auswahl veredelt, zum Beispiel pulverbeschichtet oder in Edelstahloptik, und sorgfältig von Hand geprüft. Das Ergebnis ist ein langlebiges, wetterfestes Metallschild in echter Steelmonks Qualität.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_dwX4rw": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Welche Bilder oder Motive kann ich verwenden?",
-            "content": "<p>Du kannst Fotos, Zeichnungen, Skizzen oder digitale Motive hochladen. Wichtig ist, dass du die Rechte an dem Bild besitzt oder es frei verwenden darfst. Besonders gut eignen sich klare Motive mit gut erkennbaren Formen, da diese sich optimal in ein Metall-Design umwandeln lassen.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_rpGxaA": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Wie wird der Preis meines Schildes berechnet?",
-            "content": "<p>Der Preis richtet sich nach deinem individuellen Entwurf. Faktoren wie Größe, Oberfläche und der gestalterische Aufwand spielen dabei eine Rolle. Sobald dein Design erstellt wurde, erhältst du den finalen Preis transparent angezeigt, bevor du dich für den Kauf entscheidest.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_bRxR6G": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Welche Vorlage kann ich hochladen?",
-            "content": "<p>Du kannst nahezu jede Art von Vorlage hochladen. Geeignet sind Fotos, Grafiken, Logos, Zeichnungen oder einfache Bilddateien im PNG- oder JPG-Format. Auch Motive aus dem Internet sind möglich, sofern du die Nutzungsrechte besitzt. Wichtig ist nicht die Perfektion der Vorlage, sondern die Idee dahinter, unsere Werkstatt bereitet dein Motiv technisch sauber für ein Metallschild auf.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_dfDBJL": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Kann die Vorlage auch eine eigene Skizze sein.",
-            "content": "<p>Ja, absolut. Eine handgezeichnete Skizze reicht völlig aus. Du kannst sie einfach fotografieren oder scannen und hochladen. Unsere Werkstatt interpretiert deine Skizze und verwandelt sie in ein klares, schnittfähiges Design aus Metall. Viele individuelle Schilder entstehen genau auf diese Weise.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_4caC6T": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Wie viele/ welche Angaben sind ausschlaggebend?",
-            "content": "<p>Je klarer deine Angaben, desto besser das Ergebnis. Besonders hilfreich sind Informationen zum gewünschten Motiv, eventuellem Text, Symbolen oder besonderen Details. Falls du dir bei einzelnen Punkten unsicher bist, ist das kein Problem. Eine grobe Beschreibung reicht aus, um einen passenden Entwurf zu erstellen.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        },
-        "accordion_cPmDdF": {
-          "type": "accordion",
-          "settings": {
-            "parent": "",
-            "heading": "Kann ich Hilfe bekommen, wenn ich Schwierigkeiten habe?",
-            "content": "<p>Ja. Wenn du unsicher bist oder Unterstützung brauchst, kannst du dich jederzeit an uns wenden. Unser Team hilft dir bei Fragen zur Vorlage, zur Gestaltung oder zum gesamten Prozess. Du wirst nicht allein gelassen, wir begleiten dich von der Idee bis zum fertigen Metallschild.</p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        }
-      },
-      "block_order": [
-        "accordion_3dffKx",
-        "accordion_tkaiN9",
-        "accordion_mnr9yV",
-        "accordion_dwX4rw",
-        "accordion_rpGxaA",
-        "accordion_bRxR6G",
-        "accordion_dfDBJL",
-        "accordion_4caC6T",
-        "accordion_cPmDdF"
-      ],
-      "disabled": true,
-      "name": "Accordions",
-      "settings": {
-        "heading": "Häufig gestellte Fragen",
-        "subheading": "",
-        "padding_top": 24,
-        "padding_bottom": 24,
-        "padding_left": 24,
-        "padding_right": 24
-      }
-    },
     "rich_text_dEkatx": {
       "type": "rich-text",
       "blocks": {
@@ -598,14 +383,8 @@
     "blocks_nMQt6z",
     "steelmonks_sign_creator_possibilites_3nqh9k",
     "steelmonks_sign_creator_FKYF46",
-    "steelmonks_announcement_9wcjnF",
-    "steelmonks_horizontal_dropdowns_mFUgm3",
-    "custom_liquid_EFXxGX",
     "steelmonks_werkstatt_steps_bk7jyj",
-    "main",
     "accordions_EeXHEy",
-    "masonry_gallery_yMJgLM",
-    "accordions_EWwRhh",
     "rich_text_dEkatx"
   ]
 }
