@@ -415,7 +415,8 @@
             <article class="smwc2__card" data-smwc-card data-index="{{ forloop.index0 }}" data-prompt="{{ block.settings.prompt | escape }}" {{ block.shopify_attributes }}>
               <div class="smwc2__frame" data-smwc-frame role="button" tabindex="0" aria-label="Slide auswählen">
                 {% if block.settings.base_image != blank %}
-                  {% render 'steelmonks-responsive-image', image: block.settings.base_image, class: 'smwc2__img', alt: block.settings.base_image.alt, sizes: '(max-width: 742px) 62vw, 500px' %}
+                  {%- assign base_alt = block.settings.base_image.alt | default: 'Kundenschild aus der Steelmonks-Werkstatt' -%}
+                  {% render 'steelmonks-responsive-image', image: block.settings.base_image, class: 'smwc2__img', alt: base_alt, sizes: '(max-width: 742px) 62vw, 500px' %}
                 {% elsif base_fallback != blank %}
                   <img class="smwc2__img" src="{{ base_fallback }}" alt="Werkstatt Beispiel" loading="lazy" width="1600" height="1600">
                 {% else %}
