@@ -25,6 +25,8 @@
     gap: 0.2em;
     font-size: 16px;
     line-height: 1;
+    align-self: flex-start;
+    width: fit-content;
     text-decoration: none;
     color: rgb(var(--color-foreground));
   }
@@ -54,7 +56,9 @@
     margin-left: 0.3em;
     color: rgba(var(--color-foreground), 0.6);
   }
+  /* Dawn blendet leere Divs aus (div:empty) – der Sprunganker muss trotzdem existieren */
   #bewertungen {
+    display: block;
     scroll-margin-top: 8rem;
   }
   .product__info .smk-stars:hover .smk-stars__grade,
@@ -146,10 +150,25 @@
               endif
             -%}
             {%- if smk_native -%}
-              <a
+              {%- liquid
+                # Die Bewertungsliste mit dem Anker #bewertungen liegt nur im Standard-Template product.json
+                assign smk_tag = 'span'
+                if template.suffix == blank
+                  assign smk_tag = 'a'
+                endif
+                assign smk_label = smk_grade | append: ' von 5 Sternen, ' | append: smk_count | append: ' Bewertung'
+                if smk_count != 1
+                  assign smk_label = smk_label | append: 'en'
+                endif
+                assign smk_label = smk_label | append: ' bei Trusted Shops'
+                if smk_tag == 'a'
+                  assign smk_label = smk_label | append: ' – zur Bewertungsliste'
+                endif
+              -%}
+              <{{ smk_tag }}
                 class='smk-stars'
-                href='#bewertungen'
-                aria-label='{{ smk_grade }} von 5 Sternen, {{ smk_count }} {% if smk_count == 1 %}Bewertung{% else %}Bewertungen{% endif %} bei Trusted Shops'
+                {% if smk_tag == 'a' %}href='#bewertungen'{% else %}role='img'{% endif %}
+                aria-label='{{ smk_label }}'
                 {{ block.shopify_attributes }}
               >
                 <span class='smk-stars__icons' aria-hidden='true'>
@@ -180,7 +199,7 @@
                 </span>
                 <span class='smk-stars__grade' aria-hidden='true'>{{ smk_grade }}</span>
                 <span class='smk-stars__count' aria-hidden='true'>({{ smk_count }})</span>
-              </a>
+              </{{ smk_tag }}>
             {%- elsif block.settings.widget_id != blank -%}
               <div class='smk-ts-reviews' {{ block.shopify_attributes }}>
                 {%- comment -%}
