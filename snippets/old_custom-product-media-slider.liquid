@@ -46,7 +46,9 @@
                 alt='{{ media.alt | escape }}'
                 loading='lazy'
                 width='750'
-                height='{{ media.height | times: 750.0 | divided_by: media.width | round }}'
+                {%- comment -%} Videos haben keine width/height (NaN-Fehler) – Vorschaubild nutzen {%- endcomment -%}
+                {%- assign smk_slide_ar = media.preview_image.aspect_ratio | default: 1 -%}
+                height='{{ 750.0 | divided_by: smk_slide_ar | round }}'
               >
             </div>
           {% endunless %}
