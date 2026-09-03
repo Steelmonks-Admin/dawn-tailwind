@@ -94,8 +94,8 @@
         "vendor",
         "title",
         "caption",
-        "price",
         "trusted_reviews_smk",
+        "price",
         "variant_picker",
         "zunft_quantity_tiers_block",
         "buy_buttons",
@@ -464,7 +464,7 @@
     "17459065389a6ee71e": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<!-- Trusted Shops: komplette Bewertungsliste, deutsches Widget. Direkt eingebunden,\n     weil der App-Block die Widget-ID selbst bestimmte. -->\n<etrusted-widget data-etrusted-widget-id=\"wdg-ebce3f92-9e87-43e8-8253-34c8c0973470\"\n  data-sku=\"{%- for variant in product.variants -%}{{ variant.sku }},{%- endfor -%}\"></etrusted-widget>"
+        "custom_liquid": "<div id='bewertungen'></div>\n<!-- Trusted Shops: komplette Bewertungsliste, deutsches Widget. Direkt eingebunden,\n     weil der App-Block die Widget-ID selbst bestimmte. -->\n<etrusted-widget data-etrusted-widget-id=\"wdg-ebce3f92-9e87-43e8-8253-34c8c0973470\"\n  data-sku=\"{%- for variant in product.variants -%}{{ variant.sku }},{%- endfor -%}\"></etrusted-widget>"
       }
     }
   },

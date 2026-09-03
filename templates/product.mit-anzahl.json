@@ -86,7 +86,7 @@
         "trusted_reviews_smk": {
           "type": "trusted_reviews",
           "settings": {
-            "widget_id": "wdg-ebce3f92-9e87-43e8-8253-34c8c0973470"
+            "widget_id": "wdg-7e981e7c-c798-40cb-9c30-e695d0aa36ea"
           }
         }
       },
@@ -94,8 +94,8 @@
         "vendor",
         "title",
         "caption",
-        "price",
         "trusted_reviews_smk",
+        "price",
         "variant_picker",
         "zunft_quantity_tiers_block",
         "buy_buttons",

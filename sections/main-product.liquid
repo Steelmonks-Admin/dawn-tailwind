@@ -18,6 +18,36 @@
   .product__info > .shopify-app-block[id*='__trusted_shops_reviews_and_more_trusted_stars'] {
     min-height: 62px;
   }
+  /* Sterne unter dem Titel, Optik wie das Trusted-Shops-Widget (1em-Sterne, Note, Anzahl) */
+  .product__info .smk-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2em;
+    font-size: 1.05rem;
+    line-height: 1;
+    text-decoration: none;
+    color: rgb(var(--color-foreground));
+  }
+  .product__info .smk-stars__icons {
+    display: inline-flex;
+    gap: 0.195em;
+  }
+  .product__info .smk-stars svg {
+    width: 1.3em;
+    height: 1.3em;
+    flex: none;
+  }
+  .product__info .smk-stars__grade {
+    margin-left: 0.3em;
+  }
+  .product__info .smk-stars__count {
+    margin-left: 0.3em;
+    color: rgba(var(--color-foreground), 0.6);
+  }
+  .product__info .smk-stars:hover .smk-stars__grade,
+  .product__info .smk-stars:hover .smk-stars__count {
+    text-decoration: underline;
+  }
 {% endstyle %}
 
 <section
@@ -73,7 +103,72 @@
             steuerbar ist, welches Widget laeuft.
           {%- endcomment -%}
           {%- when 'trusted_reviews' -%}
-            {%- if block.settings.widget_id != blank -%}
+            {%- comment -%}
+              Sterne unter dem Titel. Erst aus den synchronisierten Trusted-Shops-Werten
+              (reviews.rating / reviews.rating_count, gleiche Quelle wie das Widget, Abgleich per Skript):
+              serverseitig gerendert, 0 Requests, kein Layout-Sprung. Das Widget selbst haengt an der
+              App-Kette (esc.js -> Trustbadge -> Loader -> Manifest -> App -> Konfiguration -> Feeds),
+              die erst nach dem Load-Ereignis startet: gemessen 3,4 s (Desktop) bzw. 27 s (4G) bis zu den
+              Sternen. Ohne Metafeld-Werte faellt der Block auf das Widget zurueck.
+            {%- endcomment -%}
+            {%- liquid
+              assign smk_rating = product.metafields.reviews.rating.value
+              assign smk_count = product.metafields.reviews.rating_count.value | default: 0 | plus: 0
+              assign smk_accent = block.settings.accent_color | default: '#db6b22'
+              if smk_accent == 'rgba(0,0,0,0)'
+                assign smk_accent = '#db6b22'
+              endif
+              assign smk_native = false
+              if block.settings.use_metafields and smk_rating != blank and smk_count > 0
+                assign smk_native = true
+                assign smk_r100 = smk_rating.rating | times: 100 | round
+                assign smk_int = smk_r100 | divided_by: 100
+                assign smk_dec = smk_r100 | modulo: 100
+                if smk_dec < 10
+                  assign smk_dec = smk_dec | prepend: '0'
+                endif
+                assign smk_grade = smk_int | append: ',' | append: smk_dec
+                assign smk_full = smk_rating.rating | floor
+                assign smk_frac = smk_rating.rating | minus: smk_full | times: 100 | round
+              endif
+            -%}
+            {%- if smk_native -%}
+              <a
+                class='smk-stars'
+                href='#bewertungen'
+                aria-label='{{ smk_grade }} von 5 Sternen, {{ smk_count }} Bewertungen bei Trusted Shops'
+                {{ block.shopify_attributes }}
+              >
+                <span class='smk-stars__icons' aria-hidden='true'>
+                  {%- for i in (1..5) -%}
+                    {%- liquid
+                      assign smk_fill = '#cccccc'
+                      if i <= smk_full
+                        assign smk_fill = smk_accent
+                      elsif smk_frac > 0
+                        assign smk_prev = i | minus: 1
+                        if smk_prev == smk_full
+                          assign smk_fill = 'url(#smk-star-grad-' | append: section.id | append: ')'
+                        endif
+                      endif
+                    -%}
+                    <svg viewBox='0 0 24 24' width='24' height='24' focusable='false'>
+                      {%- if smk_fill contains 'url(' -%}
+                        <defs>
+                          <linearGradient id='smk-star-grad-{{ section.id }}' x1='0' x2='1' y1='0' y2='0'>
+                            <stop offset='{{ smk_frac }}%' stop-color='{{ smk_accent }}'/>
+                            <stop offset='{{ smk_frac }}%' stop-color='#cccccc'/>
+                          </linearGradient>
+                        </defs>
+                      {%- endif -%}
+                      <path fill='{{ smk_fill }}' d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/>
+                    </svg>
+                  {%- endfor -%}
+                </span>
+                <span class='smk-stars__grade' aria-hidden='true'>{{ smk_grade }}</span>
+                <span class='smk-stars__count' aria-hidden='true'>({{ smk_count }})</span>
+              </a>
+            {%- elsif block.settings.widget_id != blank -%}
               <div class='smk-ts-reviews' {{ block.shopify_attributes }}>
                 {%- comment -%}
                   data-accent-color pinnt die Sternfarbe im Theme. Ohne das Attribut nimmt das Widget
@@ -82,7 +177,7 @@
                 {%- endcomment -%}
                 <etrusted-widget
                   data-etrusted-widget-id='{{ block.settings.widget_id }}'
-                  {% if block.settings.accent_color != blank and block.settings.accent_color != 'rgba(0,0,0,0)' %}data-accent-color='{{ block.settings.accent_color }}'{% endif %}
+                  data-accent-color='{{ smk_accent }}'
                   data-sku='{%- for variant in product.variants -%}{{ variant.sku }},{%- endfor -%}'
                 ></etrusted-widget>
               </div>
@@ -898,6 +993,13 @@
           "label": "Widget-ID",
           "default": "wdg-ebce3f92-9e87-43e8-8253-34c8c0973470",
           "info": "Aus dem Trusted Shops Control Center. Muss auf de-DE stehen."
+        },
+        {
+          "type": "checkbox",
+          "id": "use_metafields",
+          "label": "Sterne sofort aus den synchronisierten Bewertungsdaten rendern",
+          "default": true,
+          "info": "Nutzt reviews.rating / reviews.rating_count am Produkt (Abgleich mit Trusted Shops per Skript). Ohne diese Werte, oder wenn ausgeschaltet, lädt das Widget."
         },
         {
           "type": "color",
