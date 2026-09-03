@@ -230,22 +230,6 @@
         "ab_test_variant": "control"
       }
     },
-    "17459065389a6ee71e": {
-      "type": "apps",
-      "blocks": {
-        "trusted_shops_reviews_and_more_product_review_list_JrKwDz": {
-          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/product-review-list/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "trusted_shops_reviews_and_more_product_review_list_JrKwDz"
-      ],
-      "custom_css": [],
-      "settings": {
-        "include_margins": true
-      }
-    },
     "sm_product_features_VBwNpg": {
       "type": "sm-product-features",
       "name": "Product Features",
@@ -482,7 +466,6 @@
     "main",
     "sm_button_back_to_collection_ENenrt",
     "sm_alternating_media_zDMx7c",
-    "17459065389a6ee71e",
     "sm_product_features_VBwNpg",
     "sm_scrolling_gallery_zh3P38",
     "related-products",
