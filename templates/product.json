@@ -33,10 +33,6 @@
           "type": "price",
           "settings": {}
         },
-        "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf": {
-          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/product-review-list-extension/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
-          "settings": {}
-        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -86,6 +82,12 @@
             "tier3_discount": 10,
             "tier3_badge": "Bester Preis"
           }
+        },
+        "trusted_reviews_smk": {
+          "type": "trusted_reviews",
+          "settings": {
+            "widget_id": "wdg-ebce3f92-9e87-43e8-8253-34c8c0973470"
+          }
         }
       },
       "block_order": [
@@ -93,7 +95,7 @@
         "title",
         "caption",
         "price",
-        "trusted_shops_reviews_and_more_product_review_list_extension_ywTbWf",
+        "trusted_reviews_smk",
         "variant_picker",
         "zunft_quantity_tiers_block",
         "buy_buttons",
@@ -340,18 +342,9 @@
       }
     },
     "1748369267571d4330": {
-      "type": "apps",
-      "blocks": {
-        "trusted_shops_reviews_and_more_review_carousel_XjbAri": {
-          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/review-carousel/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "trusted_shops_reviews_and_more_review_carousel_XjbAri"
-      ],
+      "type": "custom-liquid",
       "settings": {
-        "include_margins": true
+        "custom_liquid": "<!-- Trusted Shops Bewertungs-Karussell, deutsches Widget. Direkt eingebunden statt ueber den\n     App-Block, weil dieser die Widget-ID selbst bestimmte und das franzoesisch konfigurierte\n     Widget auslieferte. -->\n<etrusted-widget data-etrusted-widget-id=\"wdg-9438ee15-0ccd-4998-b467-5d92c4e70dd9\"></etrusted-widget>"
       }
     },
     "accordions_PLagXY": {

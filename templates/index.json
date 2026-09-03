@@ -495,18 +495,9 @@
       }
     },
     "1744354885bc91bacc": {
-      "type": "apps",
-      "blocks": {
-        "trusted_shops_reviews_and_more_review_carousel_R8Gq7i": {
-          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/review-carousel/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "trusted_shops_reviews_and_more_review_carousel_R8Gq7i"
-      ],
+      "type": "custom-liquid",
       "settings": {
-        "include_margins": true
+        "custom_liquid": "<!-- Trusted Shops Bewertungs-Karussell, deutsches Widget. Direkt eingebunden statt ueber den\n     App-Block, weil dieser die Widget-ID selbst bestimmte und das franzoesisch konfigurierte\n     Widget auslieferte. -->\n<etrusted-widget data-etrusted-widget-id=\"wdg-9438ee15-0ccd-4998-b467-5d92c4e70dd9\"></etrusted-widget>"
       }
     },
     "image_banner_QQPwzk": {
