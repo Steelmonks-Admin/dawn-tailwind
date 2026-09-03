@@ -28,6 +28,16 @@
     text-decoration: none;
     color: rgb(var(--color-foreground));
   }
+  /* Enger an Titel und Preis: Titel-Abstand (1.5rem) mit negativem Rand auf ~0.5rem kuerzen */
+  .product__info .product__title + .smk-stars {
+    margin-top: -1rem;
+  }
+  .product__info .product__text + .smk-stars {
+    margin-top: 0.3rem;
+  }
+  .product__info .smk-stars + .product__price {
+    margin-top: 0.5rem;
+  }
   .product__info .smk-stars__icons {
     display: inline-flex;
     gap: 0.195em;
