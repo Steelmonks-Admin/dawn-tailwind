@@ -86,7 +86,7 @@
         "trusted_reviews_smk": {
           "type": "trusted_reviews",
           "settings": {
-            "widget_id": "wdg-ebce3f92-9e87-43e8-8253-34c8c0973470"
+            "widget_id": "wdg-7e981e7c-c798-40cb-9c30-e695d0aa36ea"
           }
         }
       },
@@ -460,12 +460,19 @@
       "settings": {
         "include_margins": true
       }
+    },
+    "17459065389a6ee71e": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<!-- Trusted Shops: komplette Bewertungsliste, deutsches Widget. Direkt eingebunden,\n     weil der App-Block die Widget-ID selbst bestimmte. -->\n<etrusted-widget data-etrusted-widget-id=\"wdg-ebce3f92-9e87-43e8-8253-34c8c0973470\"\n  data-sku=\"{%- for variant in product.variants -%}{{ variant.sku }},{%- endfor -%}\"></etrusted-widget>"
+      }
     }
   },
   "order": [
     "main",
     "sm_button_back_to_collection_ENenrt",
     "sm_alternating_media_zDMx7c",
+    "17459065389a6ee71e",
     "sm_product_features_VBwNpg",
     "sm_scrolling_gallery_zh3P38",
     "related-products",
