@@ -197,11 +197,25 @@
               {%- endif -%}
             </div>
           {%- when 'buy_buttons' -%}
+            {%- liquid
+              # Mengenwahl nur fuer Produkte ohne Personalisierung (Tag "Mengenwahl"),
+              # nicht wenn die Zunft-Staffelmengen dieses Produkt bereits bedienen.
+              assign smk_show_qty = false
+              if block.settings.enable_quantity_selector and product.tags contains 'Mengenwahl'
+                assign smk_show_qty = true
+              endif
+              for smk_b in section.blocks
+                if smk_b.type == 'zunft_quantity_tiers' and smk_b.settings.product_handle == product.handle
+                  assign smk_show_qty = false
+                endif
+              endfor
+            -%}
             {% render 'buy-buttons',
               product: product,
               product_form_id: product_form_id,
               section: section,
-              block: block
+              block: block,
+              show_quantity: smk_show_qty
             %}
             {% render 'steelmonks-zunft-konfigurator', product: product %}
           {%- when 'zunft_quantity_tiers' -%}

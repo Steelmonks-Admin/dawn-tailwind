@@ -60,6 +60,49 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}
 
+        {%- comment -%}
+          Mengenwahl direkt ueber dem Warenkorb-Knopf. Nur fuer Produkte ohne
+          Personalisierung (Tag "Mengenwahl"); bei personalisierten Produkten steuert
+          der Zepto-Konfigurator den Warenkorb. Die Entscheidung trifft main-product.
+        {%- endcomment -%}
+        {%- if show_quantity -%}
+          {%- liquid
+            assign smk_qty_variant = product.selected_or_first_available_variant
+            assign smk_qty_min = smk_qty_variant.quantity_rule.min | default: 1
+            assign smk_qty_step = smk_qty_variant.quantity_rule.increment | default: 1
+          -%}
+          <div class='product-form__input product-form__quantity smk-quantity' id='Quantity-Form-{{ section.id }}'>
+            <label class='quantity__label form__label' for='Quantity-{{ section.id }}'>
+              {{ 'products.product.quantity.label' | t }}
+            </label>
+            <quantity-input class='quantity'>
+              <button class='quantity__button' name='minus' type='button'>
+                <span class='visually-hidden'>{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+                <span class='svg-wrapper'>{{- 'icon-minus.svg' | inline_asset_content -}}</span>
+              </button>
+              <input
+                class='quantity__input'
+                type='number'
+                name='quantity'
+                id='Quantity-{{ section.id }}'
+                inputmode='numeric'
+                data-cart-quantity='{{ cart | item_count_for_variant: smk_qty_variant.id }}'
+                data-min='{{ smk_qty_min }}'
+                min='{{ smk_qty_min }}'
+                {% if smk_qty_variant.quantity_rule.max != null %}
+                  max='{{ smk_qty_variant.quantity_rule.max }}'
+                {% endif %}
+                step='{{ smk_qty_step }}'
+                value='{{ smk_qty_min }}'
+              >
+              <button class='quantity__button' name='plus' type='button'>
+                <span class='visually-hidden'>{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+                <span class='svg-wrapper'>{{- 'icon-plus.svg' | inline_asset_content -}}</span>
+              </button>
+            </quantity-input>
+          </div>
+        {%- endif -%}
+
         <div class='product-form__buttons twcss-w-full twcss-gap-6'>
           {%- liquid
             assign check_against_inventory = true
