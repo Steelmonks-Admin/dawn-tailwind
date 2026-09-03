@@ -128,7 +128,10 @@
             </h3>
             {% comment %} ! eTrusted widget {% endcomment %}
             <!-- Begin eTrusted widget tag -->
-            {% if card_product.selected_or_first_available_variant.sku != blank %}
+            {% comment %} Nur wo wir keine eigenen Bewertungsdaten haben – sonst rendern unten die
+                           nativen Metafeld-Sterne, und die Karte zeigte bisher beides. {% endcomment %}
+            {% if card_product.selected_or_first_available_variant.sku != blank
+              and card_product.metafields.reviews.rating.value == blank %}
               <div class='twcss-mt-2'>
                 <etrusted-widget
                   style='font-size: 14px;'
@@ -177,7 +180,10 @@
           </h3>
           {% comment %} ! eTrusted widget {% endcomment %}
           <!-- Begin eTrusted widget tag -->
-          {% if card_product.selected_or_first_available_variant.sku != blank %}
+          {% comment %} Nur wo wir keine eigenen Bewertungsdaten haben – sonst rendern unten die
+                         nativen Metafeld-Sterne, und die Karte zeigte bisher beides. {% endcomment %}
+          {% if card_product.selected_or_first_available_variant.sku != blank
+            and card_product.metafields.reviews.rating.value == blank %}
             <div class='twcss-mt-2'>
               <etrusted-widget
                 style='font-size: 14px;'
@@ -639,7 +645,10 @@
           </h3>
           {% comment %} ! eTrusted widget {% endcomment %}
           <!-- Begin eTrusted widget tag -->
-          {% if card_product.selected_or_first_available_variant.sku != blank %}
+          {% comment %} Nur wo wir keine eigenen Bewertungsdaten haben – sonst rendern unten die
+                         nativen Metafeld-Sterne, und die Karte zeigte bisher beides. {% endcomment %}
+          {% if card_product.selected_or_first_available_variant.sku != blank
+            and card_product.metafields.reviews.rating.value == blank %}
             <div class='twcss-mt-2'>
               <etrusted-widget
                 style='font-size: 14px;'
