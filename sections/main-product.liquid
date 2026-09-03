@@ -75,8 +75,14 @@
           {%- when 'trusted_reviews' -%}
             {%- if block.settings.widget_id != blank -%}
               <div class='smk-ts-reviews' {{ block.shopify_attributes }}>
+                {%- comment -%}
+                  data-accent-color pinnt die Sternfarbe im Theme. Ohne das Attribut nimmt das Widget
+                  die Farbe aus seiner Konfigurations-JSON, die ohne Cache-Header ausgeliefert wird –
+                  Browser halten eine alte Farbe dann wochenlang fest (Fund 3.9.2026: Gelb statt Orange).
+                {%- endcomment -%}
                 <etrusted-widget
                   data-etrusted-widget-id='{{ block.settings.widget_id }}'
+                  {% if block.settings.accent_color != blank and block.settings.accent_color != 'rgba(0,0,0,0)' %}data-accent-color='{{ block.settings.accent_color }}'{% endif %}
                   data-sku='{%- for variant in product.variants -%}{{ variant.sku }},{%- endfor -%}'
                 ></etrusted-widget>
               </div>
@@ -892,6 +898,13 @@
           "label": "Widget-ID",
           "default": "wdg-ebce3f92-9e87-43e8-8253-34c8c0973470",
           "info": "Aus dem Trusted Shops Control Center. Muss auf de-DE stehen."
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Akzentfarbe (Sterne)",
+          "default": "#db6b22",
+          "info": "Wird direkt ans Widget übergeben und gilt sofort – unabhängig davon, was Browser von der Trusted-Shops-Konfiguration zwischengespeichert haben."
         }
       ]
     }
