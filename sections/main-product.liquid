@@ -2,6 +2,24 @@
 <!-- Include custom CSS fixes for add to cart button visibility and sticky positioning -->
 {{ 'custom-button-fixes.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%}
+  Platz fuer die App-Bloecke in der Produktinfo reservieren. Trusted Shops und der
+  Zepto-Konfigurator rendern erst nach dem Laden und schieben sonst alles darunter
+  nach unten (gemessener CLS bis 0,84). Die Werte sind die real gerenderten Hoehen;
+  faellt ein Block hoeher aus, waechst er ueber die Reserve hinaus.
+{%- endcomment -%}
+{% style %}
+  .product__info > .shopify-app-block[id*='__trusted_shops_reviews_and_more_product_review_list'] {
+    min-height: 30px;
+  }
+  .product__info > .shopify-app-block[id*='__zepto_product_personalizer'] {
+    min-height: 72px;
+  }
+  .product__info > .shopify-app-block[id*='__trusted_shops_reviews_and_more_trusted_stars'] {
+    min-height: 62px;
+  }
+{% endstyle %}
+
 <section
   class='product__container'
   id='MainProduct-{{ section.id }}'
