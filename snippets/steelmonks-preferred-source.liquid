@@ -1,0 +1,49 @@
+{%- comment -%}
+  Google "Bevorzugte Quelle": Leser koennen Steelmonks in ihren Sucheinstellungen
+  auswaehlen. Ausgewaehlte Quellen bekommen in Top Stories, AI Overviews und AI Mode
+  eine Kennzeichnung; laut Google klicken Nutzer sie doppelt so haeufig an.
+
+  Google bietet dafuer auch eine fertige Schaltflaeche an, die aber ein zusaetzliches
+  Skript von news.google.com nachlaedt. Wir nutzen stattdessen den offiziellen
+  Deeplink – gleiche Wirkung, keine einzige zusaetzliche Anfrage.
+  Doku: https://developers.google.com/search/docs/appearance/preferred-sources
+{%- endcomment -%}
+
+<div class='smk-prefsrc'>
+  <p class='smk-prefsrc__text'>
+    Liest Du hier öfter mit? Dann leg Steelmonks in Google als bevorzugte Quelle fest –
+    dann tauchen unsere Beiträge in Deinen Suchergebnissen weiter oben auf.
+  </p>
+  <a
+    class='smk-prefsrc__link'
+    href='https://www.google.com/preferences/source?q={{ request.host }}'
+    target='_blank'
+    rel='noopener'
+  >
+    In Google als bevorzugte Quelle festlegen
+  </a>
+</div>
+
+{%- style -%}
+  .smk-prefsrc {
+    margin: 2.4rem auto 0;
+    max-width: 68rem;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid rgba(var(--color-foreground), 0.12);
+    border-radius: 0.8rem;
+    text-align: center;
+  }
+  .smk-prefsrc__text {
+    margin: 0 0 1rem;
+    font-size: 1.4rem;
+    line-height: 1.45;
+    color: rgba(var(--color-foreground), 0.75);
+  }
+  .smk-prefsrc__link {
+    display: inline-block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+{%- endstyle -%}

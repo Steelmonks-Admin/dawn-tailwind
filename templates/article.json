@@ -48,6 +48,10 @@
             "heading": "Weiterlesen",
             "limit": 3
           }
+        },
+        "preferred_source_smk": {
+          "type": "preferred-source",
+          "settings": {}
         }
       },
       "block_order": [
@@ -56,6 +60,7 @@
         "content_ywFChb",
         "products_smk",
         "related_smk",
+        "preferred_source_smk",
         "back_to_blog_F7yNPq",
         "share_ETPnXc"
       ],

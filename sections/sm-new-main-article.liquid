@@ -166,6 +166,9 @@
           </div>
         {%- endif -%}
 
+      {%- when 'preferred-source' -%}
+        {% render 'steelmonks-preferred-source' %}
+
       {%- when 'back-to-blog' -%}
         <div class='twcss-text-center twcss-my-6' {{ block.shopify_attributes }}>
           <a
@@ -447,6 +450,12 @@
     }
   ],
   "blocks": [
+    {
+      "type": "preferred-source",
+      "name": "Google: bevorzugte Quelle",
+      "limit": 1,
+      "settings": []
+    },
     {
       "type": "@app"
     },
