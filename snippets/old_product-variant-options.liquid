@@ -98,13 +98,39 @@
     endif
   -%}
 
-  {% comment %} ! When the page is reloaded, the highlighted option's variant id should be added to the link so the price will update accordingly {% endcomment %}
+  {% comment %}
+    Die hervorgehobene Variante muss ausgewaehlt sein, damit der Preis dazu passt.
+    Frueher geschah das per window.location.reload() – ein kompletter zweiter
+    Seitenaufruf bei jedem Einstieg ohne ?variant= (gemessen 3,4 s). Jetzt wird die
+    Variante clientseitig gesetzt; Dawn aktualisiert Preis, Medien und URL selbst.
+    Die Notbremse unten laedt nur dann noch neu, wenn ueberhaupt keine Variante
+    gesetzt wurde, das Skript also nicht gegriffen hat.
+  {% endcomment %}
   {% if highlighted_option %}
+    {%- assign highlighted_input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
     <script>
-      if (!window.location.href.includes('{{ highlighted_option }}')) {
-        window.history.replaceState({}, document.title, '?variant=' + '{{ highlighted_option }}');
-        window.location.reload();
-      }
+      (function () {
+        var target = 'variant={{ highlighted_option }}';
+        if (window.location.search.indexOf(target) !== -1) return;
+        var apply = function () {
+          var input = document.getElementById('{{ highlighted_input_id }}');
+          if (input) {
+            input.checked = true;
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          window.setTimeout(function () {
+            if (window.location.search.indexOf('variant=') === -1) {
+              window.history.replaceState({}, document.title, '?' + target);
+              window.location.reload();
+            }
+          }, 1500);
+        };
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', apply);
+        } else {
+          apply();
+        }
+      })();
     </script>
   {%- endif -%}
 
