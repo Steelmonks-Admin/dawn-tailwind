@@ -30,12 +30,23 @@
     <link rel='preconnect' href='https://static.klaviyo.com' crossorigin>
     <link rel='preconnect' href='https://cdn-zeptoapps.com' crossorigin>
 
-    <title>
-      {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-      {%- if current_page != 1 %} &ndash; Seite {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
-    </title>
+    {%- liquid
+      # Der Shopname wird nur angehaengt, wenn er nicht schon im Titel steht.
+      # Artikel sind ausgenommen: ihre Titel sind bereits auf die Google-Breite
+      # von rund 60 Zeichen getrimmt, der Zusatz schob 318 von 807 darueber.
+      assign smk_title = page_title
+      if current_tags
+        assign smk_current_tags = current_tags | join: ', '
+        assign smk_title = smk_title | append: ' – tagged "' | append: smk_current_tags | append: '"'
+      endif
+      if current_page != 1
+        assign smk_title = smk_title | append: ' – Seite ' | append: current_page
+      endif
+      unless request.page_type == 'article' or smk_title contains shop.name
+        assign smk_title = smk_title | append: ' – ' | append: shop.name
+      endunless
+    -%}
+    <title>{{ smk_title }}</title>
 
     {%- liquid
       # Meta-Description: Startseite aus Theme-Einstellung (Shop-Beschreibung ist zu lang),
@@ -54,8 +65,15 @@
       <meta name='description' content='{{ smk_description | escape }}'>
     {% endif %}
 
+    {%- comment -%}
+      Tag-gefilterte Listen wie /collections/all/internal-production bilden nur
+      operative Tags ab, hatten in 16 Monaten null Suchklicks und erzeugen
+      duennen Doppelinhalt – deshalb noindex, den Links folgen darf Google.
+    {%- endcomment -%}
     {% if template contains 'noindexnofollow' %}
       <meta name='robots' content='noindex,nofollow'>
+    {% elsif current_tags %}
+      <meta name='robots' content='noindex,follow'>
     {% endif %}
 
     {% unless template contains 'cart' or template contains 'customer' %}
