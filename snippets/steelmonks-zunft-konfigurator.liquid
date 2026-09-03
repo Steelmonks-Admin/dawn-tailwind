@@ -1,0 +1,65 @@
+{%- comment -%}
+  Weg vom fachspezifischen Zunft-Produkt in den Konfigurator des Sammelprodukts.
+
+  Die fachspezifischen Seiten tragen den Suchverkehr (2.164 Klicks in 16 Monaten
+  gegenueber 415 auf den Sammelprodukten), bleiben also indexiert. Statt sie
+  weiterzuleiten, bekommen sie hier einen sichtbaren Kaufweg zum Konfigurator.
+
+  Erkennung ueber den Produkttyp; die Sammelprodukte selbst sind ausgenommen.
+{%- endcomment -%}
+
+{%- liquid
+  assign zk_target = ''
+  case product.type
+    when 'Zunft-Schilder'
+      assign zk_target = 'zunftschild-geschenk-fur-handwerker-personalisiert'
+      assign zk_label = 'Zunftschild frei gestalten'
+    when 'Zunft-Anhänger'
+      assign zk_target = 'zunft-anhanger-geschenk-fur-handwerker'
+      assign zk_label = 'Zunftanhänger frei gestalten'
+  endcase
+  if product.handle == zk_target
+    assign zk_target = ''
+  endif
+  assign zk_product = all_products[zk_target]
+  if zk_product == empty or zk_product.available == false
+    assign zk_target = ''
+  endif
+-%}
+
+{%- if zk_target != blank -%}
+  <div class='smk-zunft-konfig'>
+    <p class='smk-zunft-konfig__text'>
+      Dein Zunftzeichen ist nicht dabei, oder du möchtest Text, Größe und Oberfläche frei wählen?
+    </p>
+    <a
+      class='button button--secondary smk-zunft-konfig__button'
+      href='{{ zk_product.url }}'
+    >
+      {{ zk_label }}
+    </a>
+  </div>
+
+  {%- style -%}
+    .smk-zunft-konfig {
+      margin: 1.5rem 0 0;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid rgba(var(--color-foreground), 0.12);
+      border-radius: 0.6rem;
+    }
+    .smk-zunft-konfig__text {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      line-height: 1.4;
+    }
+    .smk-zunft-konfig__button {
+      width: 100%;
+      margin: 0;
+    }
+    @media screen and (min-width: 750px) {
+      .smk-zunft-konfig__button {
+        width: auto;
+      }
+    }
+  {%- endstyle -%}
+{%- endif -%}

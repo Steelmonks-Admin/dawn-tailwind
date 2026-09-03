@@ -187,6 +187,7 @@
               section: section,
               block: block
             %}
+            {% render 'steelmonks-zunft-konfigurator', product: product %}
           {%- when 'zunft_quantity_tiers' -%}
             {% render 'zunft-quantity-tiers-block', product: product, block: block %}
           {%- when 'complementary_products' -%}
