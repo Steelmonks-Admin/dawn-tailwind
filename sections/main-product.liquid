@@ -23,7 +23,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.2em;
-    font-size: 1.05rem;
+    font-size: 16px;
     line-height: 1;
     text-decoration: none;
     color: rgb(var(--color-foreground));
@@ -43,6 +43,9 @@
   .product__info .smk-stars__count {
     margin-left: 0.3em;
     color: rgba(var(--color-foreground), 0.6);
+  }
+  #bewertungen {
+    scroll-margin-top: 8rem;
   }
   .product__info .smk-stars:hover .smk-stars__grade,
   .product__info .smk-stars:hover .smk-stars__count {
@@ -136,7 +139,7 @@
               <a
                 class='smk-stars'
                 href='#bewertungen'
-                aria-label='{{ smk_grade }} von 5 Sternen, {{ smk_count }} Bewertungen bei Trusted Shops'
+                aria-label='{{ smk_grade }} von 5 Sternen, {{ smk_count }} {% if smk_count == 1 %}Bewertung{% else %}Bewertungen{% endif %} bei Trusted Shops'
                 {{ block.shopify_attributes }}
               >
                 <span class='smk-stars__icons' aria-hidden='true'>
