@@ -448,18 +448,6 @@
   {%- endif -%}
 </section>
 
-<!-- Taboola Pixel Code -->
-<script>
-  _tfa.push({
-    notify: 'event',
-    name: 'product_view',
-    id: 1617083,
-    revenue: '{{ product.price }}',
-    orderid: '{{ cart.id }}',
-    currency: '{{ shop.currency }}',
-  });
-</script>
-<!-- End of Taboola Pixel Code -->
 
 {%- if request.design_mode -%}
   <script src='{{ 'theme-editor.js' | asset_url }}' defer='defer'></script>
