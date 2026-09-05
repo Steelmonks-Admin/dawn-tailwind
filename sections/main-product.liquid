@@ -330,6 +330,8 @@
               {%- endif -%}
             </div>
           {%- when 'buy_buttons' -%}
+            {%- comment -%} Lieferdatum-App (C-EDD): Container fuer manuelle Platzierung, wird per JS gefuellt {%- endcomment -%}
+            <div class="delivery-widget__manual"></div>
             {%- liquid
               # Mengenwahl nur fuer Produkte ohne Personalisierung (Tag "Mengenwahl"),
               # nicht wenn die Zunft-Staffelmengen dieses Produkt bereits bedienen.
