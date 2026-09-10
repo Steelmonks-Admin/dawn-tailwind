@@ -203,3 +203,154 @@
 @media (prefers-reduced-motion: reduce) {
   .pin-tiers-sticky { transition: none; }
 }
+
+/* --- Mehrfach-Auswahl: mehrere Motive in einem Rutsch ------------------- */
+.pin-tiers__multi-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--pt-accent);
+  border-radius: 8px;
+  background: var(--pt-accent-soft);
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--pt-accent);
+  cursor: pointer;
+}
+.pin-tiers__multi-toggle:focus-visible { outline: 2px solid var(--pt-accent); outline-offset: 2px; }
+.pin-tiers__chev { transition: transform 0.15s ease; }
+.pin-tiers__multi-toggle[aria-expanded='true'] .pin-tiers__chev { transform: rotate(180deg); }
+
+.pin-tiers__multi[hidden] { display: none !important; }
+.pin-tiers__multi { margin-top: 0.7rem; }
+
+.pin-tiers__multi-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 292px;
+  overflow-y: auto;
+  border: 1px solid var(--pt-line);
+  border-radius: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.pin-tiers__multi-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--pt-line);
+}
+.pin-tiers__multi-row:last-child { border-bottom: 0; }
+.pin-tiers__multi-row[data-gewaehlt] { background: var(--pt-accent-soft); }
+.pin-tiers__multi-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pin-tiers__multi-price { flex: 0 0 auto; font-size: 1.2rem; color: var(--pt-mut); }
+
+.pin-tiers__stepper { display: flex; align-items: center; gap: 0.2rem; flex: 0 0 auto; }
+.pin-tiers__step {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--pt-line);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--pt-ink);
+  cursor: pointer;
+}
+.pin-tiers__step:focus-visible { outline: 2px solid var(--pt-accent); outline-offset: 1px; }
+.pin-tiers__step-input {
+  width: 42px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--pt-line);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+  font-size: 1.4rem;
+  text-align: center;
+  color: var(--pt-ink);
+  -moz-appearance: textfield;
+}
+.pin-tiers__step-input::-webkit-outer-spin-button,
+.pin-tiers__step-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.pin-tiers__multi-sum {
+  margin: 0.7rem 0 0;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  color: var(--pt-ink);
+}
+.pin-tiers__multi-sum b { font-weight: 700; }
+.pin-tiers__multi-add {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 0.6rem;
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--pt-accent);
+  font: inherit;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+.pin-tiers__multi-add[disabled] { background: #b9c0c5; cursor: default; }
+.pin-tiers__multi-add:focus-visible { outline: 2px solid var(--pt-ink); outline-offset: 2px; }
+.pin-tiers__multi-status { margin: 0.5rem 0 0; font-size: 1.2rem; color: var(--pt-good); }
+.pin-tiers__multi-status[hidden] { display: none !important; }
+.pin-tiers__multi-status[data-fehler] { color: #a3271f; }
+
+/* --- Sticky: Preiszeile und Sprungknopf nebeneinander ------------------- */
+.pin-tiers-sticky__zeile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.pin-tiers-sticky__zeile .pin-tiers-sticky__result { flex: 1 1 auto; min-width: 0; }
+.pin-tiers-sticky__jump {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--pt-accent);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--pt-accent);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pin-tiers-sticky__jump:focus-visible { outline: 2px solid var(--pt-accent); outline-offset: 2px; }
+
+/* Kurz hervorheben, wohin der Sprungknopf gefuehrt hat */
+.pin-tiers-ziel-blitz {
+  animation: pin-tiers-blitz 1.4s ease-out 1;
+  border-radius: 8px;
+}
+@keyframes pin-tiers-blitz {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 80, 31, 0); }
+  15%, 60% { box-shadow: 0 0 0 3px rgba(168, 80, 31, 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pin-tiers-ziel-blitz { animation: none; }
+  .pin-tiers__chev { transition: none; }
+}

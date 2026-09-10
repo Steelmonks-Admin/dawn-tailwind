@@ -242,6 +242,168 @@
     zeigen(true);
   }
 
+
+  /* ---------------------------------------------------------------------
+     Sprung zur Motivauswahl. Aus der Sticky-Leiste heraus sieht man nur die
+     Stueckzahl, nicht das Motiv. Der Knopf bringt einen zurueck zur Auswahl
+     und hebt sie kurz hervor.
+     --------------------------------------------------------------------- */
+  function variantPicker(root) {
+    var form = productForm(root);
+    var scope = (form && form.closest('.product__info-container, .product')) || document;
+    return scope.querySelector('variant-selects, variant-radios')
+      || scope.querySelector('.product-form__input');
+  }
+
+  function setupJump(root) {
+    var knopf = root._stickyEl && root._stickyEl.querySelector('[data-pin-tiers-jump]');
+    if (!knopf) return;
+    knopf.addEventListener('click', function () {
+      var ziel = variantPicker(root);
+      if (!ziel) return;
+      ziel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      ziel.classList.remove('pin-tiers-ziel-blitz');
+      /* Reflow erzwingen, sonst startet die Animation beim zweiten Klick nicht neu. */
+      void ziel.offsetWidth;
+      ziel.classList.add('pin-tiers-ziel-blitz');
+      setTimeout(function () { ziel.classList.remove('pin-tiers-ziel-blitz'); }, 1600);
+      var erstes = ziel.querySelector('select, input[type="radio"], button');
+      if (erstes && typeof erstes.focus === 'function') {
+        setTimeout(function () { try { erstes.focus({ preventScroll: true }); } catch (e) {} }, 420);
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------------------
+     Mehrfach-Auswahl. Setzt Mengen je Motiv und legt alles mit einem
+     einzigen /cart/add.js hinein. Das ist nur zulaessig, weil die betroffenen
+     Produkte nicht personalisiert werden. Traegt der Warenkorb-Knopf einen
+     Personalisierungs-Text, faellt der Bereich aus.
+     --------------------------------------------------------------------- */
+  function personalisiert(root) {
+    var form = productForm(root);
+    var btn = form && form.querySelector('.product-form__submit, [type="submit"]');
+    var t = btn ? (btn.textContent || '') : '';
+    return /ersonalisier/i.test(t);
+  }
+
+  function setupMulti(root) {
+    var panel = root.querySelector('[data-pin-tiers-multi]');
+    var toggle = root.querySelector('[data-pin-tiers-multi-toggle]');
+    if (!panel || !toggle) return;
+
+    if (personalisiert(root)) {
+      toggle.remove();
+      panel.remove();
+      return;
+    }
+
+    var zeilen = [].slice.call(panel.querySelectorAll('[data-pin-multi-row]'));
+    var summe = panel.querySelector('[data-pin-tiers-multi-sum]');
+    var addBtn = panel.querySelector('[data-pin-tiers-multi-add]');
+    var status = panel.querySelector('[data-pin-tiers-multi-status]');
+
+    function auswahl() {
+      var raus = [];
+      zeilen.forEach(function (z) {
+        var feld = z.querySelector('[data-pin-multi-qty]');
+        var n = parseInt(feld.value, 10);
+        if (isNaN(n) || n < 0) n = 0;
+        if (n > 0) {
+          raus.push({
+            id: z.getAttribute('data-variant-id'),
+            qty: n,
+            preis: parseInt(z.getAttribute('data-variant-price'), 10) || 0
+          });
+        }
+        if (n > 0) z.setAttribute('data-gewaehlt', ''); else z.removeAttribute('data-gewaehlt');
+      });
+      return raus;
+    }
+
+    function neuRechnen() {
+      var gewaehlt = auswahl();
+      var stueck = 0, voll = 0;
+      gewaehlt.forEach(function (g) { stueck += g.qty; voll += g.qty * g.preis; });
+
+      addBtn.disabled = stueck === 0;
+      if (stueck === 0) {
+        summe.textContent = 'Noch nichts gewählt';
+        addBtn.textContent = 'In den Warenkorb legen';
+        return;
+      }
+
+      var rabatt = bestDiscount(root, stueck);
+      var zahlt = Math.round(voll * (1 - rabatt / 100));
+      var wort = stueck === 1 ? 'Stück' : 'Stück';
+      if (rabatt > 0) {
+        summe.innerHTML = '<b>' + stueck + ' ' + wort + ': ' + euro(zahlt) + '</b> '
+          + '<span class="pin-tiers__strike">' + euro(voll) + '</span>'
+          + '<span class="pin-tiers__save">' + euro(voll - zahlt) + ' gespart</span>';
+      } else {
+        summe.innerHTML = '<b>' + stueck + ' ' + wort + ': ' + euro(voll) + '</b>';
+      }
+      addBtn.textContent = stueck + ' ' + wort + ' in den Warenkorb';
+    }
+
+    zeilen.forEach(function (z) {
+      var feld = z.querySelector('[data-pin-multi-qty]');
+      z.querySelector('[data-pin-multi-minus]').addEventListener('click', function () {
+        feld.value = String(Math.max(0, (parseInt(feld.value, 10) || 0) - 1));
+        neuRechnen();
+      });
+      z.querySelector('[data-pin-multi-plus]').addEventListener('click', function () {
+        feld.value = String(Math.max(0, (parseInt(feld.value, 10) || 0) + 1));
+        neuRechnen();
+      });
+      feld.addEventListener('input', neuRechnen);
+    });
+
+    toggle.addEventListener('click', function () {
+      var offen = panel.hidden;
+      panel.hidden = !offen;
+      toggle.setAttribute('aria-expanded', offen ? 'true' : 'false');
+      if (offen) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+
+    addBtn.addEventListener('click', function () {
+      var gewaehlt = auswahl();
+      if (!gewaehlt.length) return;
+      addBtn.disabled = true;
+      var vorher = addBtn.textContent;
+      addBtn.textContent = 'Wird hinzugefügt …';
+      if (status) { status.hidden = true; status.removeAttribute('data-fehler'); }
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          items: gewaehlt.map(function (g) { return { id: Number(g.id), quantity: g.qty }; })
+        })
+      }).then(function (r) {
+        if (!r.ok) return r.json().then(function (j) { throw new Error(j.description || j.message || 'Fehler'); });
+        return r.json();
+      }).then(function () {
+        /* Zum Warenkorb schicken statt am Drawer zu basteln: der Shop macht das
+           auf Mobil ohnehin so, und der Rabatt ist dort sofort sichtbar. */
+        window.location.href = '/cart';
+      }).catch(function (e) {
+        addBtn.disabled = false;
+        addBtn.textContent = vorher;
+        if (status) {
+          status.textContent = 'Das hat nicht geklappt: ' + (e && e.message ? e.message : 'unbekannter Fehler');
+          status.setAttribute('data-fehler', '');
+          status.hidden = false;
+        }
+      });
+    });
+
+    neuRechnen();
+  }
+
   function init(root) {
     if (root.hasAttribute('data-pin-tiers-ready')) return;
     root.setAttribute('data-pin-tiers-ready', '');
@@ -268,6 +430,8 @@
     }
 
     setupSticky(root);
+    setupJump(root);
+    setupMulti(root);
 
     pills(root).forEach(function (btn) {
       btn.addEventListener('click', function () {

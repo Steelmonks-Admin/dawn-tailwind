@@ -50,6 +50,10 @@
       assign qt_note_set = 'Set mit festem Paketpreis'
       assign qt_hint = 'Du kannst verschiedene Pin-Motive mischen.'
       assign qt_hint_set = 'Die Mengenstaffel gilt für einzelne Anstecker.'
+      # Bei den Ansteckern sind die Varianten die Motive, ein Mischen lohnt sich.
+      assign qt_multi = true
+      assign qt_multi_label = 'Mehrere Motive mischen'
+      assign qt_jump_label = 'Motiv wählen'
     else
       assign qt_qtys = '1,2,3,5' | split: ','
       assign qt_discounts = '0,10,15,20' | split: ','
@@ -61,6 +65,12 @@
       assign qt_note_set = 'Gilt für alle Baum- und Gartenstecker'
       assign qt_hint = 'Du kannst verschiedene Motive mischen.'
       assign qt_hint_set = 'Du kannst verschiedene Motive mischen.'
+      # Bei Baum- und Gartensteckern sind die Varianten nur Oberflaeche oder Groesse.
+      # Verschiedene Motive sind dort eigene Produkte, ein Mischen innerhalb eines
+      # Produkts brächte nichts. Nur der Sprung zur Auswahl bleibt.
+      assign qt_multi = false
+      assign qt_multi_label = ''
+      assign qt_jump_label = 'Variante wählen'
     endif
 
     assign qt_eligible = qt_all_eligible
@@ -69,6 +79,20 @@
         assign qt_eligible = true
       endif
     endunless
+
+    # Wieviele Motive stehen ueberhaupt zur Auswahl? Erst ab zwei lohnt der
+    # Mehrfach-Bereich. Bei den Ansteckern zaehlen nur die Einzelstuecke,
+    # Sets haben ihren eigenen Paketpreis.
+    assign qt_pick_count = 0
+    for v in product.variants
+      if v.available
+        if qt_all_eligible
+          assign qt_pick_count = qt_pick_count | plus: 1
+        elsif v.price == qt_single_price
+          assign qt_pick_count = qt_pick_count | plus: 1
+        endif
+      endif
+    endfor
   -%}
 
   {{ 'pin-tiers.css' | asset_url | stylesheet_tag }}
@@ -135,6 +159,67 @@
 
     <p class='pin-tiers__hint' data-pin-tiers-hint>{{ qt_hint }}</p>
 
+    {%- if qt_multi and qt_pick_count > 1 -%}
+      {%- comment -%}
+        Mehrfach-Auswahl. Ohne sie muesste man fuer vier verschiedene Motive
+        viermal einzeln Variante waehlen und in den Warenkorb legen. Hier setzt
+        man alle Mengen auf einmal und legt sie in einem Rutsch hinein.
+      {%- endcomment -%}
+      <button
+        type='button'
+        class='pin-tiers__multi-toggle'
+        data-pin-tiers-multi-toggle
+        aria-expanded='false'
+        aria-controls='PinTiersMulti-{{ section.id }}'
+      >
+        {{ qt_multi_label }}
+        <span class='pin-tiers__chev' aria-hidden='true'>&#9662;</span>
+      </button>
+
+      <div class='pin-tiers__multi' id='PinTiersMulti-{{ section.id }}' data-pin-tiers-multi hidden>
+        <ul class='pin-tiers__multi-list'>
+          {%- for v in product.variants -%}
+            {%- liquid
+              assign qt_pick = false
+              if v.available
+                if qt_all_eligible
+                  assign qt_pick = true
+                elsif v.price == qt_single_price
+                  assign qt_pick = true
+                endif
+              endif
+            -%}
+            {%- if qt_pick -%}
+              <li class='pin-tiers__multi-row' data-pin-multi-row data-variant-id='{{ v.id }}' data-variant-price='{{ v.price }}'>
+                <span class='pin-tiers__multi-name'>{{ v.title }}</span>
+                <span class='pin-tiers__multi-price'>{{ v.price | money }}</span>
+                <span class='pin-tiers__stepper'>
+                  <button type='button' class='pin-tiers__step' data-pin-multi-minus aria-label='Weniger {{ v.title | escape }}'>&minus;</button>
+                  <input
+                    class='pin-tiers__step-input'
+                    type='number'
+                    min='0'
+                    step='1'
+                    value='0'
+                    inputmode='numeric'
+                    data-pin-multi-qty
+                    aria-label='Anzahl {{ v.title | escape }}'
+                  >
+                  <button type='button' class='pin-tiers__step' data-pin-multi-plus aria-label='Mehr {{ v.title | escape }}'>+</button>
+                </span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        <p class='pin-tiers__multi-sum' data-pin-tiers-multi-sum>Noch nichts gewählt</p>
+        <button type='button' class='pin-tiers__multi-add' data-pin-tiers-multi-add disabled>
+          In den Warenkorb legen
+        </button>
+        <p class='pin-tiers__multi-status' data-pin-tiers-multi-status role='status' aria-live='polite' hidden></p>
+      </div>
+    {%- endif -%}
+
     {%- comment -%}
       Kompakte Fassung fuer mobil. Das Skript haengt sie beim Start an den body,
       damit position:fixed nicht an einem transformierten Vorfahren scheitert, und
@@ -162,7 +247,15 @@
           </button>
         {%- endfor -%}
       </div>
-      <p class='pin-tiers-sticky__result' data-pin-tiers-sticky-result></p>
+      <div class='pin-tiers-sticky__zeile'>
+        <p class='pin-tiers-sticky__result' data-pin-tiers-sticky-result></p>
+        {%- comment -%} Der Sprung zur Auswahl hilft in beiden Gruppen. {%- endcomment -%}
+        {%- if qt_pick_count > 1 -%}
+          <button type='button' class='pin-tiers-sticky__jump' data-pin-tiers-jump>
+            {{ qt_jump_label }}
+          </button>
+        {%- endif -%}
+      </div>
     </div>
   </div>
 
