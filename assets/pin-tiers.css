@@ -76,8 +76,10 @@
   color: var(--pt-ink);
 }
 .pin-tiers__result b { font-weight: 700; }
-.pin-tiers__strike { color: var(--pt-mut); text-decoration: line-through; font-weight: 400; }
-.pin-tiers__save { color: var(--pt-good); font-weight: 600; }
+
+.pin-tiers__strike { color: var(--pt-mut); text-decoration: line-through; font-weight: 400; white-space: nowrap; }
+.pin-tiers__save { color: var(--pt-good); font-weight: 600; white-space: nowrap; }
+.pin-tiers__result b { white-space: nowrap; }
 
 .pin-tiers__custom {
   display: flex;

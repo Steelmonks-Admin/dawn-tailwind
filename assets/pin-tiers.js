@@ -12,8 +12,7 @@
   'use strict';
 
   var HINT_DEFAULT =
-    'Der Rabatt wird im Warenkorb automatisch abgezogen und zählt über alle Anstecker '
-    + 'zusammen. Du kannst also verschiedene Motive mischen.';
+    'Du kannst verschiedene Motive mischen, der Rabatt wird im Warenkorb automatisch abgezogen.';
   var HINT_SET =
     'Dieses Set hat bereits einen Paketpreis. Die Mengenstaffel gilt für einzelne Anstecker.';
   var NOTE_DEFAULT = 'Gilt für alle Anstecker zusammen';
@@ -23,7 +22,7 @@
     return (cents / 100).toLocaleString('de-DE', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    }) + ' €';
+    }) + '\u00A0€';
   }
 
   /* Die PDP traegt mehrere Warenkorb-Formulare (Empfehlungen, Sticky-Leiste).
