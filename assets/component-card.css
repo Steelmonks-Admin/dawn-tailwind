@@ -516,6 +516,21 @@
   white-space: nowrap;
 }
 
+/* Bei 360px Breite bleiben sonst nur 2px Luft, dreistellige Bewertungszahlen
+   brechen dann doch noch um. Auf schmalen Geraeten Sterne und Zahl enger. */
+@media screen and (max-width: 374px) {
+  .card-wrapper .rating-star {
+    --letter-spacing: 0;
+    --font-size: 1.15;
+  }
+
+  .card-information
+    > *:not(.visually-hidden:first-child)
+    + p.rating-count.caption {
+    font-size: 1.1rem;
+  }
+}
+
 /* Specificity needed due to the changes below */
 .card-information
   > *:not(.visually-hidden:first-child)
