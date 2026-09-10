@@ -201,7 +201,9 @@
         var ragtRein = window.innerWidth - r.left;
         if (ragtRein > breiteste) breiteste = ragtRein;
       });
-      return breiteste > 0 ? Math.ceil(breiteste) + 6 : 0;
+      /* Rueckgabe ist das komplette rechte Polster inklusive Sicherheitsabstand,
+         nicht nur die Siegelbreite. Ohne Siegel das normale Polster. */
+      return breiteste > 0 ? Math.ceil(breiteste) + 6 : 13;
     }
 
     var geplant = false;
