@@ -82,9 +82,19 @@
     return ids.indexOf(current) !== -1;
   }
 
+  /* Die Sticky-Leiste haengt am body, nicht mehr im Widget. Beide Pill-Saetze
+     muessen aber gemeinsam angesteuert werden. */
+  function pills(root) {
+    var list = [].slice.call(root.querySelectorAll('[data-pin-tier]'));
+    if (root._stickyEl) {
+      list = list.concat([].slice.call(root._stickyEl.querySelectorAll('[data-pin-tier]')));
+    }
+    return list;
+  }
+
   function bestDiscount(root, qty) {
     var best = 0;
-    root.querySelectorAll('[data-pin-tier]').forEach(function (btn) {
+    pills(root).forEach(function (btn) {
       var q = parseInt(btn.getAttribute('data-qty'), 10);
       var d = parseFloat(btn.getAttribute('data-discount')) || 0;
       if (!isNaN(q) && qty >= q && d > best) best = d;
@@ -97,7 +107,7 @@
     var eligible = isEligible(root);
     root.setAttribute('data-eligible', eligible ? '1' : '0');
 
-    root.querySelectorAll('[data-pin-tier]').forEach(function (btn) {
+    pills(root).forEach(function (btn) {
       var exact = parseInt(btn.getAttribute('data-qty'), 10) === qty;
       btn.classList.toggle('pin-tiers__pill--active', exact);
       btn.setAttribute('aria-pressed', exact ? 'true' : 'false');
@@ -116,23 +126,28 @@
     var hint = root.querySelector('[data-pin-tiers-hint]');
     if (hint) hint.textContent = eligible ? txt(root, 'hint', '') : txt(root, 'hint-set', '');
 
-    var out = root.querySelector('[data-pin-tiers-result]');
-    if (!out) return;
+    var ziele = [root.querySelector('[data-pin-tiers-result]')];
+    if (root._stickyEl) ziele.push(root._stickyEl.querySelector('[data-pin-tiers-sticky-result]'));
+    ziele = ziele.filter(Boolean);
+    if (!ziele.length) return;
+
     var unit = parseInt(root.getAttribute('data-unit-price'), 10);
+    var html;
     if (!unit || isNaN(unit)) {
-      out.textContent = qty + ' Stück';
-      return;
-    }
-    var full = unit * qty;
-    var discount = eligible ? bestDiscount(root, qty) : 0;
-    var pays = Math.round(full * (1 - discount / 100));
-    if (discount > 0) {
-      out.innerHTML = '<b>' + qty + ' Stück: ' + euro(pays) + '</b> '
-        + '<span class="pin-tiers__strike">' + euro(full) + '</span> '
-        + '<span class="pin-tiers__save">' + euro(full - pays) + ' gespart</span>';
+      html = qty + ' Stück';
     } else {
-      out.innerHTML = '<b>' + qty + ' Stück: ' + euro(full) + '</b>';
+      var full = unit * qty;
+      var discount = eligible ? bestDiscount(root, qty) : 0;
+      var pays = Math.round(full * (1 - discount / 100));
+      if (discount > 0) {
+        html = '<b>' + qty + ' Stück: ' + euro(pays) + '</b> '
+          + '<span class="pin-tiers__strike">' + euro(full) + '</span> '
+          + '<span class="pin-tiers__save">' + euro(full - pays) + ' gespart</span>';
+      } else {
+        html = '<b>' + qty + ' Stück: ' + euro(full) + '</b>';
+      }
     }
+    ziele.forEach(function (el) { el.innerHTML = html; });
   }
 
   function readVariantPrice(root) {
@@ -148,6 +163,61 @@
       .replace(',', '.');
     var cents = Math.round(parseFloat(raw) * 100);
     if (!isNaN(cents) && cents > 0) root.setAttribute('data-unit-price', String(cents));
+  }
+
+  /* Die kompakte Leiste wandert an den body, weil position:fixed sonst an einem
+     transformierten Vorfahren der Produktinfo haengen bleiben kann. Sichtbar ist
+     sie immer dann, wenn das grosse Widget nicht im Bild steht, also auch direkt
+     beim Aufruf der Seite. Ueber der theme-eigenen Produktleiste, nie darauf. */
+  function setupSticky(root) {
+    var sticky = root.querySelector('[data-pin-tiers-sticky]');
+    if (!sticky) return;
+    document.body.appendChild(sticky);
+    root._stickyEl = sticky;
+
+    function themeBarHeight() {
+      var bar = document.querySelector('product-sticky-bar, .product__sticky-bar');
+      if (!bar) return 0;
+      var s = window.getComputedStyle(bar);
+      if (s.display === 'none' || s.visibility === 'hidden') return 0;
+      var r = bar.getBoundingClientRect();
+      var sichtbar = window.innerHeight - r.top;
+      return sichtbar > 0 ? Math.min(sichtbar, r.height) : 0;
+    }
+
+    var geplant = false;
+    function platzieren() {
+      geplant = false;
+      sticky.style.setProperty('--pt-sticky-bottom', themeBarHeight() + 'px');
+    }
+    function anstossen() {
+      if (geplant) return;
+      geplant = true;
+      window.requestAnimationFrame(platzieren);
+    }
+    window.addEventListener('scroll', anstossen, { passive: true });
+    window.addEventListener('resize', anstossen);
+    platzieren();
+
+    function zeigen(an) {
+      if (window.matchMedia('(min-width: 750px)').matches) an = false;
+      if (an) platzieren();
+      sticky.hidden = !an;
+    }
+
+    if ('IntersectionObserver' in window) {
+      /* Nicht isIntersecting abfragen: das ist schon bei einem sichtbaren Pixel
+         wahr. Entscheidend ist, ob genug vom Widget im Bild steht. */
+      new IntersectionObserver(function (eintraege) {
+        eintraege.forEach(function (e) { zeigen(e.intersectionRatio < 0.35); });
+      }, { threshold: [0, 0.2, 0.35, 0.5, 1] }).observe(root);
+    } else {
+      window.addEventListener('scroll', function () {
+        var r = root.getBoundingClientRect();
+        zeigen(r.bottom < 60 || r.top > window.innerHeight - 60);
+      }, { passive: true });
+    }
+    zeigen(true);
   }
 
   function init(root) {
@@ -175,7 +245,9 @@
       render(root, qty);
     }
 
-    root.querySelectorAll('[data-pin-tier]').forEach(function (btn) {
+    setupSticky(root);
+
+    pills(root).forEach(function (btn) {
       btn.addEventListener('click', function () {
         apply(parseInt(btn.getAttribute('data-qty'), 10) || 1);
       });

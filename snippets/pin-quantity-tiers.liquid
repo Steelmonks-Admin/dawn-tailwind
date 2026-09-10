@@ -134,6 +134,36 @@
     </div>
 
     <p class='pin-tiers__hint' data-pin-tiers-hint>{{ qt_hint }}</p>
+
+    {%- comment -%}
+      Kompakte Fassung fuer mobil. Das Skript haengt sie beim Start an den body,
+      damit position:fixed nicht an einem transformierten Vorfahren scheitert, und
+      blendet sie ein, sobald das grosse Widget aus dem Bild ist. Beim Laden der
+      Seite ist das der Fall, die Staffel ist also sofort sichtbar.
+    {%- endcomment -%}
+    <div class='pin-tiers-sticky' data-pin-tiers-sticky hidden>
+      <div class='pin-tiers-sticky__pills' role='group' aria-label='Stückzahl wählen'>
+        {%- for q in qt_qtys -%}
+          {%- assign qt_sd = qt_discounts[forloop.index0] | plus: 0 -%}
+          <button
+            type='button'
+            class='pin-tiers__pill pin-tiers-sticky__pill{% if forloop.first %} pin-tiers__pill--active{% endif %}'
+            data-pin-tier
+            data-qty='{{ q }}'
+            data-discount='{{ qt_sd }}'
+            aria-pressed='{% if forloop.first %}true{% else %}false{% endif %}'
+          >
+            <span class='pin-tiers__qty'>{{ q }}</span>
+            {%- if qt_sd > 0 -%}
+              <span class='pin-tiers__off'>&minus;{{ qt_sd }}%</span>
+            {%- else -%}
+              <span class='pin-tiers__off pin-tiers__off--none'>1×</span>
+            {%- endif -%}
+          </button>
+        {%- endfor -%}
+      </div>
+      <p class='pin-tiers-sticky__result' data-pin-tiers-sticky-result></p>
+    </div>
   </div>
 
   <script src='{{ 'pin-tiers.js' | asset_url }}' defer='defer'></script>
