@@ -531,6 +531,20 @@
   }
 }
 
+/* Sehr schmale Geraete (iPhone SE und aehnlich, Karte nur 107px breit). */
+@media screen and (max-width: 344px) {
+  .card-wrapper .rating-star {
+    --letter-spacing: 0;
+    --font-size: 0.95;
+  }
+
+  .card-information
+    > *:not(.visually-hidden:first-child)
+    + p.rating-count.caption {
+    font-size: 1rem;
+  }
+}
+
 /* Specificity needed due to the changes below */
 .card-information
   > *:not(.visually-hidden:first-child)
