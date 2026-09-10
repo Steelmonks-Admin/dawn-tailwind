@@ -186,9 +186,14 @@
 }
 .pin-tiers-sticky__result .pin-tiers__strike { display: none; }
 
-@media (max-width: 344px) {
-  .pin-tiers-sticky__result { font-size: 1.1rem; }
-  .pin-tiers-sticky__result .pin-tiers__save { font-size: 1.05rem; }
+/* Schmale Geraete: kleiner setzen, und lieber umbrechen als abschneiden.
+   Rechts steht das Trusted-Shops-Siegel, breiter geht es dort nicht. */
+@media (max-width: 389px) {
+  .pin-tiers-sticky__result {
+    font-size: 1.05rem;
+    white-space: normal;
+  }
+  .pin-tiers-sticky__result .pin-tiers__save { font-size: 1rem; }
 }
 
 @media (min-width: 750px) {
