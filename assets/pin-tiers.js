@@ -141,7 +141,7 @@
       var pays = Math.round(full * (1 - discount / 100));
       if (discount > 0) {
         html = '<b>' + qty + ' Stück: ' + euro(pays) + '</b> '
-          + '<span class="pin-tiers__strike">' + euro(full) + '</span> '
+          + '<span class="pin-tiers__strike">' + euro(full) + '</span>'
           + '<span class="pin-tiers__save">' + euro(full - pays) + ' gespart</span>';
       } else {
         html = '<b>' + qty + ' Stück: ' + euro(full) + '</b>';
@@ -185,10 +185,30 @@
       return sichtbar > 0 ? Math.min(sichtbar, r.height) : 0;
     }
 
+    /* Das schwebende Trusted-Shops-Siegel sitzt unten rechts und wuerde sonst
+       die Preiszeile verdecken. Wir messen es und halten den Platz frei. */
+    function badgeWidth() {
+      var badge = document.querySelector('[id^="trustbadge-container-"]');
+      if (!badge) return 0;
+      var kandidaten = [badge].concat([].slice.call(badge.querySelectorAll('*')));
+      var breiteste = 0;
+      kandidaten.forEach(function (el) {
+        var s = window.getComputedStyle(el);
+        if (s.position !== 'fixed' || s.display === 'none' || s.visibility === 'hidden') return;
+        var r = el.getBoundingClientRect();
+        if (r.width < 20 || r.height < 20) return;
+        if (r.bottom < window.innerHeight - 220) return;
+        var ragtRein = window.innerWidth - r.left;
+        if (ragtRein > breiteste) breiteste = ragtRein;
+      });
+      return breiteste > 0 ? Math.ceil(breiteste) + 6 : 0;
+    }
+
     var geplant = false;
     function platzieren() {
       geplant = false;
       sticky.style.setProperty('--pt-sticky-bottom', themeBarHeight() + 'px');
+      sticky.style.setProperty('--pt-sticky-right', badgeWidth() + 'px');
     }
     function anstossen() {
       if (geplant) return;
