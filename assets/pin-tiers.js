@@ -125,7 +125,7 @@
     if (discount > 0) {
       out.innerHTML = '<b>' + qty + ' Stück: ' + euro(pays) + '</b> '
         + '<span class="pin-tiers__strike">' + euro(full) + '</span> '
-        + '<span class="pin-tiers__save">· ' + euro(full - pays) + ' gespart</span>';
+        + '<span class="pin-tiers__save">' + euro(full - pays) + ' gespart</span>';
     } else {
       out.innerHTML = '<b>' + qty + ' Stück: ' + euro(full) + '</b>';
     }

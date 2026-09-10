@@ -78,7 +78,7 @@
 .pin-tiers__result b { font-weight: 700; }
 
 .pin-tiers__strike { color: var(--pt-mut); text-decoration: line-through; font-weight: 400; white-space: nowrap; }
-.pin-tiers__save { color: var(--pt-good); font-weight: 600; white-space: nowrap; }
+.pin-tiers__save { display: block; margin-top: 0.15rem; color: var(--pt-good); font-weight: 600; white-space: nowrap; }
 .pin-tiers__result b { white-space: nowrap; }
 
 .pin-tiers__custom {
