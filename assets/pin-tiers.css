@@ -254,9 +254,9 @@
   min-width: 0;
   font-size: 1.3rem;
   line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Der Motivname entscheidet die Wahl, deshalb lieber umbrechen als kuerzen
+     ("Brauer und Maelzer" wurde sonst zu "Brauer und ..."). */
+  overflow-wrap: anywhere;
 }
 .pin-tiers__multi-price { flex: 0 0 auto; font-size: 1.2rem; color: var(--pt-mut); }
 
