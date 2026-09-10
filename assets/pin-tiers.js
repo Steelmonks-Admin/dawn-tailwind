@@ -17,6 +17,8 @@
     'Dieses Set hat bereits einen Paketpreis. Die Mengenstaffel gilt für einzelne Anstecker.';
   var NOTE_DEFAULT = 'Gilt für alle Anstecker zusammen';
   var NOTE_SET = 'Set mit festem Paketpreis';
+  var TITLE_DEFAULT = 'Mehr Anstecker, mehr Rabatt';
+  var TITLE_SET = 'Stückzahl wählen';
 
   function euro(cents) {
     return (cents / 100).toLocaleString('de-DE', {
@@ -107,6 +109,8 @@
       free.value = onPill ? '' : String(qty);
     }
 
+    var title = root.querySelector('.pin-tiers__title');
+    if (title) title.textContent = eligible ? TITLE_DEFAULT : TITLE_SET;
     var note = root.querySelector('[data-pin-tiers-note]');
     if (note) note.textContent = eligible ? NOTE_DEFAULT : NOTE_SET;
     var hint = root.querySelector('[data-pin-tiers-hint]');
