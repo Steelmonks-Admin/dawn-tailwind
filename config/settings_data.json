@@ -171,11 +171,6 @@
         "disabled": false,
         "settings": {}
       },
-      "6544682535036668446": {
-        "type": "shopify://apps/pumper-bundles-quantity-breaks/blocks/app-embed/0856870d-2aca-4b1e-a662-cf1797f61270",
-        "disabled": true,
-        "settings": {}
-      },
       "855628211100114053": {
         "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
         "disabled": false,
