@@ -1,22 +1,23 @@
 /**
- * Anstecker-Mengenstaffel.
+ * Mengenstaffel-Widget (Anstecker und Baum-/Gartenstecker).
  *
  * Setzt nur die Stueckzahl im Warenkorbformular und rechnet die Ersparnis vor.
  * Der Rabatt selbst kommt aus den automatischen Shopify-Rabatten und zaehlt
- * produktuebergreifend ueber alle Anstecker im Warenkorb.
+ * produktuebergreifend ueber alle Artikel der jeweiligen Gruppe im Warenkorb.
  *
- * Set-Varianten haben einen eigenen Paketpreis und sind nicht in der Staffel;
- * fuer die schaltet das Widget die Prozente ab und passt den Hinweis an.
+ * Stufen, Preise und alle Texte kommen aus data-Attributen des Snippets,
+ * damit dieselbe Datei beide Gruppen bedient. Bei den Ansteckern haben
+ * Set-Varianten einen eigenen Paketpreis und sind nicht in der Staffel; dort
+ * schaltet das Widget die Prozente ab und tauscht die Texte.
  */
 (function () {
   'use strict';
 
-  var HINT_DEFAULT = 'Du kannst verschiedene Pin-Motive mischen.';
-  var HINT_SET = 'Die Mengenstaffel gilt für einzelne Anstecker.';
-  var NOTE_DEFAULT = 'Gilt für alle Anstecker zusammen';
-  var NOTE_SET = 'Set mit festem Paketpreis';
-  var TITLE_DEFAULT = 'Mehr Anstecker, mehr Rabatt';
-  var TITLE_SET = 'Stückzahl wählen';
+  /* Die Texte liefert das Snippet ueber data-Attribute, damit dasselbe Skript
+     Anstecker und Baumstecker bedienen kann. */
+  function txt(root, key, fallback) {
+    return root.getAttribute('data-' + key) || fallback;
+  }
 
   function euro(cents) {
     return (cents / 100).toLocaleString('de-DE', {
@@ -73,6 +74,7 @@
   }
 
   function isEligible(root) {
+    if (root.getAttribute('data-all-eligible') === '1') return true;
     var ids = (root.getAttribute('data-eligible-ids') || '').split(',').filter(Boolean);
     if (!ids.length) return root.getAttribute('data-eligible') === '1';
     var current = selectedVariantId(root);
@@ -108,11 +110,11 @@
     }
 
     var title = root.querySelector('.pin-tiers__title');
-    if (title) title.textContent = eligible ? TITLE_DEFAULT : TITLE_SET;
+    if (title) title.textContent = eligible ? txt(root, 'title', '') : txt(root, 'title-set', '');
     var note = root.querySelector('[data-pin-tiers-note]');
-    if (note) note.textContent = eligible ? NOTE_DEFAULT : NOTE_SET;
+    if (note) note.textContent = eligible ? txt(root, 'note', '') : txt(root, 'note-set', '');
     var hint = root.querySelector('[data-pin-tiers-hint]');
-    if (hint) hint.textContent = eligible ? HINT_DEFAULT : HINT_SET;
+    if (hint) hint.textContent = eligible ? txt(root, 'hint', '') : txt(root, 'hint-set', '');
 
     var out = root.querySelector('[data-pin-tiers-result]');
     if (!out) return;

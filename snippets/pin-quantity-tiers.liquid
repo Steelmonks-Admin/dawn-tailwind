@@ -1,42 +1,74 @@
 {%- comment -%}
-  Anstecker-Mengenstaffel (10.09.2026)
+  Mengenstaffel-Widget (10.09.2026)
 
-  Loest die alte, auf einen einzigen Handle festgenagelte Variante
-  `zunft-quantity-tiers-block` ab und laeuft auf allen Anstecker-Produkten.
+  Trotz des Dateinamens bedient dieses Snippet ZWEI Produktgruppen:
 
-  Das Snippet setzt ausschliesslich die Stueckzahl im Warenkorbformular.
-  Der Rabatt selbst kommt aus vier automatischen Shopify-Rabatten
-  ("Anstecker-Staffel: ab 2/3/4/8 Stueck") und zaehlt produktuebergreifend:
-  Shopify summiert alle rabattfaehigen Anstecker im Warenkorb.
+    1. "anstecker"   Produkttyp enthält "Anstecker", Einzelpreis 4,90 EUR.
+                     Stufen 2/10 %, 3/15 %, 4/20 %, 8/25 %.
+                     Set-Varianten (7,90 / 10,90 / 13,90 / 16,90) haben einen
+                     eigenen Paketpreis und sind bewusst nicht in der Staffel.
+    2. "baumstecker" Produkttyp Baumtier, Fee oder Gartenstecker.
+                     Stufen 2/10 %, 3/15 %, 5/20 %. Alle Varianten rabattfähig,
+                     die Preise reichen von 17,90 bis 49,90 EUR.
 
-  Rabattfaehig sind genau die Einzel-Anstecker zu 4,90 EUR. Set-Varianten
-  (7,90 / 10,90 / 13,90 / 16,90) haben ihren eigenen Paketpreis und sind
-  bewusst nicht in der Staffel - deshalb der Preisabgleich unten.
+  Das Snippet setzt ausschließlich die Stückzahl im Warenkorbformular. Die
+  Rabatte selbst liegen als automatische Shopify-Rabatte im Admin und zählen
+  produktübergreifend: Shopify summiert alle Artikel der jeweiligen Gruppe im
+  Warenkorb, also auch verschiedene Motive.
 
-  Aendern sich die Rabatte im Admin, muessen die Stufen hier mitgezogen werden.
+  Ändern sich die Rabatte im Admin, müssen die Stufen hier mitgezogen werden.
 {%- endcomment -%}
 
 {%- liquid
-  assign pt_single_price = 490
-  assign pt_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
-  assign pt_is_pin = false
+  assign qt_group = ''
+  assign qt_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
+  assign qt_garden_types = 'Baumtier,Fee,Gartenstecker' | split: ','
+
   if product.type contains 'Anstecker'
-    assign pt_is_pin = true
+    assign qt_group = 'anstecker'
   endif
-  if pt_excluded contains product.handle
-    assign pt_is_pin = false
+  if qt_garden_types contains product.type
+    assign qt_group = 'baumstecker'
+  endif
+  if qt_excluded contains product.handle
+    assign qt_group = ''
   endif
 -%}
 
-{%- if pt_is_pin -%}
+{%- if qt_group != blank -%}
   {%- liquid
-    assign pt_qtys = '1,2,3,4,8' | split: ','
-    assign pt_discounts = '0,10,15,20,25' | split: ','
-    assign pt_current = product.selected_or_first_available_variant
-    assign pt_eligible = false
-    if pt_current.price == pt_single_price
-      assign pt_eligible = true
+    assign qt_current = product.selected_or_first_available_variant
+
+    if qt_group == 'anstecker'
+      assign qt_qtys = '1,2,3,4,8' | split: ','
+      assign qt_discounts = '0,10,15,20,25' | split: ','
+      assign qt_single_price = 490
+      assign qt_all_eligible = false
+      assign qt_title = 'Mehr Anstecker, mehr Rabatt'
+      assign qt_title_set = 'Stückzahl wählen'
+      assign qt_note = 'Gilt für alle Anstecker zusammen'
+      assign qt_note_set = 'Set mit festem Paketpreis'
+      assign qt_hint = 'Du kannst verschiedene Pin-Motive mischen.'
+      assign qt_hint_set = 'Die Mengenstaffel gilt für einzelne Anstecker.'
+    else
+      assign qt_qtys = '1,2,3,5' | split: ','
+      assign qt_discounts = '0,10,15,20' | split: ','
+      assign qt_single_price = qt_current.price
+      assign qt_all_eligible = true
+      assign qt_title = 'Mehr Stecker, mehr Rabatt'
+      assign qt_title_set = 'Stückzahl wählen'
+      assign qt_note = 'Gilt für alle Baum- und Gartenstecker'
+      assign qt_note_set = 'Gilt für alle Baum- und Gartenstecker'
+      assign qt_hint = 'Du kannst verschiedene Motive mischen.'
+      assign qt_hint_set = 'Du kannst verschiedene Motive mischen.'
     endif
+
+    assign qt_eligible = qt_all_eligible
+    unless qt_all_eligible
+      if qt_current.price == qt_single_price
+        assign qt_eligible = true
+      endif
+    endunless
   -%}
 
   {{ 'pin-tiers.css' | asset_url | stylesheet_tag }}
@@ -44,30 +76,38 @@
   <div
     class='pin-tiers'
     data-pin-tiers
+    data-group='{{ qt_group }}'
     data-form-id='{{ product_form_id }}'
-    data-unit-price='{{ pt_single_price }}'
-    data-eligible='{% if pt_eligible %}1{% else %}0{% endif %}'
-    data-eligible-ids='{% for v in product.variants %}{% if v.price == pt_single_price %}{{ v.id }},{% endif %}{% endfor %}'
+    data-unit-price='{{ qt_single_price }}'
+    data-eligible='{% if qt_eligible %}1{% else %}0{% endif %}'
+    data-all-eligible='{% if qt_all_eligible %}1{% else %}0{% endif %}'
+    data-eligible-ids='{% unless qt_all_eligible %}{% for v in product.variants %}{% if v.price == qt_single_price %}{{ v.id }},{% endif %}{% endfor %}{% endunless %}'
+    data-title='{{ qt_title | escape }}'
+    data-title-set='{{ qt_title_set | escape }}'
+    data-note='{{ qt_note | escape }}'
+    data-note-set='{{ qt_note_set | escape }}'
+    data-hint='{{ qt_hint | escape }}'
+    data-hint-set='{{ qt_hint_set | escape }}'
   >
     <div class='pin-tiers__head'>
-      <p class='pin-tiers__title'>Mehr Anstecker, mehr Rabatt</p>
-      <p class='pin-tiers__note' data-pin-tiers-note>Gilt für alle Anstecker zusammen</p>
+      <p class='pin-tiers__title'>{{ qt_title }}</p>
+      <p class='pin-tiers__note' data-pin-tiers-note>{{ qt_note }}</p>
     </div>
 
     <div class='pin-tiers__pills' role='group' aria-label='Stückzahl wählen'>
-      {%- for q in pt_qtys -%}
-        {%- assign pt_d = pt_discounts[forloop.index0] | plus: 0 -%}
+      {%- for q in qt_qtys -%}
+        {%- assign qt_d = qt_discounts[forloop.index0] | plus: 0 -%}
         <button
           type='button'
           class='pin-tiers__pill{% if forloop.first %} pin-tiers__pill--active{% endif %}'
           data-pin-tier
           data-qty='{{ q }}'
-          data-discount='{{ pt_d }}'
+          data-discount='{{ qt_d }}'
           aria-pressed='{% if forloop.first %}true{% else %}false{% endif %}'
         >
           <span class='pin-tiers__qty'>{{ q }}</span>
-          {%- if pt_d > 0 -%}
-            <span class='pin-tiers__off'>&minus;{{ pt_d }}%</span>
+          {%- if qt_d > 0 -%}
+            <span class='pin-tiers__off'>&minus;{{ qt_d }}%</span>
           {%- else -%}
             <span class='pin-tiers__off pin-tiers__off--none'>Einzeln</span>
           {%- endif -%}
@@ -76,7 +116,7 @@
     </div>
 
     <p class='pin-tiers__result' data-pin-tiers-result>
-      <b>1 Stück: {{ pt_current.price | money }}</b>
+      <b>1 Stück: {{ qt_current.price | money }}</b>
     </p>
 
     <div class='pin-tiers__custom'>
@@ -93,9 +133,7 @@
       >
     </div>
 
-    <p class='pin-tiers__hint' data-pin-tiers-hint>
-      Du kannst verschiedene Pin-Motive mischen.
-    </p>
+    <p class='pin-tiers__hint' data-pin-tiers-hint>{{ qt_hint }}</p>
   </div>
 
   <script src='{{ 'pin-tiers.js' | asset_url }}' defer='defer'></script>

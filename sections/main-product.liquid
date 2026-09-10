@@ -364,17 +364,21 @@
                   assign smk_show_qty = false
                 endif
               endfor
-              # Anstecker: die Mengenstaffel ersetzt das nackte Zahlenfeld.
-              # Gate identisch zu snippets/pin-quantity-tiers.liquid.
-              assign smk_pin_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
-              assign smk_is_pin = false
+              # Anstecker und Baum-/Gartenstecker: die Mengenstaffel ersetzt das
+              # nackte Zahlenfeld. Gate identisch zu snippets/pin-quantity-tiers.liquid.
+              assign smk_tier_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
+              assign smk_garden_types = 'Baumtier,Fee,Gartenstecker' | split: ','
+              assign smk_has_tiers = false
               if product.type contains 'Anstecker'
-                assign smk_is_pin = true
+                assign smk_has_tiers = true
               endif
-              if smk_pin_excluded contains product.handle
-                assign smk_is_pin = false
+              if smk_garden_types contains product.type
+                assign smk_has_tiers = true
               endif
-              if smk_is_pin
+              if smk_tier_excluded contains product.handle
+                assign smk_has_tiers = false
+              endif
+              if smk_has_tiers
                 assign smk_show_qty = false
               endif
             -%}
@@ -395,8 +399,12 @@
             {%- endcomment -%}
             {%- liquid
               assign smk_zb_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
+              assign smk_zb_garden = 'Baumtier,Fee,Gartenstecker' | split: ','
               assign smk_zb_is_pin = false
               if product.type contains 'Anstecker'
+                assign smk_zb_is_pin = true
+              endif
+              if smk_zb_garden contains product.type
                 assign smk_zb_is_pin = true
               endif
               if smk_zb_excluded contains product.handle
