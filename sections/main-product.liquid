@@ -213,6 +213,28 @@
                   data-sku='{%- for variant in product.variants -%}{{ variant.sku }},{%- endfor -%}'
                 ></etrusted-widget>
               </div>
+              <script>
+                /*
+                  Hat ein Produkt keine Trusted-Shops-Bewertung, rendert das Widget nichts,
+                  haelt aber seine 82px Mindesthoehe - unter dem Produkttitel bleibt dann eine
+                  leere Luecke stehen (Fund 10.09.2026 auf /laender-anstecker). Also einklappen,
+                  solange nichts drin steht, und wieder aufmachen sobald Bewertungen nachladen.
+                */
+                (function () {
+                  var box = document.currentScript.previousElementSibling;
+                  if (!box) return;
+                  var w = box.querySelector('etrusted-widget');
+                  if (!w) return;
+                  function check() {
+                    var filled = !!(w.shadowRoot && w.shadowRoot.childElementCount)
+                      || w.childElementCount > 0
+                      || (w.textContent || '').trim().length > 0;
+                    box.style.display = filled ? '' : 'none';
+                  }
+                  check();
+                  [400, 1200, 3000, 6000].forEach(function (t) { setTimeout(check, t); });
+                })();
+              </script>
             {%- endif -%}
           {%- when 'title' -%}
             <div class='product__title' {{ block.shopify_attributes }}>
@@ -332,7 +354,7 @@
           {%- when 'buy_buttons' -%}
             {%- liquid
               # Mengenwahl nur fuer Produkte ohne Personalisierung (Tag "Mengenwahl"),
-              # nicht wenn die Zunft-Staffelmengen dieses Produkt bereits bedienen.
+              # nicht wenn eine Staffel-Mengenwahl dieses Produkt bereits bedient.
               assign smk_show_qty = false
               if block.settings.enable_quantity_selector and product.tags contains 'Mengenwahl'
                 assign smk_show_qty = true
@@ -342,7 +364,21 @@
                   assign smk_show_qty = false
                 endif
               endfor
+              # Anstecker: die Mengenstaffel ersetzt das nackte Zahlenfeld.
+              # Gate identisch zu snippets/pin-quantity-tiers.liquid.
+              assign smk_pin_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
+              assign smk_is_pin = false
+              if product.type contains 'Anstecker'
+                assign smk_is_pin = true
+              endif
+              if smk_pin_excluded contains product.handle
+                assign smk_is_pin = false
+              endif
+              if smk_is_pin
+                assign smk_show_qty = false
+              endif
             -%}
+            {% render 'pin-quantity-tiers', product: product, section: section, product_form_id: product_form_id %}
             {% render 'buy-buttons',
               product: product,
               product_form_id: product_form_id,
@@ -352,7 +388,24 @@
             %}
             {% render 'steelmonks-zunft-konfigurator', product: product %}
           {%- when 'zunft_quantity_tiers' -%}
-            {% render 'zunft-quantity-tiers-block', product: product, block: block %}
+            {%- comment -%}
+              Abgeloest durch snippets/pin-quantity-tiers.liquid, das auf allen
+              Ansteckern laeuft. Der alte Block bleibt nur fuer Produkte ausserhalb
+              dieses Gates stehen, damit nie zwei Mengenwahlen uebereinander liegen.
+            {%- endcomment -%}
+            {%- liquid
+              assign smk_zb_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
+              assign smk_zb_is_pin = false
+              if product.type contains 'Anstecker'
+                assign smk_zb_is_pin = true
+              endif
+              if smk_zb_excluded contains product.handle
+                assign smk_zb_is_pin = false
+              endif
+            -%}
+            {%- unless smk_zb_is_pin -%}
+              {% render 'zunft-quantity-tiers-block', product: product, block: block %}
+            {%- endunless -%}
           {%- when 'complementary_products' -%}
             <script src='{{ 'old_product-recommendations.js' | asset_url }}' defer='defer'></script>
 

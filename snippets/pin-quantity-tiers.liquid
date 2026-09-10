@@ -1,0 +1,103 @@
+{%- comment -%}
+  Anstecker-Mengenstaffel (10.09.2026)
+
+  Loest die alte, auf einen einzigen Handle festgenagelte Variante
+  `zunft-quantity-tiers-block` ab und laeuft auf allen Anstecker-Produkten.
+
+  Das Snippet setzt ausschliesslich die Stueckzahl im Warenkorbformular.
+  Der Rabatt selbst kommt aus vier automatischen Shopify-Rabatten
+  ("Anstecker-Staffel: ab 2/3/4/8 Stueck") und zaehlt produktuebergreifend:
+  Shopify summiert alle rabattfaehigen Anstecker im Warenkorb.
+
+  Rabattfaehig sind genau die Einzel-Anstecker zu 4,90 EUR. Set-Varianten
+  (7,90 / 10,90 / 13,90 / 16,90) haben ihren eigenen Paketpreis und sind
+  bewusst nicht in der Staffel - deshalb der Preisabgleich unten.
+
+  Aendern sich die Rabatte im Admin, muessen die Stufen hier mitgezogen werden.
+{%- endcomment -%}
+
+{%- liquid
+  assign pt_single_price = 490
+  assign pt_excluded = 'keine-gewalt-gegen-retter-anstecker,keine-gewalt-gegen-retter-anstecker-zusaetzlich' | split: ','
+  assign pt_is_pin = false
+  if product.type contains 'Anstecker'
+    assign pt_is_pin = true
+  endif
+  if pt_excluded contains product.handle
+    assign pt_is_pin = false
+  endif
+-%}
+
+{%- if pt_is_pin -%}
+  {%- liquid
+    assign pt_qtys = '1,2,3,4,8' | split: ','
+    assign pt_discounts = '0,10,15,20,25' | split: ','
+    assign pt_current = product.selected_or_first_available_variant
+    assign pt_eligible = false
+    if pt_current.price == pt_single_price
+      assign pt_eligible = true
+    endif
+  -%}
+
+  {{ 'pin-tiers.css' | asset_url | stylesheet_tag }}
+
+  <div
+    class='pin-tiers'
+    data-pin-tiers
+    data-form-id='{{ product_form_id }}'
+    data-unit-price='{{ pt_single_price }}'
+    data-eligible='{% if pt_eligible %}1{% else %}0{% endif %}'
+    data-eligible-ids='{% for v in product.variants %}{% if v.price == pt_single_price %}{{ v.id }},{% endif %}{% endfor %}'
+  >
+    <div class='pin-tiers__head'>
+      <p class='pin-tiers__title'>Mehr Anstecker, mehr Rabatt</p>
+      <p class='pin-tiers__note' data-pin-tiers-note>Gilt für alle Anstecker zusammen</p>
+    </div>
+
+    <div class='pin-tiers__pills' role='group' aria-label='Stückzahl wählen'>
+      {%- for q in pt_qtys -%}
+        {%- assign pt_d = pt_discounts[forloop.index0] | plus: 0 -%}
+        <button
+          type='button'
+          class='pin-tiers__pill{% if forloop.first %} pin-tiers__pill--active{% endif %}'
+          data-pin-tier
+          data-qty='{{ q }}'
+          data-discount='{{ pt_d }}'
+          aria-pressed='{% if forloop.first %}true{% else %}false{% endif %}'
+        >
+          <span class='pin-tiers__qty'>{{ q }}</span>
+          {%- if pt_d > 0 -%}
+            <span class='pin-tiers__off'>&minus;{{ pt_d }}%</span>
+          {%- else -%}
+            <span class='pin-tiers__off pin-tiers__off--none'>Einzeln</span>
+          {%- endif -%}
+        </button>
+      {%- endfor -%}
+    </div>
+
+    <p class='pin-tiers__result' data-pin-tiers-result>
+      <b>1 Stück: {{ pt_current.price | money }}</b>
+    </p>
+
+    <div class='pin-tiers__custom'>
+      <label class='pin-tiers__custom-label' for='PinTiersFree-{{ section.id }}'>Andere Menge</label>
+      <input
+        class='pin-tiers__free'
+        id='PinTiersFree-{{ section.id }}'
+        type='number'
+        min='1'
+        step='1'
+        inputmode='numeric'
+        placeholder='z.&nbsp;B. 6'
+        data-pin-tiers-free
+      >
+    </div>
+
+    <p class='pin-tiers__hint' data-pin-tiers-hint>
+      Der Rabatt wird im Warenkorb automatisch abgezogen und zählt über alle Anstecker
+      zusammen. Du kannst also verschiedene Motive mischen.
+    </p>
+  </div>
+
+  <script src='{{ 'pin-tiers.js' | asset_url }}' defer='defer'></script>
+{%- endif -%}

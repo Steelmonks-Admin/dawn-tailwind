@@ -1,0 +1,125 @@
+/* Anstecker-Mengenstaffel. Mobile-first; bewusst groesser als die alte Zunft-Variante. */
+.pin-tiers {
+  --pt-line: #d9dde0;
+  --pt-ink: #14181b;
+  --pt-mut: #5c666d;
+  --pt-accent: #a8501f;
+  --pt-accent-soft: #fdf1ea;
+  --pt-good: #2f6b4f;
+  margin: 1.4rem 0;
+  padding: 1.4rem 1.2rem;
+  border: 1px solid var(--pt-line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.pin-tiers__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.pin-tiers__title {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--pt-ink);
+}
+.pin-tiers__note {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--pt-mut);
+}
+
+.pin-tiers__pills {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+.pin-tiers__pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 64px;
+  padding: 0.5rem 0.2rem;
+  border: 2px solid var(--pt-line);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  color: var(--pt-ink);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+.pin-tiers__pill:hover { border-color: var(--pt-accent); }
+.pin-tiers__pill:focus-visible { outline: 2px solid var(--pt-accent); outline-offset: 2px; }
+.pin-tiers__pill--active { border-color: var(--pt-accent); background: var(--pt-accent-soft); }
+
+.pin-tiers__qty { font-size: 1.8rem; font-weight: 700; line-height: 1; }
+.pin-tiers__off { font-size: 1.15rem; font-weight: 600; line-height: 1.1; color: var(--pt-accent); white-space: nowrap; }
+.pin-tiers__off--none { font-weight: 400; color: var(--pt-mut); }
+
+/* Set-Varianten haben einen eigenen Paketpreis, die Staffel gilt dort nicht. */
+.pin-tiers[data-eligible='0'] .pin-tiers__off { visibility: hidden; }
+
+.pin-tiers__result {
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--pt-line);
+  font-size: 1.5rem;
+  line-height: 1.45;
+  color: var(--pt-ink);
+}
+.pin-tiers__result b { font-weight: 700; }
+.pin-tiers__strike { color: var(--pt-mut); text-decoration: line-through; font-weight: 400; }
+.pin-tiers__save { color: var(--pt-good); font-weight: 600; }
+
+.pin-tiers__custom {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+.pin-tiers__custom-label { font-size: 1.3rem; color: var(--pt-mut); }
+.pin-tiers__free {
+  width: 84px;
+  min-height: 44px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--pt-line);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+  font-size: 1.5rem;
+  color: var(--pt-ink);
+  text-align: center;
+}
+.pin-tiers__free:focus-visible { outline: 2px solid var(--pt-accent); outline-offset: 1px; }
+
+.pin-tiers__hint {
+  margin: 0.8rem 0 0;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--pt-mut);
+}
+
+@media (min-width: 750px) {
+  .pin-tiers { padding: 1.6rem 1.4rem; }
+  .pin-tiers__title { font-size: 1.8rem; }
+  .pin-tiers__pills { gap: 0.6rem; }
+  .pin-tiers__pill { min-height: 70px; }
+}
+
+@media (max-width: 359px) {
+  .pin-tiers__pills { gap: 0.35rem; }
+  .pin-tiers__qty { font-size: 1.6rem; }
+  .pin-tiers__off { font-size: 1.05rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-tiers__pill { transition: none; }
+}
