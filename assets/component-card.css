@@ -501,6 +501,19 @@
 
 .card-information > .rating {
   margin-top: 0.4rem;
+  vertical-align: middle;
+  /* haengende Laufweite hinter dem fuenften Stern zuruecknehmen */
+  margin-right: -0.1rem;
+}
+
+/* Die 0.7rem-Regel weiter unten setzt die Bewertungszahl sonst nach unten ab.
+   Ein Elementselektor mehr reicht, um sie zu schlagen, kein !important noetig. */
+.card-information
+  > *:not(.visually-hidden:first-child)
+  + p.rating-count.caption {
+  margin-top: 0.4rem;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 /* Specificity needed due to the changes below */

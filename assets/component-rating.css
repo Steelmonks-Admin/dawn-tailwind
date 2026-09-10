@@ -12,9 +12,14 @@
   --font-size: 1.7;
 }
 
+/* Auf Produktkarten fuellten die Sterne bei 0.7 Laufweite die komplette
+   Kartenbreite (5 x (18.2px + 9.1px) = 136.5px bei genau 136.5px Platz), die
+   Bewertungszahl hatte null Platz und rutschte auf eine zweite Zeile.
+   Schmaler gesetzt bleiben Sterne und Zahl in einer Zeile, auch vierstellig.
+   Die --percent-Formel unten rechnet mit diesen Werten, halbe Sterne bleiben korrekt. */
 .card-wrapper .rating-star {
-  --letter-spacing: 0.7;
-  --font-size: 1.4;
+  --letter-spacing: 0.1;
+  --font-size: 1.2;
 }
 
 .rating-star {

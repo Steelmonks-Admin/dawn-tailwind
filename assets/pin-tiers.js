@@ -11,10 +11,8 @@
 (function () {
   'use strict';
 
-  var HINT_DEFAULT =
-    'Du kannst verschiedene Motive mischen, der Rabatt wird im Warenkorb automatisch abgezogen.';
-  var HINT_SET =
-    'Dieses Set hat bereits einen Paketpreis. Die Mengenstaffel gilt für einzelne Anstecker.';
+  var HINT_DEFAULT = 'Du kannst verschiedene Pin-Motive mischen.';
+  var HINT_SET = 'Die Mengenstaffel gilt für einzelne Anstecker.';
   var NOTE_DEFAULT = 'Gilt für alle Anstecker zusammen';
   var NOTE_SET = 'Set mit festem Paketpreis';
   var TITLE_DEFAULT = 'Mehr Anstecker, mehr Rabatt';

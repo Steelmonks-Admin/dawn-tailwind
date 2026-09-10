@@ -6,31 +6,27 @@
   --pt-accent: #a8501f;
   --pt-accent-soft: #fdf1ea;
   --pt-good: #2f6b4f;
-  margin: 1.4rem 0;
-  padding: 1.4rem 1.2rem;
+  margin: 1.2rem 0;
+  padding: 1.1rem 1rem;
   border: 1px solid var(--pt-line);
   border-radius: 10px;
   background: #fff;
 }
 
 .pin-tiers__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.4rem 0.8rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: 0.7rem;
 }
 .pin-tiers__title {
   margin: 0;
-  font-size: 1.7rem;
+  font-size: 1.35rem;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.3;
   color: var(--pt-ink);
+  white-space: nowrap;
 }
 .pin-tiers__note {
-  margin: 0;
-  font-size: 1.3rem;
+  margin: 0.1rem 0 0;
+  font-size: 1.15rem;
   color: var(--pt-mut);
 }
 
@@ -68,8 +64,8 @@
 .pin-tiers[data-eligible='0'] .pin-tiers__off { visibility: hidden; }
 
 .pin-tiers__result {
-  margin: 1rem 0 0;
-  padding-top: 0.9rem;
+  margin: 0.75rem 0 0;
+  padding-top: 0.7rem;
   border-top: 1px dashed var(--pt-line);
   font-size: 1.5rem;
   line-height: 1.45;
@@ -85,12 +81,12 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.9rem;
+  margin-top: 0.7rem;
 }
-.pin-tiers__custom-label { font-size: 1.3rem; color: var(--pt-mut); }
+.pin-tiers__custom-label { font-size: 1.15rem; color: var(--pt-mut); }
 .pin-tiers__free {
-  width: 84px;
-  min-height: 44px;
+  width: 76px;
+  min-height: 40px;
   padding: 0.4rem 0.6rem;
   border: 1px solid var(--pt-line);
   border-radius: 6px;
@@ -103,17 +99,23 @@
 .pin-tiers__free:focus-visible { outline: 2px solid var(--pt-accent); outline-offset: 1px; }
 
 .pin-tiers__hint {
-  margin: 0.8rem 0 0;
-  font-size: 1.25rem;
-  line-height: 1.45;
+  margin: 0.6rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.4;
   color: var(--pt-mut);
 }
 
 @media (min-width: 750px) {
-  .pin-tiers { padding: 1.6rem 1.4rem; }
-  .pin-tiers__title { font-size: 1.8rem; }
+  .pin-tiers { padding: 1.4rem 1.3rem; }
+  .pin-tiers__title { font-size: 1.6rem; }
+  .pin-tiers__note { font-size: 1.25rem; }
+  .pin-tiers__hint { font-size: 1.2rem; }
   .pin-tiers__pills { gap: 0.6rem; }
   .pin-tiers__pill { min-height: 70px; }
+}
+
+@media (max-width: 344px) {
+  .pin-tiers__title { white-space: normal; }
 }
 
 @media (max-width: 359px) {
