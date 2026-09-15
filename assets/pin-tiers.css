@@ -354,3 +354,27 @@
   .pin-tiers-ziel-blitz { animation: none; }
   .pin-tiers__chev { transition: none; }
 }
+
+
+/* --- Bestandsgrenzen ---------------------------------------------------- */
+.pin-tiers__pill--aus {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+.pin-tiers__pill--aus:hover { border-color: var(--pt-line); }
+.pin-tiers__stock {
+  margin: 0.6rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: #a3271f;
+}
+.pin-tiers__stock[hidden] { display: none !important; }
+.pin-tiers__multi-stock {
+  flex: 0 0 auto;
+  font-size: 1.05rem;
+  color: #a3271f;
+  white-space: nowrap;
+}
+.pin-tiers__multi-stock[hidden] { display: none !important; }
+.pin-tiers__step[disabled] { opacity: 0.35; cursor: not-allowed; }

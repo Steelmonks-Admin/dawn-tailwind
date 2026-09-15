@@ -92,6 +92,26 @@
     return list;
   }
 
+  /* Shopify kappt im Checkout auf den Lagerbestand und schickt den Kunden sonst
+     auf /stock-problems. Was das Widget anbietet, muss also kaufbar sein.
+     0 im data-stock bedeutet unbegrenzt (Bestand nicht verfolgt oder Ueberverkauf erlaubt). */
+  function stockMap(root) {
+    if (root._stock) return root._stock;
+    var map = {};
+    (root.getAttribute('data-stock') || '').split(',').filter(Boolean).forEach(function (paar) {
+      var t = paar.split(':');
+      if (t.length === 2) map[t[0]] = parseInt(t[1], 10) || 0;
+    });
+    root._stock = map;
+    return map;
+  }
+
+  function maxQty(root) {
+    var id = selectedVariantId(root);
+    var n = stockMap(root)[id];
+    return (n === undefined || n === 0) ? Infinity : n;
+  }
+
   function bestDiscount(root, qty) {
     var best = 0;
     pills(root).forEach(function (btn) {
@@ -102,16 +122,48 @@
     return best;
   }
 
+  function hoechsteStufe(root) {
+    var max = 1;
+    pills(root).forEach(function (b) {
+      var q = parseInt(b.getAttribute('data-qty'), 10);
+      if (!isNaN(q) && q > max) max = q;
+    });
+    return max;
+  }
+
   function render(root, qty) {
     if (!qty || qty < 1) qty = 1;
     var eligible = isEligible(root);
     root.setAttribute('data-eligible', eligible ? '1' : '0');
 
+    var grenze = maxQty(root);
     pills(root).forEach(function (btn) {
-      var exact = parseInt(btn.getAttribute('data-qty'), 10) === qty;
+      var q = parseInt(btn.getAttribute('data-qty'), 10);
+      var exact = q === qty;
       btn.classList.toggle('pin-tiers__pill--active', exact);
       btn.setAttribute('aria-pressed', exact ? 'true' : 'false');
+      var zuviel = q > grenze;
+      btn.disabled = zuviel;
+      btn.classList.toggle('pin-tiers__pill--aus', zuviel);
+      if (zuviel) {
+        btn.title = 'Nur noch ' + grenze + ' auf Lager';
+      } else {
+        btn.removeAttribute('title');
+      }
     });
+
+    var frei = root.querySelector('[data-pin-tiers-free]');
+    if (frei) {
+      if (grenze === Infinity) frei.removeAttribute('max');
+      else frei.setAttribute('max', String(grenze));
+    }
+
+    var lager = root.querySelector('[data-pin-tiers-stock]');
+    if (lager) {
+      var knapp = grenze !== Infinity && grenze < hoechsteStufe(root);
+      lager.textContent = knapp ? ('Von diesem Motiv sind noch ' + grenze + ' verfügbar.') : '';
+      lager.hidden = !knapp;
+    }
 
     var free = root.querySelector('[data-pin-tiers-free]');
     if (free && document.activeElement !== free) {
@@ -346,17 +398,36 @@
       addBtn.textContent = stueck + ' ' + wort + ' in den Warenkorb';
     }
 
+    /* Auch hier gilt der Lagerbestand, sonst kappt der Checkout stillschweigend. */
+    function grenzeVon(z) {
+      var n = parseInt(z.getAttribute('data-variant-stock'), 10);
+      return (!n || isNaN(n)) ? Infinity : n;
+    }
+
     zeilen.forEach(function (z) {
       var feld = z.querySelector('[data-pin-multi-qty]');
-      z.querySelector('[data-pin-multi-minus]').addEventListener('click', function () {
-        feld.value = String(Math.max(0, (parseInt(feld.value, 10) || 0) - 1));
+      var g = grenzeVon(z);
+      if (g !== Infinity) feld.setAttribute('max', String(g));
+      function setze(n) {
+        if (n < 0) n = 0;
+        if (g !== Infinity && n > g) n = g;
+        feld.value = String(n);
+        var voll = g !== Infinity && n >= g;
+        z.querySelector('[data-pin-multi-plus]').disabled = voll;
+        var hinweis = z.querySelector('[data-pin-multi-stock]');
+        if (hinweis) {
+          hinweis.textContent = voll ? ('max. ' + g) : '';
+          hinweis.hidden = !voll;
+        }
         neuRechnen();
+      }
+      z.querySelector('[data-pin-multi-minus]').addEventListener('click', function () {
+        setze((parseInt(feld.value, 10) || 0) - 1);
       });
       z.querySelector('[data-pin-multi-plus]').addEventListener('click', function () {
-        feld.value = String(Math.max(0, (parseInt(feld.value, 10) || 0) + 1));
-        neuRechnen();
+        setze((parseInt(feld.value, 10) || 0) + 1);
       });
-      feld.addEventListener('input', neuRechnen);
+      feld.addEventListener('input', function () { setze(parseInt(feld.value, 10) || 0); });
     });
 
     toggle.addEventListener('click', function () {
@@ -424,6 +495,8 @@
 
     function apply(qty) {
       if (!qty || qty < 1) qty = 1;
+      var grenze = maxQty(root);
+      if (grenze !== Infinity && qty > grenze) qty = grenze;
       root.dataset.qty = String(qty);
       syncQty();
       render(root, qty);
@@ -472,6 +545,9 @@
       if (!t.closest('variant-selects, variant-radios, form[action*="/cart/add"]')) return;
       setTimeout(function () {
         readVariantPrice(root);
+        var g = maxQty(root);
+        var jetzt = parseInt(root.dataset.qty, 10) || 1;
+        if (g !== Infinity && jetzt > g) root.dataset.qty = String(g);
         syncQty();
         render(root, parseInt(root.dataset.qty, 10) || 1);
       }, 300);
@@ -493,3 +569,4 @@
   }
   document.addEventListener('shopify:section:load', boot);
 })();
+

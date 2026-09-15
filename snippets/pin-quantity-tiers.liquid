@@ -106,6 +106,13 @@
     data-eligible='{% if qt_eligible %}1{% else %}0{% endif %}'
     data-all-eligible='{% if qt_all_eligible %}1{% else %}0{% endif %}'
     data-eligible-ids='{% unless qt_all_eligible %}{% for v in product.variants %}{% if v.price == qt_single_price %}{{ v.id }},{% endif %}{% endfor %}{% endunless %}'
+    {%- comment -%}
+      Hoechstmenge je Variante. Ohne das verspricht die Staffel Stufen, die der
+      Checkout nicht einloest: Shopify kappt dort auf den Bestand und schickt den
+      Kunden auf /stock-problems (Fund 15.09.2026, "Bäcker" hatte 3 Stueck, das
+      Widget bot 8 an). 0 heisst unbegrenzt.
+    {%- endcomment -%}
+    data-stock='{% for v in product.variants %}{{ v.id }}:{% if v.inventory_management == blank or v.inventory_policy == 'continue' %}0{% else %}{{ v.inventory_quantity | at_least: 0 }}{% endif %},{% endfor %}'
     data-title='{{ qt_title | escape }}'
     data-title-set='{{ qt_title_set | escape }}'
     data-note='{{ qt_note | escape }}'
@@ -157,6 +164,7 @@
       >
     </div>
 
+    <p class='pin-tiers__stock' data-pin-tiers-stock hidden></p>
     <p class='pin-tiers__hint' data-pin-tiers-hint>{{ qt_hint }}</p>
 
     {%- if qt_multi and qt_pick_count > 1 -%}
@@ -190,9 +198,16 @@
               endif
             -%}
             {%- if qt_pick -%}
-              <li class='pin-tiers__multi-row' data-pin-multi-row data-variant-id='{{ v.id }}' data-variant-price='{{ v.price }}'>
+              <li
+                class='pin-tiers__multi-row'
+                data-pin-multi-row
+                data-variant-id='{{ v.id }}'
+                data-variant-price='{{ v.price }}'
+                data-variant-stock='{% if v.inventory_management == blank or v.inventory_policy == 'continue' %}0{% else %}{{ v.inventory_quantity | at_least: 0 }}{% endif %}'
+              >
                 <span class='pin-tiers__multi-name'>{{ v.title }}</span>
                 <span class='pin-tiers__multi-price'>{{ v.price | money }}</span>
+                <span class='pin-tiers__multi-stock' data-pin-multi-stock hidden></span>
                 <span class='pin-tiers__stepper'>
                   <button type='button' class='pin-tiers__step' data-pin-multi-minus aria-label='Weniger {{ v.title | escape }}'>&minus;</button>
                   <input
@@ -261,3 +276,4 @@
 
   <script src='{{ 'pin-tiers.js' | asset_url }}' defer='defer'></script>
 {%- endif -%}
+
