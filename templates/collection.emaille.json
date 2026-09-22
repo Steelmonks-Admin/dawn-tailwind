@@ -26,33 +26,36 @@
           "type": "slider_block",
           "settings": {
             "richtext": "<h2>Emaille Straßenschild</h2>",
-            "slide_count": 3,
+            "slide_count": 4,
             "image_1": "shopify://shop_images/hausschild_mit_strassennamen.png",
             "image_2": "shopify://shop_images/steelmonks-metallschild-strassenschild-modernes-zunft-hausschild-schwarz-ral-9005-30cm-5.jpg",
             "image_3": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-8.jpg",
-            "link": "shopify://products/emaille-strassenschild"
+            "link": "shopify://products/emaille-strassenschild",
+            "product": "emaille-strassenschild"
           }
         },
         "slider_block_UDcNAU": {
           "type": "slider_block",
           "settings": {
             "richtext": "<h2>Emaille Hausnummer</h2>",
-            "slide_count": 3,
+            "slide_count": 4,
             "image_1": "shopify://shop_images/Emaille_Hausnummer.png",
             "image_2": "shopify://shop_images/Hausnummer_Holzfassade.jpg",
             "image_3": "shopify://shop_images/moderne_Hausnummer.jpg",
-            "link": "shopify://products/emaille-hausnummer"
+            "link": "shopify://products/emaille-hausnummer",
+            "product": "emaille-hausnummer"
           }
         },
         "slider_block_DXxYHp": {
           "type": "slider_block",
           "settings": {
             "richtext": "<h2>Emaille Hausschild „Wiener Norm“</h2>",
-            "slide_count": 3,
+            "slide_count": 4,
             "image_1": "shopify://shop_images/Hausschild.jpg",
             "image_2": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-2.jpg",
             "image_3": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-3.jpg",
-            "link": "shopify://products/hausnummernschild-wiener-norm-emaille"
+            "link": "shopify://products/hausnummernschild-wiener-norm-emaille",
+            "product": "hausnummernschild-wiener-norm-emaille"
           }
         }
       },

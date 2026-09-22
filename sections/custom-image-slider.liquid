@@ -9,6 +9,7 @@
       "limit": 3,
       "settings": [
         { "type": "richtext", "id": "richtext", "label": "Centered Text" },
+        { "type": "product", "id": "product", "label": "Produkt", "info": "Wenn gesetzt: Bilder und Link kommen aus dem Produkt, die Bildfelder unten werden ignoriert." },
         { "type": "url", "id": "link", "label": "Link (z. B. Produktseite)", "info": "Überschrift und Bilder verlinken dorthin; darunter erscheint „Zum Produkt“." },
         {
           "type": "range",
@@ -44,11 +45,18 @@
 <div class='twcss-w-full twcss-py-12 twcss-px-4 max-w-screen-xl twcss-mx-auto'>
   <div class='twcss-flex twcss-flex-col md:twcss-flex-row md:twcss-gap-8 twcss-items-center'>
     {% for block in section.blocks %}
+      {%- liquid
+        assign slide_product = block.settings.product
+        assign slide_link = block.settings.link
+        if slide_product != blank and slide_link == blank
+          assign slide_link = slide_product.url
+        endif
+      -%}
       <div class='twcss-flex-1 twcss-flex twcss-flex-col twcss-items-center twcss-mb-6 twcss-w-full'>
         {% if block.settings.richtext != blank %}
           <div class='twcss-text-center twcss-mb-4 twcss-font-semibold twcss-text-lg'>
-            {%- if block.settings.link != blank -%}
-              <a href='{{ block.settings.link }}' class='twcss-no-underline hover:twcss-underline'>{{ block.settings.richtext }}</a>
+            {%- if slide_link != blank -%}
+              <a href='{{ slide_link }}' class='twcss-no-underline hover:twcss-underline'>{{ block.settings.richtext }}</a>
             {%- else -%}
               {{ block.settings.richtext }}
             {%- endif -%}
@@ -65,12 +73,30 @@
             </svg>
           </button>
           <div class='custom-slider twcss-flex twcss-transition-all' style='scroll-behavior: smooth;'>
+            {%- if slide_product != blank -%}
+              {%- for media in slide_product.media limit: block.settings.slide_count -%}
+                {%- if media.media_type == 'image' -%}
+                  <div class='twcss-flex-shrink-0 twcss-w-full twcss-aspect-square twcss-relative'>
+                    <a href='{{ slide_link }}' class='twcss-block twcss-w-full twcss-h-full'>
+                      <img
+                        src='{{ media | image_url: width: 800 }}'
+                        alt='{{ media.alt | default: slide_product.title | escape }}'
+                        width='800'
+                        height='800'
+                        class='twcss-w-full twcss-h-full twcss-object-cover twcss-rounded-lg'
+                        loading='lazy'
+                      >
+                    </a>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
             {% for i in (1..block.settings.slide_count) %}
               {% capture image_key %}image_{{ i }}{% endcapture %}
               {% assign image = block.settings[image_key] %}
               {% if image != blank %}
                 <div class='twcss-flex-shrink-0 twcss-w-full twcss-aspect-square twcss-relative'>
-                  {%- if block.settings.link != blank -%}<a href='{{ block.settings.link }}' class='twcss-block twcss-w-full twcss-h-full'>{%- endif -%}
+                  {%- if slide_link != blank -%}<a href='{{ slide_link }}' class='twcss-block twcss-w-full twcss-h-full'>{%- endif -%}
                   <img
                     src='{{ image | image_url: width: 800 }}'
                     alt='{{ image.alt | default: block.settings.richtext | strip_html | escape }}'
@@ -79,10 +105,11 @@
                     class='twcss-w-full twcss-h-full twcss-object-cover twcss-rounded-lg'
                     loading='lazy'
                   >
-                  {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                  {%- if slide_link != blank -%}</a>{%- endif -%}
                 </div>
               {% endif %}
             {% endfor %}
+            {%- endif -%}
           </div>
           <button
             type='button'
@@ -94,8 +121,8 @@
             </svg>
           </button>
         </div>
-        {%- if block.settings.link != blank -%}
-          <a href='{{ block.settings.link }}' class='button button--secondary twcss-mt-4'>Zum Produkt</a>
+        {%- if slide_link != blank -%}
+          <a href='{{ slide_link }}' class='button button--secondary twcss-mt-4'>Zum Produkt</a>
         {%- endif -%}
       </div>
     {% endfor %}
