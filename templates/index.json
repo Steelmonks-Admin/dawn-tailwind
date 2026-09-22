@@ -850,8 +850,8 @@
         "quick_add": "none",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
-        "padding_top": 12,
-        "padding_bottom": 0
+        "padding_top": 24,
+        "padding_bottom": 24
       }
     }
   },
@@ -860,8 +860,8 @@
     "custom_icon_grid_Ahzicm",
     "rich_text_xkqYLg",
     "steelmonks_werkstatt_hero_gt9RdT",
-    "werkstatt_galerie_home",
     "rich_text_H9Enym",
+    "werkstatt_galerie_home",
     "steelmonks_collection_grid_k79tHx",
     "featured_collection_yUM3tM",
     "image_banner_hWcQdN",
