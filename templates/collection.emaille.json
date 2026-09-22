@@ -13,7 +13,7 @@
       "type": "custom-header",
       "name": "Custom Header",
       "settings": {
-        "richtext": "<p><strong>Verwandle Deine Nachbarschaft,</strong></p><h4><strong>mit unübertroffenen Qualität</strong></h4>",
+        "richtext": "<p><strong>Verwandle Deine Nachbarschaft</strong></p><h4><strong>mit unübertroffener Qualität</strong></h4>",
         "button_text": "",
         "button_link": "",
         "image": "shopify://shop_images/sm-emaille-hero.webp"
@@ -29,7 +29,8 @@
             "slide_count": 3,
             "image_1": "shopify://shop_images/hausschild_mit_strassennamen.png",
             "image_2": "shopify://shop_images/steelmonks-metallschild-strassenschild-modernes-zunft-hausschild-schwarz-ral-9005-30cm-5.jpg",
-            "image_3": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-8.jpg"
+            "image_3": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-8.jpg",
+            "link": "shopify://products/emaille-strassenschild"
           }
         },
         "slider_block_UDcNAU": {
@@ -39,17 +40,19 @@
             "slide_count": 3,
             "image_1": "shopify://shop_images/Emaille_Hausnummer.png",
             "image_2": "shopify://shop_images/Hausnummer_Holzfassade.jpg",
-            "image_3": "shopify://shop_images/moderne_Hausnummer.jpg"
+            "image_3": "shopify://shop_images/moderne_Hausnummer.jpg",
+            "link": "shopify://products/emaille-hausnummer"
           }
         },
         "slider_block_DXxYHp": {
           "type": "slider_block",
           "settings": {
-            "richtext": "<h2>\"Wiener Norm\" Emaille Hausschild</h2>",
+            "richtext": "<h2>Emaille Hausschild „Wiener Norm“</h2>",
             "slide_count": 3,
             "image_1": "shopify://shop_images/Hausschild.jpg",
             "image_2": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-2.jpg",
-            "image_3": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-3.jpg"
+            "image_3": "shopify://shop_images/steelmonks-metallschild-strassenschild-klassisches-zunft-hausschild-schwarz-ral-9005-30cm-3.jpg",
+            "link": "shopify://products/hausnummernschild-wiener-norm-emaille"
           }
         }
       },
@@ -68,8 +71,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/after.png",
-            "title": "4-Fache Pulverbeschichtung",
-            "text": "<p>Der moderne Prozess der Pulverbeschichtung. Wetterfeste Grundierung, dann glänzendes Blau, Solides Weiß und anschliessend Klarlack.</p>",
+            "title": "4-fache Pulverbeschichtung",
+            "text": "<p>Der moderne Prozess der Pulverbeschichtung: wetterfeste Grundierung, dann glänzendes Blau, solides Weiß und anschließend Klarlack.</p>",
             "link_label": "",
             "link": ""
           }
@@ -79,7 +82,7 @@
           "settings": {
             "image": "shopify://shop_images/IMG_7308.jpg",
             "title": "Witterungsbeständig",
-            "text": "<p>Unsere Qualität spricht für sich selber und der ausführliche Prozess führt zu einem wetterfesten und langlebigerem Produkt.</p>",
+            "text": "<p>Unsere Qualität spricht für sich, und der aufwendige Prozess führt zu einem wetterfesten und langlebigen Produkt.</p>",
             "link_label": "",
             "link": ""
           }
@@ -89,7 +92,7 @@
           "settings": {
             "image": "shopify://shop_images/Shopify-thumbnail.jpg",
             "title": "Mehr als ein Hausschild",
-            "text": "<p>Unsere Emaille-Technik bei Deinem neuen Hausschild. Damit stehst Du ab und das für ein leben lang. Emaille ist immer \"in\".</p>",
+            "text": "<p>Unsere Emaille-Technik für Dein neues Hausschild. Damit hebst Du Dich ab – und das ein Leben lang. Emaille ist immer „in“.</p>",
             "link_label": "",
             "link": ""
           }
@@ -102,14 +105,14 @@
       ],
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
-        "title": "Mit mehreren Spalten",
-        "heading_size": "h1",
+        "title": "Was unsere Emaille-Schilder auszeichnet",
+        "heading_size": "h2",
         "image_width": "full",
         "image_ratio": "adapt",
         "columns_desktop": 3,
         "column_alignment": "left",
         "background_style": "primary",
-        "button_label": "Schaltflächenbeschriftung",
+        "button_label": "",
         "button_link": "",
         "color_scheme": "",
         "columns_mobile": "1",
@@ -144,7 +147,7 @@
           "settings": {
             "parent": "",
             "heading": "Emaille Schilder von Steelmonks",
-            "content": "<h1><strong>Der Zauber der Emaille Schilder von Steelmonks</strong></h1><p>Heutzutage gewinnen Design und Ästhetik zunehmend an Bedeutung. Daher müssen die Dekorationsstücke in unserem Zuhause stilvoll und einzigartig sein. Unsere klassischen Emaille Schilder bieten genau das: eine perfekte Kombination aus Tradition und zeitlosem Charme.</p><h2>Zeitlose Schönheit trifft auf Beständigkeit</h2><p>Unsere Emaille Schilder zeigen den klassischen Charme von Emaille, bekannt für Langlebigkeit und besonderen Glanz.</p><p>Mit glatter Oberfläche und lebhaften Farben verleihen sie jeder Wand einen Hauch von Nostalgie und zeitloser Eleganz. Doch ihre Schönheit beruht nicht allein auf der Optik.</p><p>Unsere Schilder werden mittels eines fortschrittlichen Verfahrens der 4-fachen Pulverbeschichtung hergestellt. Dies umfasst eine wetterfeste Grundierung, gefolgt von glänzendem Blau, solidem Weiß und abschließendem Klarlack.</p><p>Dieser ausführliche Prozess garantiert ein wetterfestes und langlebiges Produkt, das Qualität für sich selbst sprechen lässt.</p><h2>Ein Stück Geschichte an Deiner Wand</h2><p>Emaille Schilder sind mehr als nur Dekorationsstücke; sie sind ein Stück Geschichte.</p><p>Ihre robuste Beschaffenheit und Herstellungsweise erzählen Geschichten aus der Vergangenheit. Sie bringen diese Geschichten in die Gegenwart.</p><p>Jedes Schild ist ein Unikat, das Deinem Zuhause Persönlichkeit und Charakter verleiht. Doch unsere Emaille Schilder sind <strong>mehr als ein Hausschild</strong>. Dank unserer speziellen Emaille-Technik stehst Du mit Deinem neuen Hausschild ab – und das ein Leben lang.</p><p>Emaille bleibt zeitlos modern. Mit dem Emaille Straßenschild, der Hausnummer und der Wiener Norm verleihst Du Deiner Wand zeitlose Schönheit.</p><h2>Die Wiener Norm: Ein Symbol für Eleganz und Präzision</h2><p>Unsere Emaille Schilder werden nach der Wiener Norm hergestellt und stammen aus Wien. Diese Stadt ist weltweit für ihre reiche Kunst und Kultur bekannt.</p><p>Diese Norm legt fest, wie Schilder aussehen und hergestellt werden müssen. Sie sorgt dafür, dass jedes Schild sehr genau und mit den besten Materialien gemacht wird. Das bedeutet, diese Schilder halten lange und sehen dabei gut aus.</p><p>Wenn wir ein Schild nach der Wiener Norm herstellen, achten wir sehr darauf, alles richtig zu machen. So stellen wir sicher, dass die Schilder auch schlechtem Wetter standhalten können. Ein Schild nach dieser Norm zu kaufen, bedeutet also, etwas sehr Hochwertiges zu bekommen. Es bringt ein Stück der besonderen Wiener Kultur zu Dir nach Hause oder in Dein Geschäft.</p><p>Ob Hausnummer, Straßenschild oder einzigartige Wanddeko – unsere Schilder sind die ideale Wahl. Sie sind stets eine ausgezeichnete Wahl. Sie stehen für Qualität und ein schönes Design, das nicht aus der Mode kommt. Mit einem solchen Schild machst Du Deinen Raum besonders.</p><h2><strong>Häufig gestellte Fragen</strong></h2><p><em>Wie wird das Schild befestigt?</em></p><p>Jedes Schild kommt mit unserem unsichtbaren Befestigungsset, das eine einfache und sichere Montage an Deiner Wand ermöglicht. Unsere Schilder bestechen durch ihre leichte Stahlkonstruktion. Bei einer Größe von 50 cm wiegen sie überraschend weniger als 0,5 kg. Die klassische Art der Anbringung unterstreicht den authentischen Charme der Schilder.</p><p><em>Sind individuelle Designs möglich?</em></p><p>Wir verstehen die Bedeutung persönlicher Touches. Deshalb sind wir stolz darauf, auch bei Emaille Schildern individuelle Anpassungen anzubieten. Kontaktiere uns gerne mit Deinen Vorstellungen!</p><p><em>Welche Farben gibt es zur Auswahl?</em></p><p>Wir bieten Königsblau, Schwarz, Weinrot (alle mit Weiß) und Elfenbein (mit Schwarz) als Farben an.</p><h2>Pflege und Erhaltung</h2><p>Emaille Schilder sind bekannt für ihre Pflegeleichtigkeit. Ein weiches, feuchtes Tuch genügt, um sie zu reinigen und ihren Glanz zu bewahren. Vermeide aggressive Reinigungsmittel, um die Oberfläche nicht zu beschädigen.</p><h2>Schnelle Lieferung direkt zu Dir nach Hause</h2><p>Wir wissen, dass Du es kaum erwarten kannst, Dein Zuhause mit einem unserer Emaille Schilder zu bereichern. Deshalb legen wir großen Wert auf eine schnelle Bearbeitung und Lieferung Deiner Bestellung.</p><h2>Qualität, die überzeugt</h2><p>Bei Steelmonks setzen wir auf die höchste Qualität und Langlebigkeit unserer Produkte. Unsere Emaille Schilder durchlaufen strenge Qualitätskontrollen, um sicherzustellen, dass sie nicht nur schön, sondern auch beständig sind.</p><p>Mit der Wahl eines unserer Emaille Schilder gibst Du Deinem Zuhause eine besondere und zeitlose Note.</p>",
+            "content": "<h2><strong>Der Zauber der Emaille Schilder von Steelmonks</strong></h2><p>Heutzutage gewinnen Design und Ästhetik zunehmend an Bedeutung. Daher müssen die Dekorationsstücke in unserem Zuhause stilvoll und einzigartig sein. Unsere klassischen Emaille Schilder bieten genau das: eine perfekte Kombination aus Tradition und zeitlosem Charme.</p><h3>Zeitlose Schönheit trifft auf Beständigkeit</h3><p>Unsere Emaille Schilder zeigen den klassischen Charme von Emaille, bekannt für Langlebigkeit und besonderen Glanz.</p><p>Mit glatter Oberfläche und lebhaften Farben verleihen sie jeder Wand einen Hauch von Nostalgie und zeitloser Eleganz. Doch ihre Schönheit beruht nicht allein auf der Optik.</p><p>Unsere Schilder werden mittels eines fortschrittlichen Verfahrens der 4-fachen Pulverbeschichtung hergestellt. Dies umfasst eine wetterfeste Grundierung, gefolgt von glänzendem Blau, solidem Weiß und abschließendem Klarlack.</p><p>Dieser aufwendige Prozess garantiert ein wetterfestes und langlebiges Produkt, das Qualität für sich selbst sprechen lässt.</p><h3>Ein Stück Geschichte an Deiner Wand</h3><p>Emaille Schilder sind mehr als nur Dekorationsstücke; sie sind ein Stück Geschichte.</p><p>Ihre robuste Beschaffenheit und Herstellungsweise erzählen Geschichten aus der Vergangenheit. Sie bringen diese Geschichten in die Gegenwart.</p><p>Jedes Schild ist ein Unikat, das Deinem Zuhause Persönlichkeit und Charakter verleiht. Doch unsere Emaille Schilder sind <strong>mehr als ein Hausschild</strong>. Dank unserer speziellen Emaille-Technik hebst Du Dich mit Deinem neuen Hausschild ab – und das ein Leben lang.</p><p>Emaille bleibt zeitlos modern. Mit dem Emaille Straßenschild, der Hausnummer und dem Hausschild nach Wiener Norm verleihst Du Deiner Wand zeitlose Schönheit.</p><h3>Die Wiener Norm: Ein Symbol für Eleganz und Präzision</h3><p>Unsere Emaille Schilder werden nach der Wiener Norm hergestellt. Diese Norm stammt aus Wien – einer Stadt, die weltweit für ihre reiche Kunst und Kultur bekannt ist.</p><p>Diese Norm legt fest, wie Schilder aussehen und hergestellt werden müssen. Sie sorgt dafür, dass jedes Schild sehr genau und mit den besten Materialien gemacht wird. Das bedeutet, diese Schilder halten lange und sehen dabei gut aus.</p><p>Wenn wir ein Schild nach der Wiener Norm herstellen, achten wir sehr darauf, alles richtig zu machen. So stellen wir sicher, dass die Schilder auch schlechtem Wetter standhalten können. Ein Schild nach dieser Norm zu kaufen, bedeutet also, etwas sehr Hochwertiges zu bekommen. Es bringt ein Stück der besonderen Wiener Kultur zu Dir nach Hause oder in Dein Geschäft.</p><p>Ob Hausnummer, Straßenschild oder einzigartige Wanddeko – unsere Schilder sind die ideale Wahl. Sie stehen für Qualität und ein schönes Design, das nicht aus der Mode kommt. Mit einem solchen Schild machst Du Deinen Raum besonders.</p><h3><strong>Häufig gestellte Fragen</strong></h3><p><em>Wie wird das Schild befestigt?</em></p><p>Jedes Schild kommt mit unserem unsichtbaren Befestigungsset, das eine einfache und sichere Montage an Deiner Wand ermöglicht. Unsere Schilder bestechen durch ihre leichte Stahlkonstruktion. Bei einer Größe von 50 cm wiegen sie weniger als 0,5 kg. Die klassische Art der Anbringung unterstreicht den authentischen Charme der Schilder.</p><p><em>Sind individuelle Designs möglich?</em></p><p>Wir wissen, wie wichtig eine persönliche Note ist. Deshalb sind wir stolz darauf, auch bei Emaille Schildern individuelle Anpassungen anzubieten. Kontaktiere uns gerne mit Deinen Vorstellungen!</p><p><em>Welche Farben gibt es zur Auswahl?</em></p><p>Wir bieten Königsblau, Schwarz, Weinrot (alle mit Weiß) und Elfenbein (mit Schwarz) als Farben an.</p><h3>Pflege und Erhaltung</h3><p>Emaille Schilder sind bekannt für ihre Pflegeleichtigkeit. Ein weiches, feuchtes Tuch genügt, um sie zu reinigen und ihren Glanz zu bewahren. Vermeide aggressive Reinigungsmittel, um die Oberfläche nicht zu beschädigen.</p><h3>Schnelle Lieferung direkt zu Dir nach Hause</h3><p>Wir wissen, dass Du es kaum erwarten kannst, Dein Zuhause mit einem unserer Emaille Schilder zu bereichern. Deshalb legen wir großen Wert auf eine schnelle Bearbeitung und Lieferung Deiner Bestellung.</p><h3>Qualität, die überzeugt</h3><p>Bei Steelmonks setzen wir auf die höchste Qualität und Langlebigkeit unserer Produkte. Unsere Emaille Schilder durchlaufen strenge Qualitätskontrollen, um sicherzustellen, dass sie nicht nur schön, sondern auch beständig sind.</p><p>Mit der Wahl eines unserer Emaille Schilder gibst Du Deinem Zuhause eine besondere und zeitlose Note.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -165,11 +168,40 @@
         "padding_left": 24,
         "padding_right": 24
       }
+    },
+    "featured_collection_emaille": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Unsere Emaille-Schilder",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "emaille-schilder",
+        "products_to_show": 3,
+        "columns_desktop": 3,
+        "full_width": false,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
     "custom_header_iW4b7X",
     "custom_image_slider_pUyjkC",
+    "featured_collection_emaille",
     "multicolumn_ghD73g",
     "17458178119bf2149e",
     "accordions_dTrBJt"

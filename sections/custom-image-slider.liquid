@@ -9,6 +9,7 @@
       "limit": 3,
       "settings": [
         { "type": "richtext", "id": "richtext", "label": "Centered Text" },
+        { "type": "url", "id": "link", "label": "Link (z. B. Produktseite)", "info": "Überschrift und Bilder verlinken dorthin; darunter erscheint „Zum Produkt“." },
         {
           "type": "range",
           "id": "slide_count",
@@ -46,7 +47,11 @@
       <div class='twcss-flex-1 twcss-flex twcss-flex-col twcss-items-center twcss-mb-6 twcss-w-full'>
         {% if block.settings.richtext != blank %}
           <div class='twcss-text-center twcss-mb-4 twcss-font-semibold twcss-text-lg'>
-            {{ block.settings.richtext }}
+            {%- if block.settings.link != blank -%}
+              <a href='{{ block.settings.link }}' class='twcss-no-underline hover:twcss-underline'>{{ block.settings.richtext }}</a>
+            {%- else -%}
+              {{ block.settings.richtext }}
+            {%- endif -%}
           </div>
         {% endif %}
         <div class='twcss-relative twcss-w-full twcss-overflow-hidden'>
@@ -65,14 +70,16 @@
               {% assign image = block.settings[image_key] %}
               {% if image != blank %}
                 <div class='twcss-flex-shrink-0 twcss-w-full twcss-aspect-square twcss-relative'>
+                  {%- if block.settings.link != blank -%}<a href='{{ block.settings.link }}' class='twcss-block twcss-w-full twcss-h-full'>{%- endif -%}
                   <img
                     src='{{ image | image_url: width: 800 }}'
-                    alt=''
+                    alt='{{ image.alt | default: block.settings.richtext | strip_html | escape }}'
                     width='800'
                     height='800'
                     class='twcss-w-full twcss-h-full twcss-object-cover twcss-rounded-lg'
                     loading='lazy'
                   >
+                  {%- if block.settings.link != blank -%}</a>{%- endif -%}
                 </div>
               {% endif %}
             {% endfor %}
@@ -87,6 +94,9 @@
             </svg>
           </button>
         </div>
+        {%- if block.settings.link != blank -%}
+          <a href='{{ block.settings.link }}' class='button button--secondary twcss-mt-4'>Zum Produkt</a>
+        {%- endif -%}
       </div>
     {% endfor %}
   </div>
