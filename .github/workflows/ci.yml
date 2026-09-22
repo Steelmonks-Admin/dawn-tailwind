@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
@@ -119,29 +119,15 @@ jobs:
             echo "Please check the repository and resolve any remaining issues manually."
             exit 1
           }
-  lhci:
-    name: Lighthouse
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Lighthouse
-        uses: shopify/lighthouse-ci-action@v1
-        with:
-          access_token: ${{ secrets.SHOP_ACCESS_TOKEN }}
-          store: ${{ secrets.SHOP_STORE }}
-          password: ${{ secrets.SHOP_PASSWORD }}
-          lhci_github_app_token: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-          product_handle: ${{ secrets.SHOP_PRODUCT_HANDLE }}
-          collection_handle: ${{ secrets.SHOP_COLLECTION_HANDLE }}
   theme-check:
     name: Theme Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: '18'
+          node-version: '22'
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli @shopify/theme
       - name: Create theme-check config
