@@ -33,7 +33,8 @@
         "change_slides_speed": 5,
         "enable_country_selector": false,
         "enable_language_selector": false
-      }
+      },
+      "disabled": true
     },
     "17643180405fe5b42c": {
       "type": "apps",
