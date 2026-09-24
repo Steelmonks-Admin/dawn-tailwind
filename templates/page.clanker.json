@@ -377,29 +377,230 @@
       }
     },
     "werkstatt_galerie": {
-      "type": "featured-collection",
+      "type": "steelmonks-werkstatt-galerie",
+      "blocks": {
+        "bild_01": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-01-feuerwehr-jubilaeumsschild-125-jahre-hoh.jpg",
+            "caption": "Feuerwehr-Jubiläumsschild, 125 Jahre"
+          }
+        },
+        "bild_02": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-02-schriftzug-grill-and-chill-metall-wandsc.jpg",
+            "caption": "Schriftzug „Grill & chill“"
+          }
+        },
+        "bild_03": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-03-metall-wandschild-exakt-nach-foto.jpg",
+            "caption": "Wandschild exakt nach Foto"
+          }
+        },
+        "bild_04": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-04-metall-wandschild-nach-vorlage-mit-bohrl.jpg",
+            "caption": "Hausschild nach Vorlage"
+          }
+        },
+        "bild_05": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-05-feuerwehr-wappenschild-blankenhain-160-j.jpg",
+            "caption": "Feuerwehr-Wappenschild, 160 Jahre"
+          }
+        },
+        "bild_06": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-06-jweber-50-jahre-lorbeerkranz-wandschild.jpg",
+            "caption": "Jubiläumsschild 50 Jahre mit Lorbeerkranz"
+          }
+        },
+        "bild_07": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-07-feuerwehrauto-silhouette-1.jpg",
+            "caption": "Feuerwehrauto als Silhouette"
+          }
+        },
+        "bild_08": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-08-wappen-wandschild-cortenstahl-optik.jpg",
+            "caption": "Wappen-Emblem in Cortenstahl-Optik"
+          }
+        },
+        "bild_09": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-09-logo-wandschild-nach-vorlage.jpg",
+            "caption": "Motiv nach Vorlage, Cortenstahl-Optik"
+          }
+        },
+        "bild_10": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-10-fisch-emblem-bernd-der-superangler.jpg",
+            "caption": "Fisch-Emblem für Angler"
+          }
+        },
+        "bild_11": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-11-wandschild-nach-upload-vorlage.jpg",
+            "caption": "Kompassrose nach Upload"
+          }
+        },
+        "bild_12": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-12-motiv-silhouette-wandschild.jpg",
+            "caption": "Jahreszahl als Silhouette"
+          }
+        },
+        "bild_13": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-13-vintage-emblem-wandschild-nach-foto.jpg",
+            "caption": "Vintage-Emblem nach Foto"
+          }
+        },
+        "bild_14": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-14-wandschild-nach-vorlage-cortenstahl-opti.jpg",
+            "caption": "Ovales Schild in Cortenstahl-Optik"
+          }
+        },
+        "bild_15": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-15-feuerwehrauto-silhouette-wandschild.jpg",
+            "caption": "Feuerwehrauto als Silhouette"
+          }
+        },
+        "bild_16": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-16-werkstatt-emblem-corrado-964-jetta-2.jpg",
+            "caption": "Werkstatt-Emblem mit Auto-Silhouetten"
+          }
+        },
+        "bild_17": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-17-turbinenlogo-metall-wandschild.jpg",
+            "caption": "Turbinen-Emblem"
+          }
+        },
+        "bild_18": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-18-wandschild-reproduktion-75cm-schwarz.jpg",
+            "caption": "Rundes Emblem, 75 cm"
+          }
+        },
+        "bild_19": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-19-wappen-haustuer-wandschild-30x20cm.jpg",
+            "caption": "Wappen-Haustürschild"
+          }
+        },
+        "bild_20": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-20-gemeinsam-hund-person-wandschild.jpg",
+            "caption": "Silhouette nach Foto: Mensch und Hund"
+          }
+        },
+        "bild_21": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-21-emblem-wandschild-lotte-schroeder.jpg",
+            "caption": "Hunde-Emblem nach Foto"
+          }
+        },
+        "bild_22": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-22-steinkauz-kontur-wandschild-ohne-rahmen.jpg",
+            "caption": "Steinkauz in Cortenstahl-Optik"
+          }
+        },
+        "bild_23": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-23-rundes-metallschild-motiv-nach-vorlage.jpg",
+            "caption": "Rundes Motiv-Schild in Cortenstahl-Optik"
+          }
+        },
+        "bild_24": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-24-feuerwehr-jesberg-100-jahre-emblem-wands.jpg",
+            "caption": "Feuerwehr-Emblem, 100 Jahre"
+          }
+        },
+        "bild_25": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-25-metall-wandschild-nach-foto-einteilig.jpg",
+            "caption": "Feuerwehr-Emblem, 150 Jahre"
+          }
+        },
+        "bild_26": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-26-wappen-55-jahre-jugendfeuerwehr-marienhe.jpg",
+            "caption": "Jugendfeuerwehr-Wappen, 55 Jahre"
+          }
+        }
+      },
+      "block_order": [
+        "bild_01",
+        "bild_02",
+        "bild_03",
+        "bild_04",
+        "bild_05",
+        "bild_06",
+        "bild_07",
+        "bild_08",
+        "bild_09",
+        "bild_10",
+        "bild_11",
+        "bild_12",
+        "bild_13",
+        "bild_14",
+        "bild_15",
+        "bild_16",
+        "bild_17",
+        "bild_18",
+        "bild_19",
+        "bild_20",
+        "bild_21",
+        "bild_22",
+        "bild_23",
+        "bild_24",
+        "bild_25",
+        "bild_26"
+      ],
       "settings": {
-        "title": "Aus der Werkstatt: Schilder unserer Kunden",
+        "heading": "Aus der Werkstatt: Schilder unserer Kunden",
         "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "werkstatt-galerie",
-        "products_to_show": 8,
+        "text": "<p>Jedes dieser Schilder ist in der Werkstatt entstanden – aus einem Foto, einem Logo, einem Schriftzug oder einer Idee. Einzelstücke, die es so nur einmal gibt.</p>",
+        "alignment": "left",
         "columns_desktop": 4,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
         "columns_mobile": "2",
-        "swipe_on_mobile": true,
+        "max_items": 60,
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1",
         "padding_top": 36,
         "padding_bottom": 36
       }

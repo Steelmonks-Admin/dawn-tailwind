@@ -827,29 +827,86 @@
       }
     },
     "werkstatt_galerie_home": {
-      "type": "featured-collection",
+      "type": "steelmonks-werkstatt-galerie",
+      "blocks": {
+        "bild_01": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-01-feuerwehr-jubilaeumsschild-125-jahre-hoh.jpg",
+            "caption": "Feuerwehr-Jubiläumsschild, 125 Jahre"
+          }
+        },
+        "bild_02": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-02-schriftzug-grill-and-chill-metall-wandsc.jpg",
+            "caption": "Schriftzug „Grill & chill“"
+          }
+        },
+        "bild_03": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-03-metall-wandschild-exakt-nach-foto.jpg",
+            "caption": "Wandschild exakt nach Foto"
+          }
+        },
+        "bild_04": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-04-metall-wandschild-nach-vorlage-mit-bohrl.jpg",
+            "caption": "Hausschild nach Vorlage"
+          }
+        },
+        "bild_05": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-05-feuerwehr-wappenschild-blankenhain-160-j.jpg",
+            "caption": "Feuerwehr-Wappenschild, 160 Jahre"
+          }
+        },
+        "bild_06": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-06-jweber-50-jahre-lorbeerkranz-wandschild.jpg",
+            "caption": "Jubiläumsschild 50 Jahre mit Lorbeerkranz"
+          }
+        },
+        "bild_07": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-07-feuerwehrauto-silhouette-1.jpg",
+            "caption": "Feuerwehrauto als Silhouette"
+          }
+        },
+        "bild_08": {
+          "type": "bild",
+          "settings": {
+            "asset": "wg-08-wappen-wandschild-cortenstahl-optik.jpg",
+            "caption": "Wappen-Emblem in Cortenstahl-Optik"
+          }
+        }
+      },
+      "block_order": [
+        "bild_01",
+        "bild_02",
+        "bild_03",
+        "bild_04",
+        "bild_05",
+        "bild_06",
+        "bild_07",
+        "bild_08"
+      ],
       "settings": {
-        "title": "Aus der Werkstatt: Schilder unserer Kunden",
+        "heading": "Aus der Werkstatt: Schilder unserer Kunden",
         "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "werkstatt-galerie",
-        "products_to_show": 4,
+        "text": "",
+        "alignment": "left",
         "columns_desktop": 4,
-        "full_width": false,
-        "show_view_all": false,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
         "columns_mobile": "2",
-        "swipe_on_mobile": true,
+        "max_items": 60,
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1",
         "padding_top": 24,
         "padding_bottom": 24
       }
