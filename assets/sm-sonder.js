@@ -502,16 +502,32 @@ PAGES.galerie = function(){
   $('#gaN').textContent = SG.length;
   const drawF = () => { $('#gaFilter').innerHTML = ORDER.map(c => { const n = c === 'alle' ? SG.length : sgBy(c).length; return '<button class="chip" type="button" data-gc="' + c + '" aria-pressed="' + (c === cat) + '">' + (c === 'alle' ? 'Alle' : CAT_NAME[c]) + ' <small>' + n + '</small></button>'; }).join(''); };
   $('#gaGrid').innerHTML = SG.map((g, i) => '<figure class="' + (g.big ? 'big' : '') + '" data-gi="' + i + '" data-cat="' + g.cat + '" tabindex="0" role="button" aria-label="' + esc(g.cap) + '" data-rv style="--d:' + (i % 4 * .06) + 's"><img src="' + img(g.k) + '" alt="" loading="lazy" width="' + g.w + '" height="' + g.h + '"><span class="k">' + esc(CAT_NAME[g.cat]) + '</span><figcaption>' + esc(g.cap) + '</figcaption></figure>').join('');
-  GAL.set = c => { cat = ORDER.includes(c) ? c : 'alle'; drawF(); $$('#gaGrid figure').forEach(f => { const on = cat === 'alle' || f.dataset.cat === cat; f.hidden = !on; if (on && !RM){ f.classList.remove('in'); requestAnimationFrame(() => requestAnimationFrame(() => f.classList.add('in'))); } }); };
+  /* Lücke in der letzten Rasterzeile mit einer Anfrage-Kachel schließen */
+  const grid = $('#gaGrid'), gf = document.createElement('button');
+  gf.type = 'button'; gf.className = 'ga-fill'; gf.hidden = true;
+  gf.innerHTML = '<img src="' + img('px4_monk_sketch') + '" alt=""><span><b>Dein Projekt fehlt noch.</b><em>Wir fertigen es für Dich – ab 69 €.</em></span><i>Anfragen →</i>';
+  grid.append(gf);
+  const fill = () => {
+    gf.hidden = true;
+    const F = $$('#gaGrid figure').filter(f => !f.hidden); if (!F.length) return;
+    const cs = getComputedStyle(grid), cols = cs.gridTemplateColumns.split(' ').length, gap = parseFloat(cs.columnGap) || 0;
+    const cw = (grid.clientWidth - gap * (cols - 1)) / cols, st = cw + gap;
+    const bot = Math.max(...F.map(f => f.offsetTop + f.offsetHeight)), row = Math.round((bot - grid.offsetTop + gap) / st), free = Array(cols).fill(true);
+    F.filter(f => Math.abs(f.offsetTop + f.offsetHeight - bot) < 2).forEach(f => { const c = Math.round((f.offsetLeft - grid.offsetLeft) / st), n = Math.round((f.offsetWidth + gap) / st); for (let i = c; i < c + n; i++) free[i] = false; });
+    let at = 0, k = 0; for (let i = 0; i < cols;){ if (!free[i]){ i++; continue; } let j = i; while (j < cols && free[j]) j++; if (j - i > k){ at = i; k = j - i; } i = j; }
+    if (k && k < cols){ gf.style.gridArea = row + ' / ' + (at + 1) + ' / span 1 / span ' + k; gf.classList.toggle('one', k === 1); gf.hidden = false; }
+  };
+  let fillT; addEventListener('resize', () => { clearTimeout(fillT); fillT = setTimeout(fill, 120); });
+  GAL.set = c => { cat = ORDER.includes(c) ? c : 'alle'; drawF(); $$('#gaGrid figure').forEach(f => { const on = cat === 'alle' || f.dataset.cat === cat; f.hidden = !on; if (on && !RM){ f.classList.remove('in'); requestAnimationFrame(() => requestAnimationFrame(() => f.classList.add('in'))); } }); fill(); };
   $('#gaFilter').addEventListener('click', e => { const b = e.target.closest('[data-gc]'); if (b) GAL.set(b.dataset.gc); });
   const open = f => { const L = list(), g = SG[+f.dataset.gi]; lightbox(L, L.indexOf(g)); };
   $('#gaGrid').addEventListener('click', e => { const f = e.target.closest('figure'); if (f) open(f); });
   $('#gaGrid').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('figure')){ e.preventDefault(); open(e.target); } });
   const go = () => askFor({ topic: CAT_TOPIC[cat] || '' });
-  $('#gaGo').addEventListener('click', go); $('#gaGo2').addEventListener('click', go);
+  $('#gaGo').addEventListener('click', go); $('#gaGo2').addEventListener('click', go); gf.addEventListener('click', go);
   const G = []; for (let i = 1; i <= 24; i++) if (img('wg_' + String(i).padStart(2, '0'))) G.push('<img src="' + img('wg_' + String(i).padStart(2, '0')) + '" alt="Werkstatt-Schild eines Kunden" loading="lazy">');
   $('#gaWk').innerHTML = G.join('') + G.join('');
-  drawF();
+  drawF(); fill();
   saSticky('galerie', $('#gaSticky'), $('#gaHero'), null);
   pageFx(root);
 
