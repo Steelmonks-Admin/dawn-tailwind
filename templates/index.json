@@ -333,7 +333,7 @@
             "show_collection": true,
             "use_collection_title": false,
             "title": "Sonderanfertigungen",
-            "url": "shopify://pages/merchandise-und-produktanfrage",
+            "url": "shopify://pages/anfragen",
             "image": "shopify://shop_images/web-custom-signs.webp",
             "text_color": "#000000"
           }
@@ -582,7 +582,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "Jetzt  anfragen",
-            "button_link_1": "shopify://pages/merchandise-und-produktanfrage",
+            "button_link_1": "shopify://pages/anfragen",
             "button_style_secondary_1": false,
             "button_label_2": "",
             "button_link_2": "",

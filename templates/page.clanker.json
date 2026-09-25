@@ -352,7 +352,7 @@
           "type": "button",
           "settings": {
             "button_label": "Sonderanfertigung anfragen",
-            "button_link": "shopify://pages/merchandise-und-produktanfrage",
+            "button_link": "shopify://pages/anfragen",
             "button_style_secondary": false,
             "button_label_2": "",
             "button_link_2": "",
