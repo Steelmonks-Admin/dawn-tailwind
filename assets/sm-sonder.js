@@ -416,7 +416,7 @@ PAGES.wappen = function(){
   ], 'wappen');
   mountForm('wappen', 'wpForm', { topic:'wappen' });
   saSticky('wappen', $('#wpSticky'), $('#wpHero'), $('#wpForm'));
-  pageFx(root); requestAnimationFrame(draw); addEventListener('resize', () => current === 'wappen' && draw());
+  pageFx(root); draw(); requestAnimationFrame(draw); addEventListener('resize', () => current === 'wappen' && draw());
 };
 
 /* Firmenschild */
