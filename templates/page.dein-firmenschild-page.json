@@ -266,6 +266,16 @@
         "padding_left": 24,
         "padding_right": 24
       }
+    },
+    "anfrage_form": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Deine Anfrage",
+        "heading_size": "h1",
+        "color_scheme": "scheme-1",
+        "padding_top": 24,
+        "padding_bottom": 48
+      }
     }
   },
   "order": [
@@ -273,6 +283,7 @@
     "custom_header_W4hxnw",
     "custom_image_slider_AVW7CX",
     "accordions_xqfj73",
+    "anfrage_form",
     "sm_scrolling_gallery_rCpCah",
     "steelmonks_parallax_richtext_4UFHhE",
     "custom_gallery_nPaKq6",

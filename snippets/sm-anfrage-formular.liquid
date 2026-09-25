@@ -1,0 +1,54 @@
+{%- comment -%}
+  Anfrageformular (Shopify-Kontaktformular) fuer die wiederhergestellten Shogun-Seiten.
+  Steht an der Stelle der frueheren POWR-Formulare (POWR ist deinstalliert).
+  Parameter: fid = laufende Nummer (eindeutige IDs), quelle = Seitentitel, landet in der Mail.
+{%- endcomment -%}
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign fid = fid | default: 1
+  assign form_id = 'AnfrageForm-' | append: fid
+-%}
+<style>
+  .sm-anfrage { max-width: 640px; margin: 24px auto; padding: 0 16px; text-align: left; }
+  .sm-anfrage .field { margin-bottom: 12px; }
+  .sm-anfrage__hinweis { font-size: 14px; line-height: 1.5; margin: 4px 0 16px; }
+  .sm-anfrage .contact__button { margin-top: 8px; }
+</style>
+<div class="sm-anfrage contact" id="Anfrage-{{ fid }}">
+  {%- form 'contact', id: form_id, class: 'isolate' -%}
+    <input type="hidden" name="contact[Seite]" value="{{ quelle | escape }}">
+    {%- if form.posted_successfully? -%}
+      <p class="form-status form-status-list form__message" tabindex="-1" autofocus>
+        {{- 'icon-success.svg' | inline_asset_content -}}
+        {{ 'templates.contact.form.post_success' | t }}
+      </p>
+    {%- elsif form.errors -%}
+      <p class="form-status caption-large text-body form__message" role="alert" tabindex="-1" autofocus>
+        {{- 'icon-error.svg' | inline_asset_content -}}
+        {{ 'templates.contact.form.error_heading' | t }}
+        {{ form.errors.translated_fields.email | capitalize }}
+        {{ form.errors.messages.email }}
+      </p>
+    {%- endif -%}
+    <div class="field">
+      <input class="field__input" autocomplete="name" type="text" id="{{ form_id }}-name" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" placeholder="{{ 'templates.contact.form.name' | t }}">
+      <label class="field__label" for="{{ form_id }}-name">{{ 'templates.contact.form.name' | t }}</label>
+    </div>
+    <div class="field">
+      <input class="field__input" autocomplete="email" type="email" id="{{ form_id }}-email" name="contact[email]" spellcheck="false" autocapitalize="off" aria-required="true" required value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'templates.contact.form.email' | t }}">
+      <label class="field__label" for="{{ form_id }}-email">{{ 'templates.contact.form.email' | t }} <span aria-hidden="true">*</span></label>
+    </div>
+    <div class="field">
+      <input class="field__input" autocomplete="tel" type="tel" id="{{ form_id }}-phone" name="contact[{{ 'templates.contact.form.phone' | t }}]" pattern="[0-9\-\+ ]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'templates.contact.form.phone' | t }}">
+      <label class="field__label" for="{{ form_id }}-phone">{{ 'templates.contact.form.phone' | t }}</label>
+    </div>
+    <div class="field">
+      <textarea rows="7" id="{{ form_id }}-body" class="text-area field__input" name="contact[{{ 'templates.contact.form.comment' | t }}]" placeholder="Deine Idee: Motiv, Größe, Material, Stückzahl">{{- form.body -}}</textarea>
+      <label class="form__label field__label" for="{{ form_id }}-body">Deine Idee: Motiv, Größe, Material, Stückzahl</label>
+    </div>
+    <p class="sm-anfrage__hinweis">Fotos, Skizzen oder fertige Dateien schickst Du einfach per E-Mail an <a href="mailto:info@steelmonks.com">info@steelmonks.com</a>.</p>
+    <div class="contact__button">
+      <button type="submit" class="button">{{ 'templates.contact.form.send' | t }}</button>
+    </div>
+  {%- endform -%}
+</div>

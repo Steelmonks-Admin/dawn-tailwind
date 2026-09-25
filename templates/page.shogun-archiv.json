@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "inhalt": {
+      "type": "sm-shogun-archiv",
+      "settings": {}
+    }
+  },
+  "order": [
+    "inhalt"
+  ]
+}

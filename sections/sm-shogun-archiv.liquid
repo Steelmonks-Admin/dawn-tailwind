@@ -1,0 +1,20 @@
+{%- comment -%}
+  Zeigt den gespeicherten Shogun-Seiteninhalt (page.content) wie das alte Template page.shogun.default.
+  Platzhalter <div class="sm-anfrageformular-platz"></div> im Inhalt werden durch das Anfrageformular ersetzt.
+{%- endcomment -%}
+{%- assign teile = page.content | split: '<div class="sm-anfrageformular-platz"></div>' -%}
+<div class="shg-clearfix"></div>
+{%- for teil in teile -%}
+  {{ teil }}
+  {%- unless forloop.last -%}
+    {%- render 'sm-anfrage-formular', fid: forloop.index, quelle: page.title -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "Shogun-Seiteninhalt",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}
