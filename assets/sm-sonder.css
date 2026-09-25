@@ -403,9 +403,11 @@
 .smx .iq-car{position:relative;margin-bottom:14px}
 .smx .iq-topics{display:grid;grid-auto-flow:column;grid-auto-columns:148px;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 2px 6px}
 .smx .iq-topics::-webkit-scrollbar{display:none}
-.smx .iq-car .nv{position:absolute;top:38%;translate:0 -50%;z-index:2;width:34px;height:34px;border-radius:50%;border:1px solid rgba(238,240,242,.25);background:rgba(11,12,14,.85);color:#fff;display:grid;place-items:center;font-size:17.6px}
-.smx .iq-car .nv.l{left:-10px}
-.smx .iq-car .nv.r{right:-10px}
+.smx .iq-car .nv{position:absolute;top:38%;translate:0 -50%;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid rgba(238,240,242,.3);background:#0b0c0e;color:#fff;display:grid;place-items:center;font-size:17.6px;box-shadow:0 6px 16px rgba(0,0,0,.55);transition:opacity .2s}
+.smx .iq-car .nv[hidden]{display:none}
+.smx .iq-car .nv.l{left:-12px}
+.smx .iq-car .nv.r{right:-12px}
+.smx .iq-car .nv:hover{border-color:#fff}
 @media (hover: none){.smx .iq-car .nv{display:none}}
 .smx .iq-topics button{scroll-snap-align:start;position:relative;display:grid;gap:0;padding:0;border-radius:14px;overflow:hidden;border:1px solid rgba(238,240,242,.16);background:#0f1214;color:var(--blank);text-align:left;font-size:13.44px;line-height:1.2;transition:border-color .2s,transform .2s,background .2s}
 .smx .iq-topics button span{padding:9px 10px 10px;font-weight:500}

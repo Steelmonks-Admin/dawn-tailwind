@@ -247,6 +247,8 @@ function inquiry(root, opt){
       h += '</div>';
     }
     root.innerHTML = '<div class="wk" style="margin-top:0">' + h + '</div>';
+    const tr = $('.iq-topics', root);
+    if (tr){ const nl = $('.iq-car .nv.l', root), nr = $('.iq-car .nv.r', root); const upd = () => { if (nl) nl.hidden = tr.scrollLeft < 8; if (nr) nr.hidden = tr.scrollLeft + tr.clientWidth >= tr.scrollWidth - 8; }; tr.addEventListener('scroll', upd, { passive:true }); addEventListener('resize', upd); requestAnimationFrame(upd); upd(); }
     const pxs = root.closest('.sa-form') && $('.side .pxfx img', root.closest('.sa-form')); if (pxs && S.step <= 3 && pxs.dataset.img === 'px4_monk_sketch') pxs.src = img(IQ_PX[S.step - 1]);
     PXFX.scan(root);
   }
