@@ -12,7 +12,7 @@
   "type": "footer",
   "sections": {
     "footer": {
-      "type": "footer",
+      "type": "sm-footer",
       "blocks": {
         "text_LwniXk": {
           "type": "text",
@@ -62,7 +62,9 @@
         "show_policy": false,
         "margin_top": 0,
         "padding_top": 36,
-        "padding_bottom": 36
+        "padding_bottom": 36,
+        "sm_klaviyo_company": "RzeHpK",
+        "sm_klaviyo_list": "VnyvkJ"
       }
     }
   },
