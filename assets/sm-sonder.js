@@ -318,8 +318,9 @@ async function sendInquiry(S, tk, formId){
     const C = window.Shopify && window.Shopify.captcha;
     if (C && C.protect && !f.dataset.hcaptchaBound) await new Promise(res => { try { C.protect(f, res); } catch(x){ res(); } setTimeout(res, 6000); });
     if (f.requestSubmit) f.requestSubmit(); else f.submit();
-    // Normalerweise lädt die Seite jetzt neu; passiert das nicht, Fehler zeigen
-    await new Promise((ok, no) => setTimeout(() => { ss.del('smxSent'); no(e); }, 30000));
+    // Normalerweise lädt die Seite jetzt neu. Solange ein hCaptcha-Rätsel offen ist, warten; sonst nach 20 s Fehler zeigen
+    const puzzle = () => [...document.querySelectorAll('iframe[src*="hcaptcha"][src*="frame=challenge"]')].some(x => { const w = x.closest('div[style]'); return x.getBoundingClientRect().width > 0 && (!w || getComputedStyle(w).visibility !== 'hidden'); });
+    await new Promise((ok, no) => { let idle = 0; const t = setInterval(() => { idle = puzzle() ? 0 : idle + 1; if (idle >= 20){ clearInterval(t); no(e); } }, 1000); });
   }
 }
 function mountForm(r, id, preset){ const el = document.getElementById(id); if (!el) return; FORMS[r] = inquiry(el, preset); }
