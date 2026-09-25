@@ -37,7 +37,11 @@
       assign smk_title = page_title
       if current_tags
         assign smk_current_tags = current_tags | join: ', '
-        assign smk_title = smk_title | append: ' – tagged "' | append: smk_current_tags | append: '"'
+        if request.page_type == 'blog'
+          assign smk_title = smk_title | append: ' – Thema „' | append: smk_current_tags | append: '“'
+        else
+          assign smk_title = smk_title | append: ' – tagged "' | append: smk_current_tags | append: '"'
+        endif
       endif
       if current_page != 1
         assign smk_title = smk_title | append: ' – Seite ' | append: current_page
