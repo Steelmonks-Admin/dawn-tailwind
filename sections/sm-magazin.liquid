@@ -99,7 +99,7 @@
         </div>
       {%- endif -%}
       <nav class="bl-filter" aria-label="Themen">
-        <a class="chip" href="{{ blog.url }}"{% if cur == blank %} aria-pressed="true" aria-current="page"{% endif %}>Alle Themen <small>{{ blog.articles_count }}</small></a>
+        <a class="chip" href="{{ blog.url }}"{% if cur == blank %} aria-pressed="true" aria-current="page"{% endif %}>Alle Themen{% if cur == blank %} <small>{{ blog.articles_count }}</small>{% endif %}</a>
         {%- for t in topics -%}
           <a class="chip" href="{{ blog.url }}/tagged/{{ t | handleize }}"{% if cur == t %} aria-pressed="true" aria-current="page"{% endif %}>{{ t | escape }}</a>
         {%- endfor -%}
