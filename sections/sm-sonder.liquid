@@ -8,6 +8,9 @@
   {%- else -%}{%- render 'sm-sonder-anfragen' -%}
 {%- endcase -%}
 {%- render 'sm-sonder-data' -%}
+{%- comment -%} Rückfallweg, falls Zendesk nicht erreichbar ist: echtes Shopify-Kontaktformular (Spam-Schutz wie /pages/kontakt), Felder setzt sm-sonder.js {%- endcomment -%}
+{%- form 'contact', id: 'smxContact', class: 'smx-contact' -%}{%- endform -%}
+<style>#smxContact{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}</style>
 <script src="{{ 'sm-sonder.js' | asset_url }}" defer></script>
 
 {% schema %}

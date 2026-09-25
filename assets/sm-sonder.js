@@ -281,7 +281,7 @@ function inquiry(root, opt){
       const hp = $('[data-hp]', root); if (hp && hp.value){ S.step = 4; draw(); return; }
       if (Date.now() - T0 < 2500){ err('Einen Moment bitte – und dann noch einmal senden.'); return; }
       b.disabled = true; b.textContent = S.files.length ? 'Dateien werden hochgeladen …' : 'Wird gesendet …';
-      sendInquiry(S, ticket()).then(() => {
+      sendInquiry(S, ticket(), root.id).then(() => {
         S.step = 4; draw(); celebrate('px3_duo_highfive', 'Anfrage ist raus!', 'Wir melden uns mit Deinem Angebot');
         try { (window.dataLayer = window.dataLayer || []).push({ event:'sonder_anfrage', thema:S.topic, seite:current, dateien:S.files.length }); } catch(x){}
       }).catch(() => { b.disabled = false; b.textContent = 'Anfrage senden · unverbindlich'; err('Das Senden hat leider nicht geklappt. Bitte versuch es noch einmal oder schreib uns an info@steelmonks.com.'); });
@@ -290,10 +290,10 @@ function inquiry(root, opt){
     if (b.hasAttribute('data-again')){ Object.assign(S, { step:1, desc:'', ref:null, size:'', sizeX:'', mat:'', matX:'', multi:false, qty:'', when:'', files:[], rights:false }); draw(); }
   });
   draw();
-  return { set(p){ if (!p) return; if (S.step === 4) S.step = 1; ['topic','mat','qty','desc'].forEach(k => { if (p[k] != null) S[k] = p[k]; }); if (p.calc) S.calc = p.calc; if (p.size != null){ const z = iqSize(p.size); S.size = z[0]; S.sizeX = z[1]; } if (S.mat && !IQ_MATS.includes(S.mat)){ S.matX = S.mat; S.mat = 'Andere RAL-Farbe'; } if (p.ref) S.ref = p.ref; if (p.multi != null) S.multi = p.multi; if (p.step) S.step = p.step; draw(); } };
+  return { id:root.id, done(n, m){ S.name = n || ''; S.email = m || ''; S.step = 4; draw(); celebrate('px3_duo_highfive', 'Anfrage ist raus!', 'Wir melden uns mit Deinem Angebot'); }, set(p){ if (!p) return; if (S.step === 4) S.step = 1; ['topic','mat','qty','desc'].forEach(k => { if (p[k] != null) S[k] = p[k]; }); if (p.calc) S.calc = p.calc; if (p.size != null){ const z = iqSize(p.size); S.size = z[0]; S.sizeX = z[1]; } if (S.mat && !IQ_MATS.includes(S.mat)){ S.matX = S.mat; S.mat = 'Andere RAL-Farbe'; } if (p.ref) S.ref = p.ref; if (p.multi != null) S.multi = p.multi; if (p.step) S.step = p.step; draw(); } };
 }
 const ZD = 'https://steelmonkssupport.zendesk.com/api/v2/';
-async function sendInquiry(S, tk){
+async function sendInquiry(S, tk, formId){
   try {
     const uploads = [];
     for (const f of S.files){
@@ -306,11 +306,20 @@ async function sendInquiry(S, tk){
     const r = await fetch(ZD + 'requests.json', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ request:{ requester:{ name, email:S.email }, subject:tk.subj, comment:{ body:tk.text, uploads }, tags:tk.tags } }) });
     if (r.status !== 201 && r.status !== 200) throw new Error('request ' + r.status);
   } catch(e){
-    // Rückfall: Shopify-Kontaktformular (ohne Dateien), damit keine Anfrage verloren geht
-    const fd = new FormData(); fd.append('form_type', 'contact'); fd.append('utf8', '✓');
-    fd.append('contact[email]', S.email); fd.append('contact[Name]', S.name); fd.append('contact[body]', tk.subj + '\n\n' + tk.text + (S.files.length ? '\n\nHinweis: Dateien konnten nicht übertragen werden, bitte beim Kunden anfragen.' : ''));
-    const r2 = await fetch('/contact', { method:'POST', body:fd, credentials:'same-origin' });
-    if (!r2.ok) throw e;
+    // Rückfall: echtes Shopify-Kontaktformular wie auf /pages/kontakt (mit Shopifys hCaptcha), ohne Dateien.
+    // Die Seite lädt danach mit ?contact_posted=true neu und zeigt dort die Bestätigung.
+    const f = document.getElementById('smxContact'); if (!f) throw e;
+    $$('[data-dyn]', f).forEach(x => x.remove());
+    const add = (n, v) => { const i = document.createElement('input'); i.type = 'hidden'; i.name = n; i.value = v; i.setAttribute('data-dyn', ''); f.append(i); };
+    add('contact[email]', S.email); add('contact[Name]', S.name.trim() || '–'); add('contact[Betreff]', tk.subj);
+    tk.rows.forEach(r => { if (r[0] !== 'Name' && r[0] !== 'E-Mail') add('contact[' + r[0] + ']', String(r[1])); });
+    if (S.files.length) add('contact[Hinweis]', 'Dateien konnten nicht übertragen werden, bitte beim Kunden anfordern.');
+    ss.set('smxSent', JSON.stringify({ id:formId, name:S.name, email:S.email, topic:S.topic, t:Date.now() }));
+    const C = window.Shopify && window.Shopify.captcha;
+    if (C && C.protect && !f.dataset.hcaptchaBound) await new Promise(res => { try { C.protect(f, res); } catch(x){ res(); } setTimeout(res, 6000); });
+    if (f.requestSubmit) f.requestSubmit(); else f.submit();
+    // Normalerweise lädt die Seite jetzt neu; passiert das nicht, Fehler zeigen
+    await new Promise((ok, no) => setTimeout(() => { ss.del('smxSent'); no(e); }, 30000));
   }
 }
 function mountForm(r, id, preset){ const el = document.getElementById(id); if (!el) return; FORMS[r] = inquiry(el, preset); }
@@ -537,5 +546,12 @@ PAGES.galerie = function(){
 if (PAGES[current]) PAGES[current]();
 const pre = ss.get('smxPrefill'); if (pre){ ss.del('smxPrefill'); try { FORMS[current] && FORMS[current].set(JSON.parse(pre)); } catch(e){} }
 const gc = ss.get('smxGcat'); if (gc && GAL.set){ ss.del('smxGcat'); GAL.set(gc); }
+// Zurück vom Shopify-Kontaktformular (Rückfallweg): Bestätigung zeigen
+const posted = /[?&]contact_posted=true/.test(location.search);
+if (posted) history.replaceState(null, '', location.pathname);
+const sent = (() => { try { return JSON.parse(ss.get('smxSent') || 'null'); } catch(e){ return null; } })();
+if (sent){ ss.del('smxSent'); const F = Object.values(FORMS).find(f => f && f.id === sent.id);
+  if (posted && F && Date.now() - sent.t < 36e5){ F.done(sent.name, sent.email); const el = document.getElementById(sent.id); if (el) setTimeout(() => el.scrollIntoView({ block:'center' }), 200);
+    try { (window.dataLayer = window.dataLayer || []).push({ event:'sonder_anfrage', thema:sent.topic, seite:current, dateien:0, weg:'shopify' }); } catch(x){} } }
 if (location.hash){ const el = document.getElementById(location.hash.slice(1)); if (el) setTimeout(() => el.scrollIntoView({ block:'start' }), 150); }
 })();
