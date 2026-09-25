@@ -1,0 +1,45 @@
+{%- comment -%} Artikelkarte im Steelmonks Magazin. Parameter: article, topics (Array der Themen-Tags), i (Index) {%- endcomment -%}
+{%- liquid
+  assign topic = ''
+  for t in article.tags
+    if topics contains t
+      assign topic = t
+      break
+    endif
+  endfor
+  assign words = article.content | strip_html | split: ' ' | size
+  assign mins = words | divided_by: 200
+  if mins < 2
+    assign mins = 2
+  endif
+  assign d = i | modulo: 3 | times: 0.06
+  case topic
+    when 'Feuerwehr & Retter'
+      assign px = 'sm-px3_jakob_fire.webp'
+    when 'Wappen & Heraldik'
+      assign px = 'sm-px4_luis_wappen.webp'
+    when 'Geschenkideen'
+      assign px = 'sm-px3_luis_gift.webp'
+    when 'Haus & Garten'
+      assign px = 'sm-px3_luis_ladder.webp'
+    when 'Aus der Werkstatt'
+      assign px = 'sm-px2_monk_laser.webp'
+    when 'Handwerk & Zunft'
+      assign px = 'sm-px2_luis_zunft.webp'
+    else
+      assign px = 'sm-px3_monk_search.webp'
+  endcase
+-%}
+<a class="bl-card" href="{{ article.url }}" data-rv style="--d:{{ d }}s">
+  {%- if article.image -%}
+    <span class="im">{{ article.image | image_url: width: 640 | image_tag: loading: 'lazy', widths: '240, 420, 640', sizes: '(max-width: 620px) 112px, (max-width: 980px) 46vw, 400px', alt: '' }}</span>
+  {%- else -%}
+    <span class="im ph"><img src="{{ px | asset_url }}" alt="" loading="lazy" width="120" height="120"></span>
+  {%- endif -%}
+  <span class="bd">
+    {%- if topic != '' -%}<span class="tp">{{ topic | escape }}</span>{%- endif -%}
+    <b>{% render 'sm-mag-title', title: article.title %}</b>
+    <span class="x">{% if article.excerpt != blank %}{{ article.excerpt | strip_html | truncatewords: 24, ' …' }}{% else %}{{ article.content | strip_html | truncatewords: 24, ' …' }}{% endif %}</span>
+    <span class="mt">{{ mins }} Min. Lesezeit<i>Lesen →</i></span>
+  </span>
+</a>

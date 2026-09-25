@@ -1,0 +1,114 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-magazin",
+      "blocks": {
+        "teil_01": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story",
+            "titel": "Unser Weg aus Blut, Schweiß und Visionen"
+          }
+        },
+        "teil_02": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-2",
+            "titel": "Vom Traum zur Realität"
+          }
+        },
+        "teil_03": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-3",
+            "titel": "Überwindung von Zweifeln – Der erste Schritt zu Steelmonks"
+          }
+        },
+        "teil_04": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-4",
+            "titel": "Der Beginn einer Familienmission"
+          }
+        },
+        "teil_05": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-5",
+            "titel": "Vom Tauschgeschäft zur Manufaktur"
+          }
+        },
+        "teil_06": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-6",
+            "titel": "Vom Hipster zur Kreishandwerkerschaft"
+          }
+        },
+        "teil_07": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-7",
+            "titel": "Die, die für uns ins Feuer gehen"
+          }
+        },
+        "teil_08": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-8",
+            "titel": "Das Technische Hilfswerk"
+          }
+        },
+        "teil_09": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-9",
+            "titel": "Der harte Weg nach oben"
+          }
+        },
+        "teil_10": {
+          "type": "story",
+          "settings": {
+            "handle": "part-10-nichts-ist-personlicher-als-personalisiert",
+            "titel": "Nichts ist persönlicher als personalisiert"
+          }
+        },
+        "teil_11": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-11",
+            "titel": "Unser Team und unsere Reise"
+          }
+        },
+        "teil_12": {
+          "type": "story",
+          "settings": {
+            "handle": "steelmonks-story-12",
+            "titel": "Werde ein Steelmonk"
+          }
+        }
+      },
+      "block_order": [
+        "teil_01",
+        "teil_02",
+        "teil_03",
+        "teil_04",
+        "teil_05",
+        "teil_06",
+        "teil_07",
+        "teil_08",
+        "teil_09",
+        "teil_10",
+        "teil_11",
+        "teil_12"
+      ],
+      "settings": {
+        "themen": "Handwerk & Zunft,Geschenkideen,Haus & Garten,Aus der Werkstatt,Feuerwehr & Retter,Wappen & Heraldik,Material & Wissen",
+        "featured": "der-weg-zu-deinem-familienwappen"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,186 @@
+{%- comment -%} Steelmonks Magazin: Blog-Übersicht mit Themen-Tags, Suche, Story-Serie und Ratgebern (aus dem Prototyp). Template blog.magazin.json. {%- endcomment -%}
+<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+{{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
+{{ 'sm-magazin.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign topics = section.settings.themen | split: ','
+  assign cur = blank
+  for t in current_tags
+    if topics contains t
+      assign cur = t
+      break
+    endif
+  endfor
+  if cur == blank and current_tags.size > 0
+    assign cur = current_tags | first
+  endif
+  assign start = false
+-%}
+{%- paginate blog.articles by 17 -%}
+{%- liquid
+  if cur == blank and paginate.current_page == 1
+    assign start = true
+  endif
+  if cur != blank
+    assign ctakey = cur | handleize
+  else
+    assign cyc = 'werkstatt,handwerk-zunft,geschenkideen,wappen-heraldik,haus-garten,feuerwehr-retter' | split: ','
+    assign ci = paginate.current_page | minus: 1 | modulo: 6
+    assign ctakey = cyc[ci]
+  endif
+  case ctakey
+    when 'feuerwehr-retter'
+      assign tpx = 'sm-px3_jakob_fire.webp'
+    when 'wappen-heraldik'
+      assign tpx = 'sm-px4_luis_wappen.webp'
+    when 'geschenkideen'
+      assign tpx = 'sm-px3_luis_gift.webp'
+    when 'haus-garten'
+      assign tpx = 'sm-px3_luis_ladder.webp'
+    when 'aus-der-werkstatt'
+      assign tpx = 'sm-px2_monk_laser.webp'
+    when 'handwerk-zunft'
+      assign tpx = 'sm-px2_luis_zunft.webp'
+    else
+      assign tpx = 'sm-px3_monk_search.webp'
+  endcase
+-%}
+<div class="smx" data-mag data-section="{{ section.id }}" data-topics='{{ topics | json | escape }}'>
+  <div class="sa-hero bl-hero dark">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="{{ routes.root_url }}" style="color:inherit">Startseite</a> / {% if cur != blank or paginate.current_page > 1 %}<a href="{{ blog.url }}" style="color:inherit">Magazin</a>{% if cur != blank %} / <span>{{ cur | escape }}</span>{% endif %}{% else %}<span>Magazin</span>{% endif %}</nav>
+      {%- capture search -%}
+        <form class="bl-search" id="blSearch" role="search" action="{{ routes.search_url }}" method="get"><input type="hidden" name="type" value="article"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="blQ">Artikel durchsuchen</label><input id="blQ" name="q" type="search" placeholder="Zum Beispiel: Zunftzeichen Elektriker" autocomplete="off"><button class="btn btn-p btn-s" type="submit">Suchen</button></form>
+      {%- endcapture -%}
+      {%- if start -%}
+        {%- liquid
+          assign fk = blog.handle | append: '/' | append: section.settings.featured
+          assign F = articles[fk]
+          if F == blank or F.title == blank
+            assign F = blog.articles.first
+          endif
+          assign ftopic = ''
+          for t in F.tags
+            if topics contains t
+              assign ftopic = t
+              break
+            endif
+          endfor
+          assign fw = F.content | strip_html | split: ' ' | size | divided_by: 200
+          if fw < 2
+            assign fw = 2
+          endif
+        -%}
+        <div class="bl-top">
+          <div>
+            <p class="eyebrow" style="margin-top:14px">Das Steelmonks Magazin</p>
+            <h1 class="sa-h1">Wissen aus der <span class="hl">Werkstatt.</span></h1>
+            <p class="sa-lead">Zunftzeichen und Berufe, Wappen, Hausnummern und Geschenkideen – erklärt von den Leuten, die jeden Tag Stahl schneiden.</p>
+            {{ search }}
+            <div class="bl-stats"><div><b>{{ blog.articles_count }}</b><span>Artikel</span></div><div><b>{{ topics.size }}</b><span>Themen</span></div><div><b>{{ section.blocks.size }}</b><span>Teile Steelmonks-Story</span></div></div>
+          </div>
+          <div class="bl-feat-wrap" data-rv>
+            <a class="bl-feat" href="{{ F.url }}">
+              <span class="im">{% if F.image %}{{ F.image | image_url: width: 1100 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '560, 820, 1100', sizes: '(max-width: 980px) 92vw, 540px', alt: '' }}{% endif %}</span>
+              <span class="tag">Empfohlen</span>
+              <span class="bd">{% if ftopic != '' %}<span class="eyebrow" style="color:var(--blau-hell)">{{ ftopic | escape }}</span>{% endif %}<b>{% render 'sm-mag-title', title: F.title %}</b><span class="x">{{ F.excerpt | default: F.content | strip_html | truncatewords: 26, ' …' }}</span><span class="mt">{{ fw }} Min. Lesezeit<i>Weiterlesen →</i></span></span>
+            </a>
+            <span class="pxfx pxa-bob"><img src="{{ 'sm-px3_monk_coffee.webp' | asset_url }}" alt="Pixel-Art: der Mönch mit Kaffeetasse" width="96" height="96"></span>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="bl-top solo">
+          <div>
+            <p class="eyebrow" style="margin-top:14px">{% if cur != blank %}Magazin · Thema{% else %}Das Steelmonks Magazin{% endif %}</p>
+            <h1 class="sa-h1">{% if cur != blank %}{{ cur | escape }}{% else %}Wissen aus der <span class="hl">Werkstatt.</span>{% endif %}{% if paginate.current_page > 1 %} <span class="hl" style="font-size:.5em">Seite {{ paginate.current_page }}</span>{% endif %}</h1>
+            {{ search }}
+          </div>
+          <span class="pxfx pxa-sway"><img src="{{ tpx | asset_url }}" alt="" width="150" height="150"></span>
+        </div>
+      {%- endif -%}
+      <nav class="bl-filter" aria-label="Themen">
+        <a class="chip" href="{{ blog.url }}"{% if cur == blank %} aria-pressed="true" aria-current="page"{% endif %}>Alle Themen <small>{{ blog.articles_count }}</small></a>
+        {%- for t in topics -%}
+          <a class="chip" href="{{ blog.url }}/tagged/{{ t | handleize }}"{% if cur == t %} aria-pressed="true" aria-current="page"{% endif %}>{{ t | escape }}</a>
+        {%- endfor -%}
+      </nav>
+    </div>
+  </div>
+  <section class="sa-sec tight paper" id="blList" style="padding-top:clamp(28px,4vw,44px)"><div class="wrap">
+    <div class="bl-status" id="blStatus" aria-live="polite">
+      {%- if cur != blank -%}
+        <span><b>{{ paginate.items }}</b> Artikel in {{ cur | escape }}</span><a href="{{ blog.url }}">Alle Themen ansehen</a>
+      {%- else -%}
+        <span><b>{{ paginate.items }}</b> Artikel{% if paginate.pages > 1 %} · Seite {{ paginate.current_page }} von {{ paginate.pages }}{% endif %}</span><span>Neueste zuerst</span>
+      {%- endif -%}
+    </div>
+    <div class="bl-grid" id="blGrid">
+      {%- for article in blog.articles -%}
+        {%- render 'sm-mag-card', article: article, topics: topics, i: forloop.index0 -%}
+        {%- if forloop.index == 4 -%}{%- render 'sm-mag-cta', key: ctakey -%}{%- endif -%}
+      {%- else -%}
+        <div class="bl-empty"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt=""><b>Dazu haben wir noch nichts geschrieben.</b><span class="muted">Frag uns einfach direkt – wir antworten innerhalb von zwei Werktagen.</span><a class="btn btn-p btn-s" href="/pages/kontakt">Frage stellen</a></div>
+      {%- endfor -%}
+    </div>
+    <div class="bl-more">
+      {%- if paginate.previous and paginate.next == blank %}<a class="btn btn-g" href="{{ paginate.previous.url }}">← Neuere Artikel</a>{% endif -%}
+      {%- if paginate.next -%}<a class="btn btn-g" href="{{ paginate.next.url }}" id="blMore">Mehr Artikel laden</a>{%- endif -%}
+    </div>
+  </div></section>
+  {%- if start and section.blocks.size > 0 -%}
+  <section class="sa-sec sa-anth anth"><div class="wrap">
+    <div class="sa-head" data-rv><div class="t"><span class="pxfx pxa-sway hide-m"><img src="{{ 'sm-px2_monk_pc.webp' | asset_url }}" alt="" width="112" height="112"></span><div><p class="eyebrow">Serie · {{ section.blocks.size }} Teile</p><h2 class="sa-h2">Die Steelmonks-Story</h2><span class="sa-line"></span></div></div><div class="bl-nav"><button type="button" data-sn="-1" aria-label="Zurück">‹</button><button type="button" data-sn="1" aria-label="Weiter">›</button>{%- assign s1k = blog.handle | append: '/' | append: section.blocks.first.settings.handle -%}<a class="btn btn-p" href="{{ articles[s1k].url | default: blog.url }}">Mit Teil 1 beginnen</a></div></div>
+    <p class="muted" style="max-width:62ch;margin:-8px 0 24px">Vom Traum zur Realität, vom Tauschgeschäft zur Manufaktur – wie Steelmonks entstanden ist, erzählt in {{ section.blocks.size }} Teilen.</p>
+    <div class="bl-story" id="blStory">
+      {%- for block in section.blocks -%}
+        {%- assign sk = blog.handle | append: '/' | append: block.settings.handle -%}
+        {%- assign a = articles[sk] -%}
+        {%- if a.title != blank -%}
+          <a class="bl-part" href="{{ a.url }}" {{ block.shopify_attributes }}><span class="im">{% if a.image %}{{ a.image | image_url: width: 560 | image_tag: loading: 'lazy', widths: '280, 560', sizes: '(max-width: 620px) 78vw, 300px', alt: '' }}{% endif %}</span><span class="n">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><b>{{ block.settings.titel | default: a.title | escape }}</b></a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div></section>
+  {%- endif -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Noch mehr Wissen</p><h2 class="sa-h2">Unsere Ratgeber</h2><span class="sa-line"></span></div></div>
+    <div class="bl-rub">
+      {%- assign rub = 'nutzliches-fur-handwerker:sm-px2_luis_zunft.webp,nutzliches-fragen-und-antworten:sm-px3_monk_search.webp,nutzliches-fur-die-feuerwehr:sm-px3_jakob_fire.webp,nutzliches-interessantes-und-wissenswertes:sm-px3_monk_coffee.webp,nutzliches-und-hilfreiches:sm-px3_luis_ladder.webp' | split: ',' -%}
+      {%- for r in rub -%}
+        {%- assign rh = r | split: ':' | first -%}{%- assign rp = r | split: ':' | last -%}{%- assign rb = blogs[rh] -%}
+        {%- if rb.title != blank and rb.handle != blog.handle -%}
+          <a href="{{ rb.url }}" data-rv style="--d:{{ forloop.index0 | times: 0.06 }}s"><img src="{{ rp | asset_url }}" alt="" width="54" height="54" loading="lazy"><i>{{ rb.articles_count }}</i><b>{{ rb.title | escape }}</b><span>Artikel ansehen →</span></a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div></section>
+  <section class="sa-sec sa-night dark"><div class="wrap">
+    <div class="sa-head" data-rv><div class="t"><span class="pxfx pxa-bob hide-m"><img src="{{ 'sm-px2_monk_laser.webp' | asset_url }}" alt="" width="112" height="112"></span><div><p class="eyebrow">Vom Lesen zum Schild</p><h2 class="sa-h2">Lust bekommen?</h2><span class="sa-line"></span></div></div></div>
+    {%- assign zs = all_products['zunftschild-geschenk-fur-handwerker-personalisiert'] -%}{%- assign bd = all_products['baum-des-lebens-familienschild-personalisiert'] -%}
+    <div class="sa-tiles">
+      <a class="sa-tile" href="{{ zs.url }}" data-rv>{{ zs.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 800', sizes: '(max-width: 760px) 92vw, 400px', alt: '' }}<div><b>Zunftschild mit Deinem Zeichen</b><span class="btn btn-p btn-s">Zeichen wählen</span></div></a>
+      <a class="sa-tile" href="/pages/werkstatt" data-rv style="--d:.1s"><img src="{{ 'sm-wg_07.webp' | asset_url }}" alt="" loading="lazy"><div><b>Eigenes Motiv in 3 Minuten</b><span class="btn btn-w btn-s">Werkstatt öffnen</span></div></a>
+      <a class="sa-tile" href="/collections/beliebt" data-rv style="--d:.2s">{{ bd.featured_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 800', sizes: '(max-width: 760px) 92vw, 400px', alt: '' }}<div><b>Die beliebtesten Geschenke</b><span class="btn btn-w btn-s">Zur Rangliste</span></div></a>
+    </div>
+  </div></section>
+</div>
+{%- endpaginate -%}
+<script src="{{ 'sm-magazin.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "SM Magazin",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "themen", "label": "Themen-Tags (kommagetrennt, ohne Leerzeichen nach dem Komma)", "default": "Handwerk & Zunft,Geschenkideen,Haus & Garten,Aus der Werkstatt,Feuerwehr & Retter,Wappen & Heraldik,Material & Wissen" },
+    { "type": "text", "id": "featured", "label": "Empfohlener Artikel (Handle)", "default": "der-weg-zu-deinem-familienwappen" }
+  ],
+  "blocks": [
+    { "type": "story", "name": "Story-Teil", "settings": [
+      { "type": "text", "id": "handle", "label": "Artikel-Handle" },
+      { "type": "text", "id": "titel", "label": "Titel auf der Karte" } ] }
+  ],
+  "presets": [ { "name": "SM Magazin" } ]
+}
+{% endschema %}

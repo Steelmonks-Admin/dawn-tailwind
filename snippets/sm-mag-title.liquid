@@ -1,0 +1,25 @@
+{%- comment -%} Artikeltitel ohne Emoji am Anfang/Ende (Steelmonks Magazin). Parameter: title {%- endcomment -%}
+{%- liquid
+  assign emo = '%E2%9C,%E2%9D,%E2%98,%E2%99,%E2%9A,%E2%9B,%E2%AD,%E2%8F,%E2%AC' | split: ','
+  assign words = title | split: ' '
+  assign last = words.size | minus: 1
+  assign out = ''
+  for w in words
+    if forloop.index0 == 0 or forloop.index0 == last
+      assign enc = w | url_encode
+      assign p3 = enc | slice: 0, 3
+      assign p6 = enc | slice: 0, 6
+      if p3 == '%F0' or emo contains p6
+        continue
+      endif
+    endif
+    if out != ''
+      assign out = out | append: ' '
+    endif
+    assign out = out | append: w
+  endfor
+  if out == ''
+    assign out = title
+  endif
+  echo out | escape
+-%}

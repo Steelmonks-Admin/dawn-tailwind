@@ -1,0 +1,57 @@
+{%- comment -%} Produkt-Kachel im Magazin-Raster, passend zum Thema. Parameter: key (Handle des Themen-Tags oder 'werkstatt') {%- endcomment -%}
+{%- liquid
+  assign p = blank
+  assign pic = blank
+  case key
+    when 'handwerk-zunft'
+      assign p = all_products['zunftschild-geschenk-fur-handwerker-personalisiert']
+      assign k = 'Passend zum Thema'
+      assign t = 'Dein Zunftzeichen als Wandschild'
+      assign s = p.price_min | money_without_trailing_zeros | prepend: 'Zeichen wählen, Namen ergänzen · ab '
+      assign b = 'Zum Zunftschild'
+      assign u = p.url
+    when 'feuerwehr-retter'
+      assign p = all_products['feuerwehr-schlusselanhanger-dfv-signet']
+      assign k = 'Passend zum Thema'
+      assign t = 'Das Signet für Deinen Schlüsselbund'
+      assign s = p.price_min | money_without_trailing_zeros | prepend: 'Mit Gravur auf der Rückseite · '
+      assign b = 'Zum Signet'
+      assign u = p.url
+    when 'wappen-heraldik'
+      assign pic = 'sm-sg_dein_015.webp'
+      assign k = 'Passend zum Thema'
+      assign t = 'Dein Familienwappen aus Stahl'
+      assign s = 'Preis in einer Minute berechnen'
+      assign b = 'Zum Wappen-Rechner'
+      assign u = '/pages/dein-wappen'
+    when 'haus-garten'
+      assign p = all_products['hausnummer-mit-namen-einweihungsgeschenk']
+      assign k = 'Passend zum Thema'
+      assign t = 'Hausnummer mit Deinem Namen'
+      assign s = p.price_min | money_without_trailing_zeros | prepend: 'Wetterfest aus Stahl · ab '
+      assign b = 'Zu den Hausschildern'
+      assign u = '/collections/hausschilder'
+    when 'geschenkideen'
+      assign p = all_products['baum-des-lebens-familienschild-personalisiert']
+      assign k = 'Geschenkidee gesucht?'
+      assign t = 'Die Rangliste unserer Kunden'
+      assign s = 'Gezählt aus über 100.000 Bestellungen'
+      assign b = 'Zu den Bestsellern'
+      assign u = '/collections/beliebt'
+    else
+      assign pic = 'sm-wg_03.webp'
+      assign k = 'Selbst gestalten'
+      assign t = 'Dein Motiv in drei Minuten'
+      assign s = 'In der Werkstatt entwerfen, wir fertigen'
+      assign b = 'Werkstatt öffnen'
+      assign u = '/pages/werkstatt'
+  endcase
+-%}
+<a class="bl-cta" href="{{ u }}" data-rv>
+  {%- if pic != blank -%}
+    <img src="{{ pic | asset_url }}" alt="" loading="lazy">
+  {%- elsif p.featured_image -%}
+    {{ p.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 700', sizes: '(max-width: 620px) 92vw, 400px', alt: '' }}
+  {%- endif -%}
+  <div><small>{{ k }}</small><b>{{ t }}</b><span>{{ s }}</span><span class="btn btn-p btn-s">{{ b }}</span></div>
+</a>
