@@ -1,0 +1,27 @@
+{%- comment -%} Steelmonks: Sonderanfertigung, Wappen, Firmenschild, Galerie. Inhalte in snippets/sm-sonder-*.liquid (aus dem Prototyp erzeugt). {%- endcomment -%}
+<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+{{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
+{%- case section.settings.seite -%}
+  {%- when 'wappen' -%}{%- render 'sm-sonder-wappen' -%}
+  {%- when 'firmenschild' -%}{%- render 'sm-sonder-firmenschild' -%}
+  {%- when 'galerie' -%}{%- render 'sm-sonder-galerie' -%}
+  {%- else -%}{%- render 'sm-sonder-anfragen' -%}
+{%- endcase -%}
+{%- render 'sm-sonder-data' -%}
+<script src="{{ 'sm-sonder.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Steelmonks Sonderanfertigung",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "select", "id": "seite", "label": "Seite", "default": "anfragen", "options": [
+      { "value": "anfragen", "label": "Sonderanfertigung (Anfragen)" },
+      { "value": "wappen", "label": "Wappen" },
+      { "value": "firmenschild", "label": "Firmenschild" },
+      { "value": "galerie", "label": "Galerie" } ] }
+  ],
+  "presets": [ { "name": "Steelmonks Sonderanfertigung" } ]
+}
+{% endschema %}

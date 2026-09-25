@@ -1,0 +1,6 @@
+{
+  "sections": {
+    "main": { "type": "sm-sonder", "settings": { "seite": "galerie" } }
+  },
+  "order": ["main"]
+}

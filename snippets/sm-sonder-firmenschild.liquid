@@ -1,0 +1,83 @@
+<div class="smx" id="p-firma" data-smx="firmenschild" aria-label="Firmenschilder und Logos aus Stahl">
+  <div class="sa-hero dark" id="fsHero">
+    <img class="bgimg" src="{{ 'sm-sg_tpl_1f4eb5.webp' | asset_url }}" alt="">
+    <div class="wrap sa-grid">
+      <div>
+        <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <a href="/pages/anfragen" style="color:inherit">Sonderanfertigung</a> / <span>Firmenschild</span></nav>
+        <p class="eyebrow" style="margin-top:10px">Firmenschilder · Objektbeschilderung · Jubiläum</p>
+        <h1 class="sa-h1" data-split>Dein Logo. <span class="hl">Aus Stahl</span></h1>
+        <div class="sa-cut" aria-hidden="true"><i></i><b></b></div>
+        <p class="sa-lead">Für Eingang, Empfang, Laden oder das Firmenjubiläum: Wir schneiden Dein Logo aus Stahl – <b>für innen und außen</b>, einlagig oder mehrlagig, als Einzelstück oder in Serie.</p>
+        <div class="sa-ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="fsToolSec">Dein Logo in Stahl sehen</button><button class="sa-quiet" type="button" data-scroll="fsForm">Direkt anfragen</button></div>
+        <p class="mono" style="margin-top:18px;color:var(--steel);font-size:11.2px">Kunden u. a.: Spaten · San Miguel · Deutscher Feuerwehrverband · THW</p><div class="sa-proof" style="margin-top:12px"><span>Projekte ab <b>69 €</b></span><span>bis zu <b>3 Entwürfe</b> inklusive</span><span><b>7 – 10</b> Werktage</span><span>Edelstahl · Corten · RAL</span></div>
+      </div>
+      <div class="fs-wall"><figure><img src="{{ 'sm-sg_tpl_1e9c55.webp' | asset_url }}" alt="Firmenlogo als Wandschild"></figure><figure><img src="{{ 'sm-sg_tpl_2ae3eb.webp' | asset_url }}" alt="Logo-Schild in Kreissägen-Form"></figure><figure><img src="{{ 'sm-sg_anfr_010.webp' | asset_url }}" alt="Logo-Schild für ein Fotostudio"></figure><figure><img src="{{ 'sm-sg_anfr_000.webp' | asset_url }}" alt="Schild für einen Barbershop"></figure><span class="px pxfx pxa-bob" data-fx="twinkle:.7:.3:3"><img src="{{ 'sm-px4_jakob_firma.webp' | asset_url }}" alt="Pixel-Art: Jakob zeigt auf ein Firmenschild"></span></div>
+    </div>
+  </div>
+
+  <section class="sa-sec paper" id="fsToolSec"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Logo-Vorschau</p><h2 class="sa-h2">So wirkt Dein Logo an der Wand</h2><span class="sa-line"></span></div><p class="muted" style="max-width:42ch">Lade Dein Logo hoch – es bleibt in Deinem Browser. Wähle Material, Größe und Montage.</p></div>
+    
+    <div class="fs-tool">
+      <div class="fs-scene float" id="fsScene" data-wall="beton" data-rv><span class="floor"></span><span class="door"></span><i class="sign" id="fsSign"></i><span class="cm" id="fsCm">100 cm</span></div>
+      <div class="fs-ctrl" data-rv style="--d:.1s">
+        <div class="fs-up"><div class="t" id="fsUpT">Dein Logo <small>PNG, JPG oder SVG – dunkle Flächen werden zu Metall</small></div><label class="btn btn-i btn-s" for="fsFile">Hochladen</label><input id="fsFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="sr"></div>
+        <div><div class="l">Beispiel-Logos</div><div class="fs-chips" id="fsDemo"></div></div>
+        <div><div class="l">Material</div><div class="fs-chips" id="fsMat"></div></div>
+        <div><div class="l">Breite <small id="fsCmL">100 cm</small></div><div class="fs-sizes" id="fsSizes"></div><input type="range" id="fsSize" min="20" max="300" step="5" value="100" aria-label="Breite in Zentimetern"></div>
+        <div><div class="l">Wand &amp; Montage</div><div class="fs-chips" id="fsWall"></div></div>
+        <button class="btn btn-p" type="button" id="fsGo" style="width:100%;padding-block:1em">Genau so anfragen</button>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sa-sec sa-night dark"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Einsatz</p><h2 class="sa-h2">Wo soll Dein Schild hängen?</h2><span class="sa-line"></span></div></div>
+    <div class="fchips" id="fsTabs" role="tablist" aria-label="Einsatzbereich" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px"></div>
+    <div class="fs-use" data-rv><div class="pic"><img id="fsUseImg" alt=""></div><div class="body"><h3 id="fsUseT"></h3><p id="fsUseP"></p><div class="fs-facts" id="fsUseF"></div><div><button class="btn btn-p" type="button" id="fsUseGo">Anfragen</button></div></div></div>
+  </div></section>
+
+  <section class="sa-sec"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Referenzen</p><h2 class="sa-h2">Logos, die jetzt aus Stahl sind</h2><span class="sa-line"></span></div><a class="btn btn-p" href="/pages/fotogalerie" data-gcat="firma">Mehr Referenzen</a></div>
+    <div class="fs-refs" id="fsRefs"></div>
+    <div class="sa-mq logos" style="margin-top:26px"><div class="row" id="fsLogos"></div></div>
+    <a class="sa-fast" href="/pages/anfragen#saSerie" style="margin-top:22px"><span class="pxfx pxa-bob"><img src="{{ 'sm-px4_duo_crate.webp' | asset_url }}" alt=""></span><span class="t"><b>Geschenke fürs ganze Team?</b>Jubiläums-Anhänger, Kartenhalter oder Pins mit Eurem Logo – in Serie mit Staffelpreisen.</span><span class="btn btn-g btn-s" style="color:#fff">Serie planen <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+  </div></section>
+
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Ideen</p><h2 class="sa-h2">Beliebte Firmen-Projekte</h2><span class="sa-line"></span></div><p class="muted" style="max-width:40ch">Ein Klick – die Idee steht in Deiner Anfrage.</p></div>
+    <div class="sa-ideas" id="fsIdeas"></div>
+  </div></section>
+
+  <section class="sa-sec sa-night dark"><div class="wrap sa-form">
+    <div class="side" data-rv><p class="eyebrow">Firmen-Anfrage</p><h2 class="sa-h2">Dein Logo, Dein Angebot</h2><span class="sa-line"></span><span class="pxfx pxa-bob hide-m"><img src="{{ 'sm-px4_jakob_firma.webp' | asset_url }}" alt=""></span><ul class="sa-next hide-m"><li><i>01</i><span><b>Vektor-Datei ideal</b> (SVG, PDF, AI) – ein gutes Foto oder PNG geht auch. Anhängen kannst Du sie direkt im Formular.</span></li><li><i>02</i><span><b>Innen oder außen?</b> Sag uns, wo das Schild hängt, wir empfehlen das Material.</span></li><li><i>03</i><span><b>Firmenschilder</b> sind von Angeboten und Rabatten ausgeschlossen.</span></li></ul></div>
+    <div id="fsForm" data-rv style="--d:.1s"></div>
+  </div></section>
+
+  <section class="sa-sec paper" aria-labelledby="fsSeoT"><div class="wrap sa-seo">
+    <h2 id="fsSeoT">Individuelle Firmenschilder für Dein Unternehmen</h2>
+    <p>Steelmonks ist Dein Partner für individuelle Metallarbeiten im professionellen Bedarf. Von repräsentativen Firmenschildern über Objektbeschilderung bis zu Designelementen für Deine Geschäftsräume: Unsere Schilder aus Edelstahl, Cortenstahl und pulverbeschichtetem Stahl überzeugen durch Ästhetik und Haltbarkeit.</p>
+    <h3>Farbvielfalt für Deine Markenidentität</h3>
+    <p>Schwarz, Weiß, Gold und Anthrazit gehören zu unseren Standardfarben – Deine Firmenfarben treffen wir in jedem gewünschten RAL-Farbton, ob diskret elegant oder lebendig.</p>
+    <h3>Der Weg zu Deinem Firmenschild</h3>
+    <p>Mit dem Anfrageformular sammeln wir alle Informationen zu Deinem Projekt, am besten mit Deiner Logo-Datei. Nach einem unverbindlichen Kostenvoranschlag arbeitet unser Designteam Deinen Entwurf aus und stimmt ihn mit Dir ab.</p>
+    <h3>Einblicke in den Herstellungsprozess</h3>
+    <p>Nach Deiner Freigabe schneidet unsere Lasermaschine Dein Design präzise aus Stahl, bei mehrlagigen Schildern Lage für Lage. Pulverbeschichtung und Wettergrundierung machen es wetterfest. Das <a href="/products/unsichtbares-befestigungsset-bolzen-und-gewindestifte">unsichtbare Befestigungssystem</a> sorgt für eine einfache Montage und 8 mm Wandabstand – Dein Firmenschild wirkt wie schwebend.</p>
+  </div></section>
+
+  <section class="sa-sec"><div class="wrap sa-faq faq">
+    <h2 class="sa-h2" style="font-size:32px;margin-bottom:12px">Fragen zu Firmenschildern</h2>
+    <details open><summary>Was kostet ein Firmenschild?</summary><p>Projekte beginnen bei 69 €. Der Preis hängt von Komplexität, Qualität, Vorlage und Größe ab – Du bekommst zuerst ein unverbindliches Angebot.</p></details>
+    <details><summary>Welche Datei brauche ich?</summary><p>Am besten eine Vektor-Datei Deines Logos. Ein gutes Foto oder PNG reicht aber auch, wir zeichnen es sauber nach.</p></details>
+    <details><summary>Wie viele Entwürfe sind dabei?</summary><p>Bis zu drei Überarbeitungen sind inklusive. Produziert wird erst nach Deiner Freigabe.</p></details>
+    <details><summary>Wie lange dauert die Fertigung?</summary><p>7 bis 10 Werktage nach Freigabe des Entwurfs, danach geht das Schild auf die Reise. Versandkosten richten sich nach der Größe.</p></details>
+  </div></section>
+
+  <section class="closing" aria-labelledby="fsEndT"><div class="wrap">
+    <span class="pxfx pxa-bob" data-fx="twinkle:.7:.3:3"><img src="{{ 'sm-px4_jakob_firma.webp' | asset_url }}" alt="" style="width:180px;height:auto"></span>
+    <h2 class="display" id="fsEndT" style="margin-top:10px">Zeit, Flagge zu zeigen.</h2>
+    <p>Lad Dein Logo hoch und sieh sofort, wie es in Stahl wirkt.</p>
+    <div class="ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="fsToolSec">Logo ausprobieren</button></div>
+  </div></section>
+  <div class="sticky-buy sa-sticky" id="fsSticky" aria-hidden="true"><img class="pximg" src="{{ 'sm-px4_jakob_firma.webp' | asset_url }}" alt=""><div class="t"><b>Dein Logo aus Stahl</b><span>ab 69 € · unverbindlich</span></div><button class="btn btn-p btn-s" type="button" data-scroll="fsForm">Anfragen</button></div>
+</div>
