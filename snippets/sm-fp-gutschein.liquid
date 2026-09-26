@@ -1,0 +1,28 @@
+{%- comment -%} Steelmonks – Footer-Seite „gutschein“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="gutschein">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Geschenkgutschein</span></nav>
+    <div class="ft-top">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Geschenkgutschein</p>
+        <h1 class="sa-h1" data-split>Schenk die <span class="hl">Wahl.</span></h1>
+        <p class="sa-lead">Unsicher beim Motiv? Dann überlässt Du die Wahl einfach der beschenkten Person. Du entscheidest nur über den Betrag – eingelöst wird im gesamten Sortiment, vom gravierten Schlüsselanhänger bis zum großen Wandschild.</p>
+        {%- form 'product', product, id: 'ftGcForm' -%}
+          <div class="ft-amts" id="ftAmts" role="radiogroup" aria-label="Betrag wählen">
+            {%- for v in product.variants -%}<label class="chip"><input type="radio" name="id" value="{{ v.id }}" data-amt="{{ v.price | money_without_trailing_zeros }}"{% if v.price == 5000 or product.variants.size == 1 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}>{{ v.price | money_without_trailing_zeros }}</label>{%- endfor -%}
+          </div>
+          <div class="sa-ctas"><button class="btn btn-p btn-shine" type="submit" name="add" id="ftGcBuy">Gutschein kaufen</button><span class="sa-quiet" style="text-decoration:none">Der Code kommt per E-Mail</span></div>
+        {%- endform -%}
+      </div>
+      <div class="ft-gc" data-rv><img class="logo" src="{{ 'sm-logo.webp' | asset_url }}" alt="Steelmonks"><div class="amt" id="ftGcAmt">50 €</div><div class="row"><span>Geschenkgutschein</span><span>Für alles im Shop</span></div></div>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'gutschein' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="ft-steps">
+      <div data-rv><b>Betrag wählen</b><p>25, 50, 75, 100, 150 oder 200 €.</p></div>
+      <div data-rv style="--d:.08s"><b>Per E-Mail erhalten</b><p>Nach dem Kauf kommt der Gutscheincode per E-Mail – zum Weiterleiten oder Ausdrucken.</p></div>
+      <div data-rv style="--d:.16s"><b>Einlösen</b><p>An der Kasse ins Feld für Rabatt- und Gutscheincodes eingeben – fertig.</p></div>
+    </div>
+  </div></section>
+</div>

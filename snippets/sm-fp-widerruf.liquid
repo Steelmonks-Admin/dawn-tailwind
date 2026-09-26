@@ -1,0 +1,22 @@
+{%- comment -%} Steelmonks – Footer-Seite „widerruf“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="widerruf">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Widerrufsbelehrung</span></nav>
+    <div class="ft-top solo">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Rechtliches</p>
+        <h1 class="sa-h1" data-split>Widerrufs&shy;<span class="hl">belehrung.</span></h1>
+        <p class="sa-lead">Fragen zu Deiner Bestellung oder möchtest Du sie stornieren? Hier findest Du alle Informationen.</p>
+      </div>
+      <span class="pxfx pxa-sway"><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt=""></span>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'widerruf' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="ft-two" style="margin:0 0 30px">
+      <div class="ft-box ft-wr-cta" data-rv><h3>Online widerrufen</h3><p>Name, Bestellnummer und E-Mail – mehr brauchen wir nicht. Die Eingangsbestätigung bekommst Du sofort per E-Mail.</p><a class="btn btn-p" href="/pages/vertrag-widerrufen">Vertrag widerrufen</a></div>
+      <div class="ft-box" data-rv style="--d:.06s"><h3>Keine Antwort?</h3><p>Wenn Du innerhalb von 2 Werktagen keine Antwort auf Deine E-Mail erhalten hast, prüf bitte unbedingt Deinen Spam-Ordner.</p></div>
+    </div>
+    <div class="ft-doc"><nav class="ft-toc" aria-label="Inhalt"><p class="eyebrow">Inhalt</p><ol></ol></nav><article class="ft-body">{{ page.content }}</article></div>
+  </div></section>
+</div>

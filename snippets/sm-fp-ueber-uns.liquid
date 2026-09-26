@@ -1,0 +1,46 @@
+{%- comment -%} Steelmonks – Footer-Seite „ueber-uns“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="ueber-uns">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Über uns</span></nav>
+    <div class="ft-top">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Über uns</p>
+        <h1 class="sa-h1" data-split>Inspired by <span class="hl">Life.</span></h1>
+        <p class="sa-lead">2020 haben die Brüder Luis und Jakob Steelmonks gegründet – begeistert davon, was moderne Maschinen aus Stahl machen können. Heute fertigen wir mit unserem Team Schilder und personalisierte Geschenke für Dein Zuhause, Dein Büro und jeden Anlass.</p>
+        <div class="ft-stats"><div><b>2020</b><span>gegründet</span></div><div><b>100.000+</b><span>Bestellungen seit 2020</span></div><div><b>4,82 ★</b><span>aus 6.610 Bewertungen</span></div></div>
+      </div>
+      <figure class="ft-photo" data-rv><img src="{{ 'sm-ab_brothers.webp' | asset_url }}" alt="Luis und Jakob, die Gründer von Steelmonks"></figure>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'ueber-uns' -%}
+  <section class="sa-sec sa-night dark"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Unsere Geschichte</p><h2 class="sa-h2">Wie ein Phönix aus der Flut</h2><span class="sa-line"></span></div></div>
+    <div class="ft-tl">
+      <div data-rv><span class="y">2020</span><span class="dot"></span><div class="t"><b>Die Gründung</b><p>Luis und Jakob starten Steelmonks – begeistert von den Möglichkeiten, die neueste Maschinen und Technologien bieten.</p></div></div>
+      <div data-rv><span class="y">14.7.<br>2021</span><span class="dot"></span><div class="t"><b>Die Flut</b><p>Die Flutkatastrophe zerstört unsere komplette Produktion. Der Schock war groß – der Aufbauwille war größer.</p><img src="{{ 'sm-ab_workshop.webp' | asset_url }}" alt="Die überflutete Steelmonks-Werkstatt im Juli 2021" loading="lazy"></div></div>
+      <div data-rv><span class="y">Neu&shy;start</span><span class="dot"></span><div class="t"><b>Besser und größer</b><p>Wir nutzen die Chance, uns zu verbessern und zu vergrößern: mit neuen Maschinen, zwei brandneuen 3-kW-Lasern und tollen neuen Kolleginnen und Kollegen.</p><img src="{{ 'sm-ab_factory.webp' | asset_url }}" alt="Die neue Produktionshalle von Steelmonks" loading="lazy"></div></div>
+      <div data-rv><span class="y">Heute</span><span class="dot"></span><div class="t"><b>Über 100.000 Bestellungen später</b><p>Schilder, Anhänger und Sonderanfertigungen – jedes Stück ein Unikat. Unser Motto „Inspired by Life“ heißt: Alles, was uns umgibt, kann Inspiration sein.</p></div></div>
+    </div>
+  </div></section>
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Wofür wir stehen</p><h2 class="sa-h2">Altes Wissen, neue Technik</h2><span class="sa-line"></span></div></div>
+    <div class="ft-cards">
+      <div data-rv><img src="{{ 'sm-px2_monk_pc.webp' | asset_url }}" alt=""><h3>Tradition und Innovation</h3><p>Unser Mönch am Computer steht für das, was Steelmonks ausmacht: die Verbindung von altem Wissen und modernster Technologie. (Den Mönch haben wir übrigens mit KI erstellt.)</p></div>
+      <div data-rv style="--d:.08s"><img src="{{ 'sm-px2_monk_laser.webp' | asset_url }}" alt=""><h3>Einzigartig und schön</h3><p>Wir verbinden handwerkliche Technik mit eigenen Designs – für Produkte, die nicht nur einzigartig, sondern auch schön sind.</p></div>
+      <div data-rv style="--d:.16s"><img src="{{ 'sm-px3_duo_highfive.webp' | asset_url }}" alt=""><h3>Mit Freude gemacht</h3><p>Statt um den Erfolg Einzelner geht es uns um die Freude am Gestalten – und darum, die Ergebnisse mit Menschen zu teilen, die ähnlich empfinden.</p></div>
+    </div>
+  </div></section>
+  <section class="sa-sec" style="background:var(--beton)"><div class="wrap ft-quote">
+    <blockquote data-rv>Nichts ist persönlicher als personalisiert.<span>– Deine Steelmonks · It’s Sign Time!</span></blockquote>
+    <img src="{{ 'sm-ab_team.webp' | asset_url }}" alt="Das Steelmonks-Team" loading="lazy" data-rv>
+  </div></section>
+  <section class="sa-sec sa-anth anth"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Serie · 12 Teile</p><h2 class="sa-h2">Die ganze Geschichte</h2><span class="sa-line"></span></div><div class="bl-nav"><button type="button" data-sn="-1" aria-label="Zurück">‹</button><button type="button" data-sn="1" aria-label="Weiter">›</button><a class="btn btn-p" id="abStory1" href="{{ articles['steelmonks-de/steelmonks-story'].url | default: '/blogs/steelmonks-de' }}">Mit Teil 1 beginnen</a></div></div>
+    <div class="bl-story" id="abStory">
+      {%- assign story = 'steelmonks-story,steelmonks-story-2,steelmonks-story-3,steelmonks-story-4,steelmonks-story-5,steelmonks-story-6,steelmonks-story-7,steelmonks-story-8,steelmonks-story-9,part-10-nichts-ist-personlicher-als-personalisiert,steelmonks-story-11,steelmonks-story-12' | split: ',' -%}
+      {%- for sh in story -%}{%- assign sk = 'steelmonks-de/' | append: sh -%}{%- assign a = articles[sk] -%}
+        {%- if a.title != blank -%}<a class="bl-part" href="{{ a.url }}"><span class="im">{% if a.image %}{{ a.image | image_url: width: 560 | image_tag: loading: 'lazy', widths: '280, 560', sizes: '(max-width: 620px) 78vw, 300px', alt: '' }}{% endif %}</span><span class="n">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><b>{{ a.title | remove_first: 'Part ' | split: ':' | last | strip | escape }}</b></a>{%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div></section>
+</div>

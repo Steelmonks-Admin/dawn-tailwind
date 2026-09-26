@@ -76,6 +76,7 @@
               <svg class="smf-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
             </summary>
             <ul class="smf-list" role="list">
+              {%- if block.settings.menu.handle == 'footer' -%}<li class="smf-wr"><a href="/pages/vertrag-widerrufen"><span>Vertrag widerrufen</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>{%- endif -%}
               {%- for link in block.settings.menu.links -%}
                 <li><a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}><span>{{ link.title | escape }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
               {%- endfor -%}
@@ -85,6 +86,7 @@
       {%- endfor -%}
     </div>
 
+    <p class="smf-wr-bar"><a href="/pages/vertrag-widerrufen">Vertrag widerrufen</a></p>
     <div class="smf-bottom">
       <div class="smf-loc">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}

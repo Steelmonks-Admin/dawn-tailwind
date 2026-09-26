@@ -83,3 +83,9 @@
   .smf-pay .list-payment{justify-content:flex-start}
 }
 @media (prefers-reduced-motion: reduce){.smf-px img,.smf-px i{animation:none}.smf-px i{opacity:.8}}
+
+/* Online-Widerruf (§ 356a BGB): immer sichtbar */
+.smf-wr a span{font-weight:700;color:#fff}
+.smf-wr-bar{margin:18px 0 0;text-align:center}
+.smf-wr-bar a{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;border:1px solid rgba(238,240,242,.35);color:#fff;font-weight:600;font-size:14px;text-decoration:none}
+.smf-wr-bar a:hover{border-color:#fff}

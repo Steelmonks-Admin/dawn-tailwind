@@ -1,0 +1,37 @@
+{%- comment -%} Steelmonks: Footer-Seiten (Allgemeines, Rechtliches, Online-Widerruf). Inhalte in snippets/sm-fp-*.liquid (aus dem Prototyp erzeugt, port_footer.py); Rechtstexte kommen aus dem Seiteninhalt. {%- endcomment -%}
+<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+{{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
+{{ 'sm-info.css' | asset_url | stylesheet_tag }}
+{{ 'sm-magazin.css' | asset_url | stylesheet_tag }}
+{{ 'sm-fp.css' | asset_url | stylesheet_tag }}
+{%- case section.settings.seite -%}
+  {%- when 'ueber-uns' -%}{%- render 'sm-fp-ueber-uns' -%}
+  {%- when 'garantie' -%}{%- render 'sm-fp-garantie' -%}
+  {%- when 'newsletter' -%}{%- render 'sm-fp-newsletter' -%}
+  {%- when 'gutschein' -%}{%- render 'sm-fp-gutschein', product: product -%}{%- if product -%}<script type="application/ld+json">{{ product | structured_data }}</script>{%- endif -%}
+  {%- when 'fragen' -%}{%- render 'sm-fp-fragen' -%}
+  {%- when 'kontakt' -%}{%- render 'sm-fp-kontakt' -%}
+  {%- when 'impressum' -%}{%- render 'sm-fp-impressum' -%}
+  {%- when 'agb' -%}{%- render 'sm-fp-agb', page: page -%}
+  {%- when 'datenschutz' -%}{%- render 'sm-fp-datenschutz', page: page -%}
+  {%- when 'widerruf' -%}{%- render 'sm-fp-widerruf', page: page -%}
+  {%- when 'versand' -%}{%- render 'sm-fp-versand', page: page -%}
+  {%- when 'vertrag-widerrufen' -%}{%- render 'sm-fp-vertrag-widerrufen' -%}
+{%- endcase -%}
+<script src="{{ 'sm-fp.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "SM Footer-Seite",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "select", "id": "seite", "label": "Seite", "default": "kontakt", "options": [
+      { "value": "ueber-uns", "label": "Über uns" }, { "value": "garantie", "label": "Glücksgarantie" }, { "value": "newsletter", "label": "Newsletter" },
+      { "value": "gutschein", "label": "Geschenkgutschein (Produkt)" }, { "value": "fragen", "label": "Häufige Fragen" }, { "value": "kontakt", "label": "Kontakt" },
+      { "value": "impressum", "label": "Impressum" }, { "value": "agb", "label": "AGB" }, { "value": "datenschutz", "label": "Datenschutz" },
+      { "value": "widerruf", "label": "Widerrufsbelehrung" }, { "value": "versand", "label": "Versandbedingungen" }, { "value": "vertrag-widerrufen", "label": "Vertrag widerrufen" } ] }
+  ],
+  "presets": [ { "name": "SM Footer-Seite" } ]
+}
+{% endschema %}

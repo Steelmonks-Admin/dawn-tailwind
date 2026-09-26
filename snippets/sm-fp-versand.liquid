@@ -1,0 +1,25 @@
+{%- comment -%} Steelmonks – Footer-Seite „versand“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="versand">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Versand</span></nav>
+    <div class="ft-top solo">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Rechtliches</p>
+        <h1 class="sa-h1" data-split>Versand&shy;<span class="hl">bedingungen.</span></h1>
+        <p class="sa-lead">Wie wir versenden, womit und wie lange es dauert.</p>
+      </div>
+      <span class="pxfx pxa-bob"><img src="{{ 'sm-px2_jakob_parcels.webp' | asset_url }}" alt="Pixel-Art: Jakob mit Paketen"></span>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'versand' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="in-facts" style="margin:0 0 30px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+      <div><b>DHL</b><span>Versand innerhalb Deutschlands</span></div>
+      <div><b>7–10</b><span>Werktage Bearbeitung</span></div>
+      <div><b>3–5</b><span>Werktage Versand</span></div>
+      <div><b>ab 99 €</b><span>versandkostenfrei innerhalb Deutschlands</span></div>
+      <div><b>12,90 €</b><span>Versand in alle EU-Länder</span></div>
+    </div>
+    <div class="ft-doc"><nav class="ft-toc" aria-label="Inhalt"><p class="eyebrow">Inhalt</p><ol></ol></nav><article class="ft-body">{{ page.content }}</article></div>
+  </div></section>
+</div>

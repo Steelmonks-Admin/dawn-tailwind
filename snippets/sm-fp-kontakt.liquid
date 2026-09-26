@@ -1,0 +1,32 @@
+{%- comment -%} Steelmonks – Footer-Seite „kontakt“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="kontakt">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Kontakt</span></nav>
+    <div class="ft-top solo">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Kontakt</p>
+        <h1 class="sa-h1" data-split>Schreib <span class="hl">uns.</span></h1>
+        <p class="sa-lead">Fragen zur Bestellung, Beratung oder Feedback – wir antworten innerhalb von zwei Werktagen. Bitte prüf auch Deinen Spam-Ordner.</p>
+      </div>
+      <span class="pxfx pxa-bob"><img src="{{ 'sm-px3_jakob_letter.webp' | asset_url }}" alt="Pixel-Art: Jakob mit Brief"></span>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'kontakt' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="in-help">
+      <div data-rv><img src="{{ 'sm-px3_jakob_letter.webp' | asset_url }}" alt=""><b>E-Mail</b><p>Am schnellsten mit Deiner Bestellnummer.</p><a class="btn btn-p btn-s" href="mailto:info@steelmonks.com">info@steelmonks.com</a></div>
+      <a href="/pages/fragen" data-rv style="--d:.06s"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt=""><b>Häufige Fragen</b><p>Versand, Material, Rückgabe und Montage – vieles ist schon beantwortet.</p><span class="btn btn-g btn-s">Zu den Fragen</span></a>
+      <a href="/pages/anfragen" data-rv style="--d:.12s"><img src="{{ 'sm-px4_monk_sketch.webp' | asset_url }}" alt=""><b>Eigenes Projekt?</b><p>Für Sonderanfertigungen gibt es unser Anfrageformular mit Datei-Upload.</p><span class="btn btn-g btn-s">Projekt anfragen</span></a>
+    </div>
+    <div class="sa-head" style="margin-top:48px" data-rv><div><p class="eyebrow">Kontaktformular</p><h2 class="sa-h2">Deine Nachricht</h2><span class="sa-line"></span></div></div>
+    {%- form 'contact', id: 'ftCf', class: 'ft-form' -%}
+      {%- if form.posted_successfully? -%}<p class="ft-nl-ok" style="color:var(--ok)">Danke! Deine Nachricht ist angekommen – wir melden uns innerhalb von zwei Werktagen.</p>{%- endif -%}
+      {%- if form.errors -%}<div class="errors">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="two"><label>Name<input type="text" name="contact[Name]" autocomplete="name" value="{{ form.name }}"></label><label>E-Mail<input type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}"></label></div>
+      <label>Bestellnummer <small style="font-weight:400;color:var(--ink-3)">optional</small><input type="text" name="contact[Bestellnummer]" placeholder="z. B. #SM-12345-DE"></label>
+      <label>Nachricht<textarea name="contact[Nachricht]" required>{{ form.body }}</textarea></label>
+      <div><button class="btn btn-p" type="submit">Nachricht senden</button></div>
+    {%- endform -%}
+    <div class="in-links" style="margin-top:30px"><a href="/pages/fragen">Häufige Fragen →</a><a href="/pages/versandbedingungen">Versand →</a><a href="/pages/vertrag-widerrufen">Vertrag widerrufen →</a><a href="/pages/media">Montage &amp; Pflege →</a></div>
+  </div></section>
+</div>

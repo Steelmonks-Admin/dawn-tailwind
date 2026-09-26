@@ -1,0 +1,25 @@
+{%- comment -%} Steelmonks – Footer-Seite „newsletter“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="newsletter">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Newsletter</span></nav>
+    <div class="ft-top solo">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Newsletter</p>
+        <h1 class="sa-h1" data-split>5 € zum <span class="hl">Willkommen.</span></h1>
+        <p class="sa-lead">Neuheiten, Aktionen und Geschichten aus der Werkstatt – dazu 5 € für Deine erste Bestellung. Nur gelegentlich, jederzeit abbestellbar.</p>
+        <form class="ft-nl" id="ftNl" data-company="RzeHpK" data-list="VnyvkJ" novalidate><label class="sr-only" for="ftNlE">E-Mail-Adresse</label><input id="ftNlE" type="email" placeholder="Deine E-Mail-Adresse" autocomplete="email" required><button class="btn btn-p btn-shine" type="submit">Anmelden</button></form>
+        <p class="ft-nl-ok" id="ftNlOk" hidden>Danke! Bitte bestätige noch kurz den Link in Deinem Postfach.</p>
+        <p class="ft-small">Wir behandeln Deine Daten vertraulich. Abmelden kannst Du Dich jederzeit. <a href="/pages/datenschutzerklarung" style="color:inherit">Datenschutz</a></p>
+      </div>
+      <span class="pxfx pxa-bob"><img src="{{ 'sm-px3_jakob_letter.webp' | asset_url }}" alt="Pixel-Art: Jakob mit Brief"></span>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'newsletter' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="ft-cards">
+      <div data-rv><img src="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt=""><h3>Aktionen zuerst</h3><p>Unsere Sonderangebote schicken wir immer zuerst an unsere Abonnentinnen und Abonnenten.</p></div>
+      <div data-rv style="--d:.08s"><img src="{{ 'sm-px2_monk_laser.webp' | asset_url }}" alt=""><h3>Neues aus der Werkstatt</h3><p>Neue Motive, Einblicke in die Fertigung und Ideen für den nächsten Anlass.</p></div>
+      <div data-rv style="--d:.16s"><img src="{{ 'sm-px3_monk_coffee.webp' | asset_url }}" alt=""><h3>Nur gelegentlich</h3><p>Keine Sorge: Du hörst nur ab und zu von uns – und kannst Dich jederzeit abmelden.</p></div>
+    </div>
+  </div></section>
+</div>

@@ -181,7 +181,7 @@ document.addEventListener('click', e => {
 });
 
 /* ——— Anfrage in drei Schritten (baut auf den Werkstatt-Bausteinen .wk auf) ——— */
-const IQ_TOPICS = [['wappen','Wappen','sg_dein_014'],['firma','Firmenschild / Logo','sg_tpl_1e9c55'],['serie','Serie / Merchandise','sg_merc_008'],['privat','Geschenk / Privat','sg_anfr_016'],['sonst','Etwas anderes','sg_merc_004']];
+const IQ_TOPICS = [['privat','Geschenk / Privat','sg_anfr_016'],['wappen','Wappen','sg_dein_014'],['firma','Firmenschild / Logo','sg_tpl_1e9c55'],['serie','Serie / Merchandise','sg_merc_008'],['sonst','Etwas anderes','sg_merc_004']];
 const IQ_EX = { wappen:['Unser Familienwappen nach einer alten Urkunde','Ein neues Wappen mit Eiche und Löwe','Wappen in zwei Lagen, Gold auf Schwarz'], firma:['Unser Logo für den Eingang, für draußen','Empfangsschild in Edelstahl','Logo in Gold auf Schwarz fürs Büro'], serie:['200 Schlüsselanhänger mit Vereinslogo','Kartenhalter als Kundengeschenk','Jubiläums-Pins für 50 Mitarbeiter'], privat:['Porträt unseres Hundes nach Foto','Monogramm zur Hochzeit','Unser Haus als Silhouette'], sonst:['Buchstaben für eine Hochzeit, 1 m hoch','Ein Motiv für unser Gartentor'] };
 const IQ_SIZES = ['22,5 cm','45 cm','55 cm','75 cm','100 cm','Größer als 100 cm','Andere Größe'];
 const IQ_MATS = ['Schwarz (RAL 9005)','Anthrazit (RAL 7016)','Weiß (RAL 9010)','Gold','Cortenstahl (Rost)','Edelstahl','Andere RAL-Farbe','Weiß ich noch nicht'];
@@ -223,7 +223,7 @@ function inquiry(root, opt){
       h += '<span class="l">Worum geht\'s?</span><div class="iq-car"><button type="button" class="nv l" data-cv="-1" aria-label="Zurück">‹</button><div class="iq-topics" role="group" aria-label="Thema">' + IQ_TOPICS.map(t => '<button type="button" data-tp="' + t[0] + '" aria-pressed="' + (S.topic === t[0]) + '"><img src="' + img(t[2]) + '" alt=""><span>' + esc(t[1]) + '</span></button>').join('') + '</div><button type="button" class="nv r" data-cv="1" aria-label="Weiter">›</button></div>';
       if (S.ref) h += '<div class="iq-ref"><img src="' + img(S.ref.k) + '" alt=""><span>Beispiel: <b>' + esc(S.ref.cap) + '</b></span><button type="button" data-unref aria-label="Beispiel entfernen">✕</button></div>';
       if (S.calc) h += '<div class="iq-ref"><span>Aus dem ' + (S.calc.Richtpreis ? 'Preis-Rechner' : 'Logo-Vorschau') + ': <b>' + esc(Object.values(S.calc).join(' · ')) + '</b></span><button type="button" data-uncalc aria-label="Entfernen">✕</button></div>';
-      h += '<label class="l" for="' + root.id + 'D">Beschreib Deine Idee <small>' + S.desc.length + ' / 800</small></label><textarea id="' + root.id + 'D" maxlength="800" placeholder="Was soll entstehen, wofür, wie groß ungefähr?">' + esc(S.desc) + '</textarea>';
+      h += '<label class="l" for="' + root.id + 'D">Beschreib Deine Idee <span style="color:var(--laser)">*</span> <small>' + S.desc.length + ' / 800</small></label><textarea id="' + root.id + 'D" maxlength="800" placeholder="Was soll entstehen, wofür, wie groß ungefähr?">' + esc(S.desc) + '</textarea>';
       h += '<div class="wk-ex" role="group" aria-label="Beispiele">' + (IQ_EX[S.topic] || IQ_EX.sonst).map(x => '<button type="button" data-ex="' + esc(x) + '">' + esc(x) + '</button>').join('') + '</div>';
       h += '<div class="wk-go"><p class="wk-err" data-err role="alert"></p><button class="btn btn-p" type="button" data-next>Weiter zu den Details</button><p>Dauert etwa 2 Minuten · unverbindlich</p></div>';
     } else if (S.step === 2){
@@ -272,11 +272,12 @@ function inquiry(root, opt){
     if (b.hasAttribute('data-back')){ S.step--; draw(); return; }
     if (b.hasAttribute('data-next')){
       if (S.step === 1 && !S.topic){ err('Bitte wähl zuerst ein Thema.'); return; }
-      if (S.step === 1 && S.desc.trim().length < 8 && !S.ref && !S.calc){ err('Ein, zwei Sätze zu Deiner Idee helfen uns sehr.'); $('textarea', root).focus(); return; }
+      if (S.step === 1 && S.desc.trim().length < 8){ err('Bitte beschreib kurz Deine Idee – ein, zwei Sätze reichen.'); $('textarea', root).focus(); return; }
       if (S.step === 2 && S.files.length && !S.rights){ err('Bitte bestätige die Rechte an den Dateien.'); return; }
       S.step++; draw(); root.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block:'nearest' }); return;
     }
     if (b.hasAttribute('data-send')){
+      if (S.desc.trim().length < 8){ S.step = 1; draw(); err('Bitte beschreib kurz Deine Idee – ein, zwei Sätze reichen.'); $('textarea', root).focus(); return; }
       if (!/.+@.+\..+/.test(S.email)){ err('Bitte gib Deine E-Mail-Adresse an, damit wir Dir das Angebot schicken können.'); $('#' + root.id + 'E').focus(); return; }
       const hp = $('[data-hp]', root); if (hp && hp.value){ S.step = 4; draw(); return; }
       if (Date.now() - T0 < 2500){ err('Einen Moment bitte – und dann noch einmal senden.'); return; }

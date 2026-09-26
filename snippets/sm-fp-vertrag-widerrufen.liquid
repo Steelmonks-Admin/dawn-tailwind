@@ -1,0 +1,34 @@
+{%- comment -%} Steelmonks – Footer-Seite „vertrag-widerrufen“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
+<div class="smx" data-fp="vertrag-widerrufen">
+<div class="sa-hero ft-hero dark"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <a href="/pages/widerrufsbelehrung" style="color:inherit">Widerrufsbelehrung</a> / <span>Vertrag widerrufen</span></nav>
+    <div class="ft-top solo">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Online-Widerruf</p>
+        <h1 class="sa-h1" data-split>Vertrag <span class="hl">widerrufen.</span></h1>
+        <p class="sa-lead">Hier erklärst Du Deinen Widerruf online – ohne Kundenkonto. Den Eingang bestätigen wir Dir sofort per E-Mail.</p>
+        <ol class="wr-steps" id="wrSteps"><li class="on"><i>1</i>Angaben</li><li><i>2</i>Widerruf bestätigen</li><li><i>3</i>Eingangsbestätigung</li></ol>
+      </div>
+      <span class="pxfx pxa-sway"><img src="{{ 'sm-px3_jakob_letter.webp' | asset_url }}" alt=""></span>
+    </div>
+  </div></div>
+  {%- render 'sm-fp-nav', aktiv: 'vertrag-widerrufen' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    {%- form 'contact', id: 'wrForm', class: 'wr-box ft-form', novalidate: 'novalidate' -%}
+      <input type="hidden" name="contact[Betreff]" value="WIDERRUFSERKLÄRUNG über die Online-Widerrufsfunktion">
+      <input type="hidden" name="contact[Eingang]" id="wrTime" value="">
+      <input type="hidden" name="contact[body]" id="wrBody" value="">
+      <div class="two"><label><span>Name <span class="req">*</span></span><input id="wrName" name="contact[Name]" type="text" autocomplete="name" required></label><label><span>Bestellnummer <span class="req">*</span></span><input id="wrOrder" name="contact[Bestellnummer]" type="text" placeholder="z. B. #SM-12345-DE" required></label></div>
+      <label><span>E-Mail-Adresse für die Eingangsbestätigung <span class="req">*</span></span><input id="wrMail" name="contact[email]" type="email" autocomplete="email" required></label>
+      <fieldset><legend>Was möchtest Du widerrufen? <span class="hint">(freiwillig)</span></legend>
+        <div class="opt"><label><input type="radio" name="contact[Umfang]" value="Gesamte Bestellung" checked> Die ganze Bestellung</label><label><input type="radio" name="contact[Umfang]" value="Einzelne Artikel"> Nur einzelne Artikel</label></div>
+        <textarea id="wrItems" name="contact[Artikel]" placeholder="Welche Artikel? (freiwillig)" hidden></textarea>
+      </fieldset>
+      <label><span>Grund <span class="hint">(freiwillig – hilft uns, besser zu werden)</span></span><select id="wrWhy" name="contact[Grund]"><option value="">Keine Angabe</option><option>Gefällt mir nicht</option><option>Falsch bestellt</option><option>Artikel beschädigt oder fehlerhaft</option><option>Lieferung zu spät</option><option>Anderer Grund</option></select></label>
+      <p class="wk-err" id="wrErr" role="alert" style="color:#b3261e;font-size:.88rem"></p>
+      <div><button class="btn btn-p btn-shine" type="submit" id="wrGo">Widerruf bestätigen</button></div>
+      <p class="hint">Mit Klick auf „Widerruf bestätigen“ schickst Du uns Deine Widerrufserklärung. Personalisierte Artikel und Sonderanfertigungen sind vom gesetzlichen Widerrufsrecht ausgenommen – wir prüfen jede Erklärung und melden uns. Mehr in der <a href="/pages/widerrufsbelehrung" style="color:var(--blau)">Widerrufsbelehrung</a> und im <a href="/pages/datenschutzerklarung" style="color:var(--blau)">Datenschutz</a>.</p>
+    {%- endform -%}
+    <div class="wr-ok" id="wrOk" hidden></div>
+  </div></section>
+</div>

@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-footerpages",
+      "settings": {
+        "seite": "datenschutz"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
