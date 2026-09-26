@@ -1,7 +1,7 @@
 {%- comment -%}
   Steelmonks Magazin: Artikelansicht im Stil der Blog-Übersicht (Template article.magazin.json).
-  Inhalt = article.content. Solange eine überarbeitete Fassung noch nicht freigegeben ist, kann sie im Metafeld sm.inhalt_neu liegen und wird dann hier gezeigt.
-  Produkt-Kachel: Metafeld sm.kachel (Vorlage aus snippets/sm-mag-cta.liquid), sonst Einstellung „kachel“.
+  Inhalt = article.content. Solange eine überarbeitete Fassung noch nicht freigegeben ist, kann sie im Metafeld smk.inhalt_neu liegen und wird dann hier gezeigt.
+  Produkt-Kachel: Metafeld smk.kachel (Vorlage aus snippets/sm-mag-cta.liquid), sonst Einstellung „kachel“.
 {%- endcomment -%}
 <link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
 {{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
@@ -17,12 +17,12 @@
       break
     endif
   endfor
-  assign inhalt = article.metafields.sm.inhalt_neu.value | default: article.content
+  assign inhalt = article.metafields.smk.inhalt_neu.value | default: article.content
   assign mins = inhalt | strip_html | split: ' ' | size | divided_by: 200
   if mins < 2
     assign mins = 2
   endif
-  assign key = article.metafields.sm.kachel.value | default: S.kachel
+  assign key = article.metafields.smk.kachel.value | default: S.kachel
   assign name = S.name | default: blog.title
 -%}
 <div class="smx" data-mag-art>
@@ -37,7 +37,8 @@
           <div class="ar-meta"><span>{{ mins }} Min. Lesezeit</span><span>{{ name | escape }}</span><button class="ar-share" type="button" data-share>Teilen</button></div>
         </div>
         {%- if article.image -%}
-          <figure class="ar-img" data-rv>{{ article.image | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200', sizes: '(max-width: 980px) 92vw, 560px', alt: article.image.alt | default: article.title }}</figure>
+          {%- assign ialt = article.image.alt | default: article.title -%}
+          <figure class="ar-img" data-rv>{{ article.image | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200', sizes: '(max-width: 980px) 92vw, 560px', alt: ialt }}</figure>
         {%- endif -%}
       </div>
     </div>
@@ -109,9 +110,9 @@
   "settings": [
     { "type": "text", "id": "name", "label": "Name des Blogs in Brotkrumen", "default": "Magazin" },
     { "type": "text", "id": "themen", "label": "Themen-Tags (kommagetrennt)", "default": "Handwerk & Zunft,Geschenkideen,Haus & Garten,Aus der Werkstatt,Feuerwehr & Retter,Wappen & Heraldik,Material & Wissen" },
-    { "type": "text", "id": "kachel", "label": "Produkt-Kachel neben dem Text (Vorlage, falls Artikel keine eigene hat)", "default": "werkstatt" },
+    { "type": "text", "id": "kachel", "label": "Produkt-Kachel neben dem Text (Vorlage)", "default": "werkstatt" },
     { "type": "text", "id": "kacheln", "label": "Drei Kacheln unten", "default": "zunftschild,werkstatt,beliebt" },
-    { "type": "checkbox", "id": "kurz", "label": "Titel der Karten nur bis zum Fragezeichen", "default": false },
+    { "type": "checkbox", "id": "kurz", "label": "Kartentitel nur bis zum Fragezeichen", "default": false },
     { "type": "text", "id": "px", "label": "Pixel-Figur für Artikel ohne Bild (Asset)", "default": "sm-px3_monk_search.webp" }
   ],
   "presets": [ { "name": "SM Magazin-Artikel" } ]
