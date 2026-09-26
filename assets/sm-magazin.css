@@ -115,6 +115,7 @@
 .smx .bl-hero .bl-top.solo .pxfx img{width:150px;height:auto}
 .smx .bl-card[hidden]{display:none}
 .smx .bl-more .btn[aria-busy="true"]{opacity:.6;pointer-events:none}
+.smx .bl-feat .x{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .smx .crumbs{display:flex;flex-wrap:wrap;gap:6px;font-size:13.12px}
 .smx .crumbs a{text-decoration:none}.smx .crumbs a:hover{text-decoration:underline}
 .smx .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
