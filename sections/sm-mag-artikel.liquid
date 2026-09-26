@@ -61,7 +61,16 @@
   {%- liquid
     assign rel = ''
     assign n = 0
-    if topic != ''
+    # Feste Empfehlungen aus Metafeld smk.verwandt (Handles, kommagetrennt), sonst gleiches Thema, sonst neueste
+    assign fest = article.metafields.smk.verwandt.value | split: ','
+    for fh in fest
+      assign fk = blog.handle | append: '/' | append: fh
+      if articles[fk].title != blank and n < 3
+        assign rel = rel | append: fh | append: ','
+        assign n = n | plus: 1
+      endif
+    endfor
+    if topic != '' and n < 3
       for a in blog.articles
         if a.id != article.id and a.tags contains topic and n < 3
           assign rel = rel | append: a.handle | append: ','
@@ -83,8 +92,9 @@
   <section class="sa-sec ar-rel" style="background:var(--beton)"><div class="wrap">
     <div class="sa-head" data-rv><div><p class="eyebrow">Weiterlesen</p><h2 class="sa-h2">Passend dazu</h2><span class="sa-line"></span></div><a class="btn btn-g" href="{% if topic != '' %}{{ blog.url }}/tagged/{{ topic | handleize }}{% else %}{{ blog.url }}{% endif %}">{% if topic != '' %}Mehr zu {{ topic | escape }}{% else %}Alle Artikel{% endif %}</a></div>
     <div class="bl-grid">
-      {%- for a in blog.articles -%}
-        {%- if relh contains a.handle -%}{%- render 'sm-mag-card', article: a, topics: topics, i: forloop.index0, kurz: S.kurz, px: S.px -%}{%- endif -%}
+      {%- for rh in relh -%}
+        {%- assign rk = blog.handle | append: '/' | append: rh -%}
+        {%- if articles[rk].title != blank -%}{%- render 'sm-mag-card', article: articles[rk], topics: topics, i: forloop.index0, kurz: S.kurz, px: S.px -%}{%- endif -%}
       {%- endfor -%}
     </div>
   </div></section>
