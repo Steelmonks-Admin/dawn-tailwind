@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-info",
+      "settings": {
+        "seite": "oberflaechen"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

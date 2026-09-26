@@ -1,0 +1,56 @@
+{%- comment -%} Steelmonks – oberflaechen (aus dem Prototyp erzeugt, port_info.py) {%- endcomment -%}
+<div class="smx" data-info="oberflaechen">
+<div class="sa-hero of-hero dark">
+    <img class="bgimg" src="{{ 'sm-of_hero.webp' | asset_url }}" alt="">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Oberflächen</span></nav>
+      <p class="eyebrow" style="margin-top:14px">Unsere Oberflächen</p>
+      <h1 class="sa-h1" data-split>Sechs Oberflächen. <span class="hl">Dein Stil.</span></h1>
+      <p class="sa-lead">Pulverbeschichtet in Schwarz, Anthrazit, Weiß oder Gold, dazu Edelstahl und Cortenstahl – so sehen sie aus, so altern sie, dafür eignen sie sich.</p>
+      <div class="sa-ctas"><a class="btn btn-p btn-shine" href="#ofPick" data-scroll="ofPick">Oberflächen ansehen</a><a class="sa-quiet" href="/pages/werkstatt">Direkt selbst gestalten</a></div>
+      <div class="of-share" data-rv><div class="bar" id="ofBar"></div><div class="lg" id="ofLg"></div><p>So haben unsere Kunden gewählt: <span id="ofN"></span> Schilder und Anhänger mit Oberflächen-Angabe seit 2020.</p></div>
+    </div>
+  </div>
+
+  <section class="sa-sec paper" id="ofPick"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Finde Deine Oberfläche</p><h2 class="sa-h2">Welche passt zu Dir?</h2><span class="sa-line"></span></div><a class="btn btn-p" href="/pages/werkstatt">In der Werkstatt ausprobieren</a></div>
+    <div class="of-grid" id="ofGrid" role="tablist" aria-label="Oberflächen"></div>
+    <div class="of-pick" id="ofPanel" role="tabpanel" aria-live="polite"></div>
+  </div></section>
+
+  <section class="sa-sec sa-anth anth"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Schwarz · Anthrazit · Weiß · Gold</p><h2 class="sa-h2">Pulverbeschichtung, kurz erklärt</h2><span class="sa-line"></span></div></div>
+    <div class="of-pc">
+      <div data-rv><i>01</i><b>Pulver statt Lack</b><p>Die Farbe kommt als trockenes, frei fließendes Pulver – ganz ohne Lösungsmittel.</p></div>
+      <div data-rv style="--d:.08s"><i>02</i><b>Aufgeladen und gehärtet</b><p>Das Pulver wird elektrostatisch aufgetragen und anschließend gehärtet.</p></div>
+      <div data-rv style="--d:.16s"><i>03</i><b>Dick, dicht, langlebig</b><p>Es entsteht eine dicke, dichte Schicht, die haltbarer sein kann als herkömmlicher Lack.</p></div>
+    </div>
+  </div></section>
+
+  <section class="sa-sec sa-night dark"><div class="wrap">
+    <div class="sa-head" data-rv><div class="t"><span class="pxfx pxa-sway hide-m"><img src="{{ 'sm-px3_monk_coffee.webp' | asset_url }}" alt="" width="112"></span><div><p class="eyebrow">Cortenstahl (Rost)</p><h2 class="sa-h2">Ein Material, das lebt</h2><span class="sa-line"></span></div></div><a class="btn btn-p" href="/pages/media#inCorten">Zur Corten-Pflege</a></div>
+    <p style="max-width:68ch;margin:-8px 0 24px;color:var(--steel)">Cortenstahl ist ein wetterfester Baustahl. Draußen bildet er eine Rostpatina, die ihn vor weiterer Korrosion schützt. Wird sie zerkratzt, oxidiert die Stelle neu und schließt sich wieder. Dazu ist Cortenstahl zu 100 % recycelbar.</p>
+    <div class="in-time">
+      <figure data-rv><img src="{{ 'sm-of_p1.webp' | asset_url }}" alt="" loading="lazy"><figcaption><small>Am Anfang</small><b>Stahlgrau</b></figcaption></figure>
+      <figure data-rv style="--d:.08s"><img src="{{ 'sm-of_p2.webp' | asset_url }}" alt="" loading="lazy"><figcaption><small>Mit Regen und Sonne</small><b>Leuchtendes Orange</b></figcaption></figure>
+      <figure data-rv style="--d:.16s"><img src="{{ 'sm-of_p3.webp' | asset_url }}" alt="" loading="lazy"><figcaption><small>Nach und nach</small><b>Rostbraun</b></figcaption></figure>
+      <figure data-rv style="--d:.24s"><img src="{{ 'sm-of_p4.webp' | asset_url }}" alt="" loading="lazy"><figcaption><small>Nach etwa 18 Monaten</small><b>Dunkle Patina</b></figcaption></figure>
+    </div>
+  </div></section>
+
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Auf einen Blick</p><h2 class="sa-h2">Alle Oberflächen im Vergleich</h2><span class="sa-line"></span></div></div>
+    <div class="of-tbl" data-rv><table id="ofTbl"></table></div>
+  </div></section>
+
+  <section class="sa-sec" style="background:var(--beton)"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Häufige Fragen</p><h2 class="sa-h2">Kurz beantwortet</h2><span class="sa-line"></span></div></div>
+    <div class="in-faq">
+      <details><summary>Welche Oberfläche ist am beliebtesten?</summary><p>Schwarz – gut jedes dritte Schild. Danach folgen Anthrazit und Edelstahl. Bei Hausnummern mit Namen liegt Anthrazit vorn, beim Zunftschild Schwarz.</p></details>
+      <details><summary>Sind alle Oberflächen für draußen geeignet?</summary><p>Ja. Die Pulverbeschichtung ist widerstandsfähig gegen Wind und Wetter, Edelstahl rostet nicht und Cortenstahl schützt sich mit seiner Patina selbst.</p></details>
+      <details><summary>Rostet Edelstahl?</summary><p>Nein. Edelstahl behält seinen silbernen Ton, auch im Freien.</p></details>
+      <details><summary>Verändert sich Cortenstahl?</summary><p>Ja, und das ist gewollt: Aus Stahlgrau wird über rund 18 Monate eine dunkle Rostpatina. Mehr dazu unter <a href="/pages/media#inCorten">Montage &amp; Pflege</a>.</p></details>
+      <details><summary>Welche Farbe passt zu meiner Fassade?</summary><p>Ideen findest Du im Magazin, zum Beispiel <a href="/blogs/steelmonks-de/welche-farbe-passt-zu-anthrazit">Welche Farbe passt zu Anthrazit?</a> und <a href="/blogs/steelmonks-de/welche-farbe-passt-zu-gold">Welche Farbe passt zu Gold?</a></p></details>
+    </div>
+  </div></section>
+</div>
