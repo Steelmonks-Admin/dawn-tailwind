@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-magazin",
+      "settings": {
+        "name": "Geschenk-Ratgeber",
+        "eyebrow": "Nützliches & Hilfreiches",
+        "titel": "Das passende",
+        "titel_hl": "Geschenk.",
+        "lead": "Ideen für Mama, Männer, Paare und alle, die schon alles haben – und die Frage, wie viel man eigentlich schenkt.",
+        "suche": "Zum Beispiel: Geschenk für Mama",
+        "stat_zahl": "100.000+",
+        "stat_text": "Bestellungen seit 2020",
+        "px_hero": "sm-px3_luis_gift.webp",
+        "px": "sm-px3_luis_gift.webp",
+        "px_themen": "geld-regeln=sm-px4_monk_measure.webp,hochzeit-feste=sm-px3_duo_highfive.webp,fur-mama-frauen=sm-px3_jakob_letter.webp,fur-manner-opa=sm-px4_duo_crate.webp,ideen-inspiration=sm-px4_monk_sketch.webp",
+        "themen": "Für Mama & Frauen,Geld & Regeln,Für Männer & Opa,Hochzeit & Feste,Ideen & Inspiration",
+        "featured": "was-ist-ein-emotionales-geschenk-unvergesslich-kraftvoll-erklart",
+        "kurz": true,
+        "cta_themen": "hochzeit-feste=paare,fur-mama-frauen=familie,fur-manner-opa=beliebt,geld-regeln=beliebt,ideen-inspiration=werkstatt",
+        "cta_zyklus": "beliebt,familie,paare,werkstatt",
+        "kacheln": "beliebt,familie,werkstatt"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

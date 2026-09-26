@@ -1,4 +1,4 @@
-{%- comment -%} Artikelkarte im Steelmonks Magazin. Parameter: article, topics (Array der Themen-Tags), i (Index) {%- endcomment -%}
+{%- comment -%} Artikelkarte im Steelmonks Magazin. Parameter: article, topics (Array der Themen-Tags), i (Index), kurz (Titel nur bis zum „?“), px (Platzhalterbild) {%- endcomment -%}
 {%- liquid
   assign topic = ''
   for t in article.tags
@@ -27,7 +27,7 @@
     when 'Handwerk & Zunft'
       assign px = 'sm-px2_luis_zunft.webp'
     else
-      assign px = 'sm-px3_monk_search.webp'
+      assign px = px | default: 'sm-px3_monk_search.webp'
   endcase
 -%}
 <a class="bl-card" href="{{ article.url }}" data-rv style="--d:{{ d }}s">
@@ -38,7 +38,7 @@
   {%- endif -%}
   <span class="bd">
     {%- if topic != '' -%}<span class="tp">{{ topic | escape }}</span>{%- endif -%}
-    <b>{% render 'sm-mag-title', title: article.title %}</b>
+    <b>{% render 'sm-mag-title', title: article.title, kurz: kurz %}</b>
     <span class="x">{% if article.excerpt != blank %}{{ article.excerpt | strip_html | truncatewords: 24, ' …' }}{% else %}{{ article.content | strip_html | truncatewords: 24, ' …' }}{% endif %}</span>
     <span class="mt">{{ mins }} Min. Lesezeit<i>Lesen →</i></span>
   </span>

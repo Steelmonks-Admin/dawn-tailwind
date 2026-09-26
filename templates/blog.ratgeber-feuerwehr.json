@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-magazin",
+      "settings": {
+        "name": "Ratgeber Feuerwehr",
+        "eyebrow": "Nützliches für die Feuerwehr",
+        "titel": "Wissen für die",
+        "titel_hl": "Wache.",
+        "lead": "Einsatzbegriffe, Karriere bei Berufs- und Freiwilliger Feuerwehr, Gehalt und Geschenkideen – für alle, die für uns ins Feuer gehen.",
+        "suche": "Zum Beispiel: Was bedeutet B13",
+        "stat_zahl": "100.000+",
+        "stat_text": "Bestellungen seit 2020",
+        "px_hero": "sm-px3_jakob_fire.webp",
+        "px": "sm-px3_jakob_fire.webp",
+        "px_themen": "",
+        "themen": "Karriere & Ausbildung,Einsatz & Begriffe,Gehalt & Rente,Danke & Geschenke,Fahrzeuge,Wissen & Kurioses",
+        "featured": "was-kann-man-einem-feuerwehrmann-schenken-die-besten-geschenkideen-1",
+        "kurz": true,
+        "cta_themen": "danke-geschenke=feuerwehr,fahrzeuge=feuerwehr",
+        "cta_zyklus": "signet,feuerwehr,werkstatt",
+        "kacheln": "signet,feuerwehr,werkstatt"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

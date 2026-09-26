@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-magazin",
+      "settings": {
+        "name": "Ratgeber Handwerk",
+        "eyebrow": "Nützliches für Handwerker",
+        "titel": "Wissen fürs",
+        "titel_hl": "Handwerk.",
+        "lead": "Ausbildung, Gehalt, Zunftzeichen und Geschenkideen für Handwerker – kurze Antworten auf die Fragen rund um Deinen Beruf.",
+        "suche": "Zum Beispiel: Gehalt Dachdecker",
+        "stat_zahl": "100.000+",
+        "stat_text": "Bestellungen seit 2020",
+        "px_hero": "sm-px2_luis_zunft.webp",
+        "px": "sm-px2_luis_zunft.webp",
+        "px_themen": "geschenkideen=sm-px3_luis_gift.webp,danke-gluckwunsch=sm-px3_duo_highfive.webp,gehalt-kosten=sm-px4_monk_measure.webp,ausbildung-karriere=sm-px4_monk_sketch.webp,zunft-tradition=sm-px2_luis_zunft.webp,praxis-wissen=sm-px2_monk_laser.webp",
+        "themen": "Geschenkideen,Ausbildung & Karriere,Gehalt & Kosten,Zunft & Tradition,Danke & Glückwunsch,Praxis & Wissen",
+        "featured": "welche-zunftzeichen-gibt-es",
+        "kurz": true,
+        "cta_themen": "geschenkideen=handwerker,danke-gluckwunsch=zunftschild,gehalt-kosten=zunftschild,ausbildung-karriere=zunftschild,zunft-tradition=zunftschild,praxis-wissen=werkstatt",
+        "cta_zyklus": "zunftschild,handwerker,werkstatt,beliebt",
+        "kacheln": "zunftschild,handwerker,werkstatt"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

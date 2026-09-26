@@ -1,57 +1,132 @@
-{%- comment -%} Produkt-Kachel im Magazin-Raster, passend zum Thema. Parameter: key (Handle des Themen-Tags oder 'werkstatt') {%- endcomment -%}
+{%- comment -%}
+  Produkt-Kachel im Magazin/Ratgeber. Parameter:
+  key  = Vorlage: zunftschild, signet, wappen, hausnummer, beliebt, werkstatt, handwerker, feuerwehr, paare, familie, motiv, firmenschild
+  stil = 'cta' (Kachel im Artikel-Raster, Standard) oder 'kachel' (große Bildkachel unten), d = Verzögerung der Einblendung
+{%- endcomment -%}
 {%- liquid
   assign p = blank
+  assign c = blank
   assign pic = blank
+  assign k = 'Passend zum Thema'
   case key
-    when 'handwerk-zunft'
+    when 'zunftschild'
       assign p = all_products['zunftschild-geschenk-fur-handwerker-personalisiert']
-      assign k = 'Passend zum Thema'
       assign t = 'Dein Zunftzeichen als Wandschild'
       assign s = p.price_min | money_without_trailing_zeros | prepend: 'Zeichen wählen, Namen ergänzen · ab '
       assign b = 'Zum Zunftschild'
-      assign u = p.url
-    when 'feuerwehr-retter'
+      assign kt = 'Zunftschild mit Deinem Zeichen'
+      assign kb = 'Zeichen wählen'
+    when 'signet'
       assign p = all_products['feuerwehr-schlusselanhanger-dfv-signet']
-      assign k = 'Passend zum Thema'
       assign t = 'Das Signet für Deinen Schlüsselbund'
       assign s = p.price_min | money_without_trailing_zeros | prepend: 'Mit Gravur auf der Rückseite · '
       assign b = 'Zum Signet'
-      assign u = p.url
-    when 'wappen-heraldik'
+      assign kt = 'Signet mit Deiner Gravur'
+      assign kb = 'Zum Signet'
+    when 'wappen'
       assign pic = 'sm-sg_dein_015.webp'
-      assign k = 'Passend zum Thema'
       assign t = 'Dein Familienwappen aus Stahl'
       assign s = 'Preis in einer Minute berechnen'
       assign b = 'Zum Wappen-Rechner'
       assign u = '/pages/dein-wappen'
-    when 'haus-garten'
+      assign kt = 'Familienwappen aus Stahl'
+      assign kb = 'Preis berechnen'
+    when 'hausnummer'
       assign p = all_products['hausnummer-mit-namen-einweihungsgeschenk']
-      assign k = 'Passend zum Thema'
       assign t = 'Hausnummer mit Deinem Namen'
       assign s = p.price_min | money_without_trailing_zeros | prepend: 'Wetterfest aus Stahl · ab '
       assign b = 'Zu den Hausschildern'
       assign u = '/collections/hausschilder'
-    when 'geschenkideen'
+      assign kt = 'Hausschilder aus Stahl'
+      assign kb = 'Ansehen'
+    when 'beliebt'
       assign p = all_products['baum-des-lebens-familienschild-personalisiert']
       assign k = 'Geschenkidee gesucht?'
       assign t = 'Die Rangliste unserer Kunden'
       assign s = 'Gezählt aus über 100.000 Bestellungen'
       assign b = 'Zu den Bestsellern'
       assign u = '/collections/beliebt'
+      assign kt = 'Die beliebtesten Geschenke'
+      assign kb = 'Zur Rangliste'
+    when 'handwerker'
+      assign c = collections['geschenke-fur-handwerker']
+      assign k = 'Geschenkidee gesucht?'
+      assign t = 'Geschenke für Handwerker'
+      assign s = 'Zunftschilder und Anhänger mit Namen oder Betrieb'
+      assign b = 'Zu den Geschenken'
+      assign kt = 'Geschenke für Handwerker'
+      assign kb = 'Ansehen'
+    when 'feuerwehr'
+      assign c = collections['feuerwehr-geschenke']
+      assign k = 'Geschenkidee gesucht?'
+      assign t = 'Geschenke für die Feuerwehr'
+      assign s = 'Signet, Anstecker und Schilder für Deine Wache'
+      assign b = 'Zu den Geschenken'
+      assign kt = 'Geschenke für die Feuerwehr'
+      assign kb = 'Ansehen'
+    when 'paare'
+      assign c = collections['geschenke-fur-paare']
+      assign k = 'Geschenkidee gesucht?'
+      assign t = 'Geschenke für Paare'
+      assign s = 'Persönliche Schilder für Hochzeit und Jahrestag'
+      assign b = 'Zu den Geschenken'
+      assign kt = 'Geschenke für Paare'
+      assign kb = 'Ansehen'
+    when 'familie'
+      assign p = all_products['baum-des-lebens-familienschild-personalisiert']
+      assign k = 'Geschenkidee gesucht?'
+      assign t = 'Familienschild Baum des Lebens'
+      assign s = p.price_min | money_without_trailing_zeros | prepend: 'Mit den Namen Deiner Familie · ab '
+      assign b = 'Zum Familienschild'
+      assign kt = 'Baum des Lebens mit Euren Namen'
+      assign kb = 'Zum Familienschild'
+    when 'motiv'
+      assign c = collections['motivschilder']
+      assign t = 'Motivschilder aus Stahl'
+      assign s = 'Für die leere Wand – mit Deinem Namen'
+      assign b = 'Zu den Motivschildern'
+      assign kt = 'Motivschilder aus Stahl'
+      assign kb = 'Ansehen'
+    when 'firmenschild'
+      assign pic = 'sm-sg_tpl_1e9c55.webp'
+      assign t = 'Firmenschild mit Eurem Logo'
+      assign s = 'Logo hochladen und Vorschau ansehen'
+      assign b = 'Zum Firmenschild'
+      assign u = '/pages/dein-firmenschild'
+      assign kt = 'Firmenschild mit Eurem Logo'
+      assign kb = 'Logo ausprobieren'
     else
       assign pic = 'sm-wg_03.webp'
+      if stil == 'kachel'
+        assign pic = 'sm-wg_07.webp'
+      endif
       assign k = 'Selbst gestalten'
       assign t = 'Dein Motiv in drei Minuten'
       assign s = 'In der Werkstatt entwerfen, wir fertigen'
       assign b = 'Werkstatt öffnen'
       assign u = '/pages/werkstatt'
+      assign kt = 'Eigenes Motiv in 3 Minuten'
+      assign kb = 'Werkstatt öffnen'
   endcase
+  if p != blank and u == blank
+    assign u = p.url
+  endif
+  if c != blank
+    assign u = c.url
+    assign img = c.featured_image | default: c.products.first.featured_image
+  elsif p != blank
+    assign img = p.featured_image
+  endif
 -%}
-<a class="bl-cta" href="{{ u }}" data-rv>
+{%- capture bild -%}
   {%- if pic != blank -%}
     <img src="{{ pic | asset_url }}" alt="" loading="lazy">
-  {%- elsif p.featured_image -%}
-    {{ p.featured_image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '350, 700', sizes: '(max-width: 620px) 92vw, 400px', alt: '' }}
+  {%- elsif img != blank -%}
+    {{ img | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 800', sizes: '(max-width: 760px) 92vw, 400px', alt: '' }}
   {%- endif -%}
-  <div><small>{{ k }}</small><b>{{ t }}</b><span>{{ s }}</span><span class="btn btn-p btn-s">{{ b }}</span></div>
-</a>
+{%- endcapture -%}
+{%- if stil == 'kachel' -%}
+  <a class="sa-tile" href="{{ u }}" data-rv style="--d:{{ d | default: 0 }}s">{{ bild }}<div><b>{{ kt }}</b><span class="btn {% if d == blank or d == 0 %}btn-p{% else %}btn-w{% endif %} btn-s">{{ kb }}</span></div></a>
+{%- else -%}
+  <a class="bl-cta" href="{{ u }}" data-rv>{{ bild }}<div><small>{{ k }}</small><b>{{ t }}</b><span>{{ s }}</span><span class="btn btn-p btn-s">{{ b }}</span></div></a>
+{%- endif -%}

@@ -33,7 +33,9 @@ if (more) more.addEventListener('click', async e => {
 const q = $('#blQ'), status = $('#blStatus');
 const text = h => { const d = document.createElement('div'); d.innerHTML = String(h || '').replace(/<(style|script)[\s\S]*?<\/\1>/gi, ' '); return (d.textContent || '').replace(/\s+/g, ' ').trim(); };
 const cut = (s, n) => s.length > n ? s.slice(0, n).replace(/\s+\S*$/, '') + ' …' : s;
-const clean = t => String(t || '').replace(/^[\p{Extended_Pictographic}️‍\s]+|[\p{Extended_Pictographic}️‍\s]+$/gu, '') || t;
+const KURZ = R.dataset.kurz === 'true';
+const clean0 = t => KURZ && String(t).includes('?') ? String(t).split('?')[0] + '?' : String(t || '');
+const clean = t => clean0(t).replace(/^[\p{Extended_Pictographic}️‍\s]+|[\p{Extended_Pictographic}️‍\s]+$/gu, '') || t;
 const pxUrl = (R.querySelector('.bl-empty img, .bl-rub img') || {}).src || '';
 function card(a, i){
   const tags = Array.isArray(a.tags) ? a.tags : [];

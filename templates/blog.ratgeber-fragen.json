@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-magazin",
+      "settings": {
+        "name": "Fragen & Antworten",
+        "eyebrow": "Fragen & Antworten",
+        "titel": "Was schenkt man",
+        "titel_hl": "eigentlich?",
+        "lead": "Wie viel Geld zur Konfirmation, was zur Goldenen Hochzeit, wie bedankt man sich richtig – Antworten rund ums Schenken, nach Anlass sortiert.",
+        "suche": "Zum Beispiel: Geld zur Konfirmation",
+        "stat_zahl": "100.000+",
+        "stat_text": "Bestellungen seit 2020",
+        "px_hero": "sm-px3_luis_gift.webp",
+        "px": "sm-px3_monk_search.webp",
+        "px_themen": "weihnachten-ostern=sm-px4_duo_crate.webp,hochzeit-liebe=sm-px2_duo_pin.webp,feste-meilensteine=sm-px3_duo_highfive.webp,familie-kinder=sm-px4_duo_crate.webp,geburtstag=sm-px3_luis_gift.webp,beruf-kollegen=sm-px4_jakob_firma.webp,danke-worte=sm-px3_jakob_letter.webp,geschenkideen=sm-px3_luis_gift.webp",
+        "themen": "Geschenkideen,Hochzeit & Liebe,Feste & Meilensteine,Familie & Kinder,Geburtstag,Beruf & Kollegen,Weihnachten & Ostern,Danke & Worte",
+        "featured": "wie-viel-kostet-es-etwas-gravieren-zu-lassen-uberraschend-fair-prazise",
+        "kurz": true,
+        "cta_themen": "hochzeit-liebe=paare,familie-kinder=familie,beruf-kollegen=firmenschild,geburtstag=beliebt,feste-meilensteine=beliebt,weihnachten-ostern=beliebt,danke-worte=beliebt,geschenkideen=beliebt",
+        "cta_zyklus": "beliebt,paare,familie,werkstatt",
+        "kacheln": "beliebt,paare,werkstatt"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

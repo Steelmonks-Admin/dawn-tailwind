@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-magazin",
+      "settings": {
+        "name": "Wissenswertes",
+        "eyebrow": "Interessantes & Wissenswertes",
+        "titel": "Gut zu",
+        "titel_hl": "wissen.",
+        "lead": "Schilder richtig aufhängen, Handwerkern danken und Feuerwehr-Wissen – kurze Ratgeber für den Alltag.",
+        "suche": "Zum Beispiel: Schild ohne Bohren aufhängen",
+        "stat_zahl": "100.000+",
+        "stat_text": "Bestellungen seit 2020",
+        "px_hero": "sm-px4_monk_measure.webp",
+        "px": "sm-px4_monk_measure.webp",
+        "px_themen": "danke-geschenke=sm-px3_luis_gift.webp,feuerwehr=sm-px3_jakob_fire.webp,wand-deko=sm-px3_luis_ladder.webp,handwerk-gehalt=sm-px2_luis_zunft.webp",
+        "themen": "Wand & Deko,Danke & Geschenke,Feuerwehr,Handwerk & Gehalt",
+        "featured": "wie-befestigt-man-metallschilder-an-einer-wand",
+        "kurz": true,
+        "cta_themen": "wand-deko=motiv,danke-geschenke=handwerker,feuerwehr=signet,handwerk-gehalt=zunftschild",
+        "cta_zyklus": "motiv,zunftschild,werkstatt",
+        "kacheln": "motiv,hausnummer,werkstatt"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
