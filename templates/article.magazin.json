@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-mag-artikel",
+      "settings": {
+        "name": "Magazin",
+        "themen": "Handwerk & Zunft,Geschenkideen,Haus & Garten,Aus der Werkstatt,Feuerwehr & Retter,Wappen & Heraldik,Material & Wissen",
+        "kachel": "werkstatt",
+        "kacheln": "zunftschild,werkstatt,beliebt",
+        "kurz": false,
+        "px": "sm-px3_monk_search.webp"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

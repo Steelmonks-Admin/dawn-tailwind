@@ -1,0 +1,119 @@
+{%- comment -%}
+  Steelmonks Magazin: Artikelansicht im Stil der Blog-Übersicht (Template article.magazin.json).
+  Inhalt = article.content. Solange eine überarbeitete Fassung noch nicht freigegeben ist, kann sie im Metafeld sm.inhalt_neu liegen und wird dann hier gezeigt.
+  Produkt-Kachel: Metafeld sm.kachel (Vorlage aus snippets/sm-mag-cta.liquid), sonst Einstellung „kachel“.
+{%- endcomment -%}
+<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+{{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
+{{ 'sm-magazin.css' | asset_url | stylesheet_tag }}
+{{ 'sm-artikel.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign S = section.settings
+  assign topics = S.themen | split: ','
+  assign topic = ''
+  for t in article.tags
+    if topics contains t
+      assign topic = t
+      break
+    endif
+  endfor
+  assign inhalt = article.metafields.sm.inhalt_neu.value | default: article.content
+  assign mins = inhalt | strip_html | split: ' ' | size | divided_by: 200
+  if mins < 2
+    assign mins = 2
+  endif
+  assign key = article.metafields.sm.kachel.value | default: S.kachel
+  assign name = S.name | default: blog.title
+-%}
+<div class="smx" data-mag-art>
+  <div class="sa-hero ar-hero dark">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="{{ routes.root_url }}" style="color:inherit">Startseite</a> / <a href="{{ blog.url }}" style="color:inherit">{{ name | escape }}</a>{% if topic != '' %} / <a href="{{ blog.url }}/tagged/{{ topic | handleize }}" style="color:inherit">{{ topic | escape }}</a>{% endif %}</nav>
+      <div class="ar-top{% unless article.image %} solo{% endunless %}">
+        <div>
+          {%- if topic != '' -%}<a class="ar-topic" href="{{ blog.url }}/tagged/{{ topic | handleize }}">{{ topic | escape }}</a>{%- endif -%}
+          <h1 class="ar-h1">{% render 'sm-mag-title', title: article.title %}</h1>
+          {%- if article.excerpt != blank -%}<p class="sa-lead ar-lead-top">{{ article.excerpt | strip_html | truncatewords: 42, ' …' }}</p>{%- endif -%}
+          <div class="ar-meta"><span>{{ mins }} Min. Lesezeit</span><span>{{ name | escape }}</span><button class="ar-share" type="button" data-share>Teilen</button></div>
+        </div>
+        {%- if article.image -%}
+          <figure class="ar-img" data-rv>{{ article.image | image_url: width: 1200 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200', sizes: '(max-width: 980px) 92vw, 560px', alt: article.image.alt | default: article.title }}</figure>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  <section class="sa-sec paper ar-sec"><div class="wrap ar-grid">
+    <div>
+      <details class="ar-toc-m" id="arTocM" hidden><summary>Inhalt</summary><ol></ol></details>
+      <article class="ar-body" id="arBody">{{ inhalt }}</article>
+      <div class="ar-end">
+        <a class="btn btn-g" href="{{ blog.url }}">← Zurück zu {{ name | escape }}</a>
+        <button class="btn btn-g" type="button" data-share>Artikel teilen</button>
+      </div>
+      {%- render 'steelmonks-preferred-source' -%}
+    </div>
+    <aside class="ar-side">
+      <nav class="ar-toc" id="arToc" aria-label="Inhalt" hidden><p class="eyebrow">Inhalt</p><ol></ol></nav>
+      <div class="ar-cta">{%- render 'sm-mag-cta', key: key -%}</div>
+    </aside>
+  </div></section>
+  {%- liquid
+    assign rel = ''
+    assign n = 0
+    if topic != ''
+      for a in blog.articles
+        if a.id != article.id and a.tags contains topic and n < 3
+          assign rel = rel | append: a.handle | append: ','
+          assign n = n | plus: 1
+        endif
+      endfor
+    endif
+    for a in blog.articles
+      if n < 3 and a.id != article.id
+        unless rel contains a.handle
+          assign rel = rel | append: a.handle | append: ','
+          assign n = n | plus: 1
+        endunless
+      endif
+    endfor
+    assign relh = rel | split: ','
+  -%}
+  {%- if relh.size > 0 -%}
+  <section class="sa-sec ar-rel" style="background:var(--beton)"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Weiterlesen</p><h2 class="sa-h2">Passend dazu</h2><span class="sa-line"></span></div><a class="btn btn-g" href="{% if topic != '' %}{{ blog.url }}/tagged/{{ topic | handleize }}{% else %}{{ blog.url }}{% endif %}">{% if topic != '' %}Mehr zu {{ topic | escape }}{% else %}Alle Artikel{% endif %}</a></div>
+    <div class="bl-grid">
+      {%- for a in blog.articles -%}
+        {%- if relh contains a.handle -%}{%- render 'sm-mag-card', article: a, topics: topics, i: forloop.index0, kurz: S.kurz, px: S.px -%}{%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div></section>
+  {%- endif -%}
+  <section class="sa-sec sa-night dark"><div class="wrap">
+    <div class="sa-head" data-rv><div class="t"><span class="pxfx pxa-bob hide-m"><img src="{{ 'sm-px2_monk_laser.webp' | asset_url }}" alt="" width="112" height="112"></span><div><p class="eyebrow">Vom Lesen zum Schild</p><h2 class="sa-h2">Lust bekommen?</h2><span class="sa-line"></span></div></div></div>
+    <div class="sa-tiles">
+      {%- assign kacheln = S.kacheln | split: ',' -%}
+      {%- for kk in kacheln limit: 3 -%}{%- assign dd = forloop.index0 | times: 0.1 -%}{%- render 'sm-mag-cta', key: kk, stil: 'kachel', d: dd -%}{%- endfor -%}
+    </div>
+  </div></section>
+</div>
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+<script src="{{ 'sm-artikel.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "SM Magazin-Artikel",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "name", "label": "Name des Blogs in Brotkrumen", "default": "Magazin" },
+    { "type": "text", "id": "themen", "label": "Themen-Tags (kommagetrennt)", "default": "Handwerk & Zunft,Geschenkideen,Haus & Garten,Aus der Werkstatt,Feuerwehr & Retter,Wappen & Heraldik,Material & Wissen" },
+    { "type": "text", "id": "kachel", "label": "Produkt-Kachel neben dem Text (Vorlage, falls Artikel keine eigene hat)", "default": "werkstatt" },
+    { "type": "text", "id": "kacheln", "label": "Drei Kacheln unten", "default": "zunftschild,werkstatt,beliebt" },
+    { "type": "checkbox", "id": "kurz", "label": "Titel der Karten nur bis zum Fragezeichen", "default": false },
+    { "type": "text", "id": "px", "label": "Pixel-Figur für Artikel ohne Bild (Asset)", "default": "sm-px3_monk_search.webp" }
+  ],
+  "presets": [ { "name": "SM Magazin-Artikel" } ]
+}
+{% endschema %}

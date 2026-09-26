@@ -1,0 +1,72 @@
+/* Steelmonks Magazin – Artikelansicht. Basis kommt aus sm-sonder.css und sm-magazin.css (Pixelwerte, weil Dawn html{font-size:62.5%} setzt) */
+.smx .ar-hero{padding-bottom:clamp(32px,4vw,56px)}
+.smx .ar-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,4vw,56px);align-items:center;margin-top:18px}
+.smx .ar-top.solo{grid-template-columns:minmax(0,1fr)}
+.smx .ar-topic{display:inline-flex;padding:.4em .85em;border-radius:999px;background:rgba(255,107,31,.16);color:var(--laser);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+.smx .ar-topic:hover{background:rgba(255,107,31,.26)}
+.smx .ar-h1{font-size:clamp(32px,4.4vw,58px);font-weight:600;letter-spacing:-.02em;line-height:1.06;margin-top:16px;max-width:20ch}
+.smx .ar-lead-top{max-width:58ch}
+.smx .ar-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:22px;font-size:14px;color:var(--steel)}
+.smx .ar-meta span+span::before{content:"·";margin-right:16px;opacity:.6}
+.smx .ar-share{padding:.45em .95em;border-radius:999px;border:1px solid rgba(238,240,242,.28);background:transparent;color:var(--blank);font-size:13px;cursor:pointer}
+.smx .ar-share:hover{border-color:var(--blank)}
+.smx .ar-img{margin:0;border-radius:24px;overflow:hidden;background:var(--anth);box-shadow:0 40px 80px -40px rgba(0,0,0,.8)}
+.smx .ar-img img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.smx .ar-sec{padding-top:clamp(36px,5vw,64px)}
+.smx .ar-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:clamp(28px,5vw,72px);align-items:start}
+.smx .ar-body{font-size:18px;line-height:1.75;color:var(--ink-2);max-width:720px}
+.smx .ar-body>*:first-child{margin-top:0}
+.smx .ar-body .ar-lead{font-size:21px;line-height:1.6;color:var(--ink);font-weight:500;margin-bottom:26px}
+.smx .ar-body h2{font-size:clamp(26px,2.6vw,34px);font-weight:600;letter-spacing:-.015em;line-height:1.15;color:var(--ink);margin:50px 0 14px;scroll-margin-top:calc(var(--header-height,70px) + 24px)}
+.smx .ar-body h2::after{content:"";display:block;width:64px;height:2px;margin-top:12px;background:linear-gradient(90deg,var(--laser),transparent)}
+.smx .ar-body h3{font-size:21px;font-weight:600;line-height:1.3;color:var(--ink);margin:32px 0 8px}
+.smx .ar-body p{margin:0 0 16px}
+.smx .ar-body ul,.smx .ar-body ol{margin:0 0 20px;padding-left:22px}
+.smx .ar-body li{margin:0 0 8px;padding-left:4px}
+.smx .ar-body li::marker{color:var(--laser)}
+.smx .ar-body b,.smx .ar-body strong{color:var(--ink);font-weight:600}
+.smx .ar-body a{color:var(--blau);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.smx .ar-body img{display:block;width:100%;height:auto;margin:8px 0 24px!important;float:none!important;border-radius:18px;box-shadow:var(--shadow)}
+.smx .ar-body figure.ar-fig{margin:10px 0 26px}
+.smx .ar-body figure.ar-fig img{margin:0!important}
+.smx .ar-body figcaption{font-size:14px;line-height:1.4;color:var(--ink-3);margin-top:8px}
+.smx .ar-body .ar-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0 24px}
+.smx .ar-body .ar-steps figure.ar-fig{margin:0}
+.smx .ar-body .ar-steps img{aspect-ratio:4/3;object-fit:cover}
+.smx .ar-body table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:16px}
+.smx .ar-body th,.smx .ar-body td{padding:10px 12px;border-bottom:1px solid var(--line-l);text-align:left}
+.smx .ar-end{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px;padding-top:24px;border-top:1px solid var(--line-l)}
+.smx .ar-side{position:sticky;top:calc(var(--header-height,70px) + 20px);display:grid;gap:16px}
+.smx .ar-toc{padding:18px 18px 12px;border-radius:18px;background:var(--white);box-shadow:var(--shadow)}
+.smx .ar-toc ol,.smx .ar-toc-m ol{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:2px;counter-reset:t}
+.smx .ar-toc a,.smx .ar-toc-m a{display:flex;gap:10px;padding:7px 8px;border-radius:10px;text-decoration:none;font-size:14px;line-height:1.35;color:var(--ink-2)}
+.smx .ar-toc a::before,.smx .ar-toc-m a::before{counter-increment:t;content:counter(t,decimal-leading-zero);flex:none;font-family:var(--f-mono);font-size:11px;color:var(--ink-3);padding-top:2px}
+.smx .ar-toc a:hover{background:var(--paper)}
+.smx .ar-toc a.on{background:var(--paper);color:var(--ink);font-weight:600}
+.smx .ar-toc a.on::before{color:var(--laser)}
+.smx .ar-cta .bl-cta{min-height:360px}
+.smx .ar-toc-m{display:none}
+.smx .ar-rel .bl-grid{margin-top:4px}
+.smx .smk-prefsrc{margin-left:0!important}
+@media (max-width: 980px){
+  .smx .ar-top{grid-template-columns:1fr}
+  .smx .ar-img{max-width:620px}
+  .smx .ar-grid{grid-template-columns:1fr}
+  .smx .ar-side{position:static}
+  .smx .ar-toc{display:none}
+  .smx .ar-toc-m:not([hidden]){display:block;margin-bottom:22px;border-radius:16px;background:var(--white);box-shadow:var(--shadow)}
+  .smx .ar-toc-m summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;padding:14px 18px;font-weight:600}
+  .smx .ar-toc-m summary::-webkit-details-marker{display:none}
+  .smx .ar-toc-m summary::after{content:"+";color:var(--blau);font-size:20px;line-height:1}
+  .smx .ar-toc-m[open] summary::after{content:"–"}
+  .smx .ar-toc-m ol{margin:0;padding:0 10px 12px}
+  .smx .ar-cta{max-width:520px}
+}
+@media (max-width: 620px){
+  .smx .ar-h1{font-size:clamp(28px,8vw,36px)}
+  .smx .ar-body{font-size:17px}
+  .smx .ar-body .ar-lead{font-size:19px}
+  .smx .ar-body h2{font-size:25px;margin-top:40px}
+  .smx .ar-body .ar-steps{grid-template-columns:1fr 1fr;gap:8px}
+  .smx .ar-body figcaption{font-size:12px}
+}
