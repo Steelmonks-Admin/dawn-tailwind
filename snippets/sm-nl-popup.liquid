@@ -10,8 +10,8 @@
   @font-face{font-family:"SM Stencil";src:url({{ 'sm-bigshoulders-900.woff2' | asset_url }}) format("woff2");font-weight:900;font-display:swap}
   .smnl{--n:#0b0c0e;--b:#eef0f2;--s:#aeb5bb;--t:#c9ced2;--l:#9aa1a7;--blau:#0044cc;--hell:#6f9bff;--f:var(--font-body-family,Poppins,system-ui,sans-serif)}
   .smnl [hidden]{display:none!important}
-  .smnl-back,.smnl-clip,.smnl-handle{display:block}
-  html.smnl-open [id^="trustbadge-container"]{visibility:hidden!important}
+  .smnl .smnl-back,.smnl .smnl-clip,.smnl .smnl-handle{display:block}
+  html.smnl-open [id^="trustbadge-container"]{display:none!important}
   .smnl *,.smnl *::before,.smnl *::after{box-sizing:border-box}
   .smnl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .smnl-tz{position:fixed;left:16px;bottom:calc(26px + env(safe-area-inset-bottom,0px));z-index:2147483000;display:flex;align-items:center;gap:6px}
