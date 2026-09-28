@@ -3,8 +3,8 @@
 'use strict';
 const R = document.getElementById('smNl'); if (!R) return;
 
-// Test-Modus: solange LIVE = false, erscheint das Popup nur mit ?smnl=test (normale Regeln) oder ?smnl=open (sofort)
-const LIVE = false;
+// LIVE = false: Popup nur mit ?smnl=test (normale Regeln) oder ?smnl=open (sofort); ?smnl=open funktioniert auch live zum Testen
+const LIVE = true;
 const DELAY_MOBILE = 30000, DELAY_DESKTOP = 40000, SCROLL_SHARE = 0.5, PAUSE_DAYS = 14;
 const EXCLUDE = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?(?:cart|account|checkouts?|pages\/(?:kontakt|vertrag-widerrufen|impressum|agb-s|datenschutzerklarung|widerrufsbelehrung|versandbedingungen|newsletter|werkstatt|anfragen|dein-wappen|dein-firmenschild|sendungsverfolgung))(?:\/|$)/;
 
