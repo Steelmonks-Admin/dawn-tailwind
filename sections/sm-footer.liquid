@@ -63,7 +63,7 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'link_list' and block.settings.menu != blank -%}
           {%- assign n = n | plus: 1 -%}
-          <details class="smf-col" {{ block.shopify_attributes }}>
+          <details class="smf-col{% if block.settings.menu.handle == 'footer' %} smf-col-wr{% endif %}" {{ block.shopify_attributes }}>
             <summary>
               <span class="smf-ic" aria-hidden="true">
                 {%- case n -%}
@@ -82,11 +82,12 @@
               {%- endfor -%}
             </ul>
           </details>
+          {%- comment -%} Online-Widerruf (§ 356a BGB): mobil hängt der Link unter „Rechtliches“, damit er auch zugeklappt sichtbar bleibt {%- endcomment -%}
+          {%- if block.settings.menu.handle == 'footer' -%}<a class="smf-wr-m" href="/pages/vertrag-widerrufen"><span>Vertrag widerrufen</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>{%- endif -%}
         {%- endif -%}
       {%- endfor -%}
     </div>
 
-    <p class="smf-wr-bar"><a href="/pages/vertrag-widerrufen">Vertrag widerrufen</a></p>
     <div class="smf-bottom">
       <div class="smf-loc">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
