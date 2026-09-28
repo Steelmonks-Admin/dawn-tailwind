@@ -1,0 +1,117 @@
+{%- comment -%}
+  Steelmonks Newsletter-Popup (Gratis-Versand), ersetzt die Klaviyo-Popups „PopUp (Mobile/Desktop) DE - V2“.
+  Anmeldung über die Klaviyo-Client-API in die Liste „Newsletter“ (VnyvkJ) mit signup = var3:
+  damit schickt Klaviyo über „Flow 2 (Free Shipping)“ den WelcomeShipping-Code (DE/AT, einmalig, ohne Mindestbestellwert).
+  Nur für Besucher aus Deutschland und Österreich. Logik und Ausschlüsse: assets/sm-nl-popup.js
+{%- endcomment -%}
+{%- assign smnl_country = localization.country.iso_code -%}
+{%- if smnl_country == 'DE' or smnl_country == 'AT' -%}
+<style>
+  @font-face{font-family:"SM Stencil";src:url({{ 'sm-bigshoulders-900.woff2' | asset_url }}) format("woff2");font-weight:900;font-display:swap}
+  .smnl{--n:#0b0c0e;--b:#eef0f2;--s:#aeb5bb;--t:#c9ced2;--l:#9aa1a7;--blau:#0044cc;--hell:#6f9bff;--f:var(--font-body-family,Poppins,system-ui,sans-serif)}
+  .smnl [hidden]{display:none!important}
+  .smnl *,.smnl *::before,.smnl *::after{box-sizing:border-box}
+  .smnl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .smnl-tz{position:fixed;left:16px;bottom:calc(26px + env(safe-area-inset-bottom,0px));z-index:2147483000;display:flex;align-items:center;gap:6px}
+  .smnl-teaser{display:flex;align-items:center;gap:10px;height:52px;margin:0;padding:0 18px 0 6px;border-radius:999px;background:var(--n);border:1px solid rgba(238,240,242,.16);box-shadow:0 14px 30px -12px rgba(0,68,204,.7);color:#fff;font:600 15px/1 var(--f);letter-spacing:.01em;cursor:pointer}
+  .smnl-teaser-av{width:40px;height:40px;border-radius:999px;background:var(--blau);overflow:hidden;display:flex;align-items:flex-start;justify-content:center;flex:none}
+  .smnl-teaser-av img{width:36px;height:auto;margin-top:3px}
+  .smnl-teaser-x{width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;background:none;color:#4f5458;cursor:pointer}
+  .smnl-teaser-x span{width:26px;height:26px;border-radius:999px;background:#fff;border:1px solid rgba(11,12,14,.12);display:flex;align-items:center;justify-content:center}
+  .smnl-back{position:fixed;inset:0;z-index:2147483001;background:rgba(11,12,14,.6);opacity:0;transition:opacity .25s}
+  .smnl.in .smnl-back{opacity:1}
+  .smnl-dlg{position:fixed;left:0;right:0;bottom:0;z-index:2147483002;color:var(--b);font-family:var(--f);transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);outline:none}
+  .smnl.in .smnl-dlg{transform:none}
+  .smnl-media{display:none}
+  .smnl-body{position:relative;max-width:520px;margin:0 auto;padding:32px 22px calc(16px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;background:var(--n);border-top:1px solid rgba(238,240,242,.14)}
+  .smnl-clip{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+  .smnl-clip::before{content:"";position:absolute;left:-80px;top:-60px;width:360px;height:300px;border-radius:999px;background:radial-gradient(closest-side,rgba(0,68,204,.42),rgba(0,68,204,0))}
+  .smnl-handle{position:absolute;left:50%;top:10px;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:rgba(238,240,242,.22)}
+  .smnl-px{position:absolute;right:64px;top:-128px;height:150px;width:auto;pointer-events:none}
+  .smnl-x{position:absolute;right:10px;top:12px;z-index:2;width:44px;height:44px;margin:0;padding:0;border:0;border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--b);background:rgba(238,240,242,.06);cursor:pointer}
+  .smnl-x:hover{background:rgba(238,240,242,.12)}
+  .smnl-step{position:relative;display:flex;flex-direction:column;gap:14px}
+  .smnl-eye{margin:0;display:flex;align-items:center;gap:8px;font:500 11px/1.2 "IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--hell)}
+  .smnl-eye.ok{color:#4fc27f}
+  .smnl-h{margin:0;font-family:"SM Stencil","Arial Narrow",Impact,sans-serif;font-weight:900;font-size:48px;line-height:.9;letter-spacing:.005em;text-transform:uppercase;color:#fff;max-width:300px;outline:none}
+  .smnl-h span{color:var(--hell)}
+  .smnl-p{margin:0;font-size:15px;line-height:1.5;color:var(--t)}
+  .smnl-form{display:flex;flex-direction:column;gap:10px;margin:2px 0 0}
+  .smnl-form input{width:100%;height:52px;margin:0;padding:0 20px;border-radius:999px;border:1px solid rgba(238,240,242,.24);background:rgba(238,240,242,.06);color:#fff;font:16px/1 var(--f);outline:none;-webkit-appearance:none;appearance:none;box-shadow:none}
+  .smnl-form input::placeholder{color:#868d93;opacity:1}
+  .smnl-form input:focus{border-color:var(--hell);box-shadow:0 0 0 3px rgba(111,155,255,.3)}
+  .smnl-form input[aria-invalid="true"]{border-color:#ff8a80}
+  .smnl-cta{height:52px;margin:0;padding:0 24px;border:0;border-radius:999px;background:var(--blau);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font:600 16px/1 var(--f);box-shadow:0 12px 28px -14px rgba(0,68,204,.9);cursor:pointer}
+  .smnl-cta:hover{background:#0a51e6}
+  .smnl-cta[disabled]{opacity:.7;cursor:progress}
+  .smnl-cta .d{display:none}
+  .smnl-err{margin:-4px 0 0;font-size:13px;line-height:1.4;color:#ff9b93}
+  .smnl-err:empty{display:none}
+  .smnl-legal{margin:0;font-size:11.5px;line-height:1.5;color:var(--l)}
+  .smnl-legal a{color:var(--t);text-underline-offset:3px}
+  .smnl-no{align-self:center;min-height:44px;margin:0;padding:0 16px;border:0;background:none;font:500 14px/1 var(--f);color:var(--s);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+  .smnl-done{margin:4px 0 0;height:52px;padding:0 30px;border:0;border-radius:999px;background:var(--b);color:var(--n);font:600 16px/1 var(--f);cursor:pointer}
+  .smnl button:focus-visible,.smnl a:focus-visible{outline:2px solid var(--hell);outline-offset:3px}
+  @media (min-width:750px){
+    .smnl-tz{display:none}
+    .smnl-dlg{left:50%;top:50%;right:auto;bottom:auto;width:860px;max-width:calc(100vw - 48px);min-height:460px;display:grid;grid-template-columns:380px minmax(0,1fr);border-radius:26px;overflow:hidden;background:var(--n);border:1px solid rgba(238,240,242,.14);box-shadow:0 40px 80px -30px rgba(0,0,0,.7);opacity:0;transform:translate(-50%,-46%);transition:opacity .25s,transform .3s}
+    .smnl.in .smnl-dlg{opacity:1;transform:translate(-50%,-50%)}
+    .smnl-media{display:block;position:relative;background:#1d2225}
+    .smnl-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%}
+    .smnl-body{display:flex;flex-direction:column;justify-content:center;max-width:none;margin:0;padding:44px 44px 24px;border:0;border-radius:0}
+    .smnl-clip::before{left:auto;right:-120px;top:-120px;width:420px;height:380px;background:radial-gradient(closest-side,rgba(0,68,204,.4),rgba(0,68,204,0))}
+    .smnl-handle,.smnl-px{display:none}
+    .smnl-x{right:16px;top:16px}
+    .smnl-eye{font-size:12px}
+    .smnl-h{font-size:56px;line-height:.88;max-width:400px}
+    .smnl-form{flex-direction:row}
+    .smnl-form input{flex:1;min-width:0;height:54px;padding:0 22px}
+    .smnl-cta{height:54px;padding:0 22px;font-size:15px;white-space:nowrap}
+    .smnl-cta .m{display:none}.smnl-cta .d{display:inline}
+    .smnl-legal{font-size:12px}
+    .smnl-no{align-self:flex-start;padding:0}
+    .smnl-done{align-self:flex-start}
+  }
+  @media (min-width:750px) and (max-width:959px){.smnl-dlg{grid-template-columns:280px minmax(0,1fr)}}
+  @media (prefers-reduced-motion:reduce){.smnl-back,.smnl-dlg{transition:none}}
+</style>
+<div class="smnl" id="smNl" data-company="RzeHpK" data-list="VnyvkJ" hidden>
+  <div class="smnl-tz" id="smNlTz" hidden>
+    <button type="button" class="smnl-teaser" id="smNlTeaser" aria-haspopup="dialog">
+      <span class="smnl-teaser-av"><img src="{{ 'sm-px2_jakob_parcels.webp' | asset_url }}" alt="" width="36" height="62" loading="lazy"></span>
+      <span>Versand gratis</span>
+    </button>
+    <button type="button" class="smnl-teaser-x" id="smNlTeaserX" aria-label="Hinweis ausblenden"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span></button>
+  </div>
+  <div class="smnl-back" id="smNlBack" hidden></div>
+  <div class="smnl-dlg" id="smNlDlg" role="dialog" aria-modal="true" aria-labelledby="smNlH" tabindex="-1" hidden>
+    <div class="smnl-media" aria-hidden="true"><img data-src="//steelmonks.com/cdn/shop/files/Steelmonks_Fruehlings_Banner_Bild.jpg?width=800" alt="" width="380" height="460"></div>
+    <div class="smnl-body">
+      <div class="smnl-clip" aria-hidden="true"></div>
+      <span class="smnl-handle" aria-hidden="true"></span>
+      <img class="smnl-px" id="smNlPx" data-src="{{ 'sm-px2_jakob_parcels.webp' | asset_url }}" data-ok="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt="" width="87" height="150">
+      <button type="button" class="smnl-x" data-smnl-close aria-label="Schließen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="smnl-step" id="smNlStepForm">
+        <p class="smnl-eye">Newsletter</p>
+        <h2 class="smnl-h" id="smNlH">Dein Versand geht <span>auf uns.</span></h2>
+        <p class="smnl-p">Melde Dich an und Deine erste Bestellung kommt versandkostenfrei.</p>
+        <form class="smnl-form" id="smNlForm" novalidate>
+          <label for="smNlMail" class="smnl-sr">E-Mail-Adresse</label>
+          <input id="smNlMail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Deine E-Mail-Adresse" required aria-describedby="smNlErr">
+          <button type="submit" class="smnl-cta"><span class="m">Gratis-Versand sichern</span><span class="d">Sichern</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </form>
+        <p class="smnl-err" id="smNlErr" role="alert"></p>
+        <p class="smnl-legal">Newsletter mit Neuheiten und Aktionen, jederzeit abbestellbar. Deinen Code schicken wir Dir direkt per E-Mail: einmal einlösbar, ohne Mindestbestellwert, für Lieferungen nach Deutschland und Österreich. <a href="{{ routes.root_url | append: '/pages/datenschutzerklarung' | replace: '//', '/' }}">Datenschutz</a></p>
+        <button type="button" class="smnl-no" data-smnl-close>Nein danke</button>
+      </div>
+      <div class="smnl-step" id="smNlStepOk" hidden>
+        <p class="smnl-eye ok"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Angemeldet</p>
+        <h2 class="smnl-h" id="smNlHok" tabindex="-1">Dein Code ist <span>unterwegs.</span></h2>
+        <p class="smnl-p">Schau gleich in Dein Postfach, auch im Spam-Ordner.</p>
+        <button type="button" class="smnl-done" data-smnl-close>Alles klar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ 'sm-nl-popup.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
