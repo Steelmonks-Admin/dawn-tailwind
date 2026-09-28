@@ -40,7 +40,11 @@ const loadImages = () => R.querySelectorAll('img[data-src]').forEach(img => { im
 // Ein anderes Fenster ist offen (Warenkorb, Menü, Personalisierer, Klaviyo-Formular)?
 const busy = () => {
   if (document.body.classList.contains('overflow-hidden') || document.documentElement.classList.contains('overflow-hidden')) return true;
-  return Array.from(document.querySelectorAll('[aria-modal="true"], dialog[open], .klaviyo-form')).some(el => !R.contains(el) && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+  return Array.from(document.querySelectorAll('[aria-modal="true"], dialog[open], .klaviyo-form')).some(el => {
+    if (R.contains(el) || el.closest('details:not([open])')) return false;
+    const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < innerHeight && s.visibility !== 'hidden' && s.display !== 'none' && +s.opacity > 0.05;
+  });
 };
 // Schwebende Elemente anderer Anbieter (z. B. Bewertungs-Badge) liegen sonst über dem Popup
 const hideLayers = () => {
