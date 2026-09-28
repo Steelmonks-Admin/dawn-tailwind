@@ -62,10 +62,10 @@ if (nl){
     const input = $('#ftNlE', nl), email = input.value.trim(), btn = $('button', nl);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ input.focus(); return; }
     btn.disabled = true;
-    // signup 'var1' startet in Klaviyo den Flow „Flow 2 (Discount)“ mit dem 5-€-Gutschein
+    // signup 'var3' startet in Klaviyo den Flow „Flow 2 (Free Shipping)“ mit dem WelcomeShipping-Code (wie das Popup)
     fetch('https://a.klaviyo.com/client/subscriptions?company_id=' + encodeURIComponent(nl.dataset.company), {
       method:'POST', headers:{ 'Content-Type':'application/vnd.api+json', 'revision':'2025-01-15' },
-      body: JSON.stringify({ data:{ type:'subscription', attributes:{ custom_source:'Newsletter-Seite', profile:{ data:{ type:'profile', attributes:{ email, properties:{ signup:'var1' } } } } }, relationships:{ list:{ data:{ type:'list', id: nl.dataset.list } } } } })
+      body: JSON.stringify({ data:{ type:'subscription', attributes:{ custom_source:'Newsletter-Seite', profile:{ data:{ type:'profile', attributes:{ email, properties:{ signup:'var3' } } } } }, relationships:{ list:{ data:{ type:'list', id: nl.dataset.list } } } } })
     }).then(r => { if (!r.ok) throw new Error(r.status); nl.hidden = true; $('#ftNlOk', R).hidden = false; try { (window.dataLayer = window.dataLayer || []).push({ event:'newsletter_seite' }); } catch(x){} })
       .catch(() => { btn.disabled = false; alert('Das hat leider nicht geklappt. Bitte versuch es noch einmal.'); });
   });

@@ -45,8 +45,8 @@
         </span>
         <div class="smf-nl-body">
           <p class="smf-eyebrow">Newsletter</p>
-          <h2 class="smf-nl-h">5&nbsp;€ Willkommens&shy;geschenk</h2>
-          <p class="smf-nl-p">Neuheiten, Aktionen und Geschichten aus der Werkstatt – dazu 5&nbsp;€ für Deine erste Bestellung.</p>
+          <h2 class="smf-nl-h">Gratis-Versand zum&nbsp;Start</h2>
+          <p class="smf-nl-p">Neuheiten, Aktionen und Geschichten aus der Werkstatt, dazu kostenloser Versand für Deine erste Bestellung nach Deutschland oder Österreich.</p>
           <form class="smf-form" id="smfForm" data-company="{{ section.settings.sm_klaviyo_company | escape }}" data-list="{{ section.settings.sm_klaviyo_list | escape }}" novalidate>
             <label class="visually-hidden" for="smfMail">E-Mail-Adresse</label>
             <input id="smfMail" type="email" name="email" autocomplete="email" inputmode="email" placeholder="Deine E-Mail-Adresse" required>
@@ -147,13 +147,13 @@
       var email = input.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.'; msg.className = 'smf-msg err'; input.focus(); return; }
       btn.disabled = true; btn.textContent = '…';
-      // signup 'var1' startet in Klaviyo den Flow „Flow 2 (Discount)“ mit dem 5-€-Gutschein
+      // signup 'var3' startet in Klaviyo den Flow „Flow 2 (Free Shipping)“ mit dem WelcomeShipping-Code (wie das Popup)
       fetch('https://a.klaviyo.com/client/subscriptions?company_id=' + encodeURIComponent(f.dataset.company), {
         method: 'POST', headers: { 'Content-Type': 'application/vnd.api+json', 'revision': '2025-01-15' },
-        body: JSON.stringify({ data: { type: 'subscription', attributes: { custom_source: 'Footer', profile: { data: { type: 'profile', attributes: { email: email, properties: { signup: 'var1' } } } } }, relationships: { list: { data: { type: 'list', id: f.dataset.list } } } } })
+        body: JSON.stringify({ data: { type: 'subscription', attributes: { custom_source: 'Footer', profile: { data: { type: 'profile', attributes: { email: email, properties: { signup: 'var3' } } } } }, relationships: { list: { data: { type: 'list', id: f.dataset.list } } } } })
       }).then(function(r){
         if (!r.ok) throw new Error(r.status);
-        f.hidden = true; msg.textContent = 'Danke! Schau gleich in Dein Postfach – dort wartet Dein 5-€-Gutschein.'; msg.className = 'smf-msg ok';
+        f.hidden = true; msg.textContent = 'Danke! Dein Code für den Gratis-Versand ist unterwegs, schau gleich in Dein Postfach.'; msg.className = 'smf-msg ok';
         try { (window.dataLayer = window.dataLayer || []).push({ event: 'newsletter_footer' }); } catch(x){}
       }).catch(function(){
         btn.disabled = false; btn.textContent = 'Anmelden'; msg.textContent = 'Das hat leider nicht geklappt. Bitte versuch es noch einmal.'; msg.className = 'smf-msg err';
