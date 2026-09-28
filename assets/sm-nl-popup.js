@@ -59,7 +59,7 @@ function open(source){
   isOpen = true; SS.set('smNlShown', '1'); loadImages();
   lastFocus = document.activeElement;
   R.hidden = false; tz.hidden = true; back.hidden = false; dlg.hidden = false;
-  hideLayers();
+  hideLayers(); document.documentElement.classList.add('smnl-open');
   document.documentElement.style.overflow = 'hidden';
   requestAnimationFrame(() => requestAnimationFrame(() => R.classList.add('in')));
   setTimeout(() => (mq.matches ? dlg : mail).focus({ preventScroll: true }), 60);
@@ -69,7 +69,7 @@ function close(reason){
   if (!isOpen) return;
   isOpen = false; R.classList.remove('in');
   if (!done) { LS.set('smNlClosed', String(Date.now())); push('newsletter_popup_close'); }
-  setTimeout(() => { dlg.hidden = true; back.hidden = true; R.hidden = true; showLayers(); document.documentElement.style.overflow = ''; }, 320);
+  setTimeout(() => { dlg.hidden = true; back.hidden = true; R.hidden = true; showLayers(); document.documentElement.classList.remove('smnl-open'); document.documentElement.style.overflow = ''; }, 320);
   if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
 }
 
