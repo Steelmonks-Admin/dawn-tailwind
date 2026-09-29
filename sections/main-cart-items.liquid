@@ -108,6 +108,7 @@
       <div class='cart__items' id='main-cart-items' data-id='{{ section.id }}'>
         <div class='js-contents'>
           {%- if cart != empty -%}
+            {%- render 'sm-rewards-panel' -%}
             <table class='cart-items'>
               <caption class='visually-hidden'>
                 {{ 'sections.cart.title' | t }}
@@ -135,6 +136,7 @@
 
               <tbody>
                 {%- for item in cart.items -%}
+                  {%- if item.variant_id == 45204915880202 or item.variant_id == 45204916535562 or item.variant_id == 45204919943434 -%}{%- continue -%}{%- endif -%}
                   <tr class='cart-item{% if item.final_price == 0 %} cart-item--reward{% endif %}' id='CartItem-{{ item.index | plus: 1 }}'>
                     <td class='cart-item__media'>
                       {% if item.image %}

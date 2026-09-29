@@ -1,0 +1,10 @@
+{%- comment -%} Anzahl im Warenkorb ohne die Marker-Produkte des Belohnungs-Pfads (Gratisversand, 10 € Rabatt, Mystery Gift) {%- endcomment -%}
+{%- liquid
+  assign smc = cart.item_count
+  for item in cart.items
+    if item.variant_id == 45204915880202 or item.variant_id == 45204916535562 or item.variant_id == 45204919943434
+      assign smc = smc | minus: item.quantity
+    endif
+  endfor
+  echo smc
+-%}

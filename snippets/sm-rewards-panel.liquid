@@ -1,0 +1,4 @@
+{%- comment -%} Platzhalter für das Belohnungs-Panel im Drawer und auf /cart; assets/sm-rewards.js füllt ihn mit frischer Summe und Anzahl {%- endcomment -%}
+{%- capture smr_count -%}{%- render 'sm-cart-count' -%}{%- endcapture -%}
+{%- capture smr_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
+<div class="smr-panel" data-smr-panel data-total="{{ smr_basis | strip }}" data-count="{{ smr_count | strip }}" hidden></div>

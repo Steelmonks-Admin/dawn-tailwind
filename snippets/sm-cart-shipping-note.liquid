@@ -2,11 +2,18 @@
   Versandhinweis im Warenkorb. Ab 99 € ist der Versand in alle Länder kostenlos (Automatik-Rabatt „Gratisversand!“),
   darunter kostet er in Deutschland 4,95 €, nach Österreich und in die EU 12,95 € (Stand 29.09.2026).
   Der Drawer und die Warenkorbseite werden nach jeder Änderung neu gerendert, der Betrag stimmt also immer.
+  Grundlage wie beim Belohnungs-Pfad: snippets/sm-cart-basis.liquid (Rabattcodes zählen gegen die 99 €).
 {%- endcomment -%}
 {%- assign smk_free_from = 9900 -%}
-{%- if cart.total_price >= smk_free_from -%}
-  <div class="cart-freeship-confirm">&#10003; Versand kostenlos</div>
+{%- capture smk_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
+{%- assign smk_basis = smk_basis | strip | plus: 0 -%}
+{%- assign smk_c = localization.country.iso_code -%}
+{%- assign smk_eu = 'AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE' | split: ',' -%}
+{%- assign smk_save = '' -%}
+{%- if smk_c == 'DE' -%}{%- assign smk_save = '4,95 €' -%}{%- elsif smk_eu contains smk_c -%}{%- assign smk_save = '12,95 €' -%}{%- endif -%}
+{%- if smk_basis >= smk_free_from -%}
+  <div class="cart-freeship-confirm">&#10003; Versand kostenlos{% if smk_save != '' %}, Du sparst {{ smk_save }}{% endif %}</div>
 {%- else -%}
-  {%- assign smk_rest = smk_free_from | minus: cart.total_price -%}
+  {%- assign smk_rest = smk_free_from | minus: smk_basis -%}
   <div class="cart-freeship-confirm cart-freeship-confirm--open">Noch {{ smk_rest | money }} bis zum kostenlosen Versand</div>
 {%- endif -%}

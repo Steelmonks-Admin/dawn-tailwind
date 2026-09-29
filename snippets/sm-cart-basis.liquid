@@ -1,0 +1,14 @@
+{%- comment -%}
+  Bestellwert für den Belohnungs-Pfad in Cent, so wie Shopify die Mindestbeträge prüft:
+  Zwischensumme nach Artikelrabatten, abzüglich Rabattcodes; der automatische „10€ Discount!“ zählt nicht gegen sich selbst.
+  Test 29.09.2026: 102,90 € mit 5-€-Code = 97,90 €, Versand kostet 4,95 €.
+{%- endcomment -%}
+{%- liquid
+  assign smb = cart.items_subtotal_price
+  for d in cart.cart_level_discount_applications
+    if d.type == 'discount_code'
+      assign smb = smb | minus: d.total_allocated_amount
+    endif
+  endfor
+  echo smb
+-%}

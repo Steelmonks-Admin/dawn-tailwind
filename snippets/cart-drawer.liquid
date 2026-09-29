@@ -31,7 +31,9 @@
         <div class='drawer__inner-empty'>
           <div class='cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}'>
             <div class='cart-drawer__empty-content'>
+              <img class='smr-empty-monk' src='{{ 'sm-pxm_karton.webp' | asset_url }}' width='100' height='120' alt='' loading='lazy'>
               <h2 class='cart__empty-text'>{{ 'sections.cart.empty' | t }}</h2>
+              <p class='smr-empty-hint'>Ab 99 € ist der Versand kostenlos, ab 149 € gibt es 10 € Rabatt und ab 199 € ein Mystery Gift.</p>
               <button
                 class='drawer__close'
                 type='button'
@@ -79,6 +81,7 @@
           class=' is-empty'
         {% endif %}
       >
+        {%- if cart != empty -%}{%- render 'sm-rewards-panel' -%}{%- endif -%}
         <form
           action='{{ routes.cart_url }}'
           id='CartDrawer-Form'
@@ -121,7 +124,7 @@
                       {% comment %}
                         Ensure the product is not hidden or a reward product
                       {% endcomment %}
-                      {% unless item.product.metafields.custom.reward_product %}
+                      {% unless item.product.metafields.custom.reward_product or item.variant_id == 45204915880202 or item.variant_id == 45204916535562 or item.variant_id == 45204919943434 %}
                         <tr id='CartDrawer-Item-{{ item.index | plus: 1 }}' class='cart-item{% if item.final_price == 0 %} cart-item--reward{% endif %}' role='row'>
                           <td class='cart-item__media' role='cell' headers='CartDrawer-ColumnProductImage'>
                             {% if item.image %}
@@ -492,7 +495,6 @@
                   </tbody>
 
                   <tfoot>
-                    {% render 'cart-rewards' %}
                   </tfoot>
                 </table>
               </div>

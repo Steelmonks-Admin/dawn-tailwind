@@ -606,3 +606,19 @@ cart-drawer .cart-item__price-wrapper .price.price--end {
 
 /* Versand noch nicht kostenlos: neutral statt grün (2026-09-29) */
 .cart-freeship-confirm.cart-freeship-confirm--open { background: #eef3fd; color: #0b3a8f; }
+
+/* Belohnungs-Pfad 2026-09-29: Drawer-Fuß kompakt, damit Panel und Artikel sichtbar bleiben (Handy vorher 590 von 844 px) */
+@media screen {
+  .drawer__footer { padding: 8px 0 6px !important; }
+  .drawer__footer .discounts__discount { font-size: 12.5px; }
+  .drawer__footer .cart-freeship-confirm { margin: 6px 0 !important; padding: 6px 10px; font-size: 12.5px; line-height: 1.3; }
+  .drawer__footer .totals { margin: 4px 0 2px; }
+  .drawer__footer .tax-note { display: block; margin: 0 0 8px !important; font-size: 11px !important; line-height: 1.35 !important; font-style: normal !important; }
+  .drawer__footer .cart__checkout-button { min-height: 48px; }
+  .drawer__footer .cart__dynamic-checkout-buttons { margin-top: 8px; --shopify-accelerated-checkout-button-block-size: 42px; --shopify-accelerated-checkout-row-gap: 6px; }
+  .drawer__footer .cart-trust-line { margin-top: 6px; font-size: 10.5px; }
+  .drawer__footer details#Details-CartDrawer { margin-top: 2px; }
+  .drawer__footer details#Details-CartDrawer summary { padding-top: 8px; padding-bottom: 8px; }
+  /* Artikelnamen mit Silbentrennung statt Umbruch mitten im Wort */
+  .cart-drawer .cart-item__name { word-break: normal; overflow-wrap: break-word; hyphens: auto; -webkit-hyphens: auto; }
+}

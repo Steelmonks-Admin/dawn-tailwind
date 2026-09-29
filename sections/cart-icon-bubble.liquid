@@ -5,11 +5,13 @@
 {% endif %}
 
 <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
-{%- if cart != empty -%}
+{%- capture smr_count -%}{%- render 'sm-cart-count' -%}{%- endcapture -%}
+{%- assign smr_count = smr_count | strip | plus: 0 -%}
+{%- if smr_count > 0 -%}
   <div class="cart-count-bubble">
-    {%- if cart.item_count < 100 -%}
-      <span aria-hidden="true">{{ cart.item_count }}</span>
+    {%- if smr_count < 100 -%}
+      <span aria-hidden="true">{{ smr_count }}</span>
     {%- endif -%}
-    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+    <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: smr_count }}</span>
   </div>
 {%- endif -%}

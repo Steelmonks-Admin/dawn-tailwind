@@ -1,0 +1,48 @@
+{%- comment -%}
+  Belohnungs-Pfad: Stufen (Betrag in €, Marker-Variante), Bilder, Passt-dazu-Artikel, Länder
+  Marker-Produkte gratisversand, 10-discount, mystery-geschenk nie archivieren; der Rabatt selbst kommt aus den automatischen Shopify-Rabatten
+{%- endcomment -%}
+{%- capture smr_addons -%}
+  {%- assign smr_defs = 'unsichtbares-befestigungsset-bolzen-und-gewindestifte~42583387242737~mount~mount~Unsichtbares Befestigungsset~Set 3, für alle Motivschilder;geschenktute~52137820881162~bag~any~Geschenktüte~Schwarz, zum Verschenken;keine-gewalt-gegen-retter-anstecker~50234404962570~pin~retter~„Keine Gewalt gegen Retter“ Anstecker~Pin für Einsatzkräfte' | split: ';' -%}
+  {%- for smr_d in smr_defs -%}
+    {%- assign smr_f = smr_d | split: '~' -%}
+    {%- assign smr_p = all_products[smr_f[0]] -%}
+    {%- assign smr_vid = smr_f[1] | plus: 0 -%}
+    {%- for smr_v in smr_p.variants -%}
+      {%- if smr_v.id == smr_vid and smr_v.available -%}
+        {%- assign smr_img = smr_v.image | default: smr_p.featured_image -%}
+        {"pid":{{ smr_p.id }},"id":{{ smr_v.id }},"key":{{ smr_f[2] | json }},"rule":{{ smr_f[3] | json }},"title":{{ smr_f[4] | json }},"sub":{{ smr_f[5] | json }},"price":{{ smr_v.price }},"img":{% if smr_img %}{{ smr_img | image_url: width: 120 | json }}{% else %}""{% endif %}},
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<script id="smr-config" type="application/json">
+  {
+    "country": {{ localization.country.iso_code | json }},
+    "tiers": [
+      { "at": 99, "marker": 45204915880202 },
+      { "at": 149, "marker": 45204916535562 },
+      { "at": 199, "marker": 45204919943434 }
+    ],
+    "giftAttr": "Mystery Gift",
+    "giftValue": "Ja, ab 199 € Bestellwert",
+    "codeCountries": ["DE", "AT"],
+    "save": { "DE": 495, "EU": 1295 },
+    "eu": ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"],
+    "gapMax": 25,
+    "img": {
+      "monks": {
+        "karton": {{ 'sm-pxm_karton.webp' | asset_url | json }},
+        "lupe": {{ 'sm-pxm_lupe.webp' | asset_url | json }},
+        "skizze": {{ 'sm-pxm_skizze.webp' | asset_url | json }},
+        "laser": {{ 'sm-pxm_laser.webp' | asset_url | json }},
+        "kaffee": {{ 'sm-pxm_kaffee.webp' | asset_url | json }}
+      },
+      "jakob": {{ 'sm-px2_jakob_parcels.webp' | asset_url | json }},
+      "tag": {{ 'sm-px_rabatt.webp' | asset_url | json }},
+      "chest": {{ 'sm-px_truhe.webp' | asset_url | json }}
+    },
+    "addons": [{{ smr_addons | strip | remove_last: ',' }}]
+  }
+</script>
+<script src="{{ 'sm-rewards.js' | asset_url }}" defer="defer"></script>

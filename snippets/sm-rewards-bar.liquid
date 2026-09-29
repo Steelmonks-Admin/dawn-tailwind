@@ -1,0 +1,9 @@
+{%- comment -%} Belohnungs-Pfad als schmale Leiste unter dem Header; Text und Schiene zeichnet assets/sm-rewards.js {%- endcomment -%}
+{%- capture smr_count -%}{%- render 'sm-cart-count' -%}{%- endcapture -%}
+{%- capture smr_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
+<a href="{{ routes.cart_url }}" class="smr-bar{% if cart == empty %} is-empty{% endif %}" data-smr-bar data-total="{{ smr_basis | strip }}" data-count="{{ smr_count | strip }}">
+  <span class="smr-bar__in">
+    <span class="smr-bar__text" data-smr-text>Gratisversand ab <b>99 €</b> · 10 € Rabatt ab <b>149 €</b> · Mystery Gift ab <b>199 €</b></span>
+    <span class="smr-bar__rail" data-smr-rail aria-hidden="true"></span>
+  </span>
+</a>
