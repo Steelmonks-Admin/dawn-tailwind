@@ -1474,7 +1474,7 @@
         "id": "homepage_meta_description",
         "label": "Meta-Description der Startseite",
         "info": "Max. 155 Zeichen. Ersetzt die Shop-Beschreibung aus den Shopify-Einstellungen im <meta name=description> der Startseite.",
-        "default": "Personalisierte Geschenke aus Stahl: Zunftschilder, Hausnummern, Monogramme und Familienschilder – handgefertigt in Deutschland, mit deinem Wunschtext."
+        "default": "Personalisierte Geschenke aus Stahl: Zunftschilder, Hausnummern, Monogramme und Familienschilder, handgefertigt in Deutschland, mit Deinem Wunschtext."
       }
     ]
   }
