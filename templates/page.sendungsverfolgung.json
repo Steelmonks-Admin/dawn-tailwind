@@ -17,7 +17,7 @@
           "settings": {
             "parent": "",
             "heading": "Ich habe ein Produktionsupdate mit einer Sendungsnummer erhalten aber diese verändert sich schon seit Tagen nicht. Ist das normal?",
-            "content": "<p>Ja, das ist völlig normal. Wir benötigen für die Herstellung eines individuellen und persönlich angefertigten Artikels 5-7 Werktage zzgl ca. 3 Tage Versandzeit. Aus produktionstechnischen Gründen erstellen wir die Versandpapiere schon, wenn der Artikel in die Produktion aufgenommen wird. Sie laufen mit der Bestellung durch den gesamten Prozess. Deshalb verändert sich der Versandstatus in den ersten Tagen auch nicht.</p><p><br/>Wir beeilen uns immer, alle Bestellungen möglichst schnell zu produzieren und zu versenden. Sobald Deine Bestellung an DHL übergeben und gescannt wurde wird sich die Sendungsnummer automatisch aktualisieren.</p>",
+            "content": "<p>Ja, das ist völlig normal. Wir benötigen für die Herstellung eines individuellen und persönlich angefertigten Artikels 2 bis 5 Werktage zzgl. ca. 3 Tage Versandzeit. Aus produktionstechnischen Gründen erstellen wir die Versandpapiere schon, wenn der Artikel in die Produktion aufgenommen wird. Sie laufen mit der Bestellung durch den gesamten Prozess. Deshalb verändert sich der Versandstatus in den ersten Tagen auch nicht.</p><p><br/>Wir beeilen uns immer, alle Bestellungen möglichst schnell zu produzieren und zu versenden. Sobald Deine Bestellung an DHL übergeben und gescannt wurde wird sich die Sendungsnummer automatisch aktualisieren.</p>",
             "content_liquid": "",
             "featured": true,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
