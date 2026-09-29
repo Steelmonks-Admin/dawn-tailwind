@@ -80,6 +80,8 @@
               {%- for link in block.settings.menu.links -%}
                 <li><a href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}><span>{{ link.title | escape }}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
               {%- endfor -%}
+              {%- comment -%} Einwilligung jederzeit widerrufen: öffnet die Pandectes-Einstellungen {%- endcomment -%}
+              {%- if block.settings.menu.handle == 'footer' -%}<li><a href="#cookie-einstellungen" role="button" onclick="if(window.Pandectes&&Pandectes.fn&&Pandectes.fn.openPreferences){Pandectes.fn.openPreferences();}return false;"><span>Cookie-Einstellungen</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>{%- endif -%}
             </ul>
           </details>
           {%- comment -%} Online-Widerruf (§ 356a BGB): mobil hängt der Link unter „Rechtliches“, damit er auch zugeklappt sichtbar bleibt {%- endcomment -%}

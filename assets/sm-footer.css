@@ -94,3 +94,10 @@
   .smf-wr-m{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:-8px;padding:13px 16px 14px 68px;border:1px solid rgba(238,240,242,.08);border-top-color:rgba(238,240,242,.12);border-radius:0 0 20px 20px;background:rgba(238,240,242,.04);color:#fff;font-weight:700;font-size:15px;line-height:1.35;text-decoration:none}
   .smf-wr-m svg{width:16px;height:16px;flex:none}
 }
+
+/* Pandectes-Cookie-Banner: drei Knöpfe passen (Desktop-Breite), Links umbrechen, Trusted-Shops-Siegel nicht über den Knöpfen */
+@media (min-width:768px){.pd-cookie-banner-window.cc-window.cc-floating{width:30em!important;max-width:calc(100vw - 2em)!important}}
+.pd-cookie-banner-window .cc-message>span:last-child{flex-wrap:wrap!important;row-gap:4px}
+.pd-cookie-banner-window .cc-compliance{flex-wrap:wrap;gap:8px}
+.pd-cookie-banner-window .cc-compliance .cc-btn{flex:1 1 auto;margin:0!important}
+body:has(.pd-cookie-banner-window:not(.cc-invisible)) [id^="trustbadge-container"]{display:none!important}
