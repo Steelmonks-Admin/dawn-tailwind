@@ -48,6 +48,10 @@
       # Artikel sind ausgenommen: ihre Titel sind bereits auf die Google-Breite
       # von rund 60 Zeichen getrimmt, der Zusatz schob 318 von 807 darueber.
       assign smk_title = page_title
+      # Der Startseitentitel aus den Shopify-Einstellungen trennt mit " - ", sonst steht überall " | "
+      if template.name == 'index'
+        assign smk_title = smk_title | replace: ' - ', ' | '
+      endif
       if current_tags
         assign smk_current_tags = current_tags | join: ', '
         if request.page_type == 'blog'

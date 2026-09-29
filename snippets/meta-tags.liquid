@@ -3,6 +3,13 @@
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
+  # Startseite wie <title> und Meta-Description im Theme: Trenner " | ", Beschreibung aus der Theme-Einstellung
+  if template.name == 'index'
+    assign og_title = og_title | replace: ' - ', ' | '
+    if settings.homepage_meta_description != blank
+      assign og_description = settings.homepage_meta_description
+    endif
+  endif
 
   if request.page_type == 'product'
     assign og_type = 'product'
