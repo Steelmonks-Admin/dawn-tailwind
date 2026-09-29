@@ -44,6 +44,8 @@
     var bubble = document.getElementById('cart-icon-bubble');
     var freshBubbleRoot = parseSection(sections['cart-icon-bubble'], 'div.shopify-section, div');
     if (bubble && freshBubbleRoot) bubble.innerHTML = freshBubbleRoot.innerHTML;
+    // Header-Mönch (Belohnungs-Leiste) neu berechnen lassen
+    try { document.dispatchEvent(new CustomEvent('sm:cart-changed')); } catch (e) { /* non-critical */ }
   }
 
   function refreshDrawer(attempt) {

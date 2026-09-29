@@ -603,3 +603,6 @@ cart-drawer .cart-item__price-wrapper .price.price--end {
 .cart-item__details etrusted-widget {
   display: none !important;
 }
+
+/* Versand noch nicht kostenlos: neutral statt grün (2026-09-29) */
+.cart-freeship-confirm.cart-freeship-confirm--open { background: #eef3fd; color: #0b3a8f; }

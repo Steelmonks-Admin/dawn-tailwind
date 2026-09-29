@@ -664,6 +664,19 @@ startReminders() {
     manager.updateTooltips();
     await manager.updateMilestones();
     setTimeout(() => manager.startReminders(), CONFIG.REMINDER.DELAY);
+
+    // Nach Änderungen im Warenkorb neu rechnen (Drawer, Schnellkauf, Personalizer), sonst zeigt die Leiste den alten Stand
+    const refresh = async () => {
+      try {
+        const c = await CartAPI.fetchCart();
+        manager.cartValue = c.original_total_price / 100;
+        manager.updateProgress();
+        manager.updateTooltips();
+        await manager.updateMilestones();
+      } catch (e) { /* Leiste bleibt beim letzten Stand */ }
+    };
+    if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') subscribe(PUB_SUB_EVENTS.cartUpdate, refresh);
+    document.addEventListener('sm:cart-changed', refresh);
     
     {% if product.metafields.seo.hidden %}
       {% if product.id == 9784656101642 %}

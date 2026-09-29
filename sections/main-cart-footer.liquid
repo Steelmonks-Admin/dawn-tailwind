@@ -63,7 +63,7 @@
                   {%- endif -%}
                 </div>
 
-                <div class="cart-freeship-confirm">&#10003; Kostenloser Versand bei jeder Bestellung</div>
+                {%- render 'sm-cart-shipping-note' -%}
 
                 <div class="totals">
                   <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>

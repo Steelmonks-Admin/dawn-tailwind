@@ -1,0 +1,12 @@
+{%- comment -%}
+  Versandhinweis im Warenkorb. Ab 99 € ist der Versand in alle Länder kostenlos (Automatik-Rabatt „Gratisversand!“),
+  darunter kostet er in Deutschland 4,95 €, nach Österreich und in die EU 12,95 € (Stand 29.09.2026).
+  Der Drawer und die Warenkorbseite werden nach jeder Änderung neu gerendert, der Betrag stimmt also immer.
+{%- endcomment -%}
+{%- assign smk_free_from = 9900 -%}
+{%- if cart.total_price >= smk_free_from -%}
+  <div class="cart-freeship-confirm">&#10003; Versand kostenlos</div>
+{%- else -%}
+  {%- assign smk_rest = smk_free_from | minus: cart.total_price -%}
+  <div class="cart-freeship-confirm cart-freeship-confirm--open">Noch {{ smk_rest | money }} bis zum kostenlosen Versand</div>
+{%- endif -%}
