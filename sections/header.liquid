@@ -521,12 +521,12 @@
     TOOLTIPS: {
       ACHIEVED: {
         99: "Gratisversand gesichert!",
-        149: "€10 Rabatt angewendet!",
+        149: "10 € Rabatt gesichert!",
         199: "Überraschungsgeschenk erreicht!"
       },
       REMAINING: {
         99: "Gratisversand",
-        149: "€10 Rabatt",
+        149: "10 € Rabatt",
         199: "Überraschungsgeschenk" 
       }
     },
@@ -598,7 +598,7 @@
     getTooltipText(milestone) {
       const remaining = milestone - this.cartValue;
       return remaining > 0 
-        ? `Noch ${remaining.toFixed(2)}€ bis zum ${CONFIG.TOOLTIPS.REMAINING[milestone]}`
+        ? `Noch ${remaining.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} € bis zum ${CONFIG.TOOLTIPS.REMAINING[milestone]}`
         : CONFIG.TOOLTIPS.ACHIEVED[milestone];
     }
 
