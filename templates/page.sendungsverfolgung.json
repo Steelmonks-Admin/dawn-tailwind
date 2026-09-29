@@ -73,7 +73,7 @@
           "settings": {
             "parent": "",
             "heading": "Wie lange dauert die Lieferung?",
-            "content": "<p>In der Regel dauert es innerhalb Deutschlands 2-4 Werktage, international 5-12 Werktage. Falls dein Paket länger unterwegs ist, überprüfe bitte das Tracking – manchmal gibt es Verzögerungen durch das Versandunternehmen. Generell ist es aber so, dass wir in den Versand nicht mehr eingreifen können, sobald wir die Sendungen an DHL übergeben haben.</p>",
+            "content": "<p>In der Regel dauert es innerhalb Deutschlands 2-4 Werktage, international 5-12 Werktage. Falls dein Paket länger unterwegs ist, überprüfe bitte das Tracking. Manchmal gibt es Verzögerungen durch das Versandunternehmen. Generell ist es aber so, dass wir in den Versand nicht mehr eingreifen können, sobald wir die Sendungen an DHL übergeben haben.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",

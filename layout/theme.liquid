@@ -38,16 +38,16 @@
       if current_tags
         assign smk_current_tags = current_tags | join: ', '
         if request.page_type == 'blog'
-          assign smk_title = smk_title | append: ' – Thema „' | append: smk_current_tags | append: '“'
+          assign smk_title = smk_title | append: ' | Thema „' | append: smk_current_tags | append: '“'
         else
-          assign smk_title = smk_title | append: ' – tagged "' | append: smk_current_tags | append: '"'
+          assign smk_title = smk_title | append: ' | tagged "' | append: smk_current_tags | append: '"'
         endif
       endif
       if current_page != 1
-        assign smk_title = smk_title | append: ' – Seite ' | append: current_page
+        assign smk_title = smk_title | append: ' | Seite ' | append: current_page
       endif
       unless request.page_type == 'article' or smk_title contains shop.name
-        assign smk_title = smk_title | append: ' – ' | append: shop.name
+        assign smk_title = smk_title | append: ' | ' | append: shop.name
       endunless
     -%}
     <title>{{ smk_title }}</title>
@@ -59,7 +59,7 @@
       if template.name == 'index' and settings.homepage_meta_description != blank
         assign smk_description = settings.homepage_meta_description
       elsif template.name == 'blog' and smk_description == blank
-        assign smk_description = blog.title | append: ' – Ratgeber von Steelmonks: Ideen, Anlässe und Tipps rund um personalisierte Geschenke aus Stahl.'
+        assign smk_description = blog.title | append: '. Ratgeber von Steelmonks: Ideen, Anlässe und Tipps rund um personalisierte Geschenke aus Stahl.'
       endif
       if current_page > 1 and smk_description != blank
         assign smk_description = smk_description | append: ' (Seite ' | append: current_page | append: ')'

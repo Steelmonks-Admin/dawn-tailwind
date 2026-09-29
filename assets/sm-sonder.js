@@ -145,7 +145,7 @@ const CAT_NAME = { wappen:'Wappen', gross:'Großformat', firma:'Firmen & Logos',
 function lightbox(list, i){
   const g = list[i]; if (!g) return;
   const self = g.cat === 'privat' || g.cat === 'wappen';
-  openModal('<div class="ga-lb"><img src="' + img(g.k) + '" alt="' + esc(g.cap) + '"><div class="info"><span class="mono" style="color:var(--ink-3)">' + esc(CAT_NAME[g.cat] || '') + ' · ' + (i + 1) + ' / ' + list.length + '</span><h2 id="modalTitle" style="font-size:20px;font-weight:600;line-height:1.3">' + esc(g.cap) + '</h2><p class="muted" style="font-size:14.4px">Wir fertigen Dir etwas Ähnliches – nach Deiner Idee, in Deiner Größe.</p><button class="btn btn-p" type="button" data-lbask>So etwas anfragen</button>' + (self ? '<a class="link" href="/pages/werkstatt" data-lbclose>Oder bis 75 cm selbst gestalten</a>' : '') + '<div class="nav"><button class="btn btn-g btn-s" type="button" data-lbnav="-1">‹ Zurück</button><button class="btn btn-g btn-s" type="button" data-lbnav="1">Weiter ›</button></div></div></div>');
+  openModal('<div class="ga-lb"><img src="' + img(g.k) + '" alt="' + esc(g.cap) + '"><div class="info"><span class="mono" style="color:var(--ink-3)">' + esc(CAT_NAME[g.cat] || '') + ' · ' + (i + 1) + ' / ' + list.length + '</span><h2 id="modalTitle" style="font-size:20px;font-weight:600;line-height:1.3">' + esc(g.cap) + '</h2><p class="muted" style="font-size:14.4px">Wir fertigen Dir etwas Ähnliches, nach Deiner Idee, in Deiner Größe.</p><button class="btn btn-p" type="button" data-lbask>So etwas anfragen</button>' + (self ? '<a class="link" href="/pages/werkstatt" data-lbclose>Oder bis 75 cm selbst gestalten</a>' : '') + '<div class="nav"><button class="btn btn-g btn-s" type="button" data-lbnav="-1">‹ Zurück</button><button class="btn btn-g btn-s" type="button" data-lbnav="1">Weiter ›</button></div></div></div>');
   const body = $('#modalBody');
   body.onclick = e => {
     const n = e.target.closest('[data-lbnav]'); if (n){ lightbox(list, (i + +n.dataset.lbnav + list.length) % list.length); return; }
@@ -186,7 +186,7 @@ const IQ_EX = { wappen:['Unser Familienwappen nach einer alten Urkunde','Ein neu
 const IQ_SIZES = ['22,5 cm','45 cm','55 cm','75 cm','100 cm','Größer als 100 cm','Andere Größe'];
 const IQ_MATS = ['Schwarz (RAL 9005)','Anthrazit (RAL 7016)','Weiß (RAL 9010)','Gold','Cortenstahl (Rost)','Edelstahl','Andere RAL-Farbe','Weiß ich noch nicht'];
 const IQ_MATL = { 'Cortenstahl (Rost)':'Cortenstahl-Optik', 'Edelstahl':'Edelstahl satiniert' };
-const IQ_QTY = ['1','2 – 49','50 – 499','500+'];
+const IQ_QTY = ['1','2 bis 49','50 bis 499','500+'];
 const IQ_WHEN = ['Kein fester Termin','In etwa 4 Wochen','Zu einem Anlass'];
 const IQ_PX = ['px4_monk_sketch','px2_monk_pc','px3_jakob_letter'];
 /* Größe aus Rechner/Vorschau auf die Auswahlliste abbilden */
@@ -196,24 +196,24 @@ function inquiry(root, opt){
   const T0 = Date.now();
   const S = { step:1, topic:opt.topic || '', desc:'', ref:null, calc:null, size:'', sizeX:'', mat:'', matX:'', multi:false, qty:'', when:'', files:[], rights:false, name:'', email:'' };
   const needQty = () => S.topic === 'serie' || S.topic === 'firma';
-  const topicName = () => (IQ_TOPICS.find(t => t[0] === S.topic) || [0, '–'])[1];
-  const sizeTxt = () => S.size && S.size !== 'Andere Größe' ? S.size + (S.sizeX ? ' (' + S.sizeX + ')' : '') : (S.sizeX || '–');
-  const matTxt = () => (S.mat === 'Andere RAL-Farbe' ? (S.matX ? 'RAL / Farbe: ' + S.matX : 'Andere RAL-Farbe') : (IQ_MATL[S.mat] || S.mat || '–')) + (S.multi ? ' · mehrlagig' : '');
+  const topicName = () => (IQ_TOPICS.find(t => t[0] === S.topic) || [0, 'keine Angabe'])[1];
+  const sizeTxt = () => S.size && S.size !== 'Andere Größe' ? S.size + (S.sizeX ? ' (' + S.sizeX + ')' : '') : (S.sizeX || 'keine Angabe');
+  const matTxt = () => (S.mat === 'Andere RAL-Farbe' ? (S.matX ? 'RAL / Farbe: ' + S.matX : 'Andere RAL-Farbe') : (IQ_MATL[S.mat] || S.mat || 'keine Angabe')) + (S.multi ? ' · mehrlagig' : '');
   const xp = () => Math.min(100, (S.topic ? 20 : 0) + (S.desc.trim().length >= 8 || S.ref || S.calc ? 20 : 0) + (S.size ? 15 : 0) + (S.mat ? 15 : 0) + (/.+@.+\..+/.test(S.email) ? 20 : 0) + (S.name.trim() ? 10 : 0));
   const chip = (grp, v, cur) => '<button type="button" data-' + grp + '="' + esc(v) + '" aria-pressed="' + (cur === v) + '">' + esc(v) + '</button>';
   const opts = (list, cur, ph) => '<option value="">' + ph + '</option>' + list.map(v => '<option' + (v === cur ? ' selected' : '') + '>' + esc(IQ_MATL[v] || v) + '</option>').join('');
   /* So kommt die Anfrage als Zendesk-Ticket an: gegliederter Text, Feld: Wert pro Zeile */
   function ticket(){
-    const subj = 'Anfrage ' + topicName() + (S.size ? ' · ' + sizeTxt() : '') + (S.name ? ' – ' + S.name : '');
+    const subj = 'Anfrage ' + topicName() + (S.size ? ' · ' + sizeTxt() : '') + (S.name ? ' · ' + S.name : '');
     const sec = [
-      ['PROJEKT', [['Thema', topicName()], ['Idee', S.desc.trim() || '–'], ['Beispiel aus der Galerie', S.ref ? S.ref.cap : '']]],
-      ['DETAILS', [['Größe', sizeTxt()], ['Oberfläche', matTxt()], ...Object.entries(S.calc || {}), ['Stückzahl', needQty() ? (S.qty || '–') : ''], ['Termin', S.when || 'nicht angegeben']]],
-      ['DATEIEN', [['Anhänge', S.files.length ? S.files.length + ' – ' + S.files.map(f => f.name).join(', ') : 'keine']]],
-      ['KONTAKT', [['Name', S.name || '–'], ['E-Mail', S.email || '–']]],
+      ['PROJEKT', [['Thema', topicName()], ['Idee', S.desc.trim() || 'keine Angabe'], ['Beispiel aus der Galerie', S.ref ? S.ref.cap : '']]],
+      ['DETAILS', [['Größe', sizeTxt()], ['Oberfläche', matTxt()], ...Object.entries(S.calc || {}), ['Stückzahl', needQty() ? (S.qty || 'keine Angabe') : ''], ['Termin', S.when || 'nicht angegeben']]],
+      ['DATEIEN', [['Anhänge', S.files.length ? S.files.length + ': ' + S.files.map(f => f.name).join(', ') : 'keine']]],
+      ['KONTAKT', [['Name', S.name || 'keine Angabe'], ['E-Mail', S.email || 'keine Angabe']]],
       ['HERKUNFT', [['Seite', 'steelmonks.com/pages/' + ({ sonderanfertigung:'anfragen', wappen:'dein-wappen', firmenschild:'dein-firmenschild', galerie:'fotogalerie' }[current] || current)], ['Formular', 'Sonderanfertigung, 3 Schritte']]]
     ].map(s => [s[0], s[1].filter(r => r[1])]);
     const text = 'NEUE ANFRAGE ÜBER DIE WEBSITE\n\n' + sec.map(s => s[0] + '\n' + s[1].map(r => r[0] + ': ' + r[1]).join('\n')).join('\n\n');
-    const fields = [['Thema', topicName()], ['Größe', S.size || '–'], ['Oberfläche', IQ_MATL[S.mat] || S.mat || '–'], ['Lagen', (S.calc && S.calc.Lagen) || (S.multi ? '2 oder mehr' : '1')], ['Vorlage', (S.calc && S.calc.Vorlage) || '–'], ['Richtpreis', (S.calc && S.calc.Richtpreis) || '–'], ['Stückzahl', S.qty || '–']];
+    const fields = [['Thema', topicName()], ['Größe', S.size || 'keine Angabe'], ['Oberfläche', IQ_MATL[S.mat] || S.mat || 'keine Angabe'], ['Lagen', (S.calc && S.calc.Lagen) || (S.multi ? '2 oder mehr' : '1')], ['Vorlage', (S.calc && S.calc.Vorlage) || 'keine Angabe'], ['Richtpreis', (S.calc && S.calc.Richtpreis) || 'keine Angabe'], ['Stückzahl', S.qty || 'keine Angabe']];
     return { subj, text, fields, tags:['website-anfrage', 'thema-' + (S.topic || 'sonst')], rows: sec.flatMap(s => s[1]) };
   }
   function head(){ return '<ol class="wk-steps" aria-label="Fortschritt">' + ['Idee','Details','Kontakt'].map((t, i) => '<li class="' + (S.step === i + 1 ? 'on' : S.step > i + 1 ? 'done' : '') + '"><i></i>' + (i + 1) + ' · ' + t + '</li>').join('') + '</ol><div class="iq-xp"><span>Anfrage</span><span class="bar"><b style="--x:' + xp() + '%"></b></span><span>' + xp() + ' %</span></div>'; }
@@ -272,15 +272,15 @@ function inquiry(root, opt){
     if (b.hasAttribute('data-back')){ S.step--; draw(); return; }
     if (b.hasAttribute('data-next')){
       if (S.step === 1 && !S.topic){ err('Bitte wähl zuerst ein Thema.'); return; }
-      if (S.step === 1 && S.desc.trim().length < 8){ err('Bitte beschreib kurz Deine Idee – ein, zwei Sätze reichen.'); $('textarea', root).focus(); return; }
+      if (S.step === 1 && S.desc.trim().length < 8){ err('Bitte beschreib kurz Deine Idee. Ein, zwei Sätze reichen.'); $('textarea', root).focus(); return; }
       if (S.step === 2 && S.files.length && !S.rights){ err('Bitte bestätige die Rechte an den Dateien.'); return; }
       S.step++; draw(); root.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block:'nearest' }); return;
     }
     if (b.hasAttribute('data-send')){
-      if (S.desc.trim().length < 8){ S.step = 1; draw(); err('Bitte beschreib kurz Deine Idee – ein, zwei Sätze reichen.'); $('textarea', root).focus(); return; }
+      if (S.desc.trim().length < 8){ S.step = 1; draw(); err('Bitte beschreib kurz Deine Idee. Ein, zwei Sätze reichen.'); $('textarea', root).focus(); return; }
       if (!/.+@.+\..+/.test(S.email)){ err('Bitte gib Deine E-Mail-Adresse an, damit wir Dir das Angebot schicken können.'); $('#' + root.id + 'E').focus(); return; }
       const hp = $('[data-hp]', root); if (hp && hp.value){ S.step = 4; draw(); return; }
-      if (Date.now() - T0 < 2500){ err('Einen Moment bitte – und dann noch einmal senden.'); return; }
+      if (Date.now() - T0 < 2500){ err('Einen Moment bitte, dann noch einmal senden.'); return; }
       b.disabled = true; b.textContent = S.files.length ? 'Dateien werden hochgeladen …' : 'Wird gesendet …';
       sendInquiry(S, ticket(), root.id).then(() => {
         S.step = 4; draw(); celebrate('px3_duo_highfive', 'Anfrage ist raus!', 'Wir melden uns mit Deinem Angebot');
@@ -312,7 +312,7 @@ async function sendInquiry(S, tk, formId){
     const f = document.getElementById('smxContact'); if (!f) throw e;
     $$('[data-dyn]', f).forEach(x => x.remove());
     const add = (n, v) => { const i = document.createElement('input'); i.type = 'hidden'; i.name = n; i.value = v; i.setAttribute('data-dyn', ''); f.append(i); };
-    add('contact[email]', S.email); add('contact[Name]', S.name.trim() || '–'); add('contact[Betreff]', tk.subj);
+    add('contact[email]', S.email); add('contact[Name]', S.name.trim() || 'keine Angabe'); add('contact[Betreff]', tk.subj);
     tk.rows.forEach(r => { if (r[0] !== 'Name' && r[0] !== 'E-Mail') add('contact[' + r[0] + ']', String(r[1])); });
     if (S.files.length) add('contact[Hinweis]', 'Dateien konnten nicht übertragen werden, bitte beim Kunden anfordern.');
     ss.set('smxSent', JSON.stringify({ id:formId, name:S.name, email:S.email, topic:S.topic, t:Date.now() }));
@@ -413,7 +413,7 @@ PAGES.wappen = function(){
   function tween(to){ const el = $('#wpPrice'), from = shown; shown = to; if (RM || !from){ el.textContent = eur(to); return; } const t0 = performance.now(); const f = t => { const k = Math.min(1, (t - t0) / 500); el.textContent = eur(from + (to - from) * ease(k)); if (k < 1) requestAnimationFrame(f); else el.textContent = eur(to); }; requestAnimationFrame(f); }
   root.addEventListener('click', e => { const b = e.target.closest('[data-v],[data-s],[data-m],[data-m2],[data-lg]'); if (!b || !b.closest('#wpCalc')) return; if (b.dataset.v) S.v = b.dataset.v; if (b.dataset.s) S.s = +b.dataset.s; if (b.dataset.m) S.m = b.dataset.m; if (b.dataset.m2) S.m2 = b.dataset.m2; if (b.dataset.lg){ S.lagen = +b.dataset.lg; if (S.lagen === 2 && S.m2 === S.m) S.m2 = plateOf(S.m); } draw(); });
   $('#wpBolt').addEventListener('change', e => { S.bolt = e.target.checked; draw(); });
-  $('#wpGo').addEventListener('click', () => { const p = price(); askFor({ topic:'wappen', size:cmS(S.s), mat:S.m, multi:S.lagen > 1, calc:{ Vorlage:p.v[1], Lagen: S.lagen === 2 ? '2 – ' + shortMat(S.m) + ' auf ' + shortMat(S.m2) : S.lagen >= 3 ? '3 oder mehr' : '1', Befestigung: S.bolt ? 'unsichtbar (+9,45 €)' : 'ohne', Richtpreis: p.total != null ? eur(p.total) + ' laut Rechner' : 'im Angebot' } }); });
+  $('#wpGo').addEventListener('click', () => { const p = price(); askFor({ topic:'wappen', size:cmS(S.s), mat:S.m, multi:S.lagen > 1, calc:{ Vorlage:p.v[1], Lagen: S.lagen === 2 ? '2 (' + shortMat(S.m) + ' auf ' + shortMat(S.m2) + ')' : S.lagen >= 3 ? '3 oder mehr' : '1', Befestigung: S.bolt ? 'unsichtbar (+9,45 €)' : 'ohne', Richtpreis: p.total != null ? eur(p.total) + ' laut Rechner' : 'im Angebot' } }); });
   // Laufband
   const W = sgBy('wappen').concat(SG.filter(g => g.k === 'sg_anfr_028' || g.k === 'sg_tpl_1508f4'));
   const half = Math.ceil(W.length / 2), row = (list, off) => list.map((g, i) => '<img src="' + img(g.k) + '" alt="' + esc(g.cap) + '" data-wi="' + (i + off) + '" loading="lazy">').join('');
@@ -479,8 +479,8 @@ PAGES.firmenschild = function(){
     ['Eingang & Fassade','sg_tpl_e7a1c7','Draußen zählt Wetterfestigkeit: Edelstahl, Cortenstahl oder pulverbeschichteter Stahl. Mit Wandabstand wirft das Logo einen Schatten und wirkt hochwertig.',['Edelstahl','Cortenstahl','pulverbeschichtet','mit Wandabstand']],
     ['Empfang & Büro','sg_tpl_1e9c55','Das erste, was Besucher sehen: Dein Logo in zwei Farben oder mehrlagig, groß an der Wand hinter dem Empfang.',['mehrlagig','zweifarbig','bis 150 cm']],
     ['Laden & Gastro','sg_anfr_000','Ob Barbershop, Café oder Praxis: ein Schild mit Charakter, gern in Gold auf Schwarz.',['Gold','Schwarz','Einzelstück']],
-    ['Jubiläum & Team','sg_merc_006','Zum Firmenjubiläum oder als Dankeschön: Anhänger, Kartenhalter oder Schilder mit Eurem Logo – auch in Serie.',['Serie','Geschenkbox','Staffelpreise']],
-    ['Verein & Feuerwehr','sg_anfr_041','Wachen-Embleme, Jubiläumsschilder und Vereinslogos – für die Wache, das Vereinsheim oder als Geschenk.',['Emblem','Jubiläum','Gründungsjahr']]
+    ['Jubiläum & Team','sg_merc_006','Zum Firmenjubiläum oder als Dankeschön: Anhänger, Kartenhalter oder Schilder mit Eurem Logo, auch in Serie.',['Serie','Geschenkbox','Staffelpreise']],
+    ['Verein & Feuerwehr','sg_anfr_041','Wachen-Embleme, Jubiläumsschilder und Vereinslogos, für die Wache, das Vereinsheim oder als Geschenk.',['Emblem','Jubiläum','Gründungsjahr']]
   ];
   let u = 0;
   const drawUse = () => { $('#fsTabs').innerHTML = USE.map((x, i) => '<button class="chip" type="button" role="tab" data-ut="' + i + '" aria-selected="' + (i === u) + '" aria-pressed="' + (i === u) + '">' + esc(x[0]) + '</button>').join(''); const x = USE[u], im = $('#fsUseImg'); im.style.opacity = 0; setTimeout(() => { im.src = img(x[1]); im.alt = x[0]; im.style.opacity = 1; }, RM ? 0 : 160); $('#fsUseT').textContent = x[0]; $('#fsUseP').textContent = x[2]; $('#fsUseF').innerHTML = x[3].map(f => '<span>' + esc(f) + '</span>').join(''); $('#fsUseGo').textContent = 'Für ' + x[0] + ' anfragen'; };
@@ -516,7 +516,7 @@ PAGES.galerie = function(){
   /* Lücke in der letzten Rasterzeile mit einer Anfrage-Kachel schließen */
   const grid = $('#gaGrid'), gf = document.createElement('button');
   gf.type = 'button'; gf.className = 'ga-fill'; gf.hidden = true;
-  gf.innerHTML = '<img src="' + img('px4_monk_sketch') + '" alt=""><span><b>Dein Projekt fehlt noch.</b><em>Wir fertigen es für Dich – ab 69 €.</em></span><i>Anfragen →</i>';
+  gf.innerHTML = '<img src="' + img('px4_monk_sketch') + '" alt=""><span><b>Dein Projekt fehlt noch.</b><em>Wir fertigen es für Dich, ab 69 €.</em></span><i>Anfragen →</i>';
   grid.append(gf);
   const fill = () => {
     gf.hidden = true;

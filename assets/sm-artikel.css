@@ -58,7 +58,7 @@
   .smx .ar-toc-m summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;padding:14px 18px;font-weight:600}
   .smx .ar-toc-m summary::-webkit-details-marker{display:none}
   .smx .ar-toc-m summary::after{content:"+";color:var(--blau);font-size:20px;line-height:1}
-  .smx .ar-toc-m[open] summary::after{content:"–"}
+  .smx .ar-toc-m[open] summary::after{content:"−"}
   .smx .ar-toc-m ol{margin:0;padding:0 10px 12px}
   .smx .ar-cta{max-width:520px}
 }

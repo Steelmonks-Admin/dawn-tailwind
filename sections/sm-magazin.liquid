@@ -131,7 +131,7 @@
         {%- render 'sm-mag-card', article: article, topics: topics, i: forloop.index0, kurz: S.kurz, px: S.px -%}
         {%- if forloop.index == 4 -%}{%- render 'sm-mag-cta', key: ctakey -%}{%- endif -%}
       {%- else -%}
-        <div class="bl-empty"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt=""><b>Dazu haben wir noch nichts geschrieben.</b><span class="muted">Frag uns einfach direkt – wir antworten innerhalb von zwei Werktagen.</span><a class="btn btn-p btn-s" href="/pages/kontakt">Frage stellen</a></div>
+        <div class="bl-empty"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt=""><b>Dazu haben wir noch nichts geschrieben.</b><span class="muted">Frag uns einfach direkt, wir antworten innerhalb von zwei Werktagen.</span><a class="btn btn-p btn-s" href="/pages/kontakt">Frage stellen</a></div>
       {%- endfor -%}
     </div>
     <div class="bl-more">
@@ -190,7 +190,7 @@
     { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Das Steelmonks Magazin" },
     { "type": "text", "id": "titel", "label": "Überschrift", "default": "Wissen aus der" },
     { "type": "text", "id": "titel_hl", "label": "Überschrift, blauer Teil", "default": "Werkstatt." },
-    { "type": "textarea", "id": "lead", "label": "Einleitung", "default": "Zunftzeichen und Berufe, Wappen, Hausnummern und Geschenkideen – erklärt von den Leuten, die jeden Tag Stahl schneiden." },
+    { "type": "textarea", "id": "lead", "label": "Einleitung", "default": "Zunftzeichen und Berufe, Wappen, Hausnummern und Geschenkideen, erklärt von den Leuten, die jeden Tag Stahl schneiden." },
     { "type": "text", "id": "suche", "label": "Suchfeld-Beispiel", "default": "Zum Beispiel: Zunftzeichen Elektriker" },
     { "type": "text", "id": "stat_zahl", "label": "Dritte Kennzahl (ohne Serie)" },
     { "type": "text", "id": "stat_text", "label": "Dritte Kennzahl, Text" },
@@ -209,7 +209,7 @@
     { "type": "header", "content": "Serie" },
     { "type": "text", "id": "story_titel", "label": "Überschrift", "default": "Die Steelmonks-Story" },
     { "type": "text", "id": "story_stat", "label": "Kennzahl-Text", "default": "Teile Steelmonks-Story" },
-    { "type": "textarea", "id": "story_lead", "label": "Einleitung", "default": "Vom Traum zur Realität, vom Tauschgeschäft zur Manufaktur – wie Steelmonks entstanden ist, erzählt in zwölf Teilen." }
+    { "type": "textarea", "id": "story_lead", "label": "Einleitung", "default": "Vom Traum zur Realität, vom Tauschgeschäft zur Manufaktur: wie Steelmonks entstanden ist, erzählt in zwölf Teilen." }
   ],
   "blocks": [
     { "type": "story", "name": "Serien-Teil", "settings": [

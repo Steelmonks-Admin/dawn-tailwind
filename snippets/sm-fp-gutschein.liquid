@@ -6,7 +6,7 @@
       <div>
         <p class="eyebrow" style="margin-top:14px">Geschenkgutschein</p>
         <h1 class="sa-h1" data-split>Schenk die <span class="hl">Wahl.</span></h1>
-        <p class="sa-lead">Unsicher beim Motiv? Dann überlässt Du die Wahl einfach der beschenkten Person. Du entscheidest nur über den Betrag – eingelöst wird im gesamten Sortiment, vom gravierten Schlüsselanhänger bis zum großen Wandschild.</p>
+        <p class="sa-lead">Unsicher beim Motiv? Dann überlässt Du die Wahl einfach der beschenkten Person. Du entscheidest nur über den Betrag, eingelöst wird im gesamten Sortiment, vom gravierten Schlüsselanhänger bis zum großen Wandschild.</p>
         {%- form 'product', product, id: 'ftGcForm' -%}
           <div class="ft-amts" id="ftAmts" role="radiogroup" aria-label="Betrag wählen">
             {%- for v in product.variants -%}<label class="chip"><input type="radio" name="id" value="{{ v.id }}" data-amt="{{ v.price | money_without_trailing_zeros }}"{% if v.price == 5000 or product.variants.size == 1 %} checked{% endif %}{% unless v.available %} disabled{% endunless %}>{{ v.price | money_without_trailing_zeros }}</label>{%- endfor -%}
@@ -21,8 +21,8 @@
   <section class="sa-sec paper"><div class="wrap">
     <div class="ft-steps">
       <div data-rv><b>Betrag wählen</b><p>25, 50, 75, 100, 150 oder 200 €.</p></div>
-      <div data-rv style="--d:.08s"><b>Per E-Mail erhalten</b><p>Nach dem Kauf kommt der Gutscheincode per E-Mail – zum Weiterleiten oder Ausdrucken.</p></div>
-      <div data-rv style="--d:.16s"><b>Einlösen</b><p>An der Kasse ins Feld für Rabatt- und Gutscheincodes eingeben – fertig.</p></div>
+      <div data-rv style="--d:.08s"><b>Per E-Mail erhalten</b><p>Nach dem Kauf kommt der Gutscheincode per E-Mail, zum Weiterleiten oder Ausdrucken.</p></div>
+      <div data-rv style="--d:.16s"><b>Einlösen</b><p>An der Kasse ins Feld für Rabatt- und Gutscheincodes eingeben, fertig.</p></div>
     </div>
   </div></section>
 </div>

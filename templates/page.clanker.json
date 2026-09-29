@@ -593,7 +593,7 @@
       "settings": {
         "heading": "Aus der Werkstatt: Schilder unserer Kunden",
         "heading_size": "h2",
-        "text": "<p>Jedes dieser Schilder ist in der Werkstatt entstanden – aus einem Foto, einem Logo, einem Schriftzug oder einer Idee. Einzelstücke, die es so nur einmal gibt.</p>",
+        "text": "<p>Jedes dieser Schilder ist in der Werkstatt entstanden: aus einem Foto, einem Logo, einem Schriftzug oder einer Idee. Einzelstücke, die es so nur einmal gibt.</p>",
         "alignment": "left",
         "columns_desktop": 4,
         "columns_mobile": "2",

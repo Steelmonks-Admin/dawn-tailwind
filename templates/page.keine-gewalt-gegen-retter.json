@@ -38,7 +38,7 @@
           "settings": {
             "parent": "",
             "heading": "Den passende Bügel-Patch zur Aktion",
-            "content": "<p>Setze ein klares Zeichen gegen Gewalt an unseren Rettern – einfach und stilvoll!<br/><br/><br/>Der Patch ist mit einer speziellen Bügelfläche versehen und kann leicht auf Kleidung, Taschen oder andere Textilien aufgebügelt werden.<br/><br/><br/>Zeige deine Unterstützung für Einsatzkräfte und trage dazu bei, mehr Bewusstsein für Respekt und Zusammenhalt zu schaffen. </p>",
+            "content": "<p>Setze ein klares Zeichen gegen Gewalt an unseren Rettern, einfach und stilvoll!<br/><br/><br/>Der Patch ist mit einer speziellen Bügelfläche versehen und kann leicht auf Kleidung, Taschen oder andere Textilien aufgebügelt werden.<br/><br/><br/>Zeige deine Unterstützung für Einsatzkräfte und trage dazu bei, mehr Bewusstsein für Respekt und Zusammenhalt zu schaffen. </p>",
             "content_liquid": "{% render 'custom_pin-quantity-form-2' %}",
             "featured": true,
             "featured_image": "shopify://shop_images/PATCH-BE-2000-S.png",
@@ -158,7 +158,7 @@
           "settings": {
             "parent": "",
             "heading": "Worum geht es hier?",
-            "content": "<p>Leider kommt es immer wieder zu Übergriffen auf Einsatzkräfte wie Feuerwehrleute und Rettungsdienste – Menschen, die da sind, um Leben zu retten und Hilfe zu leisten. Ob durch verbale Angriffe oder sogar körperliche Gewalt, solche Vorfälle sind bedauerlicherweise keine Seltenheit und stellen eine große Belastung für die Betroffenen dar. Es ist erschütternd, dass diejenigen, die täglich ihr Leben riskieren, um anderen zu helfen, selbst gefährdet werden. Genau deshalb ist dieses Thema so wichtig und verdient die volle Aufmerksamkeit unserer Gesellschaft.</p>",
+            "content": "<p>Leider kommt es immer wieder zu Übergriffen auf Einsatzkräfte wie Feuerwehrleute und Rettungsdienste, Menschen, die da sind, um Leben zu retten und Hilfe zu leisten. Ob durch verbale Angriffe oder sogar körperliche Gewalt, solche Vorfälle sind bedauerlicherweise keine Seltenheit und stellen eine große Belastung für die Betroffenen dar. Es ist erschütternd, dass diejenigen, die täglich ihr Leben riskieren, um anderen zu helfen, selbst gefährdet werden. Genau deshalb ist dieses Thema so wichtig und verdient die volle Aufmerksamkeit unserer Gesellschaft.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -171,7 +171,7 @@
           "settings": {
             "parent": "",
             "heading": "Was hat es mit dem Anstecker auf sich?",
-            "content": "<p>Der Anstecker ist ein Symbol unserer Aktion „Keine Gewalt gegen Retter.“ Er steht für Solidarität und vereint die Stimmen aller, die sich gegen Gewalt an Einsatzkräften starkmachen. Durch das Tragen des Pins zeigst Du sichtbar Deine Unterstützung und machst auf das wichtige Thema aufmerksam. Der Anstecker wird kostenlos im Rahmen der Aktion verteilt – eine kleine Geste, die Großes bewirken kann.</p>",
+            "content": "<p>Der Anstecker ist ein Symbol unserer Aktion „Keine Gewalt gegen Retter.“ Er steht für Solidarität und vereint die Stimmen aller, die sich gegen Gewalt an Einsatzkräften starkmachen. Durch das Tragen des Pins zeigst Du sichtbar Deine Unterstützung und machst auf das wichtige Thema aufmerksam. Der Anstecker wird kostenlos im Rahmen der Aktion verteilt: eine kleine Geste, die Großes bewirken kann.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
@@ -184,7 +184,7 @@
           "settings": {
             "parent": "",
             "heading": "Was kann ich noch tun?",
-            "content": "<p>Du kannst aktiv dazu beitragen, unsere Aktion „Keine Gewalt gegen Retter“ zu unterstützen! Trage den Pin, um ein sichtbares Zeichen gegen Gewalt an Einsatzkräften zu setzen und Solidarität zu zeigen. Teile das Video und die Beiträge unserer Partner, um das Bewusstsein weiter zu verbreiten – je mehr Menschen erreicht werden, desto stärker ist die Botschaft. Jeder Beitrag zählt!</p>",
+            "content": "<p>Du kannst aktiv dazu beitragen, unsere Aktion „Keine Gewalt gegen Retter“ zu unterstützen! Trage den Pin, um ein sichtbares Zeichen gegen Gewalt an Einsatzkräften zu setzen und Solidarität zu zeigen. Teile das Video und die Beiträge unserer Partner, um das Bewusstsein weiter zu verbreiten. Je mehr Menschen erreicht werden, desto stärker ist die Botschaft. Jeder Beitrag zählt!</p>",
             "content_liquid": "",
             "featured": true,
             "featured_content_gradient": "#090a0c,#ad091f,#ad091f,#090a0c",
@@ -229,7 +229,7 @@
         "heading_1": "",
         "text1": "",
         "heading_2": "Unterstützen",
-        "text2": "👉 Teile unser Video in deiner Instagram Story oder auf anderen Platformen - so können wir noch mehr Menschen erreichen.\n<br><br>\n👉 Teile die Beiträge der Influencer, die ihre Stimme für unsere Retter erheben.\n<br><br>\n👉 Bleib informiert mit dem Feuerwehr, Rettungs und Blaulicht Magazin – gemeinsam können wir ein Umdenken in der Gesellschaft bewirken."
+        "text2": "👉 Teile unser Video in deiner Instagram Story oder auf anderen Platformen - so können wir noch mehr Menschen erreichen.\n<br><br>\n👉 Teile die Beiträge der Influencer, die ihre Stimme für unsere Retter erheben.\n<br><br>\n👉 Bleib informiert mit dem Feuerwehr, Rettungs und Blaulicht Magazin. Gemeinsam können wir ein Umdenken in der Gesellschaft bewirken."
       }
     }
   },

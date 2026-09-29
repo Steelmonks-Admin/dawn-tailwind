@@ -57,7 +57,7 @@ async function run(v){
     const u = ROOT + 'search/suggest.json?q=' + encodeURIComponent(v) + '&resources[type]=article&resources[limit]=10';
     const r = await (await fetch(u, { signal:ctl.signal, credentials:'same-origin' })).json();
     const A = (r.resources && r.resources.results && r.resources.results.articles) || [];
-    grid.innerHTML = A.length ? A.map(card).join('') : '<div class="bl-empty">' + (pxUrl ? '<img src="' + esc(pxUrl) + '" alt="">' : '') + '<b>Dazu haben wir noch nichts geschrieben.</b><span class="muted">Frag uns einfach direkt – wir antworten innerhalb von zwei Werktagen.</span><a class="btn btn-p btn-s" href="/pages/kontakt">Frage stellen</a></div>';
+    grid.innerHTML = A.length ? A.map(card).join('') : '<div class="bl-empty">' + (pxUrl ? '<img src="' + esc(pxUrl) + '" alt="">' : '') + '<b>Dazu haben wir noch nichts geschrieben.</b><span class="muted">Frag uns einfach direkt, wir antworten innerhalb von zwei Werktagen.</span><a class="btn btn-p btn-s" href="/pages/kontakt">Frage stellen</a></div>';
     if (saved.more) saved.more.hidden = true;
     const all = ROOT + 'search?type=article&q=' + encodeURIComponent(v);
     status.innerHTML = '<span>' + (A.length ? '<b>' + A.length + '</b> Top-Treffer' : 'Keine Treffer') + ' zu „' + esc(v) + '“' + (A.length ? ' · <a href="' + esc(all) + '">Alle Treffer anzeigen</a>' : '') + '</span><button class="sa-quiet" type="button" data-clear>Suche zurücksetzen</button>';

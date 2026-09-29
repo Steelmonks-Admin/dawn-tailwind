@@ -6,7 +6,7 @@
       <div>
         <p class="eyebrow" style="margin-top:14px">Online-Widerruf</p>
         <h1 class="sa-h1" data-split>Vertrag <span class="hl">widerrufen.</span></h1>
-        <p class="sa-lead">Hier erklärst Du Deinen Widerruf online – ohne Kundenkonto. Den Eingang bestätigen wir Dir sofort per E-Mail.</p>
+        <p class="sa-lead">Hier erklärst Du Deinen Widerruf online, ohne Kundenkonto. Den Eingang bestätigen wir Dir sofort per E-Mail.</p>
         <ol class="wr-steps" id="wrSteps"><li class="on"><i>1</i>Angaben</li><li><i>2</i>Widerruf bestätigen</li><li><i>3</i>Eingangsbestätigung</li></ol>
       </div>
       <span class="pxfx pxa-sway"><img src="{{ 'sm-px3_jakob_letter.webp' | asset_url }}" alt=""></span>
@@ -24,10 +24,10 @@
         <div class="opt"><label><input type="radio" name="contact[Umfang]" value="Gesamte Bestellung" checked> Die ganze Bestellung</label><label><input type="radio" name="contact[Umfang]" value="Einzelne Artikel"> Nur einzelne Artikel</label></div>
         <textarea id="wrItems" name="contact[Artikel]" placeholder="Welche Artikel? (freiwillig)" hidden></textarea>
       </fieldset>
-      <label><span>Grund <span class="hint">(freiwillig – hilft uns, besser zu werden)</span></span><select id="wrWhy" name="contact[Grund]"><option value="">Keine Angabe</option><option>Gefällt mir nicht</option><option>Falsch bestellt</option><option>Artikel beschädigt oder fehlerhaft</option><option>Lieferung zu spät</option><option>Anderer Grund</option></select></label>
+      <label><span>Grund <span class="hint">(freiwillig, hilft uns, besser zu werden)</span></span><select id="wrWhy" name="contact[Grund]"><option value="">Keine Angabe</option><option>Gefällt mir nicht</option><option>Falsch bestellt</option><option>Artikel beschädigt oder fehlerhaft</option><option>Lieferung zu spät</option><option>Anderer Grund</option></select></label>
       <p class="wk-err" id="wrErr" role="alert" style="color:#b3261e;font-size:.88rem"></p>
       <div><button class="btn btn-p btn-shine" type="submit" id="wrGo">Widerruf bestätigen</button></div>
-      <p class="hint">Mit Klick auf „Widerruf bestätigen“ schickst Du uns Deine Widerrufserklärung. Personalisierte Artikel und Sonderanfertigungen sind vom gesetzlichen Widerrufsrecht ausgenommen – wir prüfen jede Erklärung und melden uns. Mehr in der <a href="/pages/widerrufsbelehrung" style="color:var(--blau)">Widerrufsbelehrung</a> und im <a href="/pages/datenschutzerklarung" style="color:var(--blau)">Datenschutz</a>.</p>
+      <p class="hint">Mit Klick auf „Widerruf bestätigen“ schickst Du uns Deine Widerrufserklärung. Personalisierte Artikel und Sonderanfertigungen sind vom gesetzlichen Widerrufsrecht ausgenommen. Wir prüfen jede Erklärung und melden uns. Mehr in der <a href="/pages/widerrufsbelehrung" style="color:var(--blau)">Widerrufsbelehrung</a> und im <a href="/pages/datenschutzerklarung" style="color:var(--blau)">Datenschutz</a>.</p>
     {%- endform -%}
     <div class="wr-ok" id="wrOk" hidden></div>
   </div></section>
