@@ -6,7 +6,7 @@ const R = document.getElementById('smNl'); if (!R) return;
 // LIVE = false: Popup nur mit ?smnl=test (normale Regeln) oder ?smnl=open (sofort); ?smnl=open funktioniert auch live zum Testen
 const LIVE = true;
 const DELAY_MOBILE = 30000, DELAY_DESKTOP = 40000, SCROLL_SHARE = 0.5, PAUSE_DAYS = 14;
-const EXCLUDE = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?(?:cart|account|checkouts?|pages\/(?:kontakt|vertrag-widerrufen|impressum|agb-s|datenschutzerklarung|widerrufsbelehrung|versandbedingungen|newsletter|werkstatt|anfragen|dein-wappen|dein-firmenschild|sendungsverfolgung))(?:\/|$)/;
+const EXCLUDE = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?(?:cart|account|checkouts?|challenge|password|pages\/(?:kontakt|vertrag-widerrufen|impressum|agb-s|datenschutzerklarung|widerrufsbelehrung|versandbedingungen|newsletter|werkstatt|anfragen|dein-wappen|dein-firmenschild|sendungsverfolgung))(?:\/|$)/;
 
 const store = (s) => ({ get(k){ try { return s.getItem(k); } catch(e){ return null; } }, set(k, v){ try { s.setItem(k, v); } catch(e){} } });
 const LS = store(window.localStorage), SS = store(window.sessionStorage);
