@@ -162,7 +162,7 @@
                 endif
                 assign smk_label = smk_label | append: ' bei Trusted Shops'
                 if smk_tag == 'a'
-                  assign smk_label = smk_label | append: ' – zur Bewertungsliste'
+                  assign smk_label = smk_label | append: ', zur Bewertungsliste'
                 endif
               -%}
               <{{ smk_tag }}
@@ -965,7 +965,7 @@
           "type": "text",
           "id": "heading",
           "label": "Heading",
-          "default": "Mengenrabatt — Nutze die Chance!"
+          "default": "Mengenrabatt: Nutze die Chance!"
         },
         {
           "type": "text",

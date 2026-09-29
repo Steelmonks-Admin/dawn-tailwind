@@ -41,7 +41,7 @@
 
           <div class="sm-hero-hub__pixel-img-wrap">
             {% if section.settings.pixel_image %}
-              {%- assign hero_alt = section.settings.pixel_image.alt | default: section.settings.heading | default: 'Steelmonks – personalisierte Geschenke aus Stahl' -%}
+              {%- assign hero_alt = section.settings.pixel_image.alt | default: section.settings.heading | default: 'Steelmonks: personalisierte Geschenke aus Stahl' -%}
               {{ section.settings.pixel_image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', class: 'sm-hero-hub__pixel-img', alt: hero_alt }}
             {% else %}
               <div class="sm-hero-hub__pixel-placeholder">Pixel-Visual hochladen</div>
@@ -167,7 +167,7 @@
       "type": "text",
       "id": "badge_text",
       "label": "Black Friday Banner",
-      "default": "Black Friday: bis zu 50 % – nur dieses Wochenende"
+      "default": "Black Friday: bis zu 50 %, nur dieses Wochenende"
     },
     {
       "type": "text",

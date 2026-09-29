@@ -51,7 +51,7 @@
       -%}
       {%- if src != blank -%}
         <li {{ block.shopify_attributes }}>
-          <button type="button" class="smk-wg__item" data-full="{{ src_big }}" data-caption="{{ cap }}" aria-label="{% if cap != blank %}{{ cap }} – {% endif %}Bild vergrößern">
+          <button type="button" class="smk-wg__item" data-full="{{ src_big }}" data-caption="{{ cap }}" aria-label="{% if cap != blank %}{{ cap }}: {% endif %}Bild vergrößern">
             <img src="{{ src }}" alt="{{ cap }}" width="700" height="700" loading="lazy">
             {%- if cap != blank -%}<span class="smk-wg__cap" aria-hidden="true">{{ cap }}</span>{%- endif -%}
           </button>
