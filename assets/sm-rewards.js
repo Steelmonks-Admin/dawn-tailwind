@@ -274,6 +274,9 @@
   if (bubbleEl) new MutationObserver(() => { if (bubbleFixes++ < 20) fixBubble(); }).observe(bubbleEl, { childList: true, subtree: true, characterData: true });
   function renderAll() {
     bubbleFixes = 0; fixBubble();
+    // Mobile Kassen-Leiste auf /cart (Dawn-Abschnitt, wird nach Änderungen nicht neu gerendert)
+    const sv = document.querySelector('.cart-sticky-checkout__value');
+    if (sv && S) sv.textContent = money(S.cart.total_price);
     if (S) { paintBar(S); paintStrip(S); }
     document.querySelectorAll('[data-smr-panel]').forEach((p) => { p.dataset.smrOn = 's'; paintPanel(p); });
     paintNotes();
@@ -410,7 +413,7 @@
       const j = await r.json();
       if (!r.ok || j.status) throw new Error(j.description || r.status);
       push('sm_gift_wrap', { sm_on: on });
-      if (drawer && typeof drawer.renderContents === 'function' && j.sections) drawer.renderContents(j); else { location.reload(); return; }
+      if (drawer && drawer.contains(c) && typeof drawer.renderContents === 'function' && j.sections) drawer.renderContents(j); else { location.reload(); return; }
       soon();
     } catch (x) { c.checked = !on; if (lab) lab.classList.remove('is-busy'); }
   }, true);

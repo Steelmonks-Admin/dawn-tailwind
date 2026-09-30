@@ -29,11 +29,6 @@
       tabindex='-1'
     >
       {%- if cart == empty -%}
-        {%- comment -%}
-          Leerer Warenkorb wie im Prototyp: Jakob zeigt auf die meistbestellten Stücke.
-          Bestellzahlen: Bestellungen der letzten 12 Monate, Stand 26.09.2026 (gerundet). Der Anstecker kommt direkt in den
-          Warenkorb, personalisierte Stücke führen zur Produktseite.
-        {%- endcomment -%}
         <div class='drawer__inner-empty smc-empty'>
           <div class='smc-empty__head'>
             <h2 class='drawer__heading'>{{ 'sections.cart.title' | t }}</h2>
@@ -41,33 +36,7 @@
               <span class='svg-wrapper'>{{- 'icon-close.svg' | inline_asset_content -}}</span>
             </button>
           </div>
-          <div class='smc-empty__body'>
-            <img class='smc-empty__px' src='{{ 'sm-px_jakob_zeigt.webp' | asset_url }}' alt='Jakob in Pixel-Art zeigt auf die Vorschläge' width='145' height='200' loading='lazy'>
-            <h3 class='smc-empty__title'>Noch leer? Jakob hat Vorschläge</h3>
-            <p class='smc-empty__lead'>Das wird am häufigsten bestellt:</p>
-            <div class='smc-mini'>
-              {%- assign smc_recs = 'keine-gewalt-gegen-retter-anstecker~8.100+~50234404962570,feuerwehr-schlusselanhanger-dfv-signet~7.900+~,monogramm-personalisierte-wanddekoration-hochzeitsgeschenk~4.000+~' | split: ',' -%}
-              {%- for smc_r in smc_recs -%}
-                {%- assign smc_f = smc_r | split: '~' -%}
-                {%- assign smc_p = all_products[smc_f[0]] -%}
-                {%- if smc_p != blank and smc_p.available -%}
-                  <div class='smc-mini__item'>
-                    <img src='{{ smc_p.featured_image | image_url: width: 160 }}' alt='' width='56' height='56' loading='lazy'>
-                    <div>
-                      <b>{{ smc_p.title | escape }}</b>
-                      <small>{% if smc_p.price_varies %}ab {% endif %}{{ smc_p.price_min | money_without_currency }} € · {{ smc_f[1] }} Bestellungen</small>
-                    </div>
-                    {%- if smc_f[2] != blank -%}
-                      <button type='button' class='smc-mini__btn' data-smr-add='{{ smc_f[2] }}' data-smr-key='empty_{{ smc_p.handle }}' aria-label='{{ smc_p.title | escape }} in den Warenkorb'>+</button>
-                    {%- else -%}
-                      <a class='smc-mini__btn' href='{{ smc_p.url }}' aria-label='{{ smc_p.title | escape }} ansehen und gestalten'>&rarr;</a>
-                    {%- endif -%}
-                  </div>
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
-            <a class='smc-empty__more' href='{{ routes.all_products_collection_url }}'>{{ 'general.continue_shopping' | t }}</a>
-          </div>
+          {%- render 'sm-cart-empty' -%}
           <p class='smc-trust smc-empty__trust'><span>Gratisversand ab 99 €</span><span>100 % Gl&uuml;cksgarantie</span><span>4,82 &#9733; Trusted Shops</span></p>
         </div>
       {%- endif -%}
@@ -153,52 +122,7 @@
                           </td>
 
                           <td class='cart-item__details' role='cell' headers='CartDrawer-ColumnProduct'>
-                            {%- liquid
-                              assign smc_props = 0
-                              for property in item.properties
-                                assign smc_first = property.first | slice: 0
-                                if property.last != blank and smc_first != '_'
-                                  assign smc_props = smc_props | plus: 1
-                                endif
-                              endfor
-                            -%}
-                            <a href='{{ item.url }}' class='cart-item__name h4 break'>
-                              {{- item.product.title | escape -}}
-                            </a>
-                            {%- unless item.product.has_only_default_variant -%}
-                              <div class='smc-var'>{{ item.variant.title | escape }}</div>
-                            {%- endunless -%}
-                            {%- if smc_props > 0 -%}
-                              <div class='smc-pers'>
-                                {%- for property in item.properties -%}
-                                  {%- assign smc_first = property.first | slice: 0 -%}
-                                  {%- if property.last != blank and smc_first != '_' -%}
-                                    <span>
-                                      <b>{{ property.first | strip_html | escape }}:</b>
-                                      {% if property.last contains '/uploads/' -%}
-                                        <a href='{{ property.last }}' target='_blank' rel='noopener'>{{ property.last | split: '/' | last }}</a>
-                                      {%- else -%}
-                                        {{ property.last | strip_html | escape }}
-                                      {%- endif %}
-                                    </span>
-                                  {%- endif -%}
-                                {%- endfor -%}
-                              </div>
-                            {%- endif -%}
-                            {%- unless item.selling_plan_allocation.selling_plan.name == empty -%}
-                              <div class='smc-var'>{{ item.selling_plan_allocation.selling_plan.name }}</div>
-                            {%- endunless -%}
-                            {%- if item.quantity > 1 -%}
-                              <div class='smc-var'>Menge: {{ item.quantity }} × {{ item.final_price | money_without_currency }} €</div>
-                            {%- endif -%}
-                            <ul class='discounts list-unstyled' role='list' aria-label='{{ 'customer.order.discount' | t }}'>
-                              {%- for discount in item.line_level_discount_allocations -%}
-                                <li class='discounts__discount'>
-                                  {{- 'icon-discount.svg' | inline_asset_content -}}
-                                  {{ discount.discount_application.title }}
-                                </li>
-                              {%- endfor -%}
-                            </ul>
+                            {%- render 'sm-cart-line-details', item: item -%}
                           </td>
 
                           <td class='cart-item__totals right' role='cell' headers='CartDrawer-ColumnTotal'>

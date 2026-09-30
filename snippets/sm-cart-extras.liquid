@@ -44,9 +44,10 @@
 
   {%- if settings.show_cart_note -%}
     <cart-note class='cart__note field smc-note'>
-      <label class='smc-eyebrow' for='CartDrawer-Note'>Nachricht an Steelmonks</label>
+      <label class='smc-eyebrow' for='{% if page %}Cart-note{% else %}CartDrawer-Note{% endif %}'>Nachricht an Steelmonks</label>
       <textarea
-        id='CartDrawer-Note'
+        id='{% if page %}Cart-note{% else %}CartDrawer-Note{% endif %}'{% if page %}
+        form='cart'{% endif %}
         class='text-area text-area--resize-vertical field__input'
         name='note'
         placeholder='Wunschtermin, Hinweis zur Gravur …'

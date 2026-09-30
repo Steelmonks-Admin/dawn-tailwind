@@ -1,0 +1,47 @@
+{%- comment -%} Artikel-Details im Warenkorb (Drawer und /cart): Titel, Variante, Personalisierung offen, Menge, Rabatte {%- endcomment -%}
+{%- liquid
+  assign smc_props = 0
+  for property in item.properties
+    assign smc_first = property.first | slice: 0
+    if property.last != blank and smc_first != '_'
+      assign smc_props = smc_props | plus: 1
+    endif
+  endfor
+-%}
+<a href='{{ item.url }}' class='cart-item__name h4 break'>
+  {{- item.product.title | escape -}}
+</a>
+{%- unless item.product.has_only_default_variant -%}
+  <div class='smc-var'>{{ item.variant.title | escape }}</div>
+{%- endunless -%}
+{%- if smc_props > 0 -%}
+  <div class='smc-pers'>
+    {%- for property in item.properties -%}
+      {%- assign smc_first = property.first | slice: 0 -%}
+      {%- if property.last != blank and smc_first != '_' -%}
+        <span>
+          <b>{{ property.first | strip_html | escape }}:</b>
+          {% if property.last contains '/uploads/' -%}
+            <a href='{{ property.last }}' target='_blank' rel='noopener'>{{ property.last | split: '/' | last }}</a>
+          {%- else -%}
+            {{ property.last | strip_html | escape }}
+          {%- endif %}
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+{%- unless item.selling_plan_allocation.selling_plan.name == empty -%}
+  <div class='smc-var'>{{ item.selling_plan_allocation.selling_plan.name }}</div>
+{%- endunless -%}
+{%- if item.quantity > 1 -%}
+  <div class='smc-var'>Menge: {{ item.quantity }} × {{ item.final_price | money_without_currency }} €</div>
+{%- endif -%}
+<ul class='discounts list-unstyled' role='list' aria-label='{{ 'customer.order.discount' | t }}'>
+  {%- for discount in item.line_level_discount_allocations -%}
+    <li class='discounts__discount'>
+      {{- 'icon-discount.svg' | inline_asset_content -}}
+      {{ discount.discount_application.title }}
+    </li>
+  {%- endfor -%}
+</ul>

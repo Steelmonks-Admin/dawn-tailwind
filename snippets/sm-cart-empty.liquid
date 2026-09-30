@@ -1,0 +1,32 @@
+{%- comment -%}
+  Leerer Warenkorb (Drawer und /cart) wie im Prototyp: Jakob zeigt auf die meistbestellten Stücke.
+  Bestellzahlen: Bestellungen der letzten 12 Monate, Stand 26.09.2026 (gerundet). Der Anstecker kommt direkt in den
+  Warenkorb, personalisierte Stücke führen zur Produktseite.
+{%- endcomment -%}
+<div class='smc-empty__body'>
+  <img class='smc-empty__px' src='{{ 'sm-px_jakob_zeigt.webp' | asset_url }}' alt='Jakob in Pixel-Art zeigt auf die Vorschläge' width='145' height='200' loading='lazy'>
+  <h3 class='smc-empty__title'>Noch leer? Jakob hat Vorschläge</h3>
+  <p class='smc-empty__lead'>Das wird am häufigsten bestellt:</p>
+  <div class='smc-mini'>
+    {%- assign smc_recs = 'keine-gewalt-gegen-retter-anstecker~8.100+~50234404962570,feuerwehr-schlusselanhanger-dfv-signet~7.900+~,monogramm-personalisierte-wanddekoration-hochzeitsgeschenk~4.000+~' | split: ',' -%}
+    {%- for smc_r in smc_recs -%}
+      {%- assign smc_f = smc_r | split: '~' -%}
+      {%- assign smc_p = all_products[smc_f[0]] -%}
+      {%- if smc_p != blank and smc_p.available -%}
+        <div class='smc-mini__item'>
+          <img src='{{ smc_p.featured_image | image_url: width: 160 }}' alt='' width='56' height='56' loading='lazy'>
+          <div>
+            <b>{{ smc_p.title | escape }}</b>
+            <small>{% if smc_p.price_varies %}ab {% endif %}{{ smc_p.price_min | money_without_currency }} € · {{ smc_f[1] }} Bestellungen</small>
+          </div>
+          {%- if smc_f[2] != blank -%}
+            <button type='button' class='smc-mini__btn' data-smr-add='{{ smc_f[2] }}' data-smr-key='empty_{{ smc_p.handle }}' aria-label='{{ smc_p.title | escape }} in den Warenkorb'>+</button>
+          {%- else -%}
+            <a class='smc-mini__btn' href='{{ smc_p.url }}' aria-label='{{ smc_p.title | escape }} ansehen und gestalten'>&rarr;</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  <a class='smc-empty__more' href='{{ routes.all_products_collection_url }}'>{{ 'general.continue_shopping' | t }}</a>
+</div>
