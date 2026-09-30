@@ -556,4 +556,14 @@ if (sent){ ss.del('smxSent'); const F = Object.values(FORMS).find(f => f && f.id
   if (posted && F && Date.now() - sent.t < 36e5){ F.done(sent.name, sent.email); const el = document.getElementById(sent.id); if (el) setTimeout(() => el.scrollIntoView({ block:'center' }), 200);
     try { (window.dataLayer = window.dataLayer || []).push({ event:'sonder_anfrage', thema:sent.topic, seite:current, dateien:0, weg:'shopify' }); } catch(x){} } }
 if (location.hash){ const el = document.getElementById(location.hash.slice(1)); if (el) setTimeout(() => el.scrollIntoView({ block:'start' }), 150); }
+
+/* Trusted Shops: aktuelle Note (letzte 12 Monate) und Gesamtzahl aus dem öffentlichen Feed, sonst bleiben die Werte aus dem Theme */
+{ const tsR = $$('[data-ts-rating]', ROOT), tsN = $$('[data-ts-count]', ROOT);
+  if (tsR.length || tsN.length){
+    const apply = g => { if (!g) return; if (g.r) tsR.forEach(el => { el.textContent = g.r.toFixed(2).replace('.', ','); }); if (g.n) tsN.forEach(el => { el.textContent = new Intl.NumberFormat('de-DE').format(g.n); }); };
+    let c = null; try { c = JSON.parse(sessionStorage.getItem('smhTs') || 'null'); } catch (e) {}
+    if (c) apply(c);
+    else fetch('https://integrations.etrusted.com/feeds/grades/v1/channels/chl-056f6db9-2266-48bf-8c7b-44c1673f979d/touchpoints/all/feed.json', { credentials:'omit' })
+      .then(r => r.ok ? r.json() : null).then(d => { if (!d || !d.grades) return; const g = { r: (d.grades['365days'] || {}).rating, n: (d.grades.overall || {}).count }; if (!g.r || !g.n) return; apply(g); try { sessionStorage.setItem('smhTs', JSON.stringify(g)); } catch (e) {} }).catch(() => {});
+  } }
 })();
