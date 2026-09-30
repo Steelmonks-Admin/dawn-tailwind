@@ -1,0 +1,6 @@
+{%- comment -%}
+  Alle Bestellungen seit 2020 mit Tausenderpunkt, aus dem Shop-Metafeld steelmonks.bestellungen_gesamt.
+  Grundwert 30.09.2026: echte Zahl aus den Shops DE, FR und INT ohne Stornos, Erstattungen und Testbestellungen;
+  der Flow-Workflow „Bestellzähler für Produkte und Shop erhöhen“ zählt jede neue bezahlte Bestellung im DE-Shop dazu.
+{%- endcomment -%}
+{%- assign smb_n = shop.metafields.steelmonks.bestellungen_gesamt.value | default: 106605 -%}{%- render 'sm-num', n: smb_n -%}

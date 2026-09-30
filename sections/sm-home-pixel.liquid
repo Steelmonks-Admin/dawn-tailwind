@@ -1,6 +1,7 @@
 {%- comment -%} Neue Startseite: Wimmelbild „Jedes Stück ein Unikat“. Die Stellen sind unsichtbar, beim Klick erzählt jede ein Stück Steelmonks-Geschichte. {%- endcomment -%}
 {{ 'sm-home.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+{%- capture smb -%}{% render 'sm-bestellungen' %}{%- endcapture -%}
 <div class="smh" data-smh="pixel">
   <section class="sec" aria-labelledby="pxT-{{ section.id }}">
     <div class="wrap">
@@ -8,7 +9,7 @@
       <div class="pxw" id="pxw" data-fx="petals:0:0:1.4"><img class="ban" src="{{ 'sm-px_banner.webp' | asset_url }}" alt="Pixel-Art: Jakob und Luis vor ihrer Werkstatt" width="1200" height="672" loading="lazy">
         <div class="pxw-hint" id="pxHint" aria-hidden="true"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt="" width="26" height="30">{{ section.settings.hinweis | escape }}</div>
         {%- for block in section.blocks -%}
-          <button class="hs{% if block.settings.gross %} big{% endif %}" type="button" style="left:{{ block.settings.x }}%;top:{{ block.settings.y }}%" data-who="{{ block.id }}" data-t="{{ block.settings.titel | escape }}" data-fact="{{ block.settings.text | escape }}" aria-label="{{ block.settings.label | escape }}" {{ block.shopify_attributes }}></button>
+          <button class="hs{% if block.settings.gross %} big{% endif %}" type="button" style="left:{{ block.settings.x }}%;top:{{ block.settings.y }}%" data-who="{{ block.id }}" data-t="{{ block.settings.titel | escape }}" data-fact="{{ block.settings.text | replace: '[bestellungen]', smb | escape }}" aria-label="{{ block.settings.label | escape }}" {{ block.shopify_attributes }}></button>
         {%- endfor -%}
         <div class="say" id="pxSay" hidden role="status"></div></div>
       <div class="pxw-cap" style="max-width:920px;margin-inline:auto"><p class="muted" style="max-width:60ch"><span id="pxCount" class="mono">0 von {{ section.blocks.size }} entdeckt</span></p><a class="btn btn-g" href="{{ section.settings.btn_link | default: '/pages/ueber-uns' }}">{{ section.settings.btn_text | escape }}</a></div>
@@ -36,7 +37,7 @@
       { "type": "range", "id": "y", "label": "Position senkrecht (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
       { "type": "checkbox", "id": "gross", "label": "Große Klickfläche (für Personen)", "default": false },
       { "type": "text", "id": "titel", "label": "Fett am Anfang", "default": "Jakob" },
-      { "type": "textarea", "id": "text", "label": "Geschichte" }
+      { "type": "textarea", "id": "text", "label": "Geschichte", "info": "[bestellungen] zeigt die aktuelle Zahl aller Bestellungen seit 2020." }
     ] }
   ],
   "presets": [ { "name": "SM Start: Wimmelbild" } ]

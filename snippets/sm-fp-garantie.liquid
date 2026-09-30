@@ -1,4 +1,3 @@
-{%- assign smfp_n = shop.metafields.steelmonks.bestellungen_gesamt.value | default: 100000 | divided_by: 1000 | times: 1000 -%}
 {%- comment -%} Steelmonks – Footer-Seite „garantie“ (aus dem Prototyp erzeugt, port_footer.py) {%- endcomment -%}
 <div class="smx" data-fp="garantie">
 <div class="sa-hero ft-hero gold dark"><div class="wrap">
@@ -12,7 +11,7 @@
       </div>
       <span class="pxfx pxa-bob"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="Pixel-Art: Jakob mit Pokal"></span>
     </div>
-    <div class="ft-trust" data-rv><span><b><data data-ts-rating>4,82</data> ★</b>bei Trusted Shops</span><span><b data-ts-count>6.628</b>Bewertungen</span><span><b>{% render 'sm-num', n: smfp_n %}+</b>Bestellungen seit 2020</span><span>Versand aus Deutschland</span></div>
+    <div class="ft-trust" data-rv><span><b><data data-ts-rating>4,82</data> ★</b>bei Trusted Shops</span><span><b data-ts-count>6.628</b>Bewertungen</span><span><b>{% render 'sm-bestellungen' %}</b>Bestellungen seit 2020</span><span>Versand aus Deutschland</span></div>
   </div></div>
   {%- render 'sm-fp-nav', aktiv: 'garantie' -%}
   <section class="sa-sec paper"><div class="wrap">

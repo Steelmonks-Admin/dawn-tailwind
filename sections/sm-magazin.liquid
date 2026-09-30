@@ -89,7 +89,7 @@
             <h1 class="sa-h1">{{ h1 }}</h1>
             <p class="sa-lead">{{ S.lead | escape }}</p>
             {{ search }}
-            <div class="bl-stats"><div><b>{{ blog.articles_count }}</b><span>Artikel</span></div><div><b>{{ topics.size }}</b><span>Themen</span></div>{% if story.size > 0 %}<div><b>{{ story.size }}</b><span>{{ S.story_stat | escape }}</span></div>{% elsif S.stat_zahl != blank %}<div><b>{{ S.stat_zahl | escape }}</b><span>{{ S.stat_text | escape }}</span></div>{% endif %}</div>
+            <div class="bl-stats"><div><b>{{ blog.articles_count }}</b><span>Artikel</span></div><div><b>{{ topics.size }}</b><span>Themen</span></div>{% if story.size > 0 %}<div><b>{{ story.size }}</b><span>{{ S.story_stat | escape }}</span></div>{% elsif S.stat_zahl != blank %}{%- capture smb -%}{% render 'sm-bestellungen' %}{%- endcapture -%}<div><b>{{ S.stat_zahl | replace: '[bestellungen]', smb | escape }}</b><span>{{ S.stat_text | escape }}</span></div>{% endif %}</div>
           </div>
           <div class="bl-feat-wrap" data-rv>
             <a class="bl-feat" href="{{ F.url }}">
@@ -192,7 +192,7 @@
     { "type": "text", "id": "titel_hl", "label": "Überschrift, blauer Teil", "default": "Werkstatt." },
     { "type": "textarea", "id": "lead", "label": "Einleitung", "default": "Zunftzeichen und Berufe, Wappen, Hausnummern und Geschenkideen, erklärt von den Leuten, die jeden Tag Stahl schneiden." },
     { "type": "text", "id": "suche", "label": "Suchfeld-Beispiel", "default": "Zum Beispiel: Zunftzeichen Elektriker" },
-    { "type": "text", "id": "stat_zahl", "label": "Dritte Kennzahl (ohne Serie)" },
+    { "type": "text", "id": "stat_zahl", "label": "Dritte Kennzahl (ohne Serie)", "info": "[bestellungen] zeigt die aktuelle Zahl aller Bestellungen seit 2020." },
     { "type": "text", "id": "stat_text", "label": "Dritte Kennzahl, Text" },
     { "type": "text", "id": "px_hero", "label": "Pixel-Figur neben der Empfehlung (Asset)", "default": "sm-px3_monk_coffee.webp" },
     { "type": "text", "id": "px", "label": "Pixel-Figur für Themenseiten und Artikel ohne Bild (Asset)", "default": "sm-px3_monk_search.webp" },

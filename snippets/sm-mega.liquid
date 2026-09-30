@@ -43,7 +43,6 @@
       </div>
     {%- elsif forloop.first -%}
       {%- assign top = collections['beliebt'] -%}
-      {%- assign gesamt = shop.metafields.steelmonks.bestellungen_gesamt.value | default: 100000 | divided_by: 1000 | times: 1000 -%}
       <div class="mg-p mg-p--beliebt" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
         <div><p class="mg-h">{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</p><ul class="ml">{%- for c in link.links -%}{%- render 'sm-mega-li', c: c -%}{%- endfor -%}</ul></div>
         <div><p class="mg-h">Am häufigsten bestellt · seit 2020</p><div class="feat">
@@ -51,7 +50,7 @@
             <a class="feat-card" href="{{ p.url }}">{% if p.featured_media %}{{ p.featured_media | image_url: width: 220 | image_tag: loading: 'lazy', alt: '', width: 100, height: 100 }}{% endif %}<div><b>{{ p.title | escape }}</b><span>{% render 'sm-home-price', product: p %}{% capture so %}{% render 'sm-home-sold', product: p %}{% endcapture %}{% if so != blank %} · {{ so }}{% endif %}</span></div></a>
           {%- endfor -%}
         </div><a class="mg-all" href="{{ top.url | default: '/collections/beliebt' }}">Alle Bestseller ansehen →</a></div>
-        <a class="mg-px" href="{{ top.url | default: '/collections/beliebt' }}"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="Jakob in Pixel-Art mit Pokal" loading="lazy" width="92" height="120"><p><b>Echte Rangliste.</b> Gezählt aus über {% render 'sm-num', n: gesamt %} Bestellungen seit 2020.</p><span class="link">Zur Beliebt-Seite →</span></a>
+        <a class="mg-px" href="{{ top.url | default: '/collections/beliebt' }}"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="Jakob in Pixel-Art mit Pokal" loading="lazy" width="92" height="120"><p><b>Echte Rangliste.</b> Gezählt aus {% render 'sm-bestellungen' %} Bestellungen seit 2020.</p><span class="link">Zur Beliebt-Seite →</span></a>
       </div>
     {%- else -%}
       <div class="mg-p mg-p--list" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">

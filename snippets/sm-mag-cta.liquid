@@ -43,7 +43,11 @@
       assign p = all_products['baum-des-lebens-familienschild-personalisiert']
       assign k = 'Geschenkidee gesucht?'
       assign t = 'Die Rangliste unserer Kunden'
-      assign s = 'Gezählt aus über 100.000 Bestellungen'
+      capture s
+        echo 'Gezählt aus '
+        render 'sm-bestellungen'
+        echo ' Bestellungen'
+      endcapture
       assign b = 'Zu den Bestsellern'
       assign u = '/collections/beliebt'
       assign kt = 'Die beliebtesten Geschenke'
