@@ -4,7 +4,7 @@
   --smc-paper: #f6f5f1; --smc-beton: #e9e7e2; --smc-line: rgba(11, 12, 14, .12);
   --smc-ink: #0b0c0e; --smc-ink2: #4f5458; --smc-ink3: #7a7f84; --smc-blau: #0044cc; --smc-blau2: #0a51e6; --smc-ok: #1c7f47;
 }
-#CartDrawer .drawer__inner { width: 460px; max-width: 100vw; padding: 0; background: var(--smc-paper); color: var(--smc-ink); border: 0; box-shadow: none; }
+#CartDrawer .drawer__inner { width: 460px; max-width: 100vw; padding: 0; background: var(--smc-paper); color: var(--smc-ink); border: 0; box-shadow: -20px 0 60px -20px rgba(0, 0, 0, .4); }
 /* Leerer Zustand: nur Jakob-Ansicht, der leere Artikel-Container nimmt sonst Platz weg */
 #CartDrawer .smc-empty ~ cart-drawer-items { display: none; }
 #CartDrawer .drawer__header { padding: 14px 20px; border-bottom: 1px solid var(--smc-line); }
