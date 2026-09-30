@@ -1,941 +1,682 @@
 /*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
+ * Startseite seit 30.09.2026 (aus dem Prototyp). Die bisherige Startseite liegt als index.alt.json bereit (?view=alt).
  */
 {
   "sections": {
-    "steelmonks_hero_hub_7JR7Nz": {
-      "type": "steelmonks-hero-hub",
+    "hero": {
+      "type": "sm-home-hero",
       "blocks": {
-        "main_category_rww6tz": {
-          "type": "main_category",
+        "zielgruppe_1": {
+          "type": "zielgruppe",
           "settings": {
-            "title": "Alle Schilder",
-            "image": "shopify://shop_images/Ivy_Monogramm.jpg",
-            "link": "shopify://collections/motivschilder",
-            "sale_badge_text": "Bestseller",
-            "sale_badge_color": "#0044cc"
+            "label": "Handwerker",
+            "pixel": "px2_luis_zunft.webp",
+            "produkte": [
+              "zunftschild-geschenk-fur-handwerker-personalisiert",
+              "zunft-anhanger-geschenk-fur-handwerker",
+              "handwerker-anstecker-pins"
+            ],
+            "say": "Über 3.000 Zunftschilder seit 2023, 57 % nehmen es in Schwarz."
           }
         },
-        "main_category_NWiVif": {
-          "type": "main_category",
+        "zielgruppe_2": {
+          "type": "zielgruppe",
           "settings": {
-            "title": "Alle Anhänger",
-            "image": "shopify://shop_images/thumbnail-amz.jpg",
-            "link": "shopify://collections/anhanger",
-            "sale_badge_text": "Klassiker",
-            "sale_badge_color": "#0044cc"
+            "label": "Feuerwehr",
+            "pixel": "px3_jakob_fire.webp",
+            "produkte": [
+              "feuerwehr-schlusselanhanger-dfv-signet",
+              "keine-gewalt-gegen-retter-anstecker",
+              "signet-feuerwehr-schild"
+            ],
+            "say": "Über 10.000 Signet Anhänger sind schon unterwegs, 8 von 10 mit Lederband."
           }
         },
-        "main_category_kVy8q3": {
-          "type": "main_category",
+        "zielgruppe_3": {
+          "type": "zielgruppe",
           "settings": {
-            "title": "Alle Anstecker",
-            "image": "shopify://shop_images/IMG_8252Kopie2.jpg",
-            "link": "shopify://collections/pins-und-anstecker",
-            "sale_badge_text": "KUNDENLIEBLING",
-            "sale_badge_color": "#0044cc"
+            "label": "Paare",
+            "pixel": "px3_duo_highfive.webp",
+            "produkte": [
+              "monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
+              "metallschild-ringe-im-herz",
+              "schild-parchen-vorm-baum-hochzeitsgeschenk"
+            ],
+            "say": "„Ivy“ ist unser Hochzeits-Liebling: über 4.000-mal bestellt, am häufigsten von Mai bis August."
+          }
+        },
+        "zielgruppe_4": {
+          "type": "zielgruppe",
+          "settings": {
+            "label": "Familie",
+            "pixel": "px3_luis_gift.webp",
+            "produkte": [
+              "baum-des-lebens-familienschild-personalisiert",
+              "geschwungenes-monogramm-einweihungsgeschenk",
+              "metallschild-koordinaten-wanddekoration"
+            ],
+            "say": "Beim Familienschild „Baum des Lebens“ nehmen 44 % die 45 cm."
+          }
+        },
+        "zielgruppe_5": {
+          "type": "zielgruppe",
+          "settings": {
+            "label": "Zuhause",
+            "pixel": "px3_luis_ladder.webp",
+            "produkte": [
+              "modernes-strassenschild-einweihungsgeschenk",
+              "hausnummer-mit-namen-einweihungsgeschenk",
+              "moderne-zahl-hausnummer-einweihungsgeschenk"
+            ],
+            "say": "Über 17.000 Hausschilder hängen schon. Bei der Hausnummer mit Namen wählen 54 % Anthrazit."
+          }
+        },
+        "zielgruppe_6": {
+          "type": "zielgruppe",
+          "settings": {
+            "label": "Garten & Grill",
+            "pixel": "px_luis.gif",
+            "produkte": [
+              "rundes-grillschild",
+              "neugieriges-eichhornchen-rost-baumstecker",
+              "ewige-rose-gartenstecker"
+            ],
+            "say": "Das Grillschild hängt meistens in 45 cm, das wählen 57 %."
           }
         }
       },
       "block_order": [
-        "main_category_rww6tz",
-        "main_category_NWiVif",
-        "main_category_kVy8q3"
-      ],
-      "name": "Steelmonks Hero Hub",
-      "settings": {
-        "top_spacing": 52,
-        "pixel_image": "shopify://shop_images/Steelmonks_Fruehlings_Banner_Bild.jpg",
-        "badge_text": "Dein persönliches Unikat",
-        "heading": "Jedes Stück ein Unikat",
-        "kpi_title": "Geschenke aus Stahl",
-        "kpi_subtitle": "",
-        "primary_button_label": "Jetzt Geschenk gestalten",
-        "primary_button_link": "shopify://collections/beliebt",
-        "fire_button_label": "",
-        "craft_button_label": "",
-        "collection_fire_link": "shopify://collections/feuerwehr-geschenke",
-        "collection_fire_label": "Geschenke Für Feuerwehr",
-        "collection_fire_sub": "Signet-Schilder, Anhänger und mehr",
-        "collection_craft_link": "shopify://collections/geschenke-fur-handwerker",
-        "collection_craft_label": "Geschenke Für Handwerker",
-        "collection_craft_sub": "Zunftschilder, Schlüsselanhänger und mehr",
-        "show_collection_row": true
-      }
-    },
-    "custom_icon_grid_Ahzicm": {
-      "type": "custom_icon_grid",
-      "settings": {
-        "show_two_items": false
-      }
-    },
-    "rich_text_xkqYLg": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_DiM8kk": {
-          "type": "heading",
-          "settings": {
-            "heading": "Nur bei Steelmonks! Vom Bild zum Schild!",
-            "heading_size": "h1"
-          }
-        },
-        "text_C86W9k": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Probier unsere \"Werkstatt\" aus!</p>"
-          }
-        }
-      },
-      "block_order": [
-        "heading_DiM8kk",
-        "text_C86W9k"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": true,
-        "padding_top": 20,
-        "padding_bottom": 12,
-        "enable_smooth_scroll": true
-      }
-    },
-    "steelmonks_werkstatt_hero_gt9RdT": {
-      "type": "steelmonks-werkstatt-hero",
-      "blocks": {
-        "slide_TpT63i": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Hero-1.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Hero-1-Overlay.jpg",
-            "prompt": "\"Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein.\""
-          }
-        },
-        "slide_V9KQUr": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-2-Last_0e1406ce-f5d0-434f-8dad-61ecb99fc06b.jpg",
-            "prompt": "\"Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu.\""
-          }
-        },
-        "slide_dxiQdp": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Panther-First.jpg",
-            "overlay_image": "shopify://shop_images/Panther-Last.jpg",
-            "prompt": "\"Erstelle mir bitte ein Schild von genau dem Rosenbauer 8x8 aus dem Bild, in der selben exakten Position mit möglichst vielen details, arbeite mir positiven und negativen Formen.\""
-          }
-        },
-        "slide_NEreD7": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-3-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-3-Last.jpg",
-            "prompt": "Hier wurde einfach nur folgendes, ohne Referenzbild angegeben: \n\"Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere.\nDas Schild soll den vollen Namen enthalten und das Faultier.\""
-          }
-        },
-        "slide_btQmzN": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Hero-2-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Hero-2-Overlay.jpg",
-            "prompt": "\"Ein Bild von genau dem schönen Herren aus dem Photo, behalte alle Details bei und mach das Schild Schwarz mit ausgeschnittenen Details.\""
-          }
-        },
-        "slide_FjYJRp": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-6-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-6-Last_55238bb6-18e7-4017-8d62-96862fcc4c0e.jpg",
-            "prompt": "\"Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name \"Wester-Lang\" stehen.\""
-          }
-        },
-        "slide_qRbgPQ": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-5-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-5-Last.jpg",
-            "prompt": "Hier wurde folgender Text angegeben: \n\n\"Erstelle mir ein schönes Geschenk für meine Schwester, sie backt gerne Brot, ist eine Sauerteig Mama und hat einen eleganten und edlen Stil.\""
-          }
-        },
-        "slide_RA7jNA": {
-          "type": "slide",
-          "settings": {
-            "base_image": "shopify://shop_images/Werkstatt-Carousel-4-First.jpg",
-            "overlay_image": "shopify://shop_images/Werkstatt-Carousel-4-Last.jpg",
-            "prompt": "Hier wurde nur dieser Text, ohne Bild angegeben: \n\"Ein Schild von der Schlacht um Wien, als die Hussaren den Berg runter kamen in soviel detail und Historischer treue wie geht.\""
-          }
-        }
-      },
-      "block_order": [
-        "slide_TpT63i",
-        "slide_V9KQUr",
-        "slide_dxiQdp",
-        "slide_NEreD7",
-        "slide_btQmzN",
-        "slide_FjYJRp",
-        "slide_qRbgPQ",
-        "slide_RA7jNA"
-      ],
-      "name": "Werkstatt Carousel",
-      "settings": {
-        "top_spacing": 18,
-        "bottom_spacing": 18,
-        "desc_heading": "Beschreibung",
-        "autoplay": true,
-        "autoplay_seconds": 6
-      }
-    },
-    "rich_text_H9Enym": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_qM9dAA": {
-          "type": "heading",
-          "settings": {
-            "heading": "Zur Steelmonks \"Werkstatt\"",
-            "heading_size": "h1"
-          }
-        },
-        "button_bnfTcm": {
-          "type": "button",
-          "settings": {
-            "button_label": "Erstelle mein eigenes Schild",
-            "button_link": "shopify://pages/werkstatt",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_qM9dAA",
-        "button_bnfTcm"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": true,
-        "padding_top": 12,
-        "padding_bottom": 12,
-        "enable_smooth_scroll": true
-      }
-    },
-    "steelmonks_collection_grid_k79tHx": {
-      "type": "steelmonks-collection-grid",
-      "blocks": {
-        "collection_YWCjD3": {
-          "type": "collection",
-          "settings": {
-            "collection": "monogramme",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Für Dich",
-            "url": "shopify://collections/beliebt",
-            "image": "shopify://shop_images/web-fur-dich-monogram.webp",
-            "text_color": "#000000"
-          }
-        },
-        "collection_w9yRdb": {
-          "type": "collection",
-          "settings": {
-            "collection": "geschenke-fur-familien",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Für Familien",
-            "url": "shopify://collections/geschenke-fur-familien",
-            "image": "shopify://shop_images/web-monogram-family.webp",
-            "text_color": "#000000"
-          }
-        },
-        "collection_tUdLDA": {
-          "type": "collection",
-          "settings": {
-            "collection": "geschenke-fur-paare",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Für Paare",
-            "url": "shopify://collections/geschenke-fur-paare",
-            "image": "shopify://shop_images/web-couples-hearts.webp",
-            "text_color": "#000000"
-          }
-        },
-        "collection_d6jjDY": {
-          "type": "collection",
-          "settings": {
-            "collection": "geschenke-fur-handwerker",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Für Handwerker",
-            "url": "shopify://collections/geschenke-fur-handwerker",
-            "image": "shopify://shop_images/web-handworkers-png.png",
-            "text_color": "#000000"
-          }
-        },
-        "collection_zBPaTF": {
-          "type": "collection",
-          "settings": {
-            "collection": "baum-familienschilder",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Bäume",
-            "url": "shopify://collections/baum-familienschilder",
-            "image": "shopify://shop_images/web-family-tree-baum.webp",
-            "text_color": "#000000"
-          }
-        },
-        "collection_iTWK9F": {
-          "type": "collection",
-          "settings": {
-            "collection": "hausschilder",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Hausschilder",
-            "url": "shopify://collections/hausschilder",
-            "image": "shopify://shop_images/web-house-signs-numbers.webp",
-            "text_color": "#000000"
-          }
-        },
-        "collection_w9p969": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Wappen",
-            "url": "shopify://pages/dein-wappen",
-            "image": "shopify://shop_images/web-wappen-coat-of-arms.webp",
-            "text_color": "#000000"
-          }
-        },
-        "collection_kYMjiB": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "product": "",
-            "show_collection": true,
-            "use_collection_title": false,
-            "title": "Sonderanfertigungen",
-            "url": "shopify://pages/anfragen",
-            "image": "shopify://shop_images/web-custom-signs.webp",
-            "text_color": "#000000"
-          }
-        }
-      },
-      "block_order": [
-        "collection_YWCjD3",
-        "collection_w9yRdb",
-        "collection_tUdLDA",
-        "collection_d6jjDY",
-        "collection_zBPaTF",
-        "collection_iTWK9F",
-        "collection_w9p969",
-        "collection_kYMjiB"
-      ],
-      "settings": {
-        "title": "Beliebte Kollektionen",
-        "text_color": "#000000"
-      }
-    },
-    "featured_collection_yUM3tM": {
-      "type": "featured-collection",
-      "name": "t:sections.featured-collection.presets.name",
-      "settings": {
-        "title": "Beliebt",
-        "heading_size": "h1",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "beliebt",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": true,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
-    "image_banner_hWcQdN": {
-      "type": "image-banner",
-      "blocks": {
-        "heading_RaMY98": {
-          "type": "heading",
-          "settings": {
-            "heading": "Geschenke mit Bedeutung",
-            "heading_size": "h1"
-          }
-        },
-        "buttons_jUjRce": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Für Paare",
-            "button_link_1": "shopify://collections/geschenke-fur-paare",
-            "button_style_secondary_1": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_RaMY98",
-        "buttons_jUjRce"
-      ],
-      "name": "t:sections.image-banner.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/e4c0bf7c-5c15-439e-9ed9-dc6cd2292e95-min_90f7fbfd-9770-42d6-8b6e-e87cb272c8d4.png",
-        "image_overlay_opacity": 0,
-        "image_height": "adapt",
-        "desktop_content_position": "middle-center",
-        "show_text_box": false,
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-267654d1-14da-4435-b77d-7f20276030f8",
-        "image_behavior": "ambient",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": true,
-        "show_text_below": true
-      }
-    },
-    "image_banner_XjHB9c": {
-      "type": "image-banner",
-      "blocks": {
-        "heading_jWTwnm": {
-          "type": "heading",
-          "settings": {
-            "heading": "Mehr als nur eine Adresse",
-            "heading_size": "h1"
-          }
-        },
-        "buttons_eqJYiT": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Alle Hausschilder",
-            "button_link_1": "shopify://collections/hausschilder",
-            "button_style_secondary_1": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_jWTwnm",
-        "buttons_eqJYiT"
-      ],
-      "name": "t:sections.image-banner.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/0f82fda7-37fb-4146-9b98-ab9e53c6300a-min.png",
-        "image_overlay_opacity": 0,
-        "image_height": "adapt",
-        "desktop_content_position": "middle-center",
-        "show_text_box": false,
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-267654d1-14da-4435-b77d-7f20276030f8",
-        "image_behavior": "ambient",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": true,
-        "show_text_below": true
-      }
-    },
-    "steelmonks_announcement_VHr6np": {
-      "type": "steelmonks-announcement",
-      "blocks": {
-        "announcement_tBid6k": {
-          "type": "announcement",
-          "settings": {
-            "text": "<p>📯 100% Glücksgarantie</p>",
-            "font_weight": 600
-          }
-        }
-      },
-      "block_order": [
-        "announcement_tBid6k"
-      ],
-      "settings": {
-        "background_color": "#0044cc",
-        "text_color": "#fafaff"
-      }
-    },
-    "steelmonks_horizontal_dropdowns_XDyUkz": {
-      "type": "steelmonks-horizontal-dropdowns",
-      "settings": {}
-    },
-    "custom_icon_grid_ypXVPY": {
-      "type": "custom_icon_grid",
-      "settings": {
-        "show_two_items": true
-      }
-    },
-    "1744354885bc91bacc": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "<!-- Trusted Shops Bewertungs-Karussell, deutsches Widget. Direkt eingebunden statt ueber den\n     App-Block, weil dieser die Widget-ID selbst bestimmte und das franzoesisch konfigurierte\n     Widget auslieferte. -->\n<etrusted-widget data-etrusted-widget-id=\"wdg-9438ee15-0ccd-4998-b467-5d92c4e70dd9\"></etrusted-widget>"
-      }
-    },
-    "image_banner_QQPwzk": {
-      "type": "image-banner",
-      "blocks": {
-        "heading_xtJM3Q": {
-          "type": "heading",
-          "settings": {
-            "heading": "<strong>Personalisierte Geschenke für Handwerker</strong>",
-            "heading_size": "h1"
-          }
-        },
-        "buttons_FLFG39": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Für Handwerker",
-            "button_link_1": "shopify://collections/hausschilder",
-            "button_style_secondary_1": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_xtJM3Q",
-        "buttons_FLFG39"
-      ],
-      "name": "t:sections.image-banner.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/f2f8d412-9439-496c-9e9c-9929103e5f58.png",
-        "image_overlay_opacity": 0,
-        "image_height": "adapt",
-        "desktop_content_position": "middle-center",
-        "show_text_box": false,
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-267654d1-14da-4435-b77d-7f20276030f8",
-        "image_behavior": "ambient",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": true,
-        "show_text_below": true
-      }
-    },
-    "steelmonks_announcement_4wetKr": {
-      "type": "steelmonks-announcement",
-      "blocks": {
-        "announcement_CURQAX": {
-          "type": "announcement",
-          "settings": {
-            "text": "<p>📯 100% Glücksgarantie</p>",
-            "font_weight": 600
-          }
-        }
-      },
-      "block_order": [
-        "announcement_CURQAX"
-      ],
-      "name": "Custom Announcement Bar",
-      "settings": {
-        "background_color": "#0044cc",
-        "text_color": "#fafaff"
-      }
-    },
-    "image_banner_WYYhWC": {
-      "type": "image-banner",
-      "blocks": {
-        "heading_9cLqm8": {
-          "type": "heading",
-          "settings": {
-            "heading": "<em>Sonderanfertigungen aus Metall</em>",
-            "heading_size": "h1"
-          }
-        },
-        "text_GrYCVA": {
-          "type": "text",
-          "settings": {
-            "text": "Wir fertigen jedes Design, als Schild, Anhänger oder Pin.",
-            "text_style": "body"
-          }
-        },
-        "buttons_M7iyPt": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Jetzt  anfragen",
-            "button_link_1": "shopify://pages/anfragen",
-            "button_style_secondary_1": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_9cLqm8",
-        "text_GrYCVA",
-        "buttons_M7iyPt"
-      ],
-      "name": "t:sections.image-banner.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/5dafcd30-d231-4235-bf0e-19c2d8b6e4c7.png",
-        "image_overlay_opacity": 0,
-        "image_height": "adapt",
-        "desktop_content_position": "middle-center",
-        "show_text_box": true,
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-267654d1-14da-4435-b77d-7f20276030f8",
-        "image_behavior": "ambient",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": true,
-        "show_text_below": true
-      }
-    },
-    "steelmonks_items_grid_EedtxA": {
-      "type": "steelmonks-items-grid",
-      "blocks": {
-        "items_row_cPL963": {
-          "type": "items_row",
-          "settings": {
-            "title": "Hausschilder",
-            "item1": "shopify://shop_images/ST-2013-Shopify-Thumbnail_b86f3ef8-00ee-4dad-9582-3fdf9c1f2861.jpg",
-            "item1_link": "shopify://products/modernes-strassenschild-einweihungsgeschenk",
-            "item2": "shopify://shop_images/ST-1100-Shopify-Thumbnail_269b6069-aa0d-48dc-b70f-12163bfd7ea6.jpg",
-            "item2_link": "shopify://products/hausnummer-mit-namen-einweihungsgeschenk",
-            "item3": "shopify://shop_images/H-2610-Shopify-Thumbnail.jpg",
-            "item3_link": "shopify://products/geschwungene-hausnummer-einweihungsgeschenk",
-            "item4": "shopify://shop_images/H-2710-FR-Shopify-Thumbnail.webp",
-            "item4_link": "shopify://products/moderne-zahl-hausnummer-einweihungsgeschenk",
-            "cta_text": "Mehr entdecken",
-            "cta_link": "shopify://collections/hausschilder"
-          }
-        },
-        "items_row_iQFXyQ": {
-          "type": "items_row",
-          "settings": {
-            "title": "Bäume",
-            "item1": "shopify://shop_images/B-1018-Thumbnail-Master.jpg",
-            "item1_link": "shopify://products/baum-des-lebens-familienschild-personalisiert",
-            "item2": "shopify://shop_images/B-1006-Thumbnail-Master.jpg",
-            "item2_link": "shopify://products/schild-alter-baum-des-lebens-einweihungsgeschenk",
-            "item3": "shopify://shop_images/B-1005-Thumbnail-Master.jpg",
-            "item3_link": "shopify://products/schild-parchen-vorm-baum-hochzeitsgeschenk",
-            "item4": "shopify://shop_images/B-1015-Thumbnail-Master.jpg",
-            "item4_link": "shopify://products/baum-des-lebens-einweihungsgeschenk",
-            "cta_text": "Mehr entdecken",
-            "cta_link": "shopify://collections/baum-familienschilder"
-          }
-        },
-        "items_row_GRndi4": {
-          "type": "items_row",
-          "settings": {
-            "title": "Monogramme",
-            "item1": "shopify://shop_images/Ivy_Monogramm.jpg",
-            "item1_link": "shopify://products/monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
-            "item2": "shopify://shop_images/M-1009-Thumbnail-Master.jpg",
-            "item2_link": "shopify://products/modernes-monogramm-einweihungsgeschenk",
-            "item3": "shopify://shop_images/M-1004-Thumbnail-Master_2a8f3d46-abe6-4b9b-a96c-60730e2ff015.jpg",
-            "item3_link": "shopify://products/geschwungenes-monogramm-einweihungsgeschenk",
-            "item4": "shopify://shop_images/M-1012-Thumbnail-Master.jpg",
-            "item4_link": "shopify://products/monogramm-volle-blume",
-            "cta_text": "Mehr entdecken",
-            "cta_link": "shopify://collections/monogramme"
-          }
-        },
-        "items_row_qnFrbX": {
-          "type": "items_row",
-          "settings": {
-            "title": "Motive",
-            "item1": "shopify://shop_images/MS-4002-Shopify-Thumbnail.jpg",
-            "item1_link": "shopify://products/metallschild-koordinaten-wanddekoration",
-            "item2": "shopify://shop_images/MS-1074-Shopify-Thumbnail.jpg",
-            "item2_link": "shopify://products/schild-karpfen-am-haken",
-            "item3": "shopify://shop_images/MS-1052-Shopify-Thumbnail.jpg",
-            "item3_link": "shopify://products/pferdekopf",
-            "item4": "shopify://shop_images/MS-5003-Shopify-Thumbnail.jpg",
-            "item4_link": "shopify://products/rundes-grillschild",
-            "cta_text": "Mehr entdecken",
-            "cta_link": "shopify://collections/beliebt"
-          }
-        }
-      },
-      "block_order": [
-        "items_row_cPL963",
-        "items_row_iQFXyQ",
-        "items_row_GRndi4",
-        "items_row_qnFrbX"
-      ],
-      "settings": {
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "padding_left": 0,
-        "padding_right": 0
-      }
-    },
-    "steelmonks_info_grid_DWLQBG": {
-      "type": "steelmonks-info-grid",
-      "blocks": {
-        "info_grid_item_dBTgnT": {
-          "type": "info_grid_item",
-          "settings": {
-            "icon": "shopify://shop_images/web-icon-free-shipping.svg",
-            "title": "Kostenfreier Versand",
-            "description": "Wir verschicken alle in unserem Shop verkauften Artikel, versandkostenfrei ab € 99,-."
-          }
-        },
-        "info_grid_item_tgPqJz": {
-          "type": "info_grid_item",
-          "settings": {
-            "icon": "shopify://shop_images/web-icon-easy-returns.svg",
-            "title": "Schnelle Bearbeitung",
-            "description": "Deine Bestellung wird innerhalb unserer kurzen Bearbeitungszeit von 2 bis 5 Werktagen versandt."
-          }
-        },
-        "info_grid_item_rrKbpr": {
-          "type": "info_grid_item",
-          "settings": {
-            "icon": "shopify://shop_images/web-icon-great-support.svg",
-            "title": "Freundlicher Kundenservice",
-            "description": "Um Dir die bestmögliche Erfahrung zu liefern, bemühen wir uns zu jeder Zeit erreichbar zu sein."
-          }
-        }
-      },
-      "block_order": [
-        "info_grid_item_dBTgnT",
-        "info_grid_item_tgPqJz",
-        "info_grid_item_rrKbpr"
+        "zielgruppe_1",
+        "zielgruppe_2",
+        "zielgruppe_3",
+        "zielgruppe_4",
+        "zielgruppe_5",
+        "zielgruppe_6"
       ],
       "settings": {}
     },
-    "steelmonks_parallax_richtext_hDBc3Q": {
-      "type": "steelmonks-parallax-richtext",
-      "name": "Parallax Rich Text",
-      "settings": {
-        "image": "shopify://shop_images/web-galerie-banner.webp",
-        "title": "<p>Galerie</p>",
-        "link_text": "<p>Jetzt ansehen</p>",
-        "link": "shopify://pages/fotogalerie"
-      }
-    },
-    "steelmonks_deine_sm_GPbdxk": {
-      "type": "steelmonks-deine-sm",
+    "trust": {
+      "type": "sm-home-trust",
       "blocks": {
-        "text_bfMTgf": {
-          "type": "text",
-          "name": "Item",
+        "punkt_1": {
+          "type": "punkt",
           "settings": {
-            "title": "Einzigartige Geschenke",
-            "text": "Geschenke die wirklich bewegen. Schilder und Anhänger mit Deinem persönlichen Wunschtext."
+            "icon": "versand",
+            "titel": "Gratisversand ab 99 €",
+            "text": "In 2 bis 5 Werktagen versandfertig"
           }
         },
-        "text_LjK3PG": {
-          "type": "text",
-          "name": "Item",
+        "punkt_2": {
+          "type": "punkt",
           "settings": {
-            "title": "Sorgenfreies Kaufen",
-            "text": "Deine bevorzugte Zahlungsmethode oder mit Klarna zahlen erst nachdem Du Dein Schild bekommen hast."
+            "icon": "geschenk",
+            "titel": "100 % Glücksgarantie",
+            "text": "Nicht zufrieden? Wir finden eine Lösung."
           }
         },
-        "text_hNFhCd": {
-          "type": "text",
-          "name": "Item",
+        "punkt_3": {
+          "type": "punkt",
           "settings": {
-            "title": "100% Gücksgarantie",
-            "text": "100% des Geldes zurück, sogar wenn es dem Beschenkten nicht gefällt."
+            "icon": "rabatt",
+            "titel": "Belohnungen im Warenkorb",
+            "text": "10 € ab 149 € · Überraschung ab 199 €"
           }
         }
       },
       "block_order": [
-        "text_bfMTgf",
-        "text_LjK3PG",
-        "text_hNFhCd"
+        "punkt_1",
+        "punkt_2",
+        "punkt_3"
       ],
-      "name": "Deine Steelmonks",
+      "settings": {}
+    },
+    "lieblinge": {
+      "type": "sm-home-lieblinge",
       "settings": {
-        "title": "Deine",
-        "blue_text": "Steelmonks"
+        "produkte": [
+          "keine-gewalt-gegen-retter-anstecker",
+          "feuerwehr-schlusselanhanger-dfv-signet",
+          "monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
+          "ewige-rose-gartenstecker",
+          "zunftschild-geschenk-fur-handwerker-personalisiert",
+          "hausnummer-mit-namen-einweihungsgeschenk",
+          "modernes-strassenschild-einweihungsgeschenk",
+          "zunft-anhanger-geschenk-fur-handwerker"
+        ],
+        "btn_text": "Alle ansehen"
       }
     },
-    "custom_icon_grid_h6mTRm": {
-      "type": "custom_icon_grid",
-      "settings": {
-        "show_two_items": true
-      }
+    "story": {
+      "type": "sm-home-story",
+      "settings": {}
     },
-    "174478799976fe2d49": {
-      "type": "apps",
+    "werkstatt": {
+      "type": "sm-home-werkstatt",
       "blocks": {
-        "trusted_shops_reviews_and_more_trusted_stars_CUxPRy": {
-          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "trusted_shops_reviews_and_more_trusted_stars_CUxPRy"
-      ],
-      "settings": {
-        "include_margins": true
-      }
-    },
-    "accordions_U48wFK": {
-      "type": "accordions",
-      "blocks": {
-        "accordion_RFhpjn": {
-          "type": "accordion",
+        "beispiel_1": {
+          "type": "beispiel",
           "settings": {
-            "parent": "",
-            "heading": "Personalisierte Schlüsselanhänger und Metallschilder von Steelmonks.",
-            "content": "<h2>Hausnummer</h2><p>Unsere <a href=\"https://steelmonks.com/products/hausnummer\" title=\"Hausnummer\"><strong>Hausnummer</strong></a> aus Edelstahl ist nicht nur praktisch, sondern auch ein echter Hingucker an deinem Zuhause. Jede Hausnummer wird individuell gefertigt und kann nach deinen Wünschen angepasst werden. Egal ob modern oder klassisch: Unsere Hausnummer setzt ein stilvolles Statement und hält dank der hochwertigen Materialien jedem Wetter stand. Ideal kombiniert mit einem <a href=\"https://steelmonks.com/products/strassenschild-mit-hausnummer-1\" title=\"Straßenschild\"><strong>Straßenschild</strong></a> oder <a href=\"https://steelmonks.com/collections/hausschilder\" title=\"Hausschild\"><strong>Hausschild</strong></a>.</p><p>Erfahre mehr darüber, wie du deine Hausnummer optimal befestigst in unserem Blogpost <a href=\"https://steelmonks.com/de-cz/blogs/steelmonks-de/wie-befestige-ich-eine-hausnummer\">Wie befestige ich eine Hausnummer?</a></p><h2>Monogramm</h2><p>Ein <a href=\"https://steelmonks.com/products/ivy-monogramm\" title=\"Monogramm\"><strong>Monogramm</strong></a> ist eine elegante Möglichkeit, deinem Zuhause eine persönliche Note zu verleihen. Bei uns kannst du dein eigenes Monogramm erstellen und nach deinen Vorstellungen gestalten. Es eignet sich auch hervorragend als Geschenk für besondere Anlässe.</p><p>Entdecke die Vielfalt und Möglichkeiten unserer Monogramme und erfahre mehr darüber in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-ein-monogramm\">Was ist ein Monogramm?</a></p><h2>Geschenkideen für Handwerker</h2><p>Suchst du nach dem perfekten Geschenk für einen Handwerker? Bei uns findest du eine große Auswahl an individuellen Produkten wie <a href=\"https://steelmonks.com/products/zunftschild-geschenk-fuer-handwerker\" title=\"Zunftschild\"><strong>Zunftschild</strong></a>, <a href=\"https://steelmonks.com/products/zunftanhanger-geschenk-fuer-handwerker\" title=\"Zunft-Schlüsselanhänger\"><strong>Zunft-Schlüsselanhänger</strong></a>, <a href=\"https://steelmonks.com/products/zunft-feuerzeug-zippo%C2%AE-geschenk-fuer-handwerker\" title=\"Zunft Zippo Feuerzeug\"><strong>Zippo</strong></a>, <a href=\"https://steelmonks.com/products/zunft-kartenhalter-geschenk-fuer-handwerker\" title=\"Zunft Handwerker Kartenhalter\"><strong>Kartenhalter</strong></a> und unsere neuen <a href=\"https://steelmonks.com/products/zunft-anstecker\" title=\"Zunft Anstecker\"><strong>Zunft-Anstecker</strong></a>. Jedes Stück ist ein Zeichen der Wertschätzung für die Handwerkskunst.</p><p>Mehr Inspiration findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/ideales-meister-geschenk-einzigartige-ideen-fur-handwerker\">Ideales Meister Geschenk: Einzigartige Ideen für Handwerker</a></p><h2>Feuerwehr Geschenke</h2><p>Entdecke die einzigartigen <a href=\"https://steelmonks.com/collections/feuerwehr-geschenke\" title=\"Feuerwehr Geschenke\"><strong>Feuerwehr Geschenke</strong></a> von Steelmonks. Ob du ein Geschenk für einen Feuerwehrmann oder eine Feuerwehrfrau suchst: Wir haben die passenden Ideen. Unsere <a href=\"https://steelmonks.com/products/signet-feuerwehr-schluesselanhaenger\" title=\"Personalisierter Feuerwehr Schlüsselanhänger\"><strong>personalisierbaren Schlüsselanhänger</strong></a> und <a href=\"https://steelmonks.com/products/signet-feuerwehr-schild\" title=\"Feuerwehr Signet Metallschild\"><strong>Feuerwehr Signet Schilder</strong></a> sind besonders gefragt.</p><p>Erfahre mehr über unsere exklusiven Angebote in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/feuerwehr-logo-symbolik-bedeutung-und-geschenkideen\">Feuerwehr Logo: Symbolik, Bedeutung und Geschenkideen</a></p><h2>Pferde Geschenke</h2><p>Für alle Pferdeliebhaber haben wir wunderschöne <a href=\"https://steelmonks.com/collections/pferde-geschenke\" title=\"Pferde Geschenke\"><strong>Pferde Geschenke</strong></a>. Unsere Kollektion bietet eine Vielzahl an Geschenkideen fürs Reiten und Geschenke für Pferdeliebhaber, die jedes Reiterherz höher schlagen lassen.</p><p>Mehr dazu findest du in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/geschenkideen-fuer-reiter\">Geschenkideen für Reiter</a></p><h2>Gartendeko und Dekoideen für den Garten<br/></h2><p>Unsere <a href=\"https://steelmonks.com/collections/rost-gartendeko\" title=\"Rost Gartendeko\"><strong>Gartendeko</strong></a> umfasst eine breite Palette von Produkten, darunter <strong>Gartenstelen</strong>, <strong>Baumstecker</strong>, <strong>Blumenstecker</strong> und vieles mehr. Diese Deko verleiht deinem Garten einen zeitlosen Charakter und macht ihn zu einem echten Hingucker.</p><p>Lies mehr über unsere kreativen Ideen in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-ist-cortenstahl-und-wofur-wird-es-verwendet\">Was ist Cortenstahl und wofür wird es verwendet?</a></p><h2>Firmenschild, Logo und Sonderanfertigungen</h2><p>Ein <strong>Firmenschild</strong> ist Dein Aushängeschild nach außen. Bei Steelmonks bieten wir maßgeschneiderte <strong>Sonderanfertigungen</strong> wie <strong>Stahlschilder</strong> und <strong>Logos</strong> für <strong>Geschäftskunden</strong>. Unsere hochwertigen Firmenschilder vermitteln Professionalität und schaffen Vertrauen bei Deinen Kunden.</p><p>Erfahre mehr darüber, was ein gutes Firmenschild ausmacht in unserem Blogpost <a href=\"https://steelmonks.com/blogs/steelmonks-de/was-schenkt-man-zur-einer-geschaftseroffnung\">Was schenkt man zur Geschäftseröffnung?</a></p>",
-            "content_liquid": "",
-            "featured": false,
-            "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",
-            "featured_image_alignment": "center",
-            "featured_image_aspect_ratio": "233 / 349"
-          }
-        }
-      },
-      "block_order": [
-        "accordion_RFhpjn"
-      ],
-      "name": "Accordions",
-      "settings": {
-        "heading": "",
-        "subheading": "",
-        "padding_top": 24,
-        "padding_bottom": 24,
-        "padding_left": 24,
-        "padding_right": 24
-      }
-    },
-    "werkstatt_galerie_home": {
-      "type": "steelmonks-werkstatt-galerie",
-      "blocks": {
-        "bild_01": {
-          "type": "bild",
-          "settings": {
-            "asset": "wg-01-feuerwehr-jubilaeumsschild-125-jahre-hoh.jpg",
-            "caption": "Feuerwehr-Jubiläumsschild, 125 Jahre"
+            "label": "Hund",
+            "art": "Vorgabe mit Foto",
+            "paar": "hund",
+            "vorgabe": "Ein Bild von genau dem Hund aus dem Photo, die Kappe sollte Schwarz mit dem Logo ausgeschnitten sein."
           }
         },
-        "bild_02": {
-          "type": "bild",
+        "beispiel_2": {
+          "type": "beispiel",
           "settings": {
-            "asset": "wg-02-schriftzug-grill-and-chill-metall-wandsc.jpg",
-            "caption": "Schriftzug „Grill & chill“"
+            "label": "Paar",
+            "art": "Vorgabe mit Foto",
+            "paar": "paar",
+            "vorgabe": "Bitte erstell mir ein Schild von Mir und meiner Freundin, genau so wie in dem beigelegten Photo, benutze positive und negative formen aber bleib detail getreu."
           }
         },
-        "bild_03": {
-          "type": "bild",
+        "beispiel_3": {
+          "type": "beispiel",
           "settings": {
-            "asset": "wg-03-metall-wandschild-exakt-nach-foto.jpg",
-            "caption": "Wandschild exakt nach Foto"
+            "label": "Löschfahrzeug",
+            "art": "Vorgabe mit Foto",
+            "paar": "panther",
+            "vorgabe": "Erstelle mir bitte ein Schild von genau dem Rosenbauer 8x8 aus dem Bild, in der selben exakten Position mit möglichst vielen details, arbeite mir positiven und negativen Formen."
           }
         },
-        "bild_04": {
-          "type": "bild",
+        "beispiel_4": {
+          "type": "beispiel",
           "settings": {
-            "asset": "wg-04-metall-wandschild-nach-vorlage-mit-bohrl.jpg",
-            "caption": "Hausschild nach Vorlage"
+            "label": "Nur Text",
+            "art": "Vorgabe ohne Bild, nur dieser Satz",
+            "paar": "lotta",
+            "vorgabe": "Erstelle ein Schild für die Zimmertür meiner Tochter Lotta, sie liebt Faultiere. Das Schild soll den vollen Namen enthalten und das Faultier."
           }
         },
-        "bild_05": {
-          "type": "bild",
+        "beispiel_5": {
+          "type": "beispiel",
           "settings": {
-            "asset": "wg-05-feuerwehr-wappenschild-blankenhain-160-j.jpg",
-            "caption": "Feuerwehr-Wappenschild, 160 Jahre"
-          }
-        },
-        "bild_06": {
-          "type": "bild",
-          "settings": {
-            "asset": "wg-06-jweber-50-jahre-lorbeerkranz-wandschild.jpg",
-            "caption": "Jubiläumsschild 50 Jahre mit Lorbeerkranz"
-          }
-        },
-        "bild_07": {
-          "type": "bild",
-          "settings": {
-            "asset": "wg-07-feuerwehrauto-silhouette-1.jpg",
-            "caption": "Feuerwehrauto als Silhouette"
-          }
-        },
-        "bild_08": {
-          "type": "bild",
-          "settings": {
-            "asset": "wg-08-wappen-wandschild-cortenstahl-optik.jpg",
-            "caption": "Wappen-Emblem in Cortenstahl-Optik"
+            "label": "Wappen",
+            "art": "Vorgabe mit Zeichnung",
+            "paar": "wappen",
+            "vorgabe": "Erstelle mir aus der Zeichnung meines Wappens ein edles, detailreiches Wandschild. Unten, in einer Banderole soll der Name „Wester-Lang“ stehen."
           }
         }
       },
       "block_order": [
-        "bild_01",
-        "bild_02",
-        "bild_03",
-        "bild_04",
-        "bild_05",
-        "bild_06",
-        "bild_07",
-        "bild_08"
+        "beispiel_1",
+        "beispiel_2",
+        "beispiel_3",
+        "beispiel_4",
+        "beispiel_5"
       ],
-      "settings": {
-        "heading": "Aus der Werkstatt: Schilder unserer Kunden",
-        "heading_size": "h2",
-        "text": "",
-        "alignment": "left",
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "max_items": 60,
-        "button_label": "",
-        "button_link": "",
-        "color_scheme": "scheme-1",
-        "padding_top": 24,
-        "padding_bottom": 24
-      }
+      "settings": {}
+    },
+    "pins": {
+      "type": "sm-home-pins",
+      "blocks": {
+        "pin_1": {
+          "type": "pin",
+          "settings": {
+            "karte": "pin_retter.webp",
+            "produkt": "keine-gewalt-gegen-retter-anstecker",
+            "titel": "„Keine Gewalt gegen Retter“",
+            "preis": "4,95 € · jeder weitere 0,95 €"
+          }
+        },
+        "pin_2": {
+          "type": "pin",
+          "settings": {
+            "karte": "pin_zunftpin.webp",
+            "produkt": "zunft-anstecker",
+            "titel": "Zunft-Anstecker",
+            "preis": ""
+          }
+        },
+        "pin_3": {
+          "type": "pin",
+          "settings": {
+            "karte": "pin_lecker.webp",
+            "produkt": "lecker-bierchen-anstecker",
+            "titel": "Lecker Bierchen",
+            "preis": ""
+          }
+        },
+        "pin_4": {
+          "type": "pin",
+          "settings": {
+            "karte": "pin_laender.webp",
+            "produkt": "laender-anstecker",
+            "titel": "Länder Anstecker",
+            "preis": ""
+          }
+        },
+        "pin_5": {
+          "type": "pin",
+          "settings": {
+            "karte": "pin_freizeit.webp",
+            "produkt": "freizeit-anstecker",
+            "titel": "Lustige Freizeit Anstecker",
+            "preis": ""
+          }
+        }
+      },
+      "block_order": [
+        "pin_1",
+        "pin_2",
+        "pin_3",
+        "pin_4",
+        "pin_5"
+      ],
+      "settings": {}
+    },
+    "pixel": {
+      "type": "sm-home-pixel",
+      "blocks": {
+        "stelle_1": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über Jakob",
+            "x": 37,
+            "y": 50,
+            "gross": true,
+            "titel": "Jakob",
+            "text": "2020 haben Luis und ich Steelmonks gegründet: zwei Brüder, eine Idee und viel Lust auf neue Maschinen."
+          }
+        },
+        "stelle_2": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über Luis",
+            "x": 58,
+            "y": 48,
+            "gross": true,
+            "titel": "Luis",
+            "text": "Am 14. Juli 2021 hat die Flut unsere komplette Produktion zerstört. Aufgegeben haben wir nicht, wir haben größer wieder angefangen."
+          }
+        },
+        "stelle_3": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über die Zunftschilder",
+            "x": 20,
+            "y": 72,
+            "gross": false,
+            "titel": "Die Zunftschilder",
+            "text": "Kein Gewerk bestellt so viele wie die Zimmerer, danach kommen Dachdecker, Maurer und Elektriker."
+          }
+        },
+        "stelle_4": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über die Werkstatt",
+            "x": 44,
+            "y": 54,
+            "gross": false,
+            "titel": "Die Werkstatt",
+            "text": "Nach der Flut kamen zwei brandneue 3-kW-Laser. Jedes personalisierte Schild wird einzeln geschnitten."
+          }
+        },
+        "stelle_5": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über das Fenster",
+            "x": 81,
+            "y": 56,
+            "gross": false,
+            "titel": "Unser Mönch",
+            "text": "Das Maskottchen haben wir mit KI erstellt. Er sitzt am Computer: alte Tradition trifft neue Technik."
+          }
+        },
+        "stelle_6": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über die Paletten",
+            "x": 86,
+            "y": 72,
+            "gross": false,
+            "titel": "Die Paletten",
+            "text": "Seit 2020 haben wir über 100.000 Bestellungen verschickt. Und über 50.000 Pins für unsere Retter."
+          }
+        },
+        "stelle_7": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über den Baum",
+            "x": 5,
+            "y": 42,
+            "gross": false,
+            "titel": "„Inspired by Life“",
+            "text": "Alles um uns herum inspiriert uns, auch dieser Baum. Als „Baum des Lebens“ hängt er an tausenden Wänden."
+          }
+        },
+        "stelle_8": {
+          "type": "stelle",
+          "settings": {
+            "label": "Geschichte über die Blumen",
+            "x": 92,
+            "y": 86,
+            "gross": false,
+            "titel": "Die Blumen",
+            "text": "Unsere Ewige Rose welkt nie und wurde über 3.400-mal bestellt. It’s Sign Time!"
+          }
+        }
+      },
+      "block_order": [
+        "stelle_1",
+        "stelle_2",
+        "stelle_3",
+        "stelle_4",
+        "stelle_5",
+        "stelle_6",
+        "stelle_7",
+        "stelle_8"
+      ],
+      "settings": {}
+    },
+    "serie": {
+      "type": "sm-home-serie",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "sm-home-reviews",
+      "blocks": {
+        "bewertung_1": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Signet Anhänger",
+            "sterne": 5,
+            "text": "Sehr schönes Produkt, super kurze Lieferung. Vielen Dank",
+            "datum": "2026-09-23"
+          }
+        },
+        "bewertung_2": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Signet Anhänger",
+            "sterne": 5,
+            "text": "Ich möchte meinem Sohn diesen Anhänger schenken. Er ist Feuerwehrmann und Rettungssanitäter mit Leib und Seele.",
+            "datum": "2026-09-22"
+          }
+        },
+        "bewertung_3": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Signet Anhänger",
+            "sterne": 5,
+            "text": "Da es ein einzigartiges Geschenk ist, finde ich es klasse....gerade für Feuerwehrangehörige",
+            "datum": "2026-09-18"
+          }
+        },
+        "bewertung_4": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Signet Anhänger",
+            "sterne": 5,
+            "text": "Es fing mit einer Sonderbestellung des Goldschmiedewappens an und auch mehrere Bestellungen danach darf ich konstant gute Arbeit bewundern :) Die Beschenkte (Feuerwehr Schlüsselanhänger) hat sich auch sehr gefreut. Immer wieder gerne!",
+            "datum": "2026-09-16"
+          }
+        },
+        "bewertung_5": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Ivy",
+            "sterne": 5,
+            "text": "Sehr schönes Wandschild (Ivy)! Sorgfältig gearbeitet, ohne scharfe Kanten, sehr stabil. Die Lieferung war sehr schnell und die Ware gut verpackt! Das Personalisieren des Schildes war sehr einfach durchzuführen.",
+            "datum": "2026-09-11"
+          }
+        },
+        "bewertung_6": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Ivy",
+            "sterne": 5,
+            "text": "Ich habe schon einige bei euch bestellt. Sind einfach ein Hinkucker👍top",
+            "datum": "2026-08-30"
+          }
+        },
+        "bewertung_7": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Ivy",
+            "sterne": 5,
+            "text": "So wie vorgestellt. Qualität ist super, schnelle Bearbeitung und Lieferung. 👍",
+            "datum": "2026-08-14"
+          }
+        },
+        "bewertung_8": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Ivy",
+            "sterne": 5,
+            "text": "Klasse , wie beschrieben und bestellt.  Versand auch sehr schnell.  Gerne wieder für Hochzeiten",
+            "datum": "2026-08-07"
+          }
+        },
+        "bewertung_9": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftschild",
+            "sterne": 5,
+            "text": "Es sieht Mega gut aus und ist Qualitativ spitze!",
+            "datum": "2026-09-19"
+          }
+        },
+        "bewertung_10": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftschild",
+            "sterne": 5,
+            "text": "Sehr saubere Arbeit und schnelle Lieferung. \nEs gibt auch wirklich sehr netten und hilfsbereiten Kundensupport.\nIch kann Steelmonks nur empfehlen!",
+            "datum": "2026-09-17"
+          }
+        },
+        "bewertung_11": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftschild",
+            "sterne": 5,
+            "text": "Einfacher Bestellprozess, schnelle und gut verpackte Lieferung, 1A Ware.",
+            "datum": "2026-09-08"
+          }
+        },
+        "bewertung_12": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftschild",
+            "sterne": 5,
+            "text": "Super Qualität und schnelle Lieferung..",
+            "datum": "2026-09-05"
+          }
+        },
+        "bewertung_13": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftanhänger",
+            "sterne": 5,
+            "text": "Alles wie gewünscht, Liefertermin nicht ganz eingehalten. Aber war auch nicht problematisch.",
+            "datum": "2026-09-15"
+          }
+        },
+        "bewertung_14": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftanhänger",
+            "sterne": 5,
+            "text": "Sehr gut gemacht wird als Schlüsselanhänger verwendet",
+            "datum": "2026-09-12"
+          }
+        },
+        "bewertung_15": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftanhänger",
+            "sterne": 5,
+            "text": "Ist sehr gut gemacht, wird als Schlüsselanhänger verwendet.",
+            "datum": "2026-09-05"
+          }
+        },
+        "bewertung_16": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Zunftanhänger",
+            "sterne": 5,
+            "text": "Zur bestandenen Gesellenprüfung. War ein tolles Geschenk für einen Schornsteinfeger. Die persönliche Widmung kam sehr gut an. Sieht hochwertig aus.",
+            "datum": "2026-09-04"
+          }
+        },
+        "bewertung_17": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Baum des Lebens",
+            "sterne": 5,
+            "text": "Euer Schild hab ich an der Front meines Hauses angebracht. Es sieht sehr schön aus und ist wirklich eine Zierde.",
+            "datum": "2026-09-23"
+          }
+        },
+        "bewertung_18": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Baum des Lebens",
+            "sterne": 5,
+            "text": "Alles super, wunderschön verarbeitet, tolles Produkt! Und super kundenfreundlich mit schneller Lieferung!",
+            "datum": "2026-09-16"
+          }
+        },
+        "bewertung_19": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Baum des Lebens",
+            "sterne": 5,
+            "text": "Es ist ein Hochzeitsgeschenk,sieht super aus",
+            "datum": "2026-08-25"
+          }
+        },
+        "bewertung_20": {
+          "type": "bewertung",
+          "settings": {
+            "produkt": "Baum des Lebens",
+            "sterne": 5,
+            "text": "Professionelle Auftragsabwicklung, tolle Qualität des Schildes. Besonders Materialstärke, Sauberkeit der Schnittkanten und die Beschichtung sind hier zu nennen. Echt Empfehlenswert!",
+            "datum": "2026-08-09"
+          }
+        },
+        "foto_21": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_0.webp",
+            "sterne": 5,
+            "text": "Sehr gute Arbeit ,  sehr gerne wieder.",
+            "datum": "2026-06-20"
+          }
+        },
+        "foto_22": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_1.webp",
+            "sterne": 5,
+            "text": "Artikel sehr gute Qualität, super verarbeitet.",
+            "datum": "2025-03-16"
+          }
+        },
+        "foto_23": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_2.webp",
+            "sterne": 5,
+            "text": "Ich bin so mega zufrieden. Das ist ein sehr schönes Produkt. Danke nochmal",
+            "datum": "2025-03-10"
+          }
+        },
+        "foto_24": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_3.webp",
+            "sterne": 5,
+            "text": "Ich finde die Idee ..etwas zeitlos schönes zu personalisieren .. einfach wirklich toll! Das ist ein Geschenk ..völlig egal wie alt der Besch",
+            "datum": "2024-11-02"
+          }
+        },
+        "foto_25": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_4.webp",
+            "sterne": 5,
+            "text": "Ich finde das Produkt einfach der Wahnsinn. Qualitativ ist es atemberaubend. Und das für den Preis. Einfach nur Top",
+            "datum": "2024-06-08"
+          }
+        },
+        "foto_26": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_5.webp",
+            "sterne": 5,
+            "text": "Sieht sehr gut aus",
+            "datum": "2023-06-25"
+          }
+        },
+        "foto_27": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_6.webp",
+            "sterne": 5,
+            "text": "Sehr gute Qualität und schnelle Lieferung.\nDanke",
+            "datum": "2023-05-28"
+          }
+        },
+        "foto_28": {
+          "type": "foto",
+          "settings": {
+            "asset": "u_feuerw_7.webp",
+            "sterne": 5,
+            "text": "Hallo liebes Steelmonks-Team, habe den \"Feuerwehr\"-Anhänger für meinen Sohn (Berufsfeuerwehrmann) bestellt. Der Anhänger ist super verarbeit",
+            "datum": "2023-04-07"
+          }
+        }
+      },
+      "block_order": [
+        "bewertung_1",
+        "bewertung_2",
+        "bewertung_3",
+        "bewertung_4",
+        "bewertung_5",
+        "bewertung_6",
+        "bewertung_7",
+        "bewertung_8",
+        "bewertung_9",
+        "bewertung_10",
+        "bewertung_11",
+        "bewertung_12",
+        "bewertung_13",
+        "bewertung_14",
+        "bewertung_15",
+        "bewertung_16",
+        "bewertung_17",
+        "bewertung_18",
+        "bewertung_19",
+        "bewertung_20",
+        "foto_21",
+        "foto_22",
+        "foto_23",
+        "foto_24",
+        "foto_25",
+        "foto_26",
+        "foto_27",
+        "foto_28"
+      ],
+      "settings": {}
+    },
+    "closing": {
+      "type": "sm-home-closing",
+      "settings": {}
     }
   },
   "order": [
-    "steelmonks_hero_hub_7JR7Nz",
-    "custom_icon_grid_Ahzicm",
-    "rich_text_xkqYLg",
-    "steelmonks_werkstatt_hero_gt9RdT",
-    "rich_text_H9Enym",
-    "werkstatt_galerie_home",
-    "steelmonks_collection_grid_k79tHx",
-    "featured_collection_yUM3tM",
-    "image_banner_hWcQdN",
-    "image_banner_XjHB9c",
-    "steelmonks_announcement_VHr6np",
-    "steelmonks_horizontal_dropdowns_XDyUkz",
-    "custom_icon_grid_ypXVPY",
-    "1744354885bc91bacc",
-    "image_banner_QQPwzk",
-    "steelmonks_announcement_4wetKr",
-    "image_banner_WYYhWC",
-    "steelmonks_items_grid_EedtxA",
-    "steelmonks_info_grid_DWLQBG",
-    "steelmonks_parallax_richtext_hDBc3Q",
-    "steelmonks_deine_sm_GPbdxk",
-    "custom_icon_grid_h6mTRm",
-    "174478799976fe2d49",
-    "accordions_U48wFK"
+    "hero",
+    "trust",
+    "lieblinge",
+    "story",
+    "werkstatt",
+    "pins",
+    "pixel",
+    "serie",
+    "reviews",
+    "closing"
   ]
 }

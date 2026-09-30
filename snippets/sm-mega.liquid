@@ -1,5 +1,5 @@
 {%- comment -%}
-  Neues Mega-Menü am Desktop (erst auf der neuen Startseite ?view=neu): gleiche Menüpunkte wie im Shop (Navigation „main-menu“),
+  Mega-Menü am Desktop: gleiche Menüpunkte wie im Shop (Navigation „main-menu“),
   Knöpfe im Stil des bisherigen Headers, Flächen mit Bildern und Pixel-Art. Aufbau je Menüpunkt:
   erster Punkt = Liste, Top 3 aus „Beliebt“ und Jakob; Punkt mit Unterpunkten in Gruppen = Gruppen mit Vorschau;
   Punkt nur mit Seiten = Bildkarten; sonst Liste in zwei Spalten mit Vorschau. Bilder: snippets/sm-mega-img.liquid.
@@ -56,7 +56,7 @@
     {%- else -%}
       <div class="mg-p mg-p--list" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
         <div><p class="mg-h">{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</p><ul class="ml two">{%- for c in link.links -%}{%- render 'sm-mega-li', c: c, prev: true -%}{%- endfor -%}</ul></div>
-        <div class="mg-prev" data-sub="Geschenkideen ansehen"><img class="big px" src="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt="" loading="lazy"><div class="cap"><b>Unsicher, was passt?</b><span>Wähle auf der Startseite, für wen Du suchst. Wir zeigen Dir, was andere für diese Person am häufigsten bestellen.</span><br><a href="{{ routes.root_url }}{% if template.suffix == 'neu' %}?view=neu{% endif %}#finder">Zur Auswahl →</a></div></div>
+        <div class="mg-prev" data-sub="Geschenkideen ansehen"><img class="big px" src="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt="" loading="lazy"><div class="cap"><b>Unsicher, was passt?</b><span>Wähle auf der Startseite, für wen Du suchst. Wir zeigen Dir, was andere für diese Person am häufigsten bestellen.</span><br><a href="{{ routes.root_url }}#finder">Zur Auswahl →</a></div></div>
       </div>
     {%- endif -%}
   {%- endif -%}{%- endfor -%}

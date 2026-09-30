@@ -1,4 +1,4 @@
-{%- comment -%} Neues Handy-Menü (erst auf ?view=neu): hell, gleiche Punkte wie im Shop, mit Bildern; ersetzt dort header-drawer {%- endcomment -%}
+{%- comment -%} Handy-Menü: hell, gleiche Punkte wie im Shop, mit Bildern; ersetzt header-drawer {%- endcomment -%}
 {%- assign smm_menu = section.settings.menu -%}
 <div class="smm-toggle"><button type="button" class="header__icon header__icon--menu link focus-inset smm-burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="smmMob"><span>{{- 'icon-hamburger.svg' | inline_asset_content -}}</span></button></div>
 <div class="smm smm-mob" id="smmMob" hidden role="dialog" aria-modal="true" aria-label="Menü">

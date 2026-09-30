@@ -1,4 +1,4 @@
-/* Neues Mega-Menü und Handy-Menü (erst auf ?view=neu), aus dem Prototyp übernommen */
+/* Neues Mega-Menü und Handy-Menü, aus dem Prototyp übernommen */
 (function () {
   'use strict';
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));

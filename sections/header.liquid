@@ -6,8 +6,8 @@
 <!-- Belohnungs-Pfad: Zeitstrahl am Desktop (header-milestones.css), Leiste auf dem Handy und Warenkorb-Panel (sm-rewards.css) -->
 {{ 'header-milestones.css' | asset_url | stylesheet_tag }}
 {{ 'sm-rewards.css' | asset_url | stylesheet_tag }}
-{%- comment -%} Neues Mega-Menü: erst auf der neuen Startseite (?view=neu), zum Umstellen die Bedingungen template.suffix == 'neu' entfernen {%- endcomment -%}
-{%- if template.suffix == 'neu' -%}{{ 'sm-mega.css' | asset_url | stylesheet_tag }}<script src="{{ 'sm-mega.js' | asset_url }}" defer></script>{%- endif -%}
+{%- comment -%} Mega-Menü mit Bildern und helles Handy-Menü (snippets/sm-mega*.liquid), seit 30.09.2026 im ganzen Shop {%- endcomment -%}
+{{ 'sm-mega.css' | asset_url | stylesheet_tag }}<script src="{{ 'sm-mega.js' | asset_url }}" defer></script>
 
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -165,11 +165,7 @@
   <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
     {%- liquid
       if section.settings.menu != blank
-        if template.suffix == 'neu'
-          render 'sm-mega-mobile'
-        else
-          render 'header-drawer'
-        endif
+        render 'sm-mega-mobile'
       endif
 
       if section.settings.logo_position == 'top-center' or section.settings.menu == blank
@@ -209,7 +205,7 @@
 
     {%- liquid
       if section.settings.menu != blank
-        if template.suffix == 'neu'
+        if section.settings.menu_type_desktop == 'mega'
           render 'sm-mega'
         elsif section.settings.menu_type_desktop == 'dropdown'
           render 'header-dropdown-menu'

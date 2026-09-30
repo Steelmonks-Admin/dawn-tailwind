@@ -1,4 +1,4 @@
-/* Neues Mega-Menü und Handy-Menü (erst auf der neuen Startseite ?view=neu), aus dem Prototyp übernommen. Einheiten in px, weil rem im Theme 13 px ist. */
+/* Neues Mega-Menü und Handy-Menü, aus dem Prototyp übernommen. Einheiten in px, weil rem im Theme 13 px ist. */
 .smm{--ink:#0b0c0e;--ink-2:#4f5458;--ink-3:#7a7f84;--blau:#0044cc;--paper:#f6f5f1;--line-l:rgba(11,12,14,.12);font-family:var(--font-body-family,Poppins,sans-serif);letter-spacing:normal;color:var(--ink)}
 .smm *,.smm *::before,.smm *::after{box-sizing:border-box}
 .smm img{display:block;max-width:100%}
