@@ -13,7 +13,8 @@ const io = 'IntersectionObserver' in window && !RM ? new IntersectionObserver(es
 $$('[data-rv]', R).forEach(el => io ? io.observe(el) : el.classList.add('in'));
 
 /* Service-Navigation: aktive Seite sichtbar */
-const cur = $('.ft-nav [aria-current]', R); if (cur) requestAnimationFrame(() => cur.scrollIntoView({ inline:'center', block:'nearest' }));
+// nur die Leiste waagerecht verschieben: scrollIntoView hat beim Laden auch die ganze Seite nach unten geschoben
+const cur = $('.ft-nav [aria-current]', R); if (cur) requestAnimationFrame(() => { const w = cur.closest('.wrap'); if (w) w.scrollLeft += cur.getBoundingClientRect().left - w.getBoundingClientRect().left - (w.clientWidth - cur.offsetWidth) / 2; });
 
 /* Rechtstexte: Inhaltsverzeichnis aus den H2 */
 $$('.ft-doc', R).forEach(doc => {
@@ -98,5 +99,15 @@ if (wf){
     $('#wrBody', wf).value = 'Hiermit widerrufe ich den von mir abgeschlossenen Vertrag.\nName: ' + name + '\nBestellnummer: ' + order + '\nE-Mail: ' + mail + '\nUmfang: ' + umf + (why ? '\nGrund (freiwillig): ' + why : '') + '\nAbgesendet über die Online-Widerrufsfunktion am ' + time + '.';
     ss.set('smWiderruf', JSON.stringify({ name, order, mail, umf, why, time }));
   });
+}
+
+/* Trusted Shops: aktuelle Note (letzte 12 Monate) und Gesamtzahl aus dem öffentlichen Feed, sonst bleiben die Werte aus dem Theme */
+const tsR = $$('[data-ts-rating]', R), tsN = $$('[data-ts-count]', R);
+if (tsR.length || tsN.length){
+  const apply = g => { if (!g) return; if (g.r) tsR.forEach(el => { el.textContent = g.r.toFixed(2).replace('.', ','); }); if (g.n) tsN.forEach(el => { el.textContent = new Intl.NumberFormat('de-DE').format(g.n); }); };
+  let c = null; try { c = JSON.parse(sessionStorage.getItem('smhTs') || 'null'); } catch (e) {}
+  if (c) apply(c);
+  else fetch('https://integrations.etrusted.com/feeds/grades/v1/channels/chl-056f6db9-2266-48bf-8c7b-44c1673f979d/touchpoints/all/feed.json', { credentials:'omit' })
+    .then(r => r.ok ? r.json() : null).then(d => { if (!d || !d.grades) return; const g = { r: (d.grades['365days'] || {}).rating, n: (d.grades.overall || {}).count }; if (!g.r || !g.n) return; apply(g); try { sessionStorage.setItem('smhTs', JSON.stringify(g)); } catch (e) {} }).catch(() => {});
 }
 })();
