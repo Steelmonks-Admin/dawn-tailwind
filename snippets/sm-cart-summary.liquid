@@ -1,0 +1,41 @@
+{%- comment -%}
+  Zusammenfassung im Warenkorb-Drawer: Zwischensumme, Rabatte, Versand nach Land und Bestellwert, Gesamt.
+  Versand: ab 99 € kostenlos (Grundlage wie Shopify, sm-cart-basis); darunter DE 4,95 €, AT und EU 12,95 €, CH 14,90 CHF,
+  Brief ab 2,95 € unter 3,80 €. Den Newsletter-Versandcode trägt sm-rewards.js nach (Liquid sieht keine Versandcodes).
+{%- endcomment -%}
+{%- capture smc_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
+{%- liquid
+  assign smc_basis = smc_basis | strip | plus: 0
+  assign smc_c = localization.country.iso_code
+  assign smc_eu = 'AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE' | split: ','
+  assign smc_free = false
+  if smc_basis >= 9900
+    assign smc_free = true
+  endif
+  assign smc_ship = 'wird an der Kasse berechnet'
+  if smc_basis < 380
+    assign smc_ship = 'ab 2,95 €'
+  elsif smc_c == 'DE'
+    assign smc_ship = '4,95 €'
+  elsif smc_eu contains smc_c
+    assign smc_ship = '12,95 €'
+  elsif smc_c == 'CH'
+    assign smc_ship = '14,90 CHF'
+  endif
+-%}
+<div class='smc-row'><span>Zwischensumme</span><span>{{ cart.items_subtotal_price | money_without_currency }} €</span></div>
+{%- for discount in cart.cart_level_discount_applications -%}
+  <div class='smc-row smc-row--ok'>
+    <span>{% if discount.title == '10€ Discount!' %}10 € Rabatt{% else %}{{ discount.title | escape }}{% endif %}</span>
+    <span>− {{ discount.total_allocated_amount | money_without_currency }} €</span>
+  </div>
+{%- endfor -%}
+<div class='smc-row' data-smc-ship{% if smc_free %} data-free{% endif %}>
+  <span>Versand</span>
+  {%- if smc_free -%}<span class='smc-ok'>kostenlos</span>{%- else -%}<span>{{ smc_ship }}</span>{%- endif -%}
+</div>
+<div class='smc-row smc-row--total totals' role='status'>
+  <span class='totals__total'>Gesamt</span>
+  <span class='totals__total-value'>{{ cart.total_price | money_without_currency }} €</span>
+</div>
+<p class='smc-tax tax-note'>Inkl. MwSt.{% unless smc_free %}, zzgl. Versand{% endunless %}</p>

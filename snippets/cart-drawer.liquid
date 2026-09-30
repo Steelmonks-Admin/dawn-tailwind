@@ -7,6 +7,7 @@
 
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'sm-cart.css' | asset_url | stylesheet_tag }}
 
 <script src='{{ 'cart.js' | asset_url }}' defer='defer'></script>
 <script src='{{ 'quantity-popover.js' | asset_url }}' defer='defer'></script>
@@ -31,9 +32,7 @@
         <div class='drawer__inner-empty'>
           <div class='cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}'>
             <div class='cart-drawer__empty-content'>
-              <img class='smr-empty-monk' src='{{ 'sm-pxm_karton.webp' | asset_url }}' width='100' height='120' alt='' loading='lazy'>
               <h2 class='cart__empty-text'>{{ 'sections.cart.empty' | t }}</h2>
-              <p class='smr-empty-hint'>Ab 99 € ist der Versand kostenlos, ab 149 € gibt es 10 € Rabatt und ab 199 € ein Mystery Gift.</p>
               <button
                 class='drawer__close'
                 type='button'
@@ -64,7 +63,9 @@
         </div>
       {%- endif -%}
       <div class='drawer__header'>
-        <h2 class='drawer__heading'>{{ 'sections.cart.title' | t }}</h2>
+        {%- capture smc_count -%}{%- render 'sm-cart-count' -%}{%- endcapture -%}
+        {%- assign smc_count = smc_count | strip | plus: 0 -%}
+        <h2 class='drawer__heading'>{{ 'sections.cart.title' | t }}{% if smc_count > 0 %} ({{ smc_count }}){% endif %}</h2>
         <button
           class='drawer__close'
           type='button'
@@ -125,7 +126,8 @@
                         Ensure the product is not hidden or a reward product
                       {% endcomment %}
                       {% unless item.product.metafields.custom.reward_product or item.variant_id == 45204915880202 or item.variant_id == 45204916535562 or item.variant_id == 45204919943434 %}
-                        <tr id='CartDrawer-Item-{{ item.index | plus: 1 }}' class='cart-item{% if item.final_price == 0 %} cart-item--reward{% endif %}' role='row'>
+                        {%- assign smc_addon = false -%}{%- if item.properties['_pc_pricing_ref'] != blank and item.properties.size == 1 -%}{%- assign smc_addon = true -%}{%- endif -%}
+                        <tr id='CartDrawer-Item-{{ item.index | plus: 1 }}' class='cart-item{% if item.final_price == 0 %} cart-item--reward{% endif %}{% if smc_addon %} smc-addon{% endif %}' role='row'>
                           <td class='cart-item__media' role='cell' headers='CartDrawer-ColumnProductImage'>
                             {% if item.image %}
                               {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
@@ -142,123 +144,45 @@
                           </td>
 
                           <td class='cart-item__details' role='cell' headers='CartDrawer-ColumnProduct'>
-                            {%- if settings.show_vendor -%}
-                              <p class='caption-with-letter-spacing light'>{{ item.product.vendor }}</p>
-                            {%- endif -%}
-
+                            {%- liquid
+                              assign smc_props = 0
+                              for property in item.properties
+                                assign smc_first = property.first | slice: 0
+                                if property.last != blank and smc_first != '_'
+                                  assign smc_props = smc_props | plus: 1
+                                endif
+                              endfor
+                            -%}
                             <a href='{{ item.url }}' class='cart-item__name h4 break'>
                               {{- item.product.title | escape -}}
                             </a>
-
-                            {%- if item.original_price != item.final_price -%}
-                              <div class='cart-item__discounted-prices'>
-                                <span class='visually-hidden'>
-                                  {{ 'products.product.price.regular_price' | t }}
-                                </span>
-                                <s class='cart-item__old-price product-option'>
-                                  {{- item.original_price | money -}}
-                                </s>
-                                <span class='visually-hidden'>
-                                  {{ 'products.product.price.sale_price' | t }}
-                                </span>
-                                <strong class='cart-item__final-price product-option'>
-                                  {{ item.final_price | money }}
-                                </strong>
-                              </div>
-                            {%- else -%}
-                              <div class='product-option'>
-                                {{ item.original_price | money }}
-                              </div>
-                            {%- endif -%}
-
-                            {%- if item.product.has_only_default_variant == false
-                              or item.properties.size != 0
-                              or item.selling_plan_allocation != null
-                            -%}
-                              <div class='cart-info-block'>
-                                <div class='cart-info-dropdown'>
-                                  <details>
-                                    <summary>
-                                      Auswahl ansehen
-                                      <svg
-                                        width='11'
-                                        height='6'
-                                        viewBox='0 0 11 6'
-                                        fill='none'
-                                        xmlns='http://www.w3.org/2000/svg'
-                                      >
-                                        <path d="M10 0.75L5.5 5.25L1 0.75" stroke="currentColor"/>
-                                      </svg>
-                                    </summary>
-                                    <div class='dropdown-content' id='Cart-Info'>
-                                      {%- if item.product.has_only_default_variant == false
-                                        or item.properties.size != 0
-                                        or item.selling_plan_allocation != null
-                                      -%}
-                                        {%- if item.product.has_only_default_variant == false -%}
-                                          {%- for option in item.options_with_values -%}
-                                            {% unless option.value == 'Default Title' %}
-                                              <dl class='cart-info-dropdown'>
-                                                <dt>{{ option.name }}:</dt>
-                                                <dd>{{ option.value }}</dd>
-                                              </dl>
-                                            {% endunless %}
-                                          {%- endfor -%}
-                                        {%- endif -%}
-
-                                        {%- for property in item.properties -%}
-                                          {%- assign property_first_char = property.first | slice: 0 -%}
-                                          {%- if property.last != blank and property_first_char != '_' -%}
-                                            <dl>
-                                              <dt>{{ property.first }}:</dt>
-                                              <dd>
-                                                {%- if property.last contains '/uploads/' -%}
-                                                  <a
-                                                    style='text-decoration: underline; color: #04c;'
-                                                    href='{{ property.last }}'
-                                                    target='_blank'
-                                                  >
-                                                    {{ property.last | split: '/' | last }}
-                                                  </a>
-                                                {%- else -%}
-                                                  {% unless property.last == 'Default Title' %}
-                                                    {{ property.last }}
-                                                  {% endunless %}
-                                                {%- endif -%}
-                                              </dd>
-                                            </dl>
-                                          {%- endif -%}
-                                        {%- endfor -%}
-
-                                        {%- unless item.selling_plan_allocation.selling_plan.name == empty -%}
-                                          <p>{{ item.selling_plan_allocation.selling_plan.name }}</p>
-                                        {%- endunless -%}
-                                      {%- endif -%}
-
-                                      <ul
-                                        class='list-unstyled'
-                                        role='list'
-                                        aria-label='{{ 'customer.order.discount' | t }}'
-                                      >
-                                        {%- for discount_allocation in item.line_level_discount_allocations -%}
-                                          <li>
-                                            {{ discount_allocation.discount_application.title }} (-
-                                            {{- discount_allocation.amount | money -}}
-                                            )
-                                          </li>
-                                        {%- endfor -%}
-                                      </ul>
-                                    </div>
-                                  </details>
-                                </div>
+                            {%- unless item.product.has_only_default_variant -%}
+                              <div class='smc-var'>{{ item.variant.title | escape }}</div>
+                            {%- endunless -%}
+                            {%- if smc_props > 0 -%}
+                              <div class='smc-pers'>
+                                {%- for property in item.properties -%}
+                                  {%- assign smc_first = property.first | slice: 0 -%}
+                                  {%- if property.last != blank and smc_first != '_' -%}
+                                    <span>
+                                      <b>{{ property.first | strip_html | escape }}:</b>
+                                      {% if property.last contains '/uploads/' -%}
+                                        <a href='{{ property.last }}' target='_blank' rel='noopener'>{{ property.last | split: '/' | last }}</a>
+                                      {%- else -%}
+                                        {{ property.last | strip_html | escape }}
+                                      {%- endif %}
+                                    </span>
+                                  {%- endif -%}
+                                {%- endfor -%}
                               </div>
                             {%- endif -%}
-
-                            <ul
-                              class='discounts list-unstyled'
-                              role='list'
-                              aria-label='{{ 'customer.order.discount' | t }}'
-                            >
+                            {%- unless item.selling_plan_allocation.selling_plan.name == empty -%}
+                              <div class='smc-var'>{{ item.selling_plan_allocation.selling_plan.name }}</div>
+                            {%- endunless -%}
+                            {%- if item.quantity > 1 -%}
+                              <div class='smc-var'>Menge: {{ item.quantity }} × {{ item.final_price | money_without_currency }} €</div>
+                            {%- endif -%}
+                            <ul class='discounts list-unstyled' role='list' aria-label='{{ 'customer.order.discount' | t }}'>
                               {%- for discount in item.line_level_discount_allocations -%}
                                 <li class='discounts__discount'>
                                   {{- 'icon-discount.svg' | inline_asset_content -}}
@@ -277,18 +201,18 @@
                                     {{ 'products.product.price.regular_price' | t }}
                                   </span>
                                   <s class='cart-item__old-price price price--end'>
-                                    {{ item.original_line_price | money }}
+                                    {{ item.original_line_price | money_without_currency }} €
                                   </s>
                                   <span class='visually-hidden'>
                                     {{ 'products.product.price.sale_price' | t }}
                                   </span>
                                   <span class='price price--end'>
-                                    {{ item.final_line_price | money }}
+                                    {{ item.final_line_price | money_without_currency }} €
                                   </span>
                                 </div>
                               {%- else -%}
                                 <span class='price price--end'>
-                                  {{ item.original_line_price | money }}
+                                  {{ item.original_line_price | money_without_currency }} €
                                 </span>
                               {%- endif -%}
 
@@ -317,9 +241,7 @@
                                 aria-label='{{ 'sections.cart.remove_title' | t: title: item.title | escape }}'
                                 data-variant-id='{{ item.variant.id }}'
                               >
-                                <span class='svg-wrapper'>
-                                  {{- 'icon-remove.svg' | inline_asset_content -}}
-                                </span>
+                                Entfernen
                               </button>
                             </cart-remove-button>
                           </td>
@@ -497,6 +419,7 @@
                   <tfoot>
                   </tfoot>
                 </table>
+                {%- render 'sm-cart-extras' -%}
               </div>
             {%- endif -%}
             <p id='CartDrawer-LiveRegionText' class='visually-hidden' role='status'></p>
@@ -513,75 +436,32 @@
         <!-- Start blocks -->
         <!-- Subtotals -->
 
-        <div class='cart-drawer__footer' {{ block.shopify_attributes }}>
-          <div>
-            {%- if cart.cart_level_discount_applications.size > 0 -%}
-              <ul class='discounts list-unstyled' role='list' aria-label='{{ 'customer.order.discount' | t }}'>
-                {%- for discount in cart.cart_level_discount_applications -%}
-                  <li class='discounts__discount discounts__discount--end'>
-                    {{- 'icon-discount.svg' | inline_asset_content -}}
-                    {{ discount.title | escape }}
-                    (-{{ discount.total_allocated_amount | money }})
-                  </li>
-                {%- endfor -%}
-              </ul>
-            {%- endif -%}
-          </div>
-
-          {%- render 'sm-cart-shipping-note' -%}
-
-          <div class='totals' role='status'>
-            <h2 class='totals__total'>{{ 'sections.cart.estimated_total' | t }}</h2>
-            <p class='totals__total-value'>{{ cart.total_price | money_with_currency }}</p>
-          </div>
-
-          <small class='tax-note caption-large rte'>Inkl. Steuern. Rabatte werden beim Checkout berechnet.</small>
+        <div class='cart-drawer__footer smc-sum' {{ block.shopify_attributes }}>
+          {%- render 'sm-cart-summary' -%}
         </div>
 
-        <!-- CTAs -->
-
-        <div class='cart__ctas' {{ block.shopify_attributes }}>
+        <div class='cart__ctas smc-ctas' {{ block.shopify_attributes }}>
           <button
             type='submit'
             id='CartDrawer-Checkout'
-            class='cart__checkout-button button'
+            class='cart__checkout-button button smc-checkout'
             name='checkout'
             form='CartDrawer-Form'
             {% if cart == empty %}
               disabled
             {% endif %}
           >
-            {{ 'sections.cart.checkout' | t }}
+            Zur Kasse <span aria-hidden='true'>&rarr;</span>
           </button>
 
           {%- if additional_checkout_buttons -%}
-            <div class='cart__dynamic-checkout-buttons additional-checkout-buttons'>
+            <div class='cart__dynamic-checkout-buttons additional-checkout-buttons smc-express'>
               {{ content_for_additional_checkout_buttons }}
             </div>
           {%- endif -%}
 
-          <div class='cart-trust-line'>&#9733; 4,79 &bdquo;Hervorragend&ldquo; bei Trusted Shops &middot; 100% Gl&uuml;cksgarantie</div>
+          <p class='smc-trust'><span>4,82 &#9733; &bdquo;Hervorragend&ldquo; bei Trusted Shops</span><span>100 % Gl&uuml;cksgarantie</span></p>
         </div>
-
-        {%- if settings.show_cart_note -%}
-          <details id='Details-CartDrawer'>
-            <summary>
-              <span class='summary__title'>
-                {{ 'sections.cart.note' | t }}
-                {{- 'icon-caret.svg' | inline_asset_content -}}
-              </span>
-            </summary>
-            <cart-note class='cart__note field'>
-              <label class='visually-hidden' for='CartDrawer-Note'>{{ 'sections.cart.note' | t }}</label>
-              <textarea
-                id='CartDrawer-Note'
-                class='text-area text-area--resize-vertical field__input'
-                name='note'
-                placeholder='{{ 'sections.cart.note' | t }}'
-              >{{ cart.note }}</textarea>
-            </cart-note>
-          </details>
-        {%- endif -%}
       </div>
     </div>
   </div>

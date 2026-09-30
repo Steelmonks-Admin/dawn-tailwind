@@ -3,7 +3,7 @@
   Marker-Produkte gratisversand, 10-discount, mystery-geschenk nie archivieren; der Rabatt selbst kommt aus den automatischen Shopify-Rabatten
 {%- endcomment -%}
 {%- capture smr_addons -%}
-  {%- assign smr_defs = 'unsichtbares-befestigungsset-bolzen-und-gewindestifte~42583387242737~mount~mount~Unsichtbares Befestigungsset~Set 3, für alle Motivschilder;geschenktute~52137820881162~bag~any~Geschenktüte~Schwarz, zum Verschenken;keine-gewalt-gegen-retter-anstecker~50234404962570~pin~retter~„Keine Gewalt gegen Retter“ Anstecker~Pin für Einsatzkräfte' | split: ';' -%}
+  {%- assign smr_defs = 'unsichtbares-befestigungsset-bolzen-und-gewindestifte~42583387242737~mount~mount~Unsichtbares Befestigungsset~Set 3, für alle Motivschilder~Damit hängt Dein Schild mit Abstand vor der Wand.;geschenktute~52137820881162~bag~any~Geschenktüte~Schwarz, zum Verschenken~Schwarze Geschenktüte zum Verschenken.;keine-gewalt-gegen-retter-anstecker~50234404962570~pin~retter~„Keine Gewalt gegen Retter“ Anstecker~Pin für Einsatzkräfte~Zeig Haltung für alle, die im Einsatz helfen.' | split: ';' -%}
   {%- for smr_d in smr_defs -%}
     {%- assign smr_f = smr_d | split: '~' -%}
     {%- assign smr_p = all_products[smr_f[0]] -%}
@@ -11,7 +11,7 @@
     {%- for smr_v in smr_p.variants -%}
       {%- if smr_v.id == smr_vid and smr_v.available -%}
         {%- assign smr_img = smr_v.image | default: smr_p.featured_image -%}
-        {"pid":{{ smr_p.id }},"id":{{ smr_v.id }},"key":{{ smr_f[2] | json }},"rule":{{ smr_f[3] | json }},"title":{{ smr_f[4] | json }},"sub":{{ smr_f[5] | json }},"price":{{ smr_v.price }},"img":{% if smr_img %}{{ smr_img | image_url: width: 120 | json }}{% else %}""{% endif %}},
+        {"pid":{{ smr_p.id }},"id":{{ smr_v.id }},"key":{{ smr_f[2] | json }},"rule":{{ smr_f[3] | json }},"title":{{ smr_f[4] | json }},"sub":{{ smr_f[5] | json }},"pitch":{{ smr_f[6] | json }},"price":{{ smr_v.price }},"img":{% if smr_img %}{{ smr_img | image_url: width: 120 | json }}{% else %}""{% endif %}},
       {%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
@@ -40,7 +40,16 @@
       },
       "jakob": {{ 'sm-px2_jakob_parcels.webp' | asset_url | json }},
       "tag": {{ 'sm-px_rabatt.webp' | asset_url | json }},
-      "chest": {{ 'sm-px_truhe.webp' | asset_url | json }}
+      "chest": {{ 'sm-px_truhe.webp' | asset_url | json }},
+      "tileDiscount": "https://cdn.shopify.com/s/files/1/0472/6420/2901/files/Discount_96a411b4-37b3-48a3-b100-c6a28dbd20af.jpg?v=1708351214&width=300",
+      "tileMystery": "https://cdn.shopify.com/s/files/1/0472/6420/2901/files/Mystery-Gift.jpg?v=1731506220&width=300",
+      "luisLadder": {{ 'sm-px3_luis_ladder.webp' | asset_url | json }},
+      "duoPin": {{ 'sm-px2_duo_pin.webp' | asset_url | json }},
+      "icons": [
+        "https://cdn.shopify.com/s/files/1/0472/6420/2901/files/free-shipping.png?v=1708352230&width=80",
+        "https://cdn.shopify.com/s/files/1/0472/6420/2901/files/discount-tag.png?v=1708352250&width=80",
+        "https://cdn.shopify.com/s/files/1/0472/6420/2901/files/opened-gift.png?v=1708352267&width=80"
+      ]
     },
     "addons": [{{ smr_addons | strip | remove_last: ',' }}]
   }

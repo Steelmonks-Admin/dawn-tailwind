@@ -4,6 +4,7 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+{{ 'sm-cart.css' | asset_url | stylesheet_tag }}
 
 {% style %}
   /* J.1l — inline mobile compact rules (cache-proof) */
@@ -548,6 +549,7 @@
                 {%- endfor -%}
               </tbody>
             </table>
+            <div class='smc-upsell smc-upsell--page' data-smr-upsell hidden></div>
           {%- endif -%}
         </div>
       </div>

@@ -3,7 +3,8 @@
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 
-<!-- Belohnungs-Pfad unter dem Header (Leiste, Warenkorb-Panel) -->
+<!-- Belohnungs-Pfad: Zeitstrahl am Desktop (header-milestones.css), Leiste auf dem Handy und Warenkorb-Panel (sm-rewards.css) -->
+{{ 'header-milestones.css' | asset_url | stylesheet_tag }}
 {{ 'sm-rewards.css' | asset_url | stylesheet_tag }}
 
 {%- if settings.predictive_search_enabled -%}
@@ -322,6 +323,9 @@
       </a>
     </div>
 
+  {%- unless request.path contains '/pages/werkstatt' -%}
+    {%- render 'sm-rewards-strip' -%}
+  {%- endunless -%}
   </header>
   {%- unless request.path contains '/pages/werkstatt' -%}
     {%- render 'sm-rewards-bar' -%}

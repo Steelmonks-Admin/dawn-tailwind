@@ -1,0 +1,24 @@
+{%- comment -%}
+  Belohnungs-Pfad am Desktop: Mönchs-Zeitstrahl über die volle Breite wie bisher (Styles in header-milestones.css),
+  Pixel-Mönch je Stufe, Texte beim Überfahren und kurz nach Warenkorb-Änderungen. Auf dem Handy läuft sm-rewards-bar.
+{%- endcomment -%}
+{%- capture smr_count -%}{%- render 'sm-cart-count' -%}{%- endcapture -%}
+{%- capture smr_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
+<div class="milestones__container smr-strip" data-smr-strip data-total="{{ smr_basis | strip }}" data-count="{{ smr_count | strip }}">
+  <div class="milestones__timeline">
+    <span class="milestones__timeline--1" data-smr-pt="0" tabindex="0" role="button" aria-label="Gratisversand ab 99 €">
+      <img height="35" width="32" src="https://cdn.shopify.com/s/files/1/0472/6420/2901/files/free-shipping.png?v=1708352230&width=80" alt="">
+      <span class="milestones__timeline__tooltip"><span data-smr-tip>Gratisversand ab 99 €</span></span>
+    </span>
+    <span class="milestones__timeline--2" data-smr-pt="1" tabindex="0" role="button" aria-label="10 € Rabatt ab 149 €">
+      <img style="margin-top: 3px" width="25" height="25" src="https://cdn.shopify.com/s/files/1/0472/6420/2901/files/discount-tag.png?v=1708352250&width=80" alt="">
+      <span class="milestones__timeline__tooltip"><span data-smr-tip>10 € Rabatt ab 149 €</span></span>
+    </span>
+    <span class="milestones__timeline--3" data-smr-pt="2" tabindex="0" role="button" aria-label="Mystery Gift ab 199 €">
+      <img height="25" width="25" src="https://cdn.shopify.com/s/files/1/0472/6420/2901/files/opened-gift.png?v=1708352267&width=80" alt="">
+      <span class="milestones__timeline__tooltip"><span data-smr-tip>Mystery Gift ab 199 €</span></span>
+    </span>
+    <div class="milestones__timeline--shine-animation" data-smr-fill></div>
+    <img class="milestones__timeline--traveling-monk smr-strip__monk" data-smr-monk src="{{ 'sm-pxm_karton.webp' | asset_url }}" alt="" width="40" height="48">
+  </div>
+</div>

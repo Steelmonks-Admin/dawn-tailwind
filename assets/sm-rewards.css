@@ -15,6 +15,22 @@
 .smr-bar__rail { position: relative; flex: 0 0 min(400px, 44%); align-self: stretch; }
 .smr-bar.is-empty .smr-bar__rail { opacity: .75; }
 
+/* Desktop: Zeitstrahl über die volle Breite (Grundstil in header-milestones.css), Handy: Leiste mit Text */
+@media screen and (max-width: 749px) { .smr-strip { display: none !important; } }
+@media screen and (min-width: 750px) { .smr-bar { display: none !important; } }
+.smr-strip .milestones__timeline { position: relative; cursor: pointer; }
+.smr-strip .milestones__timeline > span { cursor: pointer; outline: none; }
+.smr-strip .milestones__timeline > span.is-done { background: #0044cc; border-color: #090a0c; }
+.smr-strip .milestones__timeline > span:focus-visible { box-shadow: 0 0 0 3px #6f9bff; }
+.smr-strip .milestones__timeline__tooltip { left: 50%; top: 5.4rem; width: auto; margin-left: 0; transform: translateX(-50%); white-space: nowrap; padding: 7px 12px; border-radius: 8px; background: rgba(9, 10, 12, .92); font: 500 12.5px/1.35 var(--font-body-family); letter-spacing: .01em; opacity: 0; transition: opacity .2s, visibility .2s; pointer-events: none; }
+.smr-strip .milestones__timeline__tooltip::after { border-color: transparent transparent rgba(9, 10, 12, .92) transparent; }
+.smr-strip .milestones__timeline > span:hover .milestones__timeline__tooltip,
+.smr-strip .milestones__timeline > span:focus-visible .milestones__timeline__tooltip,
+.smr-strip .milestones__timeline > span.is-remind .milestones__timeline__tooltip { visibility: visible; opacity: 1; }
+.smr-strip__monk { width: auto !important; height: 48px; top: 50%; margin-top: -30px; transform: translateX(-50%); transition-property: left; transition-timing-function: linear; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .45)); pointer-events: none; }
+.smr-strip__monk.is-walking { animation: smr-walk .3s steps(2, jump-none) infinite alternate; }
+.smr-strip .milestones__timeline--shine-animation { transition-property: width; transition-timing-function: linear; }
+
 /* Schiene (klein in der Kopfleiste) */
 .smr-bar__rail, .smr-rail { --l: 16px; --r: 13px; }
 .smr-track { position: absolute; left: var(--l); right: var(--r); top: 31px; height: 4px; border-radius: 2px; background: rgba(238, 240, 242, .14); overflow: hidden; }
@@ -22,6 +38,8 @@
 .smr-node, .smr-dot, .smr-lbl, .smr-monk { position: absolute; left: calc(var(--l) + (100% - var(--l) - var(--r)) * var(--p)); }
 .smr-node { top: 21px; width: 24px; height: 24px; margin: 0 0 0 -12px; border-radius: 50%; display: grid; place-items: center; background: #1d2225; border: 2px solid rgba(238, 240, 242, .22); color: #aeb5bb; transition: background .3s, border-color .3s, color .3s; }
 .smr-node svg { width: 12px; height: auto; fill: currentColor; }
+.smr-node img { width: 15px; height: 15px; object-fit: contain; filter: grayscale(1) invert(1); }
+.smr-node--1 { border-color: silver; } .smr-node--2 { border-color: gold; } .smr-node--3 { border-color: #00c3ff; }
 .smr-node.is-done { background: #0044cc; border-color: #6f9bff; color: #fff; }
 .smr-monk { top: 1px; height: 32px; width: auto; transform: translateX(-50%); z-index: 2; pointer-events: none; transition: left 1s cubic-bezier(.2, .8, .2, 1); filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .55)); }
 .smr-monk--kaffee { transform: translateX(-62%); }
@@ -38,6 +56,7 @@
   .smr-bar__rail .smr-track { top: 30px; }
   .smr-bar__rail .smr-node { top: 22px; width: 20px; height: 20px; margin-left: -10px; }
   .smr-node svg { width: 10px; }
+  .smr-bar__rail .smr-node img { width: 12px; height: 12px; }
   .smr-bar__rail .smr-monk { height: 30px; top: 2px; }
 }
 
@@ -65,14 +84,14 @@
 /* Gestrichelte Stange von der Station hinunter zum Pfad */
 .smr-dot::before { content: ''; position: absolute; left: 50%; bottom: 100%; height: var(--pole, 40px); border-left: 1px dashed rgba(238, 240, 242, .2); }
 .smr-dot.is-done::before { border-left-color: rgba(111, 155, 255, .55); }
-.smr-rail--mini .smr-dot { --pole: 23px; }
 .smr-lbl { top: 37px; transform: translateX(-50%); font-size: 11px; line-height: 1; white-space: nowrap; color: #8d959c; font-variant-numeric: tabular-nums; }
 .smr-lbl.is-done { color: #eef0f2; font-weight: 600; }
 .smr-rail--big .smr-monk { top: 54px; height: 40px; }
 .smr-rail--mini { --l: 18px; --r: 13px; height: 58px; margin-top: 8px; }
 .smr-rail--mini .smr-track { top: 52px; }
-.smr-rail--mini .smr-node { top: 0; }
-.smr-rail--mini .smr-dot { top: 49px; }
+.smr-rail--mini .smr-node { top: 0; width: 28px; height: 28px; margin-left: -14px; }
+.smr-rail--mini .smr-node img { width: 17px; height: 17px; }
+.smr-rail--mini .smr-dot { top: 49px; --pole: 19px; }
 .smr-rail--mini .smr-monk { top: 24px; height: 28px; }
 .smr-card--compact { padding: 11px 12px 10px; }
 .smr-card--compact .smr-lead { margin-top: 0 !important; font-size: 13.5px; }
@@ -94,10 +113,6 @@
 .smr-add__b.is-busy { opacity: .6; cursor: progress; }
 .cart__items .smr-panel { max-width: 640px; margin: 0 0 20px; }
 
-/* Leerer Drawer: Mönch mit leerem Karton */
-.smr-empty-monk { display: block; width: 84px; height: auto; margin: 0 auto 10px; }
-.smr-empty-hint { max-width: 30rem; margin: -1rem auto 2rem; font-size: 1.35rem; line-height: 1.5; color: rgba(var(--color-foreground), .7); }
-
 /* Spaltenköpfe im Drawer nur für Screenreader, das Panel braucht den Platz */
 .drawer__inner:has(.smr-card) .cart-items thead th { position: absolute !important; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .drawer__inner:has(.smr-card) .cart-items thead { border: 0; }
@@ -117,6 +132,7 @@ body:has([data-smr-panel]:not([hidden]) .smr-card) .cart-freeship-confirm--open 
 
 @media (prefers-reduced-motion: reduce) {
   .smr-fill, .smr-monk, .smr-node, .smr-node--big img, .smr-toast { transition: none !important; }
-  .smr-monk.is-walking { animation: none; }
+  .smr-monk.is-walking, .smr-strip__monk.is-walking { animation: none; }
+  .milestones__timeline--shine-animation::after { animation: none !important; }
   .smr-confetti { display: none; }
 }

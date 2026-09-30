@@ -16,7 +16,7 @@
     { id: 'free_shipping', short: 'bis zum Gratisversand', m: 'bis Gratisversand', lead: 'dann ist Dein Versand kostenlos', done: 'Gratisversand gesichert', toast: 'Gratisversand freigeschaltet!', hint: 'Dein Versand ist jetzt kostenlos.', img: C.img.jakob, icon: 'truck' },
     { id: 'discount_10', short: 'für 10 € Rabatt', m: 'für 10 € Rabatt', lead: 'dann gibt es 10 € Rabatt', done: '10 € Rabatt gesichert', toast: '10 € Rabatt freigeschaltet!', hint: 'Wird automatisch abgezogen.', img: C.img.tag, icon: 'tag' },
     { id: 'mystery_gift', short: 'für das Mystery Gift', m: 'für Mystery Gift', lead: 'dann legen wir ein Mystery Gift dazu', done: 'Mystery Gift ist dabei', toast: 'Mystery Gift freigeschaltet!', hint: 'Wir legen Dir eine Überraschung ins Paket.', img: C.img.chest, icon: 'chest' }
-  ].map((t, i) => Object.assign(t, C.tiers[i], { cents: Math.round(C.tiers[i].at * 100 * rate) }));
+  ].map((t, i) => Object.assign(t, C.tiers[i], { cents: Math.round(C.tiers[i].at * 100 * rate) }, { label: ['Gratisversand', '10 € Rabatt', 'Mystery Gift'][i], tile: [C.img.jakob, C.img.tileDiscount, C.img.tileMystery][i], title: ['Versand', '10 € Rabatt', 'Mystery Gift'][i], on: ['kostenlos', 'freigeschaltet', 'ist dabei'][i] }));
   const MAX = T[T.length - 1].cents;
   const MARK = new Set(T.map((t) => t.marker));
   const SIGN = /schild(er)?$|^(monogramm|wappen)$/i, NOSIGN = /klingel|stra(ß|ss)en/i;
@@ -59,7 +59,7 @@
     const reached = T.map((t) => st.count > 0 && st.total >= t.cents);
     const shipFree = reached[0] || (st.count > 0 && st.shipCode);
     const next = T.find((t, i) => !reached[i] && !(i === 0 && shipFree));
-    return { reached, shipFree, next, empty: !st.count, gap: next ? next.cents - st.total : 0, p: Math.max(0, Math.min(1, st.total / MAX)), level: reached.filter(Boolean).length };
+    return { reached, shipFree, next, total: st.total, empty: !st.count, gap: next ? next.cents - st.total : 0, p: Math.max(0, Math.min(1, st.total / MAX)), level: reached.filter(Boolean).length };
   }
 
   let S = null;
@@ -73,28 +73,42 @@
     let h = '<span class="smr-track"><span class="smr-fill"' + pos(p) + '></span></span>';
     T.forEach((t, i) => {
       const f = t.cents / MAX, done = i === 0 ? v.shipFree : v.reached[i], cls = done ? ' is-done' : '';
-      if (big) {
+      if (mode === 'p') {
+        h += '<span class="smr-node smr-node--' + (i + 1) + cls + '"' + pos(f) + '><img src="' + C.img.icons[i] + '" alt="" width="17" height="17"></span>' +
+          '<small class="smr-lbl' + cls + '"' + pos(f) + '>' + (i === 0 && done && !v.reached[0] ? 'Code' : amt(t.cents)) + '</small>';
+      } else if (big) {
         h += '<span class="smr-node smr-node--big' + cls + '"' + pos(f) + '><img src="' + t.img + '" alt="" decoding="async"><i class="smr-badge">' + svg(done ? 'check' : 'lock') + '</i></span>' +
           '<span class="smr-dot' + cls + '"' + pos(f) + '></span>' +
           '<small class="smr-lbl' + cls + '"' + pos(f) + '>' + (i === 0 && done && !v.reached[0] ? 'Code' : amt(t.cents)) + '</small>';
       } else {
-        h += '<span class="smr-node' + cls + '"' + pos(f) + '>' + svg(t.icon) + '</span>' + (mode === 'mini' ? '<span class="smr-dot' + cls + '"' + pos(f) + '></span>' : '');
+        h += '<span class="smr-node smr-node--' + (i + 1) + cls + '"' + pos(f) + '><img src="' + C.img.icons[i] + '" alt="" width="16" height="16"></span>' + (mode === 'mini' ? '<span class="smr-dot' + cls + '"' + pos(f) + '></span>' : '');
       }
     });
     return h + '<img class="smr-monk smr-monk--' + monk(v) + '" src="' + C.img.monks[monk(v)] + '" alt="" decoding="async"' + pos(p) + '>';
   }
   // Neu zeichnen, dann läuft der Mönch von der alten zur neuen Stelle
+  function monkFrac(v, box) {
+    const W = Math.max(120, box.clientWidth - 32), g = 26 / W, f = T.map((t) => t.cents / MAX), t = v.empty ? 0 : v.total;
+    const seg = (a, b, x0, x1) => x0 + (x1 - x0) * Math.max(0, Math.min(1, (t - a) / (b - a)));
+    if (t <= 0) return 0;
+    if (t < T[0].cents) return seg(0, T[0].cents, 0, f[0] - g);
+    if (t < T[1].cents) return seg(T[0].cents, T[1].cents, f[0] + g, f[1] - g);
+    if (t < T[2].cents) return seg(T[1].cents, T[2].cents, f[1] + g, f[2] - g);
+    return f[2] - g;
+  }
   function paintRail(box, v, mode) {
     const key = mode === 'bar' ? 'smrPh' : 'smrPb', old = box.querySelector('.smr-monk');
     let from = old ? parseFloat(old.style.getPropertyValue('--p')) : parseFloat(SS.get(key));
     if (isNaN(from)) from = mode === 'bar' ? v.p : 0;
     box.innerHTML = railHTML(v, mode, from);
+    const to = mode === 'p' ? monkFrac(v, box) : v.p;
+    v = Object.assign({}, v, { p: to });
     SS.set(key, String(v.p));
     if (Math.abs(from - v.p) < 0.002) return;
     const monk = box.querySelector('.smr-monk'), fill = box.querySelector('.smr-fill');
     void box.offsetWidth;
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      monk.style.setProperty('--p', v.p.toFixed(4)); fill.style.setProperty('--p', v.p.toFixed(4));
+      monk.style.setProperty('--p', v.p.toFixed(4)); fill.style.setProperty('--p', (mode === 'p' ? Math.max(0, Math.min(1, v.total / MAX)) : v.p).toFixed(4));
       if (!RM) { monk.classList.add('is-walking'); setTimeout(() => monk.classList.remove('is-walking'), 1000); }
     }));
   }
@@ -121,6 +135,58 @@
     paintRail(bar.querySelector('[data-smr-rail]'), v, 'bar');
   }
 
+  // Desktop-Zeitstrahl über die volle Breite: der Mönch läuft bei jedem Seitenaufruf vom linken Rand los wie bisher,
+  // an den Kreisen ist er genau bei 99, 149 und 199 €, danach geht es bis 95 % der Breite weiter
+  const strip = document.querySelector('[data-smr-strip]');
+  let stripX = null, stripTotal = null;
+  function stripGeom() {
+    const line = strip.querySelector('.milestones__timeline'), L = line.getBoundingClientRect().left, W = line.clientWidth;
+    return { W, cs: [...strip.querySelectorAll('[data-smr-pt]')].map((p) => { const r = p.getBoundingClientRect(); return r.left + r.width / 2 - L; }) };
+  }
+  function stripPos(total, g) {
+    // Zwischen den Kreisen bleibt er stehen, nicht dahinter (Abstand d): ab 99 € rechts neben dem ersten Kreis usw.
+    const d = 40, c = g.cs, seg = (a, b, x0, x1) => x0 + (x1 - x0) * Math.max(0, Math.min(1, (total - a) / (b - a)));
+    if (total <= 0) return 22;
+    if (total < T[0].cents) return seg(0, T[0].cents, 22, c[0] - d);
+    if (total < T[1].cents) return seg(T[0].cents, T[1].cents, c[0] + d, c[1] - d);
+    if (total < T[2].cents) return seg(T[1].cents, T[2].cents, c[1] + d, c[2] - d);
+    return seg(T[2].cents, Math.round(T[2].cents * 1.5), c[2] + d, g.W * 0.95);
+  }
+  function paintStrip(st, instant) {
+    if (!strip || !strip.offsetParent) return;
+    const v = view(st), g = stripGeom(), x = stripPos(st.count ? st.total : 0, g);
+    const m = strip.querySelector('[data-smr-monk]'), fill = strip.querySelector('[data-smr-fill]'), k = monk(v);
+    if (m.dataset.k !== k) { m.src = C.img.monks[k]; m.dataset.k = k; }
+    strip.querySelectorAll('[data-smr-pt]').forEach((p) => {
+      const i = +p.dataset.smrPt, t = T[i], done = i === 0 ? v.shipFree : v.reached[i];
+      const txt = done ? (i === 0 && !v.reached[0] ? 'Versand mit Deinem Code kostenlos' : t.done + '!')
+        : st.count ? 'Noch ' + money(t.cents - st.total) + ' ' + t.short : ['Gratisversand', '10 € Rabatt', 'Mystery Gift'][i] + ' ab ' + amt(t.cents);
+      p.classList.toggle('is-done', done);
+      p.querySelector('[data-smr-tip]').textContent = txt;
+      p.setAttribute('aria-label', txt);
+    });
+    const from = stripX === null ? 0 : stripX, dist = Math.abs(x - from);
+    const dur = RM || instant ? 0 : Math.min(8, Math.max(0.6, 8 * dist / g.W));
+    [m, fill].forEach((el) => { el.style.transitionDuration = dur + 's'; });
+    if (stripX === null) { m.style.left = '0px'; fill.style.width = '0px'; void m.offsetWidth; }
+    requestAnimationFrame(() => { m.style.left = x + 'px'; fill.style.width = x + 'px'; });
+    if (dur && dist > 2) { m.classList.add('is-walking'); clearTimeout(m._w); m._w = setTimeout(() => m.classList.remove('is-walking'), dur * 1000); }
+    stripX = x;
+    // Text zur nächsten Stufe kurz zeigen: nach einer Warenkorb-Änderung und einmal je Sitzung nach dem Laufen
+    const changed = stripTotal !== null && S && st.total !== stripTotal;
+    if (S) stripTotal = st.total;
+    if (v.next && st.count && (changed || (S && !SS.get('smrRemind')))) {
+      SS.set('smrRemind', '1');
+      const p = strip.querySelector('[data-smr-pt="' + T.indexOf(v.next) + '"]');
+      clearTimeout(strip._r);
+      strip._r = setTimeout(() => { p.classList.add('is-remind'); setTimeout(() => p.classList.remove('is-remind'), 4500); }, changed ? 400 : Math.max(1500, dur * 1000));
+    }
+  }
+  if (strip) {
+    let rz = 0;
+    addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (S) { stripX = null; paintStrip(S, true); } }, 200); });
+  }
+
   // Passt dazu: kleine Artikel ohne Personalisierung, die die Lücke zur nächsten Stufe schließen
   function addons(st, v) {
     const pids = new Set(st.items.map((i) => i.product_id));
@@ -144,7 +210,25 @@
         '<button type="button" class="smr-add__b" data-smr-add="' + a.id + '" data-smr-key="' + esc(a.key) + '" aria-label="' + esc(a.title) + ' für ' + money(a.price) + ' hinzufügen">+ ' + money(a.price) + '</button></div>').join('') + '</div>';
   }
 
-  // Panel im Warenkorb (Drawer und Seite /cart); Liquid liefert frische Summe und Anzahl als Attribute
+  // Panel im Warenkorb (Drawer und Seite /cart) wie im Prototyp; Liquid liefert frische Summe und Anzahl als Attribute
+  let panelLevel = null;
+  function tilesHTML(v) {
+    return '<div class="smr-tiles">' + T.map((t, i) => {
+      const on = i === 0 ? v.shipFree : v.reached[i], code = i === 0 && on && !v.reached[0];
+      const pop = on && panelLevel !== null && i >= panelLevel && i < v.level;
+      return '<div class="smr-tile' + (on ? ' is-on' : '') + (pop ? ' is-pop' : '') + '"><span class="smr-tile__img' + (i === 0 ? ' smr-tile__img--px' : '') + '"><img src="' + t.tile + '" alt="" loading="lazy"></span>' +
+        '<i class="smr-tile__lock">' + svg(on ? 'check' : 'lock') + '</i><b>' + t.title + '</b><span>' + (on ? (code ? 'mit Deinem Code' : t.on) : 'ab ' + amt(t.cents)) + '</span></div>';
+    }).join('') + '</div>';
+  }
+  function upsellHTML(st, v) {
+    const a = addons(st, v).filter((x) => x.key !== 'bag')[0];
+    if (!a) return '';
+    const closes = v.next && a.price >= v.gap;
+    const px = a.rule === 'mount' ? C.img.luisLadder : C.img.duoPin;
+    return '<div class="smc-up"><img class="px" src="' + px + '" alt="" loading="lazy"><img class="ph" src="' + esc(a.img) + '" alt="" loading="lazy">' +
+      '<span><b>' + esc(a.title) + '</b><small>' + esc(a.pitch || a.sub) + '</small>' + (closes ? '<small class="go">Damit ' + v.next.lead.replace(/^dann /, '') + '.</small>' : '') + '</span>' +
+      '<button type="button" class="smc-pill" data-smr-add="' + a.id + '" data-smr-key="' + esc(a.key) + '" aria-label="' + esc(a.title) + ' für ' + money(a.price) + ' hinzufügen">+ ' + money(a.price) + '</button></div>';
+  }
   function paintPanel(p) {
     const dt = parseInt(p.dataset.total, 10), dc = parseInt(p.dataset.count, 10);
     let st = S ? Object.assign({}, S) : { total: 0, count: 0, items: [], shipCode: false };
@@ -152,24 +236,19 @@
     const fresh = !!S && (isNaN(dt) || dt === S.total) && (isNaN(dc) || dc === S.count);
     if (!isNaN(dt)) st.total = dt;
     if (!isNaN(dc)) st.count = dc;
-    if (!st.count) { p.hidden = true; p.innerHTML = ''; return; }
-    const v = view(st), chips = [];
-    // Große Schiene mit Bildern nur mit genug Platz (Seite /cart, hohe Fenster); im Drawer auf dem Handy kompakt, damit die Artikel sichtbar bleiben
-    const big = !p.closest('cart-drawer') || matchMedia('(min-width: 750px) and (min-height: 1000px)').matches;
-    if (v.reached[0]) chips.push(T[0].done);
-    else if (v.shipFree) chips.push('Versand mit Deinem Code kostenlos');
-    if (v.reached[1]) chips.push(T[1].done);
-    if (v.reached[2]) chips.push(T[2].done);
-    p.innerHTML = '<div class="smr-card' + (big ? '' : ' smr-card--compact') + '">' +
-      (big ? '<p class="smr-top"><span>Dein Belohnungspfad</span><span>' + v.level + ' von ' + T.length + ' freigeschaltet</span></p>' : '') +
-      '<p class="smr-lead">' + (v.next ? 'Noch <b>' + money(v.gap) + '</b>, ' + v.next.lead + '.' : 'Alles freigeschaltet: <b>Gratisversand, 10 € Rabatt und Mystery Gift</b>.') + '</p>' +
-      '<div class="smr-rail' + (big ? ' smr-rail--big' : ' smr-rail--mini') + '" aria-hidden="true"></div>' +
-      (big && chips.length ? '<p class="smr-chips">' + chips.map((c) => '<span>' + svg('check') + c + '</span>').join('') + '</p>' : '') +
-      (fresh ? addonsHTML(st, v, big ? 2 : 1) : '') + '</div>';
+    const host = p.closest('cart-drawer') || p.closest('cart-items'), up = host ? host.querySelector('[data-smr-upsell]') : null;
+    if (!st.count) { p.hidden = true; p.innerHTML = ''; if (up) { up.hidden = true; up.innerHTML = ''; } return; }
+    const v = view(st);
+    p.innerHTML = '<div class="smr-card smr-card--p">' +
+      '<p class="smr-lead">' + (v.next ? 'Noch <b>' + money(v.gap) + '</b> bis <b>' + v.next.label + '</b>' : '<b>Alle Belohnungen freigeschaltet!</b>') + '</p>' +
+      '<div class="smr-rail smr-rail--p" aria-hidden="true"></div>' + tilesHTML(v) +
+      (!up && fresh ? upsellHTML(st, v) : '') + '</div>';
+    panelLevel = v.level;
     p.hidden = false;
-    paintRail(p.querySelector('.smr-rail'), v, big ? 'big' : 'mini');
+    paintRail(p.querySelector('.smr-rail'), v, 'p');
+    if (up) { const h = fresh ? upsellHTML(st, v) : ''; if (h || fresh) { up.innerHTML = h; up.hidden = !h; } }
     const open = p.closest('cart-drawer') ? p.closest('cart-drawer').classList.contains('active') : true;
-    if (open) p.querySelectorAll('[data-smr-key]').forEach((b) => once('gv_' + b.dataset.smrKey, () => push('sm_gapfill_view', { sm_item: b.dataset.smrKey, sm_gap: v.gap / 100 })));
+    if (open) (up || p).querySelectorAll('[data-smr-key]').forEach((b) => once('gv_' + b.dataset.smrKey, () => push('sm_gapfill_view', { sm_item: b.dataset.smrKey, sm_gap: v.gap / 100 })));
   }
   const once = (k, fn) => { if (SS.get('smrE_' + k)) return; SS.set('smrE_' + k, '1'); fn(); };
 
@@ -177,10 +256,12 @@
   function paintNotes() {
     if (!S || !S.shipCode || view(S).reached[0]) return;
     document.querySelectorAll('.cart-freeship-confirm--open').forEach((n) => { n.classList.remove('cart-freeship-confirm--open'); n.innerHTML = '&#10003; Versand mit Deinem Code kostenlos'; });
+    document.querySelectorAll('[data-smc-ship]:not([data-free])').forEach((n) => { n.setAttribute('data-free', ''); n.innerHTML = '<span>Versand</span><span class="smc-ok">kostenlos mit Code</span>'; });
   }
   function mountAll() {
     document.querySelectorAll('[data-smr-panel]').forEach((p) => { if (p.dataset.smrOn !== (S ? 's' : 'l')) { p.dataset.smrOn = S ? 's' : 'l'; paintPanel(p); } });
     paintNotes();
+    document.querySelectorAll('[data-smc-xs]:not([data-on])').forEach((b) => { b.dataset.on = '1'; paintXS(b); });
   }
   // Die Personalisierungs-App (pplr) schreibt cart.item_count in die Zahl am Warenkorb-Symbol, also mit Markern; hier korrigieren
   let bubbleFixes = 0;
@@ -193,7 +274,7 @@
   if (bubbleEl) new MutationObserver(() => { if (bubbleFixes++ < 20) fixBubble(); }).observe(bubbleEl, { childList: true, subtree: true, characterData: true });
   function renderAll() {
     bubbleFixes = 0; fixBubble();
-    if (S) paintBar(S);
+    if (S) { paintBar(S); paintStrip(S); }
     document.querySelectorAll('[data-smr-panel]').forEach((p) => { p.dataset.smrOn = 's'; paintPanel(p); });
     paintNotes();
   }
@@ -313,9 +394,52 @@
     }
   });
 
-  // Kopfleiste öffnet den Drawer
+  // Änderungen unter den Artikeln (Geschenktüte, Nachricht) nicht an Dawn weitergeben: Dawn hält jede Änderung im Warenkorb für eine Mengenänderung
+  document.addEventListener('change', async (e) => {
+    if (!e.target.closest || !e.target.closest('.smc-extras')) return;
+    e.stopPropagation();
+    const c = e.target.closest('[data-smc-gift]');
+    if (!c) return;
+    const lab = c.closest('.smc-gift'), drawer = document.querySelector('cart-drawer'), on = c.checked;
+    if (lab) lab.classList.add('is-busy');
+    const sections = { sections: 'cart-drawer,cart-icon-bubble', sections_url: location.pathname };
+    try {
+      const r = on
+        ? await fetch(ROOT + 'cart/add.js', { method: 'POST', headers: JSONH, body: JSON.stringify(Object.assign({ items: [{ id: +c.dataset.smcGift, quantity: 1 }] }, sections)) })
+        : await fetch(ROOT + 'cart/change.js', { method: 'POST', headers: JSONH, body: JSON.stringify(Object.assign({ id: c.dataset.smcKey, quantity: 0 }, sections)) });
+      const j = await r.json();
+      if (!r.ok || j.status) throw new Error(j.description || r.status);
+      push('sm_gift_wrap', { sm_on: on });
+      if (drawer && typeof drawer.renderContents === 'function' && j.sections) drawer.renderContents(j); else { location.reload(); return; }
+      soon();
+    } catch (x) { c.checked = !on; if (lab) lab.classList.remove('is-busy'); }
+  }, true);
+
+  // Empfehlungen im Drawer: Shopify-Empfehlungen zum ersten Artikel, als Karten mit Link (personalisierte Produkte brauchen die Produktseite)
+  const xsCache = {};
+  const imgW = (u, w) => (u ? (u.indexOf('//') === 0 ? 'https:' + u : u) + (u.indexOf('?') > -1 ? '&' : '?') + 'width=' + w : '');
+  async function paintXS(box) {
+    const pid = box.dataset.smcXs;
+    if (!pid) return;
+    if (!xsCache[pid]) {
+      try { const r = await fetch(ROOT + 'recommendations/products.json?product_id=' + pid + '&limit=10&intent=related'); xsCache[pid] = ((await r.json()).products || []); } catch (e) { xsCache[pid] = []; }
+    }
+    const inCart = new Set((S ? S.items : []).map((i) => i.product_id));
+    // Keine Hilfsprodukte des Personalisierers (Gravur-Aufpreise), keine Versand- oder Sonderanfertigungs-Posten
+    const skip = /^(PPLR_HIDDEN_PRODUCT|Sonderanfertigung|Versand|Gravur|Befestigungsset)$/i;
+    const cards = xsCache[pid].filter((p) => p.available && !inCart.has(p.id) && p.price >= 500 && p.featured_image && !skip.test(p.type || '') && !/gravur auf der|einseitige gravur|beidseitige gravur/i.test(p.title)).slice(0, 6);
+    if (!cards.length) { box.hidden = true; return; }
+    box.querySelector('.smc-xs__row').innerHTML = cards.map((p) => '<a class="smc-xs__card" href="' + esc(p.url) + '" data-smc-xs-card="' + p.id + '"><img src="' + esc(imgW(p.featured_image, 300)) + '" alt="" loading="lazy" width="136" height="136"><div><b>' + esc(p.title) + '</b><span>' + (p.price_varies ? 'ab ' : '') + money(p.price) + '</span><em>Ansehen</em></div></a>').join('');
+    box.hidden = false;
+  }
   document.addEventListener('click', (e) => {
-    const bar = e.target.closest('[data-smr-bar]');
+    const a = e.target.closest && e.target.closest('[data-smc-xs-card]');
+    if (a) push('sm_xsell_click', { sm_product_id: +a.dataset.smcXsCard });
+  });
+
+  // Kopfleiste und Zeitstrahl öffnen den Drawer
+  document.addEventListener('click', (e) => {
+    const bar = e.target.closest('[data-smr-bar], [data-smr-strip]');
     const drawer = document.querySelector('cart-drawer');
     if (!bar || !drawer || typeof drawer.open !== 'function' || /\/cart\/?$/.test(location.pathname)) return;
     e.preventDefault();
@@ -341,6 +465,7 @@
   // Start: sofort aus Liquid-Werten zeichnen, dann mit /cart.js abgleichen
   const bar = document.querySelector('[data-smr-bar]');
   if (bar) paintBar({ total: +bar.dataset.total || 0, count: +bar.dataset.count || 0, items: [], shipCode: false });
+  if (strip) paintStrip({ total: +strip.dataset.total || 0, count: +strip.dataset.count || 0, items: [], shipCode: false });
   watch(); mountAll();
   if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') subscribe(PUB_SUB_EVENTS.cartUpdate, soon);
   document.addEventListener('sm:cart-changed', soon);

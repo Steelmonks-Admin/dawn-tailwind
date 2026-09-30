@@ -1,0 +1,56 @@
+{%- comment -%}
+  Warenkorb-Drawer unter den Artikeln (Prototyp „Werkbank“): Passt-dazu-Vorschlag (füllt sm-rewards.js),
+  Geschenktüte als Schalter, Empfehlungen (lädt sm-rewards.js), Nachricht an Steelmonks.
+{%- endcomment -%}
+{%- liquid
+  assign smc_bag_vid = 52137820881162
+  assign smc_bag_key = ''
+  for item in cart.items
+    if item.variant_id == smc_bag_vid
+      assign smc_bag_key = item.key
+    endif
+  endfor
+  assign smc_bag = all_products['geschenktute']
+  assign smc_bag_price = ''
+  for v in smc_bag.variants
+    if v.id == smc_bag_vid and v.available
+      assign smc_bag_price = v.price | money_without_currency | append: ' €'
+    endif
+  endfor
+  assign smc_first_pid = ''
+  for item in cart.items
+    if item.final_price > 0 and smc_first_pid == ''
+      assign smc_first_pid = item.product_id
+    endif
+  endfor
+-%}
+<div class='smc-extras'>
+  <div class='smc-upsell' data-smr-upsell hidden></div>
+
+  {%- if smc_bag_price != '' -%}
+    <label class='smc-gift'>
+      <img src='{{ 'sm-px3_luis_gift.webp' | asset_url }}' alt='' width='40' height='80' loading='lazy'>
+      <span><b>Als Geschenk verpacken</b><small>Schwarze Geschenktüte · {{ smc_bag_price }}</small></span>
+      <input type='checkbox' data-smc-gift='{{ smc_bag_vid }}' data-smc-key='{{ smc_bag_key }}'{% if smc_bag_key != '' %} checked{% endif %} aria-label='Als Geschenk verpacken, Geschenktüte für {{ smc_bag_price }}'>
+    </label>
+  {%- endif -%}
+
+  {%- if smc_first_pid != '' -%}
+    <div class='smc-xs' data-smc-xs='{{ smc_first_pid }}' hidden>
+      <p class='smc-eyebrow'>Passt dazu</p>
+      <div class='smc-xs__row'></div>
+    </div>
+  {%- endif -%}
+
+  {%- if settings.show_cart_note -%}
+    <cart-note class='cart__note field smc-note'>
+      <label class='smc-eyebrow' for='CartDrawer-Note'>Nachricht an Steelmonks</label>
+      <textarea
+        id='CartDrawer-Note'
+        class='text-area text-area--resize-vertical field__input'
+        name='note'
+        placeholder='Wunschtermin, Hinweis zur Gravur …'
+      >{{ cart.note }}</textarea>
+    </cart-note>
+  {%- endif -%}
+</div>
