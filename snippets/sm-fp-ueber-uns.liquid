@@ -39,7 +39,7 @@
     <div class="bl-story" id="abStory">
       {%- assign story = 'steelmonks-story,steelmonks-story-2,steelmonks-story-3,steelmonks-story-4,steelmonks-story-5,steelmonks-story-6,steelmonks-story-7,steelmonks-story-8,steelmonks-story-9,part-10-nichts-ist-personlicher-als-personalisiert,steelmonks-story-11,steelmonks-story-12' | split: ',' -%}
       {%- for sh in story -%}{%- assign sk = 'steelmonks-de/' | append: sh -%}{%- assign a = articles[sk] -%}
-        {%- if a.title != blank -%}<a class="bl-part" href="{{ a.url }}"><span class="im">{% if a.image %}{{ a.image | image_url: width: 560 | image_tag: loading: 'lazy', widths: '280, 560', sizes: '(max-width: 620px) 78vw, 300px', alt: '' }}{% endif %}</span><span class="n">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><b>{{ a.title | remove_first: 'Part ' | split: ':' | last | strip | escape }}</b></a>{%- endif -%}
+        {%- if a.title != blank -%}<a class="bl-part" href="{{ a.url }}"><span class="im">{% if a.image %}{{ a.image | image_url: width: 560 | image_tag: loading: 'lazy', widths: '280, 560', sizes: '(max-width: 620px) 78vw, 300px', alt: '' }}{% endif %}</span><span class="n">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><b>{% render 'sm-story-title', title: a.title %}</b></a>{%- endif -%}
       {%- endfor -%}
     </div>
   </div></section>

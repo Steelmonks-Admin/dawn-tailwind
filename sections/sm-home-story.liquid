@@ -1,0 +1,69 @@
+{%- comment -%} Neue Startseite: Scroll-Story „Vom Text zum Unikat“ mit eigenem Wunschtext (Schnittvorlage, Laser, Farbe, Montage) {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="story">
+  <section class="story" id="entstehung" aria-label="So entsteht Dein Schild">
+    <div class="story-sticky"><div class="wrap story-grid">
+      <div>
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h2 class="display">{{ section.settings.titel | escape }}</h2>
+        <div class="story-input"><label class="sr" for="storyText">Dein Wunschtext</label><input id="storyText" maxlength="18" value="{{ section.settings.zeile_1 | escape }}"><label class="sr" for="storyText2">Zweite Zeile</label><input id="storyText2" maxlength="20" value="{{ section.settings.zeile_2 | escape }}" style="max-width:140px"></div>
+        <ol class="steps" id="steps">
+          <li class="on"><span class="n">Schritt 1 / 4</span><h3>{{ section.settings.s1_titel | escape }}</h3><p>{{ section.settings.s1_text | escape }}</p></li>
+          <li><span class="n">Schritt 2 / 4</span><h3>{{ section.settings.s2_titel | escape }}</h3><p>{{ section.settings.s2_text | escape }}</p></li>
+          <li><span class="n">Schritt 3 / 4</span><h3>{{ section.settings.s3_titel | escape }}</h3><p>{{ section.settings.s3_text | escape }}</p></li>
+          <li><span class="n">Schritt 4 / 4</span><h3>{{ section.settings.s4_titel | escape }}</h3><p>{{ section.settings.s4_text | escape }}</p></li>
+        </ol>
+        <div class="srail" id="srail"><button type="button" class="on"><i><b></b></i><span>Idee</span></button><button type="button"><i><b></b></i><span>Laser</span></button><button type="button"><i><b></b></i><span>Farbe</span></button><button type="button"><i><b></b></i><span>Montage</span></button></div>
+      </div>
+      <div class="sstage" aria-hidden="true">
+        <div class="wall" id="sWall"></div>
+        <svg id="storySign" viewBox="0 0 600 340">
+          <defs>
+            <linearGradient id="gRaw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d646a"/><stop offset=".4" stop-color="#8b9298"/><stop offset=".7" stop-color="#666d73"/><stop offset="1" stop-color="#7b8288"/></linearGradient>
+            <linearGradient id="gBeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff6b1f" stop-opacity="0"/><stop offset=".5" stop-color="#ff9a4d" stop-opacity=".9"/><stop offset="1" stop-color="#ff6b1f" stop-opacity="0"/></linearGradient>
+            <filter id="fBrushed" x="0" y="0" width="100%" height="100%"><feTurbulence type="turbulence" baseFrequency=".003 .9" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .9 0 0 0 -.05" result="s"/><feComposite in="s" in2="SourceGraphic" operator="in" result="sp"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="sp"/></feMerge></filter>
+            <filter id="fPowder" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .28 0 0 0 -.17" result="s"/><feComposite in="s" in2="SourceGraphic" operator="in" result="sp"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="sp"/></feMerge></filter>
+            <filter id="fGlow" x="-400%" y="-10%" width="900%" height="120%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="sShadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="10" dy="16" stdDeviation="9" flood-color="#000" flood-opacity=".5"/></filter>
+            <mask id="sCut" maskUnits="userSpaceOnUse" x="0" y="0" width="600" height="340"><rect x="20" y="40" width="560" height="260" rx="28" fill="#fff"/><text id="s1" x="300" y="192" text-anchor="middle" fill="#000" font-family="Big Shoulders Stencil Display, Arial Narrow, Impact, sans-serif" font-weight="900" font-size="110">{{ section.settings.zeile_1 | upcase | escape }}</text><text id="s2" x="300" y="258" text-anchor="middle" fill="#000" font-family="Big Shoulders Stencil Display, Arial Narrow, Impact, sans-serif" font-weight="800" font-size="34" letter-spacing="8">{{ section.settings.zeile_2 | upcase | escape }}</text></mask>
+            <mask id="sPlate" maskUnits="userSpaceOnUse" x="0" y="0" width="600" height="340"><rect x="20" y="40" width="560" height="260" rx="28" fill="#fff"/></mask>
+            <clipPath id="sL"><rect id="sLr" x="0" y="0" width="20" height="340"/></clipPath>
+            <clipPath id="sR"><rect id="sRr" x="20" y="0" width="580" height="340"/></clipPath>
+          </defs>
+          <text id="meas" x="-9999" y="-9999" opacity="0" font-family="Big Shoulders Stencil Display, Arial Narrow, Impact, sans-serif" font-weight="900" font-size="110">M</text>
+          <g id="sBlue"><rect x="20" y="40" width="560" height="260" rx="28" fill="none" stroke="#6f9bff" stroke-width="2" stroke-dasharray="8 6"/><text id="sb1" x="300" y="192" text-anchor="middle" fill="none" stroke="#6f9bff" stroke-width="1.6" font-family="Big Shoulders Stencil Display, Arial Narrow, Impact, sans-serif" font-weight="900" font-size="110">{{ section.settings.zeile_1 | upcase | escape }}</text><text id="sb2" x="300" y="258" text-anchor="middle" fill="none" stroke="#6f9bff" stroke-width="1.2" font-family="Big Shoulders Stencil Display, Arial Narrow, Impact, sans-serif" font-weight="800" font-size="34" letter-spacing="8">{{ section.settings.zeile_2 | upcase | escape }}</text></g>
+          <g id="sMetal" opacity="0"><g id="sShadowG">
+            <g clip-path="url(#sR)"><rect width="600" height="340" mask="url(#sPlate)" fill="url(#gRaw)" filter="url(#fBrushed)"/></g>
+            <g clip-path="url(#sL)"><rect width="600" height="340" mask="url(#sCut)" fill="url(#gRaw)" filter="url(#fBrushed)"/></g>
+            <rect id="sColor" width="600" height="340" mask="url(#sCut)" fill="#16181a" filter="url(#fPowder)" opacity="0"/>
+          </g></g>
+          <g id="sLaser" opacity="0"><rect id="sBeamW" x="0" y="26" width="26" height="288" fill="url(#gBeam)" opacity=".55"/><rect id="sBeam" x="0" y="30" width="3" height="280" fill="#fff4e6" filter="url(#fGlow)"/></g>
+        </svg>
+        <div class="ro mono" id="sRo"><span id="sRoL">Schnittvorlage · 2 mm Stahl</span><span>Schwarz · RAL 9005</span></div>
+      </div>
+    </div></div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Text zum Unikat",
+  "tag": "section",
+  "class": "section smh-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "So entsteht Dein Schild" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Vom Text zum Unikat" },
+    { "type": "text", "id": "zeile_1", "label": "Beispieltext, erste Zeile", "default": "Familie Müller" },
+    { "type": "text", "id": "zeile_2", "label": "Beispieltext, zweite Zeile", "default": "Seit 2019" },
+    { "type": "text", "id": "s1_titel", "label": "Schritt 1: Titel", "default": "Deine Idee" },
+    { "type": "textarea", "id": "s1_text", "label": "Schritt 1: Text", "default": "Name, Datum, Zunftzeichen oder ein eigenes Foto: Du gibst den Inhalt vor, daraus entsteht die Schnittvorlage." },
+    { "type": "text", "id": "s2_titel", "label": "Schritt 2: Titel", "default": "Der Laser schneidet" },
+    { "type": "textarea", "id": "s2_text", "label": "Schritt 2: Text", "default": "Aus 2 mm starkem Stahl wird jede Linie einzeln geschnitten. Bei ausgeschnittenen Buchstaben halten kleine Stege die Innenteile von O, A und B." },
+    { "type": "text", "id": "s3_titel", "label": "Schritt 3: Titel", "default": "Die Farbe wird eingebrannt" },
+    { "type": "textarea", "id": "s3_text", "label": "Schritt 3: Text", "default": "Pulverbeschichtet in Schwarz, Anthrazit, Weiß oder Gold, alternativ blanker Edelstahl und Cortenstahl mit Rostpatina." },
+    { "type": "text", "id": "s4_titel", "label": "Schritt 4: Titel", "default": "Bereit für Deine Wand" },
+    { "type": "textarea", "id": "s4_text", "label": "Schritt 4: Text", "default": "Mit dem unsichtbaren Befestigungsset hängt das Schild mit etwas Abstand vor der Wand. Wetterfest, drinnen wie draußen." }
+  ],
+  "presets": [ { "name": "SM Start: Text zum Unikat" } ]
+}
+{% endschema %}

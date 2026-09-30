@@ -1,0 +1,4 @@
+{%- comment -%} Sterne aus den Trusted-Shops-Metafeldern: „★ 4,82 · 239“, ohne Bewertungen „Neu“ {%- endcomment -%}
+{%- assign smr_r = product.metafields.reviews.rating.value.rating | default: 0 | times: 1.0 -%}
+{%- assign smr_n = product.metafields.reviews.rating_count.value | default: 0 -%}
+{%- if smr_r > 0 and smr_n > 0 -%}<span class="stars">★</span> {{ smr_r | round: 2 | append: '' | replace: '.', ',' }}{% assign smr_d = smr_r | round: 2 | append: '' | split: '.' | last | size %}{% if smr_d == 1 %}0{% endif %} · {% render 'sm-num', n: smr_n %}{%- else -%}Neu{%- endif -%}

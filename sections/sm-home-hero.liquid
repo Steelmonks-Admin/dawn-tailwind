@@ -1,0 +1,80 @@
+{%- comment -%} Neue Startseite: Einstieg mit Überschrift, „Für wen?“-Auswahl und Kartenstapel der meistbestellten Stücke je Zielgruppe {%- endcomment -%}
+<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+{%- liquid
+  assign px_default = 'sm-px_luis.gif' | asset_url
+-%}
+<div class="smh" data-smh="hero">
+  <div class="h-hero dark">
+    <div class="wrap grid">
+      <div class="h-copy">
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h1 class="display">{{ section.settings.titel_1 }}<span class="st">{{ section.settings.titel_2 }}</span></h1>
+        {%- if section.settings.text != blank -%}<p class="lead">{{ section.settings.text }}</p>{%- endif -%}
+      </div>
+      <div class="finder" id="finder">
+        <div class="finder-q"><img id="finderPx" src="{{ px_default }}" alt="Luis in Pixel-Art zeigt auf die Auswahl" width="58" height="84"><p class="bubble" id="finderSay">{{ section.settings.frage }}</p></div>
+        <div class="fchips" id="fchips" role="group" aria-label="Für wen suchst Du?">
+          {%- for block in section.blocks -%}
+            {%- assign px = 'sm-' | append: block.settings.pixel | asset_url -%}
+            <button class="chip" type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-aud="{{ block.id }}" data-say="{{ block.settings.say | escape }}" data-px="{{ px }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="deck" id="deck" aria-live="polite">
+        {%- for block in section.blocks -%}
+          <div class="deck-set" data-set="{{ block.id }}"{% unless forloop.first %} hidden{% endunless %}>
+            {%- for p in block.settings.produkte limit: 3 -%}{%- render 'sm-home-dcard', product: p, pos: forloop.index0, first: forloop.parentloop.first -%}{%- endfor -%}
+          </div>
+        {%- endfor -%}
+        <div class="deck-nav"><button type="button" id="dPrev" aria-label="Vorheriges Produkt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" id="dNext" aria-label="Nächstes Produkt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></div>
+      </div>
+      <div class="ctas">
+        {%- if section.settings.btn_text != blank -%}<a class="btn btn-p" href="{{ section.settings.btn_link | default: '/collections/beliebt' }}">{{ section.settings.btn_text | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>{%- endif -%}
+        {%- if section.settings.link_text != blank -%}<a class="tlink" href="{{ section.settings.link_url | default: '/pages/werkstatt' }}">{{ section.settings.link_text | escape }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "SM Start: Einstieg",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Geschenke aus Stahl · Gefertigt in Deutschland" },
+    { "type": "text", "id": "titel_1", "label": "Überschrift, erste Zeile", "default": "Stahl mit" },
+    { "type": "text", "id": "titel_2", "label": "Überschrift, zweite Zeile (metallisch)", "default": "Deinem Namen." },
+    { "type": "textarea", "id": "text", "label": "Einleitung", "default": "Zunftschilder, Anhänger, Hausnummern und Unikate, lasergeschnitten und mit Deinem Wunschtext." },
+    { "type": "text", "id": "frage", "label": "Sprechblase vor der Auswahl", "default": "Für wen suchst Du? Ich zeige Dir, was andere am häufigsten bestellen." },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Bestseller ansehen" },
+    { "type": "url", "id": "btn_link", "label": "Knopf-Link" },
+    { "type": "text", "id": "link_text", "label": "Textlink daneben", "default": "oder eigenes Motiv in der Werkstatt gestalten →" },
+    { "type": "url", "id": "link_url", "label": "Textlink-Ziel" }
+  ],
+  "blocks": [
+    {
+      "type": "zielgruppe",
+      "name": "Zielgruppe",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Name", "default": "Handwerker" },
+        { "type": "textarea", "id": "say", "label": "Sprechblase beim Auswählen" },
+        { "type": "select", "id": "pixel", "label": "Pixel-Figur", "default": "px2_luis_zunft.webp", "options": [
+          { "value": "px2_luis_zunft.webp", "label": "Luis mit Zunftzeichen" },
+          { "value": "px3_jakob_fire.webp", "label": "Jakob Feuerwehr" },
+          { "value": "px3_duo_highfive.webp", "label": "Jakob und Luis, Abklatschen" },
+          { "value": "px3_luis_gift.webp", "label": "Luis mit Geschenk" },
+          { "value": "px3_luis_ladder.webp", "label": "Luis auf der Leiter" },
+          { "value": "px_luis.gif", "label": "Luis zeigt" },
+          { "value": "px_jakob.gif", "label": "Jakob zeigt" }
+        ] },
+        { "type": "product_list", "id": "produkte", "label": "Drei Produkte im Stapel", "limit": 3 }
+      ]
+    }
+  ],
+  "presets": [ { "name": "SM Start: Einstieg" } ]
+}
+{% endschema %}

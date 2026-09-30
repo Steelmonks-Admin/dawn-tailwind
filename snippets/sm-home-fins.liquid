@@ -1,0 +1,6 @@
+{%- comment -%} Oberflächen als kleine Muster (Option „Oberfläche“) {%- endcomment -%}
+{%- for smf_o in product.options_with_values -%}{%- if smf_o.name == 'Oberfläche' -%}{%- for smf_v in smf_o.values -%}
+  {%- assign smf_d = smf_v | downcase -%}{%- assign smf_k = '' -%}
+  {%- if smf_d contains 'schwarz' -%}{%- assign smf_k = 'schwarz' -%}{%- elsif smf_d contains 'anthrazit' -%}{%- assign smf_k = 'anthrazit' -%}{%- elsif smf_d contains 'weiß' or smf_d contains 'weiss' -%}{%- assign smf_k = 'weiss' -%}{%- elsif smf_d contains 'gold' -%}{%- assign smf_k = 'gold' -%}{%- elsif smf_d contains 'corten' -%}{%- assign smf_k = 'corten' -%}{%- elsif smf_d contains 'edelstahl' -%}{%- assign smf_k = 'edelstahl' -%}{%- endif -%}
+  {%- if smf_k != '' -%}<i class="tx tx-{{ smf_k }}" title="{{ smf_v | escape }}"></i>{%- endif -%}
+{%- endfor -%}{%- endif -%}{%- endfor -%}

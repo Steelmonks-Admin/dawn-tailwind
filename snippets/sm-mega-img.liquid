@@ -1,0 +1,56 @@
+{%- comment -%}
+  Bild zu einem Menüpunkt für das neue Mega-Menü. Ausgabe: "<url>|<art>" (art: foto, px für Pixel-Art, lg für Logos).
+  Reihenfolge: Produkt aus dem Kollektions-Metafeld steelmonks.menu_bild, Pixel-Art (nur Geburtstag), Kollektionsbild, erstes Produkt.
+  Seiten (Werkstatt, Anfragen, Wappen, Firmenschild, Galerie) haben feste Bilder aus dem Theme. Mit b: true das zweite Bild (Überblenden).
+{%- endcomment -%}
+{%- liquid
+  assign smi_u = ''
+  assign smi_k = 'foto'
+  assign smi_w = w | default: 160
+  if link.type == 'collection_link' and link.object
+    assign smi_c = link.object
+    assign smi_mp = smi_c.metafields.steelmonks.menu_bild.value
+    assign smi_px = ''
+    if smi_c.handle == 'zum-geburtstag'
+      assign smi_px = 'sm-px2_chest.webp'
+    endif
+    if smi_mp and smi_mp.featured_image
+      assign smi_u = smi_mp.featured_image | image_url: width: smi_w
+    elsif smi_px != ''
+      assign smi_u = smi_px | asset_url
+      assign smi_k = 'px'
+    elsif smi_c.featured_image
+      assign smi_u = smi_c.featured_image | image_url: width: smi_w
+    elsif smi_c.products.first.featured_image
+      assign smi_u = smi_c.products.first.featured_image | image_url: width: smi_w
+    endif
+  elsif link.type == 'page_link' and link.object
+    case link.object.handle
+      when 'werkstatt'
+        if b
+          assign smi_u = 'sm-w_hund_b.webp' | asset_url
+        else
+          assign smi_u = 'sm-w_hund_a.webp' | asset_url
+        endif
+      when 'anfragen'
+        assign smi_u = 'sm-px4_monk_sketch.webp' | asset_url
+        assign smi_k = 'px'
+      when 'dein-wappen'
+        if b
+          assign smi_u = 'sm-w_wappen_b.webp' | asset_url
+        else
+          assign smi_u = 'sm-w_wappen_a.webp' | asset_url
+          assign smi_k = 'wh'
+        endif
+      when 'dein-firmenschild'
+        assign smi_u = 'sm-px4_jakob_firma.webp' | asset_url
+        assign smi_k = 'px'
+      when 'fotogalerie'
+        if b
+          assign smi_u = 'sm-g_02.webp' | asset_url
+        else
+          assign smi_u = 'sm-g_01.webp' | asset_url
+        endif
+    endcase
+  endif
+-%}{{ smi_u }}|{{ smi_k }}

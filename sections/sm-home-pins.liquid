@@ -1,0 +1,54 @@
+{%- comment -%} Neue Startseite: Anstecker auf Pixel-Karten als Kartenstapel zum Durchblättern {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="pins">
+  <section class="sec anth" aria-labelledby="pinsT-{{ section.id }}">
+    <div class="wrap pins-grid">
+      <div>
+        <span class="pxfx pxa-bob" data-fx="twinkle:.07:.25:1.5" style="margin-bottom:14px"><img src="{{ 'sm-px2_duo_pin.webp' | asset_url }}" alt="Pixel-Art: Jakob und Luis mit dem Keine-Gewalt-Pin" style="width:120px;height:auto" width="120" height="120" loading="lazy"></span>
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h2 class="h2" id="pinsT-{{ section.id }}">{{ section.settings.titel | escape }}</h2>
+        <p class="muted" style="margin-top:14px;max-width:44ch">{{ section.settings.text | escape }}</p>
+        <div class="pins-list" id="pinsList">
+          {%- for block in section.blocks -%}
+            {%- assign pp = block.settings.produkt -%}
+            <button type="button" data-pin="{{ forloop.index0 }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" {{ block.shopify_attributes }}><span>{{ block.settings.titel | default: pp.title | escape }}</span><span class="tnum">{% if block.settings.preis != blank %}{{ block.settings.preis | escape }}{% elsif pp %}{% render 'sm-home-price', product: pp %}{% endif %}</span></button>
+          {%- endfor -%}
+          <a class="btn btn-p" style="margin-top:8px;justify-self:start" href="{{ section.settings.btn_link | default: '/collections/pins-und-anstecker' }}">{{ section.settings.btn_text | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+      <div class="pdeck" id="pdeck">
+        {%- for block in section.blocks -%}
+          {%- assign pp = block.settings.produkt -%}
+          {%- assign bild = 'sm-' | append: block.settings.karte | asset_url -%}
+          <figure data-i="{{ forloop.index0 }}"{% if pp %} data-url="{{ pp.url }}"{% endif %}><img src="{{ bild }}" alt="Anstecker {{ block.settings.titel | default: pp.title | escape }} auf seiner Karte" loading="lazy" width="420" height="560"><figcaption><b>{{ block.settings.titel | default: pp.title | escape }}</b><span class="tnum">{% if block.settings.preis != blank %}{{ block.settings.preis | escape }}{% elsif pp %}{% render 'sm-home-price', product: pp %}{% endif %}</span></figcaption></figure>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Anstecker",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Anstecker auf Pixel-Karten" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Kleine Dinge, die ankommen." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Jeder Anstecker kommt auf einer Karte mit den Pixel-Figuren von Luis und Jakob. Tipp auf den Stapel oder wähle unten." },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Alle Anstecker" },
+    { "type": "url", "id": "btn_link", "label": "Knopf-Link" }
+  ],
+  "blocks": [
+    { "type": "pin", "name": "Anstecker", "settings": [
+      { "type": "product", "id": "produkt", "label": "Produkt" },
+      { "type": "text", "id": "titel", "label": "Name (leer = Produktname)" },
+      { "type": "text", "id": "preis", "label": "Preistext (leer = Produktpreis)" },
+      { "type": "select", "id": "karte", "label": "Bild der Karte", "default": "pin_retter.webp", "options": [
+        { "value": "pin_retter.webp", "label": "Keine Gewalt gegen Retter" }, { "value": "pin_zunftpin.webp", "label": "Zunft" }, { "value": "pin_lecker.webp", "label": "Lecker Bierchen" }, { "value": "pin_laender.webp", "label": "Länder" }, { "value": "pin_freizeit.webp", "label": "Freizeit" } ] }
+    ] }
+  ],
+  "presets": [ { "name": "SM Start: Anstecker" } ]
+}
+{% endschema %}

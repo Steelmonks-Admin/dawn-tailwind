@@ -1,0 +1,33 @@
+{%- comment -%} Neue Startseite: Die Steelmonks-Story als Reihe, zwölf Teile aus dem Blog {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+{%- assign story = section.settings.teile | split: ',' -%}
+{%- assign first_key = 'steelmonks-de/' | append: story.first | strip -%}
+<div class="smh" data-smh="serie">
+  <section class="sec anth" id="steelmonksStory" aria-labelledby="stT-{{ section.id }}">
+    <div class="wrap">
+      <div class="sa-head"><div class="t"><span class="pxfx pxa-sway hide-m"><img src="{{ 'sm-px2_monk_pc.webp' | asset_url }}" alt="" width="112" height="112" loading="lazy"></span><div><p class="eyebrow" style="color:var(--steel)">{{ section.settings.eyebrow | escape }}</p><h2 class="h2" id="stT-{{ section.id }}">{{ section.settings.titel | escape }}</h2></div></div><div class="bl-nav"><button type="button" data-sn="-1" aria-label="Zurück">‹</button><button type="button" data-sn="1" aria-label="Weiter">›</button><a class="btn btn-p" href="{{ articles[first_key].url | default: '/blogs/steelmonks-de' }}">{{ section.settings.btn_text | escape }}</a></div></div>
+      <p style="max-width:62ch;margin:-8px 0 24px;color:var(--steel)">{{ section.settings.text | escape }}</p>
+      <div class="bl-story" id="stStory">
+        {%- for sh in story -%}{%- assign sk = 'steelmonks-de/' | append: sh | strip -%}{%- assign a = articles[sk] -%}
+          {%- if a.title != blank -%}<a class="bl-part" href="{{ a.url }}"><span class="im">{% if a.image %}{{ a.image | image_url: width: 560 | image_tag: loading: 'lazy', widths: '280, 560', sizes: '(max-width: 620px) 78vw, 300px', alt: '' }}{% endif %}</span><span class="n">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span><b>{% render 'sm-story-title', title: a.title %}</b></a>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Story-Reihe",
+  "tag": "section",
+  "class": "section smh-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Serie · 12 Teile" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Die Steelmonks-Story" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Vom Traum zur Realität, vom Tauschgeschäft zur Manufaktur: wie Steelmonks entstanden ist, erzählt in zwölf Teilen." },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Mit Teil 1 beginnen" },
+    { "type": "textarea", "id": "teile", "label": "Artikel (Handles im Blog steelmonks-de, durch Komma getrennt)", "default": "steelmonks-story,steelmonks-story-2,steelmonks-story-3,steelmonks-story-4,steelmonks-story-5,steelmonks-story-6,steelmonks-story-7,steelmonks-story-8,steelmonks-story-9,part-10-nichts-ist-personlicher-als-personalisiert,steelmonks-story-11,steelmonks-story-12" }
+  ],
+  "presets": [ { "name": "SM Start: Story-Reihe" } ]
+}
+{% endschema %}

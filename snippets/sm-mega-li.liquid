@@ -1,0 +1,10 @@
+{%- comment -%}
+  Ein Eintrag im neuen Mega-Menü: kleines Bild, Name (Klammerzusatz als zweite Zeile), Vorschau-Daten fürs große Bild.
+  Markierungen im Menütitel („--highlighted“, „--highlighted-red“) werden wie im bisherigen Menü als farbiger Verlauf gezeigt.
+{%- endcomment -%}
+{%- capture sml_s -%}{% render 'sm-mega-img', link: c, w: 120 %}{%- endcapture -%}{%- assign sml_s = sml_s | strip | split: '|' -%}
+{%- if prev -%}{%- capture sml_b -%}{% render 'sm-mega-img', link: c, w: 700 %}{%- endcapture -%}{%- assign sml_b = sml_b | strip | split: '|' -%}{%- endif -%}
+{%- assign sml_hl = '' -%}{%- if c.title contains '--highlighted-red' -%}{%- assign sml_hl = '--highlighted-red' -%}{%- elsif c.title contains '--highlighted' -%}{%- assign sml_hl = '--highlighted' -%}{%- endif -%}
+{%- assign sml_title = c.title | remove: '--highlighted-red' | remove: '--highlighted' | strip -%}
+{%- assign sml_t = sml_title | split: ' (' -%}{%- assign sml_sub = '' -%}{%- if sml_t.size > 1 -%}{%- assign sml_sub = sml_t.last | remove: ')' | strip -%}{%- endif -%}
+<li><a href="{{ c.url }}"{% if prev %} data-pi="{{ sml_b[0] }}" data-pk="{{ sml_b[1] }}" data-pt="{{ sml_t.first | strip | escape }}"{% endif %}>{% if sml_s[0] != blank %}<img src="{{ sml_s[0] }}" alt="" class="{{ sml_s[1] }}" loading="lazy" width="36" height="36">{% else %}<span class="ph0" aria-hidden="true"></span>{% endif %}<span><span class="{{ sml_hl }}">{{ sml_t.first | strip | escape }}</span>{% if sml_sub != '' %}<small>{{ sml_sub | escape }}</small>{% endif %}</span><i aria-hidden="true">→</i></a></li>

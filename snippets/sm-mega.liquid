@@ -1,0 +1,63 @@
+{%- comment -%}
+  Neues Mega-Menü am Desktop (erst auf der neuen Startseite ?view=neu): gleiche Menüpunkte wie im Shop (Navigation „main-menu“),
+  Knöpfe im Stil des bisherigen Headers, Flächen mit Bildern und Pixel-Art. Aufbau je Menüpunkt:
+  erster Punkt = Liste, Top 3 aus „Beliebt“ und Jakob; Punkt mit Unterpunkten in Gruppen = Gruppen mit Vorschau;
+  Punkt nur mit Seiten = Bildkarten; sonst Liste in zwei Spalten mit Vorschau. Bilder: snippets/sm-mega-img.liquid.
+{%- endcomment -%}
+{%- assign smm_menu = section.settings.menu -%}
+<nav class="header__inline-menu smm-nav" aria-label="Hauptmenü">
+  <ul class="twcss-flex twcss-gap-4 twcss-items-center twcss-list-none smm-top" role="list">
+    {%- for link in smm_menu.links -%}
+      {%- assign hl = '' -%}{%- if link.title contains '--highlighted-red' -%}{%- assign hl = '--highlighted-red' -%}{%- elsif link.title contains '--highlighted' -%}{%- assign hl = '--highlighted' -%}{%- endif -%}
+      <li>
+        {%- if link.links != blank -%}
+          <button class="header__menu-item list-menu__item link focus-inset smm-nb" type="button" data-p="smm-p{{ forloop.index }}" aria-expanded="false" aria-controls="smm-p{{ forloop.index }}"><span class="{{ hl }}{% if link.child_active %} header__active-menu-item{% endif %}">{{ link.title | remove: hl | escape }}</span>{{- 'icon-caret.svg' | inline_asset_content -}}</button>
+        {%- else -%}
+          <a class="header__menu-item list-menu__item link focus-inset" href="{{ link.url }}"><span class="{{ hl }}">{{ link.title | remove: hl | escape }}</span></a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+  <span class="smm-ink" aria-hidden="true"></span>
+</nav>
+<div class="smm smm-mg" id="smmMg" aria-hidden="true"><div class="mg-box"><div class="mg-in">
+  {%- for link in smm_menu.links -%}{%- if link.links != blank -%}
+    {%- assign pid = 'smm-p' | append: forloop.index -%}
+    {%- assign allpages = true -%}{%- for c in link.links -%}{%- if c.type != 'page_link' -%}{%- assign allpages = false -%}{%- endif -%}{%- endfor -%}
+    {%- if link.levels > 1 -%}
+      <div class="mg-p mg-p--groups" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
+        {%- for g in link.links -%}
+          <div><p class="mg-h">{{ g.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</p><ul class="ml sm{% if g.links.size > 8 %} two{% endif %}">{%- for c in g.links -%}{%- render 'sm-mega-li', c: c, prev: true -%}{%- endfor -%}</ul></div>
+        {%- endfor -%}
+        <div class="mg-prev" data-sub="Kollektion ansehen"><img class="big px" src="{{ 'sm-px4_monk_curator.webp' | asset_url }}" alt="" loading="lazy"><div class="cap"><b>Stöbern nach Thema</b><span>Vom Baum des Lebens bis zum Zunftzeichen: Fast jedes Motiv personalisieren wir mit Deinem Text.</span><br><a href="{{ link.links.first.links.first.url | default: '/collections/all' }}">Themen ansehen →</a></div></div>
+      </div>
+    {%- elsif allpages -%}
+      <div class="mg-p mg-p--cards" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
+        {%- for c in link.links -%}
+          {%- capture a -%}{% render 'sm-mega-img', link: c, w: 480 %}{%- endcapture -%}{%- assign a = a | strip | split: '|' -%}
+          {%- capture b2 -%}{% render 'sm-mega-img', link: c, w: 480, b: true %}{%- endcapture -%}{%- assign b2 = b2 | strip | split: '|' -%}
+          {%- assign t = c.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | split: ' (' -%}{%- assign sub = '' -%}{%- if t.size > 1 -%}{%- assign sub = t.last | remove: ')' | strip | append: '.' -%}{%- endif -%}
+          {%- if sub == '' -%}{%- case c.object.handle -%}{%- when 'anfragen' -%}{%- assign sub = 'Deine Idee als Einzelstück oder Serie, mit unverbindlichem Angebot.' -%}{%- when 'dein-wappen' -%}{%- assign sub = 'Aus Zeichnung oder Vorlage wird Stahl.' -%}{%- when 'dein-firmenschild' -%}{%- assign sub = 'Logos und Schilder für Dein Unternehmen.' -%}{%- when 'fotogalerie' -%}{%- assign sub = 'Echte Stücke aus unserer Werkstatt.' -%}{%- endcase -%}{%- endif -%}
+          <a class="mc" href="{{ c.url }}"><div class="mc-i {{ a[1] }}">{% if a[0] != blank %}<img src="{{ a[0] }}" alt="" loading="lazy">{% endif %}{% if b2[0] != blank and b2[0] != a[0] %}<img class="b" src="{{ b2[0] }}" alt="" loading="lazy">{% endif %}</div><div class="mc-t"><b>{{ t.first | escape }}</b>{% if sub != '' %}<span>{{ sub | escape }}</span>{% endif %}</div></a>
+        {%- endfor -%}
+      </div>
+    {%- elsif forloop.first -%}
+      {%- assign top = collections['beliebt'] -%}
+      {%- assign gesamt = shop.metafields.steelmonks.bestellungen_gesamt.value | default: 100000 | divided_by: 1000 | times: 1000 -%}
+      <div class="mg-p mg-p--beliebt" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
+        <div><p class="mg-h">{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</p><ul class="ml">{%- for c in link.links -%}{%- render 'sm-mega-li', c: c -%}{%- endfor -%}</ul></div>
+        <div><p class="mg-h">Am häufigsten bestellt · seit 2020</p><div class="feat">
+          {%- for p in top.products limit: 3 -%}
+            <a class="feat-card" href="{{ p.url }}">{% if p.featured_media %}{{ p.featured_media | image_url: width: 220 | image_tag: loading: 'lazy', alt: '', width: 100, height: 100 }}{% endif %}<div><b>{{ p.title | escape }}</b><span>{% render 'sm-home-price', product: p %}{% capture so %}{% render 'sm-home-sold', product: p %}{% endcapture %}{% if so != blank %} · {{ so }}{% endif %}</span></div></a>
+          {%- endfor -%}
+        </div><a class="mg-all" href="{{ top.url | default: '/collections/beliebt' }}">Alle Bestseller ansehen →</a></div>
+        <a class="mg-px" href="{{ top.url | default: '/collections/beliebt' }}"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="Jakob in Pixel-Art mit Pokal" loading="lazy" width="92" height="120"><p><b>Echte Rangliste.</b> Gezählt aus über {% render 'sm-num', n: gesamt %} Bestellungen seit 2020.</p><span class="link">Zur Beliebt-Seite →</span></a>
+      </div>
+    {%- else -%}
+      <div class="mg-p mg-p--list" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
+        <div><p class="mg-h">{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</p><ul class="ml two">{%- for c in link.links -%}{%- render 'sm-mega-li', c: c, prev: true -%}{%- endfor -%}</ul></div>
+        <div class="mg-prev" data-sub="Geschenkideen ansehen"><img class="big px" src="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt="" loading="lazy"><div class="cap"><b>Unsicher, was passt?</b><span>Wähle auf der Startseite, für wen Du suchst. Wir zeigen Dir, was andere für diese Person am häufigsten bestellen.</span><br><a href="{{ routes.root_url }}{% if template.suffix == 'neu' %}?view=neu{% endif %}#finder">Zur Auswahl →</a></div></div>
+      </div>
+    {%- endif -%}
+  {%- endif -%}{%- endfor -%}
+</div></div></div>

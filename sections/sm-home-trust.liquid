@@ -1,0 +1,39 @@
+{%- comment -%}
+  Neue Startseite: Vertrauensleiste. Die Trusted-Shops-Werte kommen live aus dem öffentlichen Bewertungs-Feed (sm-home.js),
+  die Zahlen hier sind der Stand vom 30.09.2026 und stehen da, falls der Feed nicht antwortet.
+{%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="trust">
+  <div class="trust4"><ul class="wrap">
+    <li><span class="stars" aria-hidden="true" style="font-size:20.8px">★</span><div><b><span data-ts-rating>{{ section.settings.ts_note }}</span> „Hervorragend“</b><span><span data-ts-count>{{ section.settings.ts_anzahl }}</span> Bewertungen bei Trusted Shops</span></div></li>
+    {%- for block in section.blocks -%}
+      {%- case block.settings.icon -%}{%- when 'geschenk' -%}{%- assign ic = 'https://cdn.shopify.com/s/files/1/0472/6420/2901/files/opened-gift.png?v=1708352267&width=80' -%}{%- when 'rabatt' -%}{%- assign ic = 'https://cdn.shopify.com/s/files/1/0472/6420/2901/files/discount-tag.png?v=1708352250&width=80' -%}{%- else -%}{%- assign ic = 'https://cdn.shopify.com/s/files/1/0472/6420/2901/files/free-shipping.png?v=1708352230&width=80' -%}{%- endcase -%}
+      <li {{ block.shopify_attributes }}><img src="{{ ic }}" alt="" width="34" height="34" loading="lazy"><div><b>{{ block.settings.titel | escape }}</b><span>{{ block.settings.text | escape }}</span></div></li>
+    {%- endfor -%}
+  </ul></div>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Vertrauen",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "text", "id": "ts_note", "label": "Trusted-Shops-Note (Rückfall)", "default": "4,82", "info": "Wird beim Laden durch den aktuellen Wert der letzten 12 Monate ersetzt." },
+    { "type": "text", "id": "ts_anzahl", "label": "Anzahl Bewertungen (Rückfall)", "default": "6.628", "info": "Wird beim Laden durch die aktuelle Gesamtzahl ersetzt." }
+  ],
+  "blocks": [
+    { "type": "punkt", "name": "Punkt", "settings": [
+      { "type": "select", "id": "icon", "label": "Symbol", "default": "versand", "options": [
+        { "value": "versand", "label": "Versand" },
+        { "value": "geschenk", "label": "Geschenk" },
+        { "value": "rabatt", "label": "Rabatt" }
+      ] },
+      { "type": "text", "id": "titel", "label": "Titel" },
+      { "type": "text", "id": "text", "label": "Text" }
+    ] }
+  ],
+  "presets": [ { "name": "SM Start: Vertrauen" } ]
+}
+{% endschema %}

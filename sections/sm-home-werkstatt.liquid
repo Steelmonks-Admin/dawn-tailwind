@@ -1,0 +1,74 @@
+{%- comment -%} Neue Startseite: Werkstatt „Vom Bild zum Schild“ mit Vorher/Nachher-Regler, Beispielen und Laufband echter Stücke {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="werkstatt">
+  <section class="sec dark werk" aria-labelledby="werkT-{{ section.id }}">
+    <div class="wrap werk-grid">
+      <div>
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h2 class="display" id="werkT-{{ section.id }}">{{ section.settings.titel | escape }}</h2>
+        <p class="lead">{{ section.settings.text | escape }}</p>
+        <div class="tabs" role="tablist" aria-label="Beispiele aus der Werkstatt" id="werkTabs">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign a = 'sm-w_' | append: block.settings.paar | append: '_a.webp' | asset_url
+              assign b = 'sm-w_' | append: block.settings.paar | append: '_b.webp' | asset_url
+              if block.settings.bild_a != blank
+                assign a = block.settings.bild_a | image_url: width: 900
+              endif
+              if block.settings.bild_b != blank
+                assign b = block.settings.bild_b | image_url: width: 900
+              endif
+            -%}
+            <button class="chip" type="button" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}" data-a="{{ a }}" data-b="{{ b }}" data-kind="{{ block.settings.art | escape }}" data-text="{{ block.settings.vorgabe | escape }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
+          {%- endfor -%}
+        </div>
+        {%- assign f = section.blocks.first -%}
+        <div class="prompt"><span class="mono" style="color:var(--steel)" id="promptKind">{{ f.settings.art | escape }}</span><q id="promptText">{{ f.settings.vorgabe | escape }}</q></div>
+        <div style="margin-top:22px"><a class="btn btn-p" href="{{ section.settings.btn_link | default: '/pages/werkstatt' }}">{{ section.settings.btn_text | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      {%- liquid
+        assign a0 = 'sm-w_' | append: f.settings.paar | append: '_a.webp' | asset_url
+        assign b0 = 'sm-w_' | append: f.settings.paar | append: '_b.webp' | asset_url
+        if f.settings.bild_a != blank
+          assign a0 = f.settings.bild_a | image_url: width: 900
+        endif
+        if f.settings.bild_b != blank
+          assign b0 = f.settings.bild_b | image_url: width: 900
+        endif
+      -%}
+      <div class="cmp" id="cmp"><img class="before" id="cmpA" src="{{ a0 }}" alt="Vorlage" loading="lazy"><img class="after" id="cmpB" src="{{ b0 }}" alt="Fertiges Schild aus Stahl" loading="lazy"><span class="lab l mono">Vorlage</span><span class="lab r mono">Dein Schild</span><span class="bar" aria-hidden="true"></span><span class="knob" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span><label class="sr" for="cmpRange">Vergleich verschieben</label><input type="range" id="cmpRange" min="0" max="100" value="50"></div>
+    </div>
+    <div class="mq"><div class="mq-track" id="mq">
+      {%- for i in (1..16) -%}{%- if i < 10 -%}{%- assign g = 'sm-g_0' | append: i -%}{%- else -%}{%- assign g = 'sm-g_' | append: i -%}{%- endif -%}<figure><img src="{{ g | append: '.webp' | asset_url }}" alt="Kundenschild aus der Werkstatt" loading="lazy" width="240" height="240"></figure>{%- endfor -%}
+      {%- for i in (1..16) -%}{%- if i < 10 -%}{%- assign g = 'sm-g_0' | append: i -%}{%- else -%}{%- assign g = 'sm-g_' | append: i -%}{%- endif -%}<figure aria-hidden="true" class="dup"><img src="{{ g | append: '.webp' | asset_url }}" alt="" loading="lazy" width="240" height="240"></figure>{%- endfor -%}
+    </div></div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Werkstatt",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Die Werkstatt" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Vom Bild zum Schild." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Lade ein Foto hoch oder beschreibe Deine Idee in einem Satz. Die Werkstatt zeigt Dir den fertigen Entwurf, bevor Du bestellst." },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Werkstatt öffnen" },
+    { "type": "url", "id": "btn_link", "label": "Knopf-Link" }
+  ],
+  "blocks": [
+    { "type": "beispiel", "name": "Beispiel", "settings": [
+      { "type": "text", "id": "label", "label": "Name", "default": "Hund" },
+      { "type": "text", "id": "art", "label": "Art der Vorgabe", "default": "Vorgabe mit Foto" },
+      { "type": "textarea", "id": "vorgabe", "label": "Vorgabe des Kunden (unverändert)" },
+      { "type": "select", "id": "paar", "label": "Bilder", "default": "hund", "options": [
+        { "value": "hund", "label": "Hund" }, { "value": "paar", "label": "Paar" }, { "value": "panther", "label": "Löschfahrzeug" }, { "value": "lotta", "label": "Nur Text (Lotta)" }, { "value": "wappen", "label": "Wappen" } ] },
+      { "type": "image_picker", "id": "bild_a", "label": "Eigenes Bild: Vorlage", "info": "Ersetzt das Vorlagenbild der Auswahl oben." },
+      { "type": "image_picker", "id": "bild_b", "label": "Eigenes Bild: fertiges Schild" }
+    ] }
+  ],
+  "presets": [ { "name": "SM Start: Werkstatt" } ]
+}
+{% endschema %}

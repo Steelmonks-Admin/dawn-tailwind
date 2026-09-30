@@ -1,0 +1,30 @@
+{%- comment -%} Neue Startseite: „Die Lieblinge“, Rangliste der meistbestellten Stücke {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="lieblinge">
+  <section class="sec" aria-labelledby="lieblingeT-{{ section.id }}">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 class="h2" id="lieblingeT-{{ section.id }}">{{ section.settings.titel | escape }}</h2></div>
+        {%- if section.settings.btn_text != blank -%}<a class="btn btn-i" href="{{ section.settings.btn_link | default: '/collections/beliebt' }}">{{ section.settings.btn_text | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>{%- endif -%}
+      </div>
+      <div class="ranks">
+        {%- for p in section.settings.produkte limit: 8 -%}<div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: p %}</div>{%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Lieblinge",
+  "tag": "section",
+  "class": "section smh-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Die Lieblinge · seit 2020" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Was am häufigsten bestellt wird" },
+    { "type": "product_list", "id": "produkte", "label": "Rangliste (Reihenfolge = Platz)", "limit": 8 },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Alle ansehen" },
+    { "type": "url", "id": "btn_link", "label": "Knopf-Link" }
+  ],
+  "presets": [ { "name": "SM Start: Lieblinge" } ]
+}
+{% endschema %}

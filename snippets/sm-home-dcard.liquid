@@ -1,0 +1,11 @@
+{%- comment -%} Karte im Stapel der Startseite; bei einigen Bestsellern gibt es ein Foto in der Hand als Theme-Asset (sm-pp0_<handle>.webp) {%- endcomment -%}
+{%- if product != blank -%}
+{%- assign smd_pp = 'zunftschild-geschenk-fur-handwerker-personalisiert,feuerwehr-schlusselanhanger-dfv-signet,keine-gewalt-gegen-retter-anstecker,monogramm-personalisierte-wanddekoration-hochzeitsgeschenk,baum-des-lebens-familienschild-personalisiert,modernes-strassenschild-einweihungsgeschenk,hausnummer-mit-namen-einweihungsgeschenk,zunft-anhanger-geschenk-fur-handwerker' | split: ',' -%}
+<a class="dcard" data-pos="{{ pos }}" href="{{ product.url }}">
+  <div class="ph">
+    {%- if smd_pp contains product.handle -%}{%- assign smd_f = 'sm-pp0_' | append: product.handle | append: '.webp' -%}<img src="{{ smd_f | asset_url }}" alt="{{ product.title | escape }}" width="480" height="480" {% if pos == 0 and first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+    {%- elsif product.featured_media -%}{{ product.featured_media | image_url: width: 720 | image_tag: loading: 'lazy', widths: '360, 540, 720', sizes: '(max-width: 760px) 78vw, 360px', alt: product.title }}{%- endif -%}
+  </div>
+  <div class="body"><h3>{{ product.title | escape }}</h3><div class="meta"><b class="tnum">{% render 'sm-home-price', product: product %}</b><span>{% render 'sm-home-rating', product: product %}</span></div>{% render 'sm-home-sold', product: product %}</div>
+</a>
+{%- endif -%}

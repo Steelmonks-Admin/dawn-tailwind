@@ -1,0 +1,3 @@
+{%- comment -%} Ganze Zahl mit Tausenderpunkt: {% render 'sm-num', n: 8100 %} → 8.100 {%- endcomment -%}
+{%- assign smn_s = n | round | append: '' -%}{%- assign smn_l = smn_s.size -%}
+{%- for smn_i in (1..smn_l) -%}{%- assign smn_k = smn_i | minus: 1 -%}{{ smn_s | slice: smn_k }}{%- assign smn_r = smn_l | minus: smn_i -%}{%- assign smn_m = smn_r | modulo: 3 -%}{%- if smn_r > 0 and smn_m == 0 -%}.{%- endif -%}{%- endfor -%}

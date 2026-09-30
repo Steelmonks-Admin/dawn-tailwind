@@ -1,0 +1,10 @@
+{%- comment -%} Titel eines Story-Teils ohne „Part N:“ und ohne „Die Geschichte der Steelmonks:“/„Die Steelmonks Story (Part N):“ davor {%- endcomment -%}
+{%- assign sst_p = title | split: ': ' -%}{%- assign sst_out = '' -%}{%- assign sst_skip = true -%}
+{%- for sst_x in sst_p -%}
+  {%- assign sst_l = sst_x | downcase -%}
+  {%- if sst_skip and forloop.last == false -%}
+    {%- if sst_l contains 'part ' or sst_l contains 'geschichte der steelmonks' or sst_l contains 'steelmonks story' -%}{%- continue -%}{%- endif -%}
+  {%- endif -%}
+  {%- assign sst_skip = false -%}
+  {%- if sst_out != '' -%}{%- assign sst_out = sst_out | append: ': ' -%}{%- endif -%}{%- assign sst_out = sst_out | append: sst_x -%}
+{%- endfor -%}{{ sst_out | strip | escape }}

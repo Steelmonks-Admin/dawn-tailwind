@@ -1,0 +1,13 @@
+{%- comment -%}
+  Bestellzahl eines Produkts aus dem Metafeld steelmonks.bestellungen (Stand 30.09.2026 als Grundwert, neue Bestellungen kommen oben drauf),
+  gerundet wie im Prototyp: ab 1.000 auf Hunderter, ab 100 auf Zehner, mit „+“.
+{%- endcomment -%}
+{%- assign smo_n = product.metafields.steelmonks.bestellungen.value | default: 0 -%}
+{%- if smo_n >= 100 -%}
+  {%- if smo_n >= 1000 -%}{%- assign smo_r = smo_n | divided_by: 100 | times: 100 -%}{%- else -%}{%- assign smo_r = smo_n | divided_by: 10 | times: 10 -%}{%- endif -%}
+  <span class="sold">{% render 'sm-num', n: smo_r %}+ Bestellungen</span>
+{%- elsif smo_n > 0 -%}
+  <span class="sold">{{ smo_n }} Bestellungen</span>
+{%- elsif blank_line -%}
+  <span class="sold">&nbsp;</span>
+{%- endif -%}

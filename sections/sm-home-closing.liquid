@@ -1,0 +1,27 @@
+{%- comment -%} Neue Startseite: Abschluss „Bereit für Dein Unikat?“ {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="closing">
+  <section class="closing" aria-labelledby="endT-{{ section.id }}"><div class="wrap">
+    <span class="pxfx pxa-bob" data-fx="twinkle:.5:.04:2.5" style="margin-bottom:10px"><img src="{{ 'sm-px3_duo_highfive.webp' | asset_url }}" alt="Pixel-Art: Jakob und Luis klatschen sich ab" style="width:150px;height:auto" width="150" height="150" loading="lazy"></span>
+    <h2 class="display" id="endT-{{ section.id }}">{{ section.settings.titel | escape }}</h2>
+    <p>{{ section.settings.text | escape }}</p>
+    <div class="ctas"><a class="btn btn-p" href="{{ section.settings.btn_link | default: '/collections/beliebt' }}">{{ section.settings.btn_text | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="tlink" href="{{ section.settings.link_url | default: '/pages/werkstatt' }}">{{ section.settings.link_text | escape }}</a></div>
+  </div></section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Abschluss",
+  "tag": "section",
+  "class": "section smh-section",
+  "settings": [
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Bereit für Dein Unikat?" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Wähle aus Hunderten Schildern und Anhängern oder gestalte Dein eigenes in der Werkstatt." },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Bestseller entdecken" },
+    { "type": "url", "id": "btn_link", "label": "Knopf-Link" },
+    { "type": "text", "id": "link_text", "label": "Textlink", "default": "oder Dein eigenes Motiv gestalten →" },
+    { "type": "url", "id": "link_url", "label": "Textlink-Ziel" }
+  ],
+  "presets": [ { "name": "SM Start: Abschluss" } ]
+}
+{% endschema %}

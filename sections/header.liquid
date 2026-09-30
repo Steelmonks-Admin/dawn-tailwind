@@ -6,6 +6,8 @@
 <!-- Belohnungs-Pfad: Zeitstrahl am Desktop (header-milestones.css), Leiste auf dem Handy und Warenkorb-Panel (sm-rewards.css) -->
 {{ 'header-milestones.css' | asset_url | stylesheet_tag }}
 {{ 'sm-rewards.css' | asset_url | stylesheet_tag }}
+{%- comment -%} Neues Mega-Menü: erst auf der neuen Startseite (?view=neu), zum Umstellen die Bedingungen template.suffix == 'neu' entfernen {%- endcomment -%}
+{%- if template.suffix == 'neu' -%}{{ 'sm-mega.css' | asset_url | stylesheet_tag }}<script src="{{ 'sm-mega.js' | asset_url }}" defer></script>{%- endif -%}
 
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -163,7 +165,11 @@
   <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
     {%- liquid
       if section.settings.menu != blank
-        render 'header-drawer'
+        if template.suffix == 'neu'
+          render 'sm-mega-mobile'
+        else
+          render 'header-drawer'
+        endif
       endif
 
       if section.settings.logo_position == 'top-center' or section.settings.menu == blank
@@ -203,7 +209,9 @@
 
     {%- liquid
       if section.settings.menu != blank
-        if section.settings.menu_type_desktop == 'dropdown'
+        if template.suffix == 'neu'
+          render 'sm-mega'
+        elsif section.settings.menu_type_desktop == 'dropdown'
           render 'header-dropdown-menu'
         elsif section.settings.menu_type_desktop != 'drawer'
           render 'header-mega-menu'

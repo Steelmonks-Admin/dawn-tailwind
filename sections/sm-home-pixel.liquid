@@ -1,0 +1,44 @@
+{%- comment -%} Neue Startseite: Wimmelbild „Jedes Stück ein Unikat“. Die Stellen sind unsichtbar, beim Klick erzählt jede ein Stück Steelmonks-Geschichte. {%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<div class="smh" data-smh="pixel">
+  <section class="sec" aria-labelledby="pxT-{{ section.id }}">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 class="h2" id="pxT-{{ section.id }}">{{ section.settings.titel | escape }}</h2></div><p class="muted">{{ section.settings.text | escape }}</p></div>
+      <div class="pxw" id="pxw" data-fx="petals:0:0:1.4"><img class="ban" src="{{ 'sm-px_banner.webp' | asset_url }}" alt="Pixel-Art: Jakob und Luis vor ihrer Werkstatt" width="1200" height="672" loading="lazy">
+        <div class="pxw-hint" id="pxHint" aria-hidden="true"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt="" width="26" height="30">{{ section.settings.hinweis | escape }}</div>
+        {%- for block in section.blocks -%}
+          <button class="hs{% if block.settings.gross %} big{% endif %}" type="button" style="left:{{ block.settings.x }}%;top:{{ block.settings.y }}%" data-who="{{ block.id }}" data-t="{{ block.settings.titel | escape }}" data-fact="{{ block.settings.text | escape }}" aria-label="{{ block.settings.label | escape }}" {{ block.shopify_attributes }}></button>
+        {%- endfor -%}
+        <div class="say" id="pxSay" hidden role="status"></div></div>
+      <div class="pxw-cap" style="max-width:920px;margin-inline:auto"><p class="muted" style="max-width:60ch"><span id="pxCount" class="mono">0 von {{ section.blocks.size }} entdeckt</span></p><a class="btn btn-g" href="{{ section.settings.btn_link | default: '/pages/ueber-uns' }}">{{ section.settings.btn_text | escape }}</a></div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Wimmelbild",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Hinter Steelmonks" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Jedes Stück ein Unikat." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Die Pixel-Figuren sind Jakob und Luis. Klick Dich durch das Bild, vielleicht findest Du etwas: Acht kleine Geschichten sind darin versteckt." },
+    { "type": "text", "id": "hinweis", "label": "Hinweis auf dem Bild", "default": "Klick Dich durch, vielleicht findest Du etwas." },
+    { "type": "text", "id": "btn_text", "label": "Knopf", "default": "Über uns" },
+    { "type": "url", "id": "btn_link", "label": "Knopf-Link" }
+  ],
+  "blocks": [
+    { "type": "stelle", "name": "Versteckte Stelle", "settings": [
+      { "type": "text", "id": "label", "label": "Beschreibung für Screenreader", "default": "Geschichte über Jakob" },
+      { "type": "range", "id": "x", "label": "Position waagerecht (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
+      { "type": "range", "id": "y", "label": "Position senkrecht (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
+      { "type": "checkbox", "id": "gross", "label": "Große Klickfläche (für Personen)", "default": false },
+      { "type": "text", "id": "titel", "label": "Fett am Anfang", "default": "Jakob" },
+      { "type": "textarea", "id": "text", "label": "Geschichte" }
+    ] }
+  ],
+  "presets": [ { "name": "SM Start: Wimmelbild" } ]
+}
+{% endschema %}

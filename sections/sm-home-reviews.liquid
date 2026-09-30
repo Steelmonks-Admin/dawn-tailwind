@@ -1,0 +1,73 @@
+{%- comment -%}
+  Neue Startseite: Bewertungen. Note und Anzahl kommen live aus dem Trusted-Shops-Feed (sm-home.js), Zitate sind echte, unveränderte Bewertungen.
+{%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+{%- liquid
+  assign labels = ''
+  for block in section.blocks
+    if block.type == 'bewertung'
+      assign l = block.settings.produkt | strip
+      unless labels contains l
+        assign labels = labels | append: l | append: '|'
+      endunless
+    endif
+  endfor
+  assign labels = labels | split: '|'
+-%}
+<div class="smh" data-smh="reviews">
+  <section class="sec paper" aria-labelledby="revT-{{ section.id }}">
+    <div class="wrap">
+      <div class="score"><div class="big" aria-hidden="true" data-ts-rating>{{ section.settings.ts_note }}</div><div><p class="eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 id="revT-{{ section.id }}" style="font-size:clamp(28.8px,3.4vw,41.6px);font-weight:600;margin-top:6px">{{ section.settings.titel | escape }}</h2><div class="stars" aria-label="{{ section.settings.ts_note }} von 5 Sternen" style="font-size:24px">★★★★★</div><p class="muted"><b style="color:var(--ink)"><span data-ts-count>{{ section.settings.ts_anzahl }}</span> Bewertungen</b> · Durchschnitt <span data-ts-rating>{{ section.settings.ts_note }}</span> von 5</p></div></div>
+      <div class="rev-chips" id="revChips" role="group" aria-label="Bewertungen filtern"><button class="chip" type="button" data-rp="alle" aria-pressed="true">Alle</button>{%- for l in labels -%}<button class="chip" type="button" data-rp="{{ l | handleize }}" aria-pressed="false">{{ l | escape }}</button>{%- endfor -%}</div>
+      <div class="quotes" id="homeQuotes">
+        {%- for block in section.blocks -%}{%- if block.type == 'bewertung' -%}
+          {%- assign d = block.settings.datum | split: '-' -%}
+          <figure class="quote" data-rp="{{ block.settings.produkt | strip | handleize }}" {{ block.shopify_attributes }}><span class="stars">{% for i in (1..block.settings.sterne) %}★{% endfor %}</span><q>{{ block.settings.text | escape }}</q><figcaption class="foot2 mono"><span class="prod" style="text-transform:none;letter-spacing:0;font-family:var(--f-body)">{{ block.settings.produkt | escape }}</span><span>{% if d.size == 3 %}{{ d[2] }}.{{ d[1] }}.{{ d[0] }}{% else %}{{ block.settings.datum }}{% endif %}</span></figcaption></figure>
+        {%- endif -%}{%- endfor -%}
+      </div>
+      <div class="ugc-strip" id="homeUgc" aria-label="Kundenfotos">
+        {%- for block in section.blocks -%}{%- if block.type == 'foto' -%}
+          {%- assign d = block.settings.datum | split: '-' -%}
+          {%- if block.settings.bild != blank -%}{%- assign u = block.settings.bild | image_url: width: 800 -%}{%- else -%}{%- assign u = 'sm-' | append: block.settings.asset | asset_url -%}{%- endif -%}
+          <button type="button" data-ugc data-src="{{ u }}" data-text="{{ block.settings.text | escape }}" data-stars="{{ block.settings.sterne }}" data-date="{% if d.size == 3 %}{{ d[2] }}.{{ d[1] }}.{{ d[0] }}{% endif %}" aria-label="Kundenfoto vergrößern" {{ block.shopify_attributes }}><img src="{{ u }}" alt="Kundenfoto aus einer Bewertung" loading="lazy" width="200" height="200"></button>
+        {%- endif -%}{%- endfor -%}
+      </div>
+      <p class="muted" style="margin-top:18px;font-size:13.12px">{{ section.settings.hinweis | escape }}</p>
+    </div>
+  </section>
+</div>
+<div class="smh smh-lbw">
+  <div class="smh-lb" id="smhLb" hidden role="dialog" aria-modal="true" aria-label="Kundenfoto"><div class="smh-lb__box"><button type="button" class="smh-lb__x" aria-label="Schließen">×</button><div class="smh-lb__img"><img alt="Kundenfoto"></div><div class="smh-lb__info"><span class="stars"></span><p><q></q></p><p class="muted mono"></p></div></div></div>
+</div>
+{% schema %}
+{
+  "name": "SM Start: Bewertungen",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 40,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Was Kunden sagen" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "„Hervorragend“ bei Trusted Shops" },
+    { "type": "text", "id": "ts_note", "label": "Note (Rückfall)", "default": "4,82", "info": "Wird beim Laden durch den aktuellen Trusted-Shops-Wert der letzten 12 Monate ersetzt." },
+    { "type": "text", "id": "ts_anzahl", "label": "Anzahl (Rückfall)", "default": "6.628" },
+    { "type": "text", "id": "hinweis", "label": "Hinweis unten", "default": "Verifizierte Bewertungen, gesammelt unter den Nutzungsbedingungen von Trusted Shops. Zitate unverändert." }
+  ],
+  "blocks": [
+    { "type": "bewertung", "name": "Bewertung", "settings": [
+      { "type": "text", "id": "produkt", "label": "Produkt (für den Filter)", "default": "Signet Anhänger" },
+      { "type": "range", "id": "sterne", "label": "Sterne", "min": 1, "max": 5, "step": 1, "default": 5 },
+      { "type": "textarea", "id": "text", "label": "Text (unverändert)" },
+      { "type": "text", "id": "datum", "label": "Datum (JJJJ-MM-TT)" }
+    ] },
+    { "type": "foto", "name": "Kundenfoto", "settings": [
+      { "type": "image_picker", "id": "bild", "label": "Foto" },
+      { "type": "text", "id": "asset", "label": "Foto aus dem Theme (Dateiname ohne sm-)", "info": "Nur nötig, wenn oben kein Foto gewählt ist." },
+      { "type": "range", "id": "sterne", "label": "Sterne", "min": 1, "max": 5, "step": 1, "default": 5 },
+      { "type": "textarea", "id": "text", "label": "Text der Bewertung" },
+      { "type": "text", "id": "datum", "label": "Datum (JJJJ-MM-TT)" }
+    ] }
+  ],
+  "presets": [ { "name": "SM Start: Bewertungen" } ]
+}
+{% endschema %}
