@@ -7,8 +7,8 @@
 #CartDrawer .drawer__inner { width: 46rem; max-width: 100vw; padding: 0; background: var(--smc-paper); color: var(--smc-ink); box-shadow: -20px 0 60px -20px rgba(0, 0, 0, .4); }
 #CartDrawer .drawer__header { padding: 14px 20px; border-bottom: 1px solid var(--smc-line); }
 #CartDrawer .drawer__heading { font-size: 19px; font-weight: 600; letter-spacing: 0; margin: 0; }
-#CartDrawer .drawer__close { top: 50%; right: 12px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
-#CartDrawer .drawer__close:hover { background: var(--smc-beton); }
+#CartDrawer .drawer__header .drawer__close { top: 50%; right: 12px; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; }
+#CartDrawer .drawer__header .drawer__close:hover { background: var(--smc-beton); }
 #CartDrawer cart-drawer-items { padding: 16px 20px 20px; }
 #CartDrawer .drawer__contents, #CartDrawer .drawer__cart-items-wrapper { padding: 0; min-width: 0; width: 100%; max-width: 100%; }
 #CartDrawer .cart-drawer__form { min-width: 0; width: 100%; }
@@ -82,6 +82,8 @@
 
 /* Fuß: Zusammenfassung und Kasse */
 #CartDrawer .drawer__footer { padding: 14px 20px calc(env(safe-area-inset-bottom, 0px) + 14px) !important; border-top: 1px solid var(--smc-line); background: var(--smc-paper); display: grid; gap: 10px; }
+/* Leerer Warenkorb: wie bei Dawn ohne Fuß */
+#CartDrawer cart-drawer-items.is-empty + .drawer__footer, cart-drawer.is-empty #CartDrawer .drawer__footer { display: none; }
 #CartDrawer .smc-sum { display: grid; gap: 4px; margin: 0; padding: 0; }
 #CartDrawer .smc-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14.5px; line-height: 1.45; color: var(--smc-ink); margin: 0; }
 #CartDrawer .smc-row--ok span:last-child, #CartDrawer .smc-ok { color: var(--smc-ok); font-weight: 600; }
