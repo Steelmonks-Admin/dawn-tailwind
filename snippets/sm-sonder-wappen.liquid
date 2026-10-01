@@ -1,21 +1,25 @@
 <div class="smx" id="p-wappen" data-smx="wappen" aria-label="Wappen anfertigen lassen">
   <div class="sa-hero gold dark" id="wpHero">
-    <div class="wrap sa-grid sa-grid--form">
-      <div class="sa-copy">
+    <div class="wrap sa-grid">
+      <div>
         <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <a href="/pages/anfragen" style="color:inherit">Sonderanfertigung</a> / <span>Wappen</span></nav>
         <p class="eyebrow" style="margin-top:10px">Familienwappen aus Stahl</p>
         <h1 class="sa-h1 sa-h1-long" data-split>Dein Familien&shy;wappen. <span class="hl" style="color:#f0c35a">Für Generationen.</span></h1>
         <div class="sa-cut" aria-hidden="true"><i></i><b></b></div>
         <p class="sa-lead">Ein Erbstück des 21. Jahrhunderts: nach Deiner Vorlage, einem Foto oder <b>ganz neu entworfen</b>: mehrlagig, farbig und so groß, wie Deine Wand es verträgt.</p>
-      </div>
-      <div class="sa-heroform"><div id="wpForm"></div></div>
-      <div class="sa-meta">
         <div class="sa-ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="wpCalc">Preis in 20 Sekunden berechnen</button><button class="sa-quiet" type="button" data-scroll="wpWays">Fertige Wappen ab {{ all_products['familienwappen'].price_min | divided_by: 100 }} €</button></div>
         <div class="sa-proof"><span>ab <b>109 €</b> inkl. Vorlage</span><span>bis zu <b>3 Entwürfe</b> inklusive</span><span><b>7 bis 10</b> Werktage</span><span><span class="stars">★</span> <b>4,82</b> Trusted Shops</span></div>
-        <ul class="sa-next"><li><i>01</i><span><b>Vorlage beilegen:</b> Foto, Scan oder Datei, auch alte Urkunden und Zeichnungen.</span></li><li><i>02</i><span><b>Größe und Lagen</b> kannst Du offen lassen, der Rechner weiter unten gibt Dir den Richtpreis.</span></li><li><i>03</i><span><b>Bis zu drei Entwürfe</b> sind inklusive, gefertigt wird erst nach Deiner Freigabe.</span></li></ul>
       </div>
+      <div class="wp-arch"><div class="frame"><img src="{{ 'sm-sg_anfr_003.webp' | asset_url }}" alt="Mehrlagiges, farbiges Familienwappen aus Stahl"></div><span class="px pxfx pxa-sway" data-fx="twinkle:.5:.4:4"><img src="{{ 'sm-px4_luis_wappen.webp' | asset_url }}" alt="Pixel-Art: Luis hält ein Wappen hoch"></span></div>
     </div>
   </div>
+
+  <section class="sa-sec sa-night dark sa-formsec"><div class="wrap sa-form-c">
+    <div class="sa-form-head" data-rv><p class="eyebrow">Wappen-Anfrage</p><h2 class="sa-h2">Erzähl uns von Deinem Wappen</h2><span class="sa-line"></span></div>
+    <div id="wpForm"></div>
+    <ul class="sa-next sa-next--row"><li><i>01</i><span><b>Vorlage beilegen:</b> Foto, Scan oder Datei, auch alte Urkunden und Zeichnungen.</span></li><li><i>02</i><span><b>Größe und Lagen</b> kannst Du offen lassen, der Rechner weiter unten gibt Dir den Richtpreis.</span></li><li><i>03</i><span><b>Bis zu drei Entwürfe</b> sind inklusive, gefertigt wird erst nach Deiner Freigabe.</span></li></ul>
+  </div></section>
+
 
   <section class="sa-sec paper" id="wpCalc"><div class="wrap">
     <div class="sa-head" data-rv><div class="t"><span class="pxfx pxa-bob" data-fx="dust:.5:.9:2"><img src="{{ 'sm-px4_monk_measure.webp' | asset_url }}" alt="Pixel-Art: der Mönch misst ein großes Wappen"></span><div><p class="eyebrow">Preis-Rechner</p><h2 class="sa-h2">Was kostet Dein Wappen?</h2><span class="sa-line"></span></div></div><p class="muted" style="max-width:44ch">Schildpreis nach Größe und Oberfläche plus Vorlage. Bei zwei Lagen zahlst Du die günstigere Lage nur zur Hälfte. Bis zu drei Entwürfe sind inklusive.</p></div>

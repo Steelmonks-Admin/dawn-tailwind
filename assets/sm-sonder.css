@@ -677,10 +677,10 @@
 .smx .faq summary::-webkit-details-marker{display:none}
 .smx .faq summary::after{content:"+";font-family:var(--f-mono);font-size:20px;line-height:1;color:var(--ink-3);transition:transform .25s}
 .smx .faq details[open] summary::after{content:"−"}
-/* Anfrageformular im Kopfbereich (Okt. 2026): links Text, rechts das Formular; am Handy Text, Formular, danach Knöpfe und Hinweise */
-.smx .sa-grid--form{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"copy form" "meta form";align-items:start;column-gap:clamp(24px,4vw,56px);row-gap:0}
-.smx .sa-grid--form .sa-copy{grid-area:copy}
-.smx .sa-grid--form .sa-heroform{grid-area:form;min-width:0;position:relative;z-index:1}
-.smx .sa-grid--form .sa-meta{grid-area:meta}
-.smx .sa-grid--form .sa-next{margin-top:24px}
-@media (max-width: 960px){.smx .sa-grid--form{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "form" "meta";row-gap:24px}}
+/* Anfrageformular als zweiter Abschnitt direkt unter dem Kopfbereich (Okt. 2026): schlicht und zentriert */
+.smx .sa-formsec{padding-top:clamp(28px,4vw,48px)}
+.smx .sa-form-c{max-width:840px;margin-inline:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
+.smx .sa-form-head{text-align:center;display:grid;justify-items:center;gap:6px}
+.smx .sa-form-head .sa-line{margin-inline:auto}
+.smx .sa-next--row{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:4px}
+@media (max-width: 760px){.smx .sa-next--row{grid-template-columns:minmax(0,1fr)}}

@@ -1,22 +1,32 @@
 <div class="smx" id="p-sonder" data-smx="sonderanfertigung" aria-label="Sonderanfertigung anfragen">
   <div class="sa-hero dark" id="saHero">
-    <div class="wrap sa-grid sa-grid--form">
-      <div class="sa-copy">
+    <div class="wrap sa-grid">
+      <div>
         <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Sonderanfertigung</span></nav>
         
         <p class="eyebrow" style="margin-top:10px">Sonderanfertigung · Wappen · Logo · Serie</p>
         <h1 class="sa-h1" data-split>Deine Idee. <span class="hl">Aus Stahl</span></h1>
         <div class="sa-cut" aria-hidden="true"><i></i><b></b></div>
         <p class="sa-lead">Wappen, Firmenlogo, Geschenk oder eine ganze Serie: Du schickst uns Deine Idee, wir schicken Dir ein <b>unverbindliches Angebot</b>. Bis zu <b>drei Entwürfe</b> sind inklusive, gefertigt wird in <b>7 bis 10 Werktagen</b>.</p>
-      </div>
-      <div class="sa-heroform" id="saFormSec"><div id="saForm"></div></div>
-      <div class="sa-meta">
-        <div class="sa-ctas"><a class="sa-quiet" href="/pages/werkstatt">Bis 75 cm? In 3 Minuten selbst gestalten</a></div>
+        <div class="sa-ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="saForm">Anfrage starten <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><a class="sa-quiet" href="/pages/werkstatt">Bis 75 cm? In 3 Minuten selbst gestalten</a></div>
         <div class="sa-proof"><span><b><span data-count="{{ shop.metafields.steelmonks.bestellungen_gesamt.value | default: 106605 }}">{% render 'sm-bestellungen' %}</span></b> Bestellungen seit 2020</span><span><span class="stars">★</span> <b data-ts-rating>4,82</b> · <span data-ts-count>6.628</span> Bewertungen</span><span>Projekte ab <b>69 €</b></span><span>bis <b>3 × 2 m</b>, größer mehrteilig</span></div>
-        <ul class="sa-next"><li><i>01</i><span><b>Wir lesen jede Anfrage selbst</b> und melden uns mit Fragen oder direkt mit dem Angebot.</span></li><li><i>02</i><span><b>Unverbindlich:</b> Du entscheidest erst, wenn Du Preis und Idee kennst.</span></li><li><i>03</i><span><b>Rabatte</b> gelten nicht für Sonderanfertigungen, dafür ist jedes Stück ein Unikat.</span></li></ul>
+        
+      </div>
+      <div class="sa-stage" aria-label="Beispiele aus der Werkstatt">
+        <figure class="sa-card c1"><img src="{{ 'sm-sg_tpl_b33d86.webp' | asset_url }}" alt="Vierlagiges Wappen aus Gold, Corten und Edelstahl"><figcaption class="tag"><b>4 Lagen · 80 × 75 cm</b>Gold, Corten, Edelstahl</figcaption></figure>
+        <figure class="sa-card c2"><img src="{{ 'sm-sg_tpl_1508f4.webp' | asset_url }}" alt="Palma-de-Mallorca-Wappen, 150 mal 150 Zentimeter"><figcaption class="tag"><b>150 × 150 cm</b>Anthrazit auf Edelstahl</figcaption></figure>
+        <figure class="sa-card c3"><img src="{{ 'sm-sg_merc_004.webp' | asset_url }}" alt="LOVE-Buchstaben aus Stahl im Freien"><figcaption class="tag"><b>Installation</b>Buchstaben für draußen</figcaption></figure>
+        <span class="px pxfx pxa-bob" data-fx="twinkle:.8:.3:2"><img src="{{ 'sm-px4_monk_sketch.webp' | asset_url }}" alt="Pixel-Art: der Mönch hält eine Skizze und das fertige Stahlschild"></span>
       </div>
     </div>
   </div>
+
+  <section class="sa-sec sa-night dark sa-formsec" id="saFormSec"><div class="wrap sa-form-c">
+    <div class="sa-form-head" data-rv><p class="eyebrow">Deine Anfrage</p><h2 class="sa-h2">In drei Schritten zum Angebot</h2><span class="sa-line"></span></div>
+    <div id="saForm"></div>
+    <ul class="sa-next sa-next--row"><li><i>01</i><span><b>Wir lesen jede Anfrage selbst</b> und melden uns mit Fragen oder direkt mit dem Angebot.</span></li><li><i>02</i><span><b>Unverbindlich:</b> Du entscheidest erst, wenn Du Preis und Idee kennst.</span></li><li><i>03</i><span><b>Rabatte</b> gelten nicht für Sonderanfertigungen, dafür ist jedes Stück ein Unikat.</span></li></ul>
+  </div></section>
+
 
   <section class="sa-sec paper"><div class="wrap">
     <div class="sa-head" data-rv><div><p class="eyebrow">Schritt 1 von 1</p><h2 class="sa-h2">Was hast Du vor?</h2><span class="sa-line"></span></div><p class="muted" style="max-width:42ch">Wähl Deinen Weg. Jede Seite zeigt Dir Beispiele, Preise und das passende Formular.</p></div>
