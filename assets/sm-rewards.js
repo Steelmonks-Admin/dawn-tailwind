@@ -142,9 +142,9 @@
     if (!line.offsetParent) return; // am Desktop ausgeblendet
     const L = line.getBoundingClientRect().left, W = line.clientWidth;
     const c = [...mbar.querySelectorAll('[data-smr-mpt]')].map((p) => { const r = p.getBoundingClientRect(); return r.left + r.width / 2 - L; });
-    const total = st.count ? st.total : 0, d = 26, seg = (a, b, x0, x1) => x0 + (x1 - x0) * Math.max(0, Math.min(1, (total - a) / (b - a)));
-    const x = total <= 0 ? 16 : total < T[0].cents ? seg(0, T[0].cents, 16, c[0] - d) : total < T[1].cents ? seg(T[0].cents, T[1].cents, c[0] + d, c[1] - d)
-      : total < T[2].cents ? seg(T[1].cents, T[2].cents, c[1] + d, c[2] - d) : seg(T[2].cents, Math.round(T[2].cents * 1.5), c[2] + d, W - 52);
+    const total = st.count ? st.total : 0, d = 36, seg = (a, b, x0, x1) => x0 + (x1 - x0) * Math.max(0, Math.min(1, (total - a) / (b - a)));
+    const x = total <= 0 ? 24 : total < T[0].cents ? seg(0, T[0].cents, 24, c[0] - d) : total < T[1].cents ? seg(T[0].cents, T[1].cents, c[0] + d, c[1] - d)
+      : total < T[2].cents ? seg(T[1].cents, T[2].cents, c[1] + d, c[2] - d) : seg(T[2].cents, Math.round(T[2].cents * 1.5), c[2] + d, W - 58);
     const m = mbar.querySelector('[data-smr-mmonk]'), fill = mbar.querySelector('[data-smr-mfill]'), k = monk(v);
     if (m.dataset.k !== k) { m.src = C.img.monks[k]; m.dataset.k = k; }
     const from = mX === null ? 0 : mX, dist = Math.abs(x - from);
