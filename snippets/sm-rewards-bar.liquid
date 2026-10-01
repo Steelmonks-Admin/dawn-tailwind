@@ -1,9 +1,17 @@
-{%- comment -%} Belohnungs-Pfad als schmale Leiste unter dem Header; Text und Schiene zeichnet assets/sm-rewards.js {%- endcomment -%}
+{%- comment -%}
+  Belohnungs-Pfad am Handy: Zeitstrahl über die volle Breite wie am Desktop (Kreise, blaue Füllung, laufender Mönch).
+  Antippen klappt darunter die Details auf (nächste Stufe, alle drei Stufen, Knopf zum Warenkorb). Zeichnet assets/sm-rewards.js.
+{%- endcomment -%}
 {%- capture smr_count -%}{%- render 'sm-cart-count' -%}{%- endcapture -%}
 {%- capture smr_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
-<a href="{{ routes.cart_url }}" class="smr-bar{% if cart == empty %} is-empty{% endif %}" data-smr-bar data-total="{{ smr_basis | strip }}" data-count="{{ smr_count | strip }}">
-  <span class="smr-bar__in">
-    <span class="smr-bar__text" data-smr-text>Gratisversand ab <b>99 €</b> · 10 € Rabatt ab <b>149 €</b> · Mystery Gift ab <b>199 €</b></span>
-    <span class="smr-bar__rail" data-smr-rail aria-hidden="true"></span>
-  </span>
-</a>
+<div class="smr-bar{% if cart == empty %} is-empty{% endif %}" data-smr-bar data-total="{{ smr_basis | strip }}" data-count="{{ smr_count | strip }}">
+  <button type="button" class="smr-mline" data-smr-mtoggle aria-expanded="false" aria-controls="smrMinfo" aria-label="Belohnungen im Warenkorb anzeigen">
+    <span class="smr-mline__track" aria-hidden="true"><span class="smr-mline__fill" data-smr-mfill></span></span>
+    <span class="smr-mpt smr-mpt--1" data-smr-mpt="0" aria-hidden="true"><img src="https://cdn.shopify.com/s/files/1/0472/6420/2901/files/free-shipping.png?v=1708352230&width=80" alt="" width="20" height="20"></span>
+    <span class="smr-mpt smr-mpt--2" data-smr-mpt="1" aria-hidden="true"><img src="https://cdn.shopify.com/s/files/1/0472/6420/2901/files/discount-tag.png?v=1708352250&width=80" alt="" width="16" height="16"></span>
+    <span class="smr-mpt smr-mpt--3" data-smr-mpt="2" aria-hidden="true"><img src="https://cdn.shopify.com/s/files/1/0472/6420/2901/files/opened-gift.png?v=1708352267&width=80" alt="" width="16" height="16"></span>
+    <img class="smr-mmonk" data-smr-mmonk src="{{ 'sm-pxm_karton.webp' | asset_url }}" alt="" width="28" height="34">
+    <span class="smr-mchev" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+  </button>
+  <div class="smr-minfo" id="smrMinfo" data-smr-minfo hidden></div>
+</div>

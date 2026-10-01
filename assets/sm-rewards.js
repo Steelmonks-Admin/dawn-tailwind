@@ -113,26 +113,56 @@
     }));
   }
 
-  // Kopfleiste
-  function paintBar(st) {
-    const bar = document.querySelector('[data-smr-bar]');
-    if (!bar) return;
-    const v = view(st), text = bar.querySelector('[data-smr-text]');
-    let l, s;
-    if (!st.count) {
-      l = 'Gratisversand ab <b>' + amt(T[0].cents) + '</b> · 10 € Rabatt ab <b>' + amt(T[1].cents) + '</b> · Mystery Gift ab <b>' + amt(T[2].cents) + '</b>';
-      s = 'Gratisversand ab <b>' + amt(T[0].cents) + '</b>';
-    } else if (v.next) {
-      s = 'Noch <b>' + money(v.gap) + '</b> ' + v.next.m;
-      l = (v.shipFree ? '<span class="smr-ok">' + svg('check') + (v.reached[0] ? 'Versand kostenlos' : 'Versand mit Code kostenlos') + '</span> ' : '') + 'Noch <b>' + money(v.gap) + '</b> ' + v.next.short;
-    } else {
-      l = '<span class="smr-ok">' + svg('check') + 'Alles freigeschaltet:</span> Gratisversand, 10 € Rabatt und Mystery Gift';
-      s = '<span class="smr-ok">' + svg('check') + 'Alle Belohnungen freigeschaltet</span>';
-    }
-    text.innerHTML = '<span class="smr-l">' + l + '</span><span class="smr-s">' + s + '</span>';
-    bar.classList.toggle('is-empty', !st.count);
-    bar.setAttribute('aria-label', text.querySelector('.smr-l').textContent + '. Warenkorb öffnen');
-    paintRail(bar.querySelector('[data-smr-rail]'), v, 'bar');
+  // Handy-Leiste: Zeitstrahl über die volle Breite wie am Desktop; der Mönch läuft bei jedem Seitenaufruf vom linken Rand los,
+  // an den Kreisen ist er genau bei 99, 149 und 199 €. Antippen klappt die Details auf.
+  const mbar = document.querySelector('[data-smr-bar]');
+  let mX = null;
+  const LBL = ['Gratisversand', '10 € Rabatt', 'Mystery Gift'];
+  function infoHTML(st, v) {
+    let lead;
+    if (!st.count) lead = 'Mit Deinem Warenkorb sammelst Du Belohnungen:';
+    else if (v.next) lead = (v.shipFree && !v.reached[0] ? 'Versand mit Deinem Code kostenlos. ' : '') + 'Noch <b>' + money(v.gap) + '</b> ' + v.next.short + '.';
+    else lead = '<b>Alles freigeschaltet:</b> Gratisversand, 10 € Rabatt und Mystery Gift.';
+    const rows = T.map((t, i) => {
+      const done = i === 0 ? v.shipFree : v.reached[i];
+      const st2 = done ? '\u2713 ' + (i === 2 ? 'dabei' : 'gesichert') : st.count ? 'noch ' + money(t.cents - st.total) : '';
+      return '<li' + (done ? ' class="is-done"' : '') + '><span class="smr-minfo__ic"><img src="' + C.img.icons[i] + '" alt="" width="15" height="15"></span><span><b>' + LBL[i] + '</b>ab ' + amt(t.cents) + '</span><span class="smr-minfo__st">' + st2 + '</span></li>';
+    }).join('');
+    return '<p class="smr-minfo__lead">' + lead + '</p><ul class="smr-minfo__list">' + rows + '</ul><a class="smr-minfo__go" href="' + ROOT + 'cart" data-smr-mgo>' + (st.count ? 'Zum Warenkorb' : 'Warenkorb ansehen') + '</a>';
+  }
+  function paintBar(st, instant) {
+    if (!mbar) return;
+    const v = view(st), info = mbar.querySelector('[data-smr-minfo]'), btn = mbar.querySelector('[data-smr-mtoggle]');
+    mbar.classList.toggle('is-empty', !st.count);
+    info.innerHTML = infoHTML(st, v);
+    const tmp = document.createElement('div'); tmp.innerHTML = info.querySelector('.smr-minfo__lead').innerHTML;
+    btn.setAttribute('aria-label', tmp.textContent + ' Details anzeigen');
+    mbar.querySelectorAll('[data-smr-mpt]').forEach((p) => { const i = +p.dataset.smrMpt; p.classList.toggle('is-done', !!(i === 0 ? v.shipFree : v.reached[i])); });
+    const line = mbar.querySelector('.smr-mline');
+    if (!line.offsetParent) return; // am Desktop ausgeblendet
+    const L = line.getBoundingClientRect().left, W = line.clientWidth;
+    const c = [...mbar.querySelectorAll('[data-smr-mpt]')].map((p) => { const r = p.getBoundingClientRect(); return r.left + r.width / 2 - L; });
+    const total = st.count ? st.total : 0, d = 26, seg = (a, b, x0, x1) => x0 + (x1 - x0) * Math.max(0, Math.min(1, (total - a) / (b - a)));
+    const x = total <= 0 ? 16 : total < T[0].cents ? seg(0, T[0].cents, 16, c[0] - d) : total < T[1].cents ? seg(T[0].cents, T[1].cents, c[0] + d, c[1] - d)
+      : total < T[2].cents ? seg(T[1].cents, T[2].cents, c[1] + d, c[2] - d) : seg(T[2].cents, Math.round(T[2].cents * 1.5), c[2] + d, W - 52);
+    const m = mbar.querySelector('[data-smr-mmonk]'), fill = mbar.querySelector('[data-smr-mfill]'), k = monk(v);
+    if (m.dataset.k !== k) { m.src = C.img.monks[k]; m.dataset.k = k; }
+    const from = mX === null ? 0 : mX, dist = Math.abs(x - from);
+    const dur = RM || instant ? 0 : Math.min(6, Math.max(0.6, 6 * dist / W));
+    [m, fill].forEach((el) => { el.style.transitionDuration = dur + 's'; });
+    if (mX === null) { m.style.left = '0px'; fill.style.width = '0px'; void m.offsetWidth; }
+    requestAnimationFrame(() => { m.style.left = x + 'px'; fill.style.width = x + 'px'; });
+    if (dur && dist > 2) { m.classList.add('is-walking'); clearTimeout(m._w); m._w = setTimeout(() => m.classList.remove('is-walking'), dur * 1000); }
+    mX = x;
+  }
+  if (mbar) {
+    const btn = mbar.querySelector('[data-smr-mtoggle]'), info = mbar.querySelector('[data-smr-minfo]');
+    const setOpen = (on) => { info.hidden = !on; btn.setAttribute('aria-expanded', on ? 'true' : 'false'); if (on) once('mbar_open', () => push('sm_reward_bar_open', { sm_cart_value: S ? S.total / 100 : 0 })); };
+    btn.addEventListener('click', () => setOpen(info.hidden));
+    document.addEventListener('click', (e) => { if (!info.hidden && !mbar.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !info.hidden) { setOpen(false); btn.focus(); } });
+    let rz = 0;
+    addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (S) { mX = null; paintBar(S, true); } }, 200); });
   }
 
   // Desktop-Zeitstrahl über die volle Breite: der Mönch läuft bei jedem Seitenaufruf vom linken Rand los wie bisher,
@@ -440,12 +470,14 @@
     if (a) push('sm_xsell_click', { sm_product_id: +a.dataset.smcXsCard });
   });
 
-  // Kopfleiste und Zeitstrahl öffnen den Drawer
+  // Desktop-Zeitstrahl und der Knopf in den Handy-Details öffnen den Drawer
   document.addEventListener('click', (e) => {
-    const bar = e.target.closest('[data-smr-bar], [data-smr-strip]');
+    const bar = e.target.closest('[data-smr-strip], [data-smr-mgo]');
     const drawer = document.querySelector('cart-drawer');
     if (!bar || !drawer || typeof drawer.open !== 'function' || /\/cart\/?$/.test(location.pathname)) return;
     e.preventDefault();
+    const mi = bar.closest('[data-smr-minfo]');
+    if (mi) { mi.hidden = true; const tg = document.querySelector('[data-smr-mtoggle]'); if (tg) tg.setAttribute('aria-expanded', 'false'); }
     drawer.open(bar);
   });
 
@@ -466,8 +498,7 @@
   window.SMR = { sync, state: () => S, view: () => (S ? view(S) : null) };
 
   // Start: sofort aus Liquid-Werten zeichnen, dann mit /cart.js abgleichen
-  const bar = document.querySelector('[data-smr-bar]');
-  if (bar) paintBar({ total: +bar.dataset.total || 0, count: +bar.dataset.count || 0, items: [], shipCode: false });
+  if (mbar) paintBar({ total: +mbar.dataset.total || 0, count: +mbar.dataset.count || 0, items: [], shipCode: false });
   if (strip) paintStrip({ total: +strip.dataset.total || 0, count: +strip.dataset.count || 0, items: [], shipCode: false });
   watch(); mountAll();
   if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') subscribe(PUB_SUB_EVENTS.cartUpdate, soon);
