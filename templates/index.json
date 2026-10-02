@@ -70,19 +70,6 @@
             ],
             "say": "Über 17.000 Hausschilder hängen schon. Bei der Hausnummer mit Namen wählen 54 % Anthrazit."
           }
-        },
-        "zielgruppe_6": {
-          "type": "zielgruppe",
-          "settings": {
-            "label": "Garten & Grill",
-            "pixel": "px_luis.gif",
-            "produkte": [
-              "rundes-grillschild",
-              "neugieriges-eichhornchen-rost-baumstecker",
-              "sterne-rost-garten-stele"
-            ],
-            "say": "Das Grillschild hängt meistens in 45 cm, das wählen 57 %."
-          }
         }
       },
       "block_order": [
@@ -90,8 +77,7 @@
         "zielgruppe_2",
         "zielgruppe_3",
         "zielgruppe_4",
-        "zielgruppe_5",
-        "zielgruppe_6"
+        "zielgruppe_5"
       ],
       "settings": {}
     },
