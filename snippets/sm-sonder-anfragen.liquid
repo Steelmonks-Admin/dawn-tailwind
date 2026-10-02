@@ -44,7 +44,7 @@
     <div class="sa-head" data-rv><div><p class="eyebrow">So läuft's</p><h2 class="sa-h2">Vier Stationen bis zu <span class="or">Deinem Unikat</span></h2><span class="sa-line"></span></div></div>
     <ol class="sa-quest" id="saQuest">
       <span class="fill" aria-hidden="true"></span>
-      <span class="walker pxa-walk" aria-hidden="true"><img src="{{ 'sm-px_monk.png' | asset_url }}" alt=""></span>
+      {%- assign sa_posen = 'lupe,mass,skizze,laser,kaffee' | split: ',' -%}<span class="walker" id="saWalker" aria-hidden="true">{%- for m in sa_posen -%}<img src="{{ 'sm-pxm_' | append: m | append: '.webp' | asset_url }}" alt="" loading="lazy" decoding="async"{% if forloop.first %} class="on"{% endif %}>{%- endfor -%}</span>
       <li data-rv style="--d:.0s"><span class="n"></span><b>Anfrage</b><p>Beschreib Deine Idee, gern mit Foto, Skizze oder fertiger Datei.</p><em>2 Minuten</em></li>
       <li data-rv style="--d:.1s"><span class="n"></span><b>Angebot</b><p>Du bekommst ein unverbindliches Angebot. Der Preis richtet sich nach Größe, Vorlage und Aufwand.</p><em>unverbindlich</em></li>
       <li data-rv style="--d:.2s"><span class="n"></span><b>Entwurf</b><p>Unsere Designer zeichnen Dein Motiv. Bis zu drei Überarbeitungen sind inklusive.</p><em>bis 3 Entwürfe</em></li>

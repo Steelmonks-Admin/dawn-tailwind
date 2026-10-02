@@ -356,8 +356,10 @@ PAGES.sonderanfertigung = function(){
   $('#saKinds').addEventListener('click', e => { const b = e.target.closest('[data-kind]'); if (b) askFor({ topic:'serie', desc:'Serie: ' + b.dataset.kind + ' mit unserem Logo' }); });
   $('#saLogos').innerHTML = logoTiles();
   // Ablauf: Fortschritt beim Scrollen
-  const q = $('#saQuest'), lis = $$('li', q);
-  const onScroll = () => { if (current !== 'sonderanfertigung') return; const r = q.getBoundingClientRect(), vh = innerHeight; const p = clamp((vh * .75 - r.top) / (r.height + vh * .25), 0, 1); q.style.setProperty('--p', p.toFixed(3)); lis.forEach((li, i) => li.classList.toggle('on', p >= i / lis.length + .05)); };
+  const q = $('#saQuest'), lis = $$('li', q), wk = $('#saWalker'), poses = wk ? $$('img', wk) : [];
+  let wkT = 0;
+  const onScroll = () => { if (current !== 'sonderanfertigung') return; const r = q.getBoundingClientRect(), vh = innerHeight; const p = clamp((vh * .75 - r.top) / (r.height + vh * .25), 0, 1); q.style.setProperty('--p', p.toFixed(3)); let n = 0; lis.forEach((li, i) => { const on = p >= i / lis.length + .05; li.classList.toggle('on', on); n += on; });
+    if (wk){ const pose = p > .97 ? 4 : Math.max(0, n - 1); poses.forEach((im, i) => im.classList.toggle('on', i === pose)); if (!RM){ wk.classList.add('mv'); clearTimeout(wkT); wkT = setTimeout(() => wk.classList.remove('mv'), 300); } } };
   addEventListener('scroll', onScroll, { passive:true }); onScroll();
   mountForm('sonderanfertigung', 'saForm', {});
   saSticky('sonderanfertigung', $('#saSticky'), $('#saHero'), $('#saFormSec'));
