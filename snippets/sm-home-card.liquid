@@ -5,7 +5,7 @@
     {%- if product.featured_media -%}{{ product.featured_media | image_url: width: 600 | image_tag: class: 'a', loading: 'lazy', widths: '300, 450, 600', sizes: '(max-width: 760px) 46vw, 280px', alt: product.title }}{%- endif -%}
     {%- assign smc_b = product.media[1] -%}{%- if smc_b and smc_b.media_type == 'image' -%}{{ smc_b | image_url: width: 600 | image_tag: class: 'b', loading: 'lazy', widths: '300, 450, 600', sizes: '(max-width: 760px) 46vw, 280px', alt: '' }}{%- endif -%}
   </div>
-  <div class="body"><h3>{{ product.title | escape }}</h3><div class="meta"><span class="price">{% render 'sm-home-price', product: product %}</span><span class="r">{% render 'sm-home-rating', product: product %}</span></div>
+  <div class="body">{% if show_type and product.type != blank %}<span class="ptype">{{ product.type | replace: '-', ' ' | escape }}</span>{% endif %}<h3>{{ product.title | escape }}</h3><div class="meta"><span class="price">{% render 'sm-home-price', product: product %}</span><span class="r">{% render 'sm-home-rating', product: product %}</span></div>
     <div class="sws" aria-label="Oberflächen">{% render 'sm-home-fins', product: product %}</div>{% render 'sm-home-sold', product: product, blank_line: true %}</div>
 </a>
 {%- endif -%}

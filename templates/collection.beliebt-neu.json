@@ -1,0 +1,115 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-beliebt",
+      "blocks": {
+        "kat_anhanger": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "anhanger",
+            "titel": "Schlüsselanhänger",
+            "eyebrow": "Top [anzahl]",
+            "text": "Signet, Zunft, Foto und Name: am Schlüsselbund jeden Tag dabei.",
+            "anzahl": 8,
+            "link_text": "Alle Anhänger"
+          }
+        },
+        "kat_schilder": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "schilder",
+            "titel": "Wandschilder",
+            "eyebrow": "Top [anzahl]",
+            "text": "Monogramme, Bäume, Zunftschilder und Motive für die Wand.",
+            "anzahl": 8,
+            "link_text": "Alle Wandschilder"
+          }
+        },
+        "kat_hausschilder": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "hausschilder",
+            "titel": "Hausschilder",
+            "eyebrow": "Top [anzahl]",
+            "text": "Hausnummern, Straßenschilder und Klingelschilder für draußen.",
+            "anzahl": 8,
+            "link_text": "Alle Hausschilder"
+          }
+        },
+        "kat_pins_und_anstecker": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "pins-und-anstecker",
+            "titel": "Anstecker",
+            "eyebrow": "Top [anzahl]",
+            "text": "Klein, günstig und auf Pixel-Karten verschickt.",
+            "anzahl": 8,
+            "link_text": "Alle Anstecker"
+          }
+        },
+        "kat_zunftzeichen": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "zunftzeichen",
+            "titel": "Für Handwerker",
+            "eyebrow": "Top [anzahl]",
+            "text": "Zunftzeichen für jedes Gewerk, als Schild, Anhänger oder Anstecker.",
+            "anzahl": 8,
+            "link_text": "Alle Zunftzeichen"
+          }
+        },
+        "kat_feuerwehr_geschenke": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "feuerwehr-geschenke",
+            "titel": "Für die Feuerwehr",
+            "eyebrow": "Top [anzahl]",
+            "text": "Signet, Anstecker und Schilder für die Wache und zu Hause.",
+            "anzahl": 8,
+            "link_text": "Alle Feuerwehr-Geschenke"
+          }
+        },
+        "kat_rost_gartendeko": {
+          "type": "kategorie",
+          "settings": {
+            "kollektion": "rost-gartendeko",
+            "titel": "Garten",
+            "eyebrow": "Top [anzahl]",
+            "text": "Baumstecker, Blumenstecker und Tiere aus Stahl und Rost.",
+            "anzahl": 8,
+            "link_text": "Alle Gartendeko"
+          }
+        }
+      },
+      "block_order": [
+        "kat_anhanger",
+        "kat_schilder",
+        "kat_hausschilder",
+        "kat_pins_und_anstecker",
+        "kat_zunftzeichen",
+        "kat_feuerwehr_geschenke",
+        "kat_rost_gartendeko"
+      ],
+      "settings": {}
+    },
+    "trusted": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trusted"
+  ]
+}

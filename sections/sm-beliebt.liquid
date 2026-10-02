@@ -1,0 +1,163 @@
+{%- comment -%}
+  Beliebt-Seite: echte Rangliste nach dem Metafeld steelmonks.bestellungen (Grundwert = alle DE-Bestellungen seit 2020, der Flow zählt neue Bestellungen dazu).
+  Oben „Insgesamt“ aus der Kollektion „all“ (die ersten 250 nach Bestseller-Sortierung), darunter je Block eine Kategorie mit ihren meistbestellten Stücken.
+  Nicht gezählt werden Zusatzartikel (Meilensteine, Gravur-Zusätze, „zusätzlich“, Befestigungssets) und die Handles aus „Ausschließen“.
+  Sortierung in Liquid: Schlüssel „Bestellungen+100000000 - (1999 - Position)“ als Text sortieren, umdrehen, Position zurückrechnen.
+{%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+{{ 'sm-beliebt.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+{%- liquid
+  assign smb_ex = section.settings.ausschluss | remove: ' ' | prepend: ',' | append: ','
+  assign smb_types = ',Meilenstein,PPLR_HIDDEN_PRODUCT,Befestigungsset,'
+  assign smb_top = section.settings.top_anzahl
+  capture smb_total
+    render 'sm-bestellungen'
+  endcapture
+  assign smb_total = smb_total | strip
+-%}
+<div class="smh smb" data-smh="beliebt">
+  <div class="h-hero dark smb-hero">
+    <div class="wrap smb-hero__in">
+      <div class="smb-hero__copy">
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <h1 class="display">{{ section.settings.titel_1 | escape }}<span class="st">{{ section.settings.titel_2 | escape }}</span></h1>
+        {%- if section.settings.text != blank -%}<p class="lead">{{ section.settings.text | escape | replace: '[bestellungen]', smb_total }}</p>{%- endif -%}
+        <nav class="smb-jump" aria-label="Zu den Kategorien springen">
+          <a class="chip" href="#smb-insgesamt">{{ section.settings.top_chip | escape }}</a>
+          {%- for block in section.blocks -%}{%- assign c = block.settings.kollektion -%}{%- if c != blank -%}<a class="chip" href="#smb-{{ block.id }}">{{ block.settings.titel | default: c.title | escape }}</a>{%- endif -%}{%- endfor -%}
+        </nav>
+      </div>
+      <div class="smb-hero__px" aria-hidden="true"><span class="pxfx pxa-bob" data-fx="twinkle:.5:.2:1.2"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="" width="160" height="209"></span></div>
+    </div>
+  </div>
+
+  {%- comment -%} Insgesamt {%- endcomment -%}
+  <section class="sec paper smb-sec" id="smb-insgesamt" aria-labelledby="smbT-top">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">{{ section.settings.top_eyebrow | replace: '[anzahl]', smb_top | escape }}</p><h2 class="h2" id="smbT-top">{{ section.settings.top_titel | escape }}</h2></div>{%- if section.settings.top_text != blank -%}<p class="muted">{{ section.settings.top_text | escape }}</p>{%- endif -%}</div>
+      {%- assign c = collections['all'] -%}
+      {%- paginate c.products by 250 -%}
+        {%- assign keys = '' -%}
+        {%- for p in c.products -%}
+          {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
+          {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
+          {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 -%}{%- if n == 0 -%}{%- continue -%}{%- endif -%}
+          {%- assign nk = n | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
+          {%- capture keys -%}{{ keys }}{{ nk }}-{{ k }},{%- endcapture -%}
+        {%- endfor -%}
+        {%- assign arr = keys | split: ',' | sort | reverse -%}
+        <div class="ranks smb-ranks smb-ranks--top" data-smb-more>
+          {%- for x in arr limit: smb_top -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
+            <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
+          {%- endfor -%}
+        </div>
+      {%- endpaginate -%}
+      {%- if smb_top > 6 -%}<button class="btn btn-g smb-more" type="button" data-smb-morebtn hidden>{{ section.settings.mehr_text | replace: '[anzahl]', smb_top | escape }}</button>{%- endif -%}
+    </div>
+  </section>
+
+  {%- comment -%} Kategorien {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- assign c = block.settings.kollektion -%}{%- if c == blank -%}{%- continue -%}{%- endif -%}
+    {%- assign bt = block.settings.titel | default: c.title -%}{%- assign bn = block.settings.anzahl -%}
+    {%- capture bg -%}{% cycle 'beton', 'paper' %}{%- endcapture -%}
+    <section class="sec smb-sec smb-sec--{{ bg }}" id="smb-{{ block.id }}" aria-labelledby="smbT-{{ block.id }}" {{ block.shopify_attributes }}>
+      <div class="wrap">
+        <div class="sec-head"><div><p class="eyebrow">{{ block.settings.eyebrow | default: 'Top [anzahl]' | replace: '[anzahl]', bn | escape }}</p><h2 class="h2" id="smbT-{{ block.id }}">{{ bt | escape }}</h2>{%- if block.settings.text != blank -%}<p class="muted smb-sub">{{ block.settings.text | escape }}</p>{%- endif -%}</div>
+          <a class="btn btn-i smb-all" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+        {%- paginate c.products by 250 -%}
+          {%- assign keys = '' -%}
+          {%- for p in c.products -%}
+            {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
+            {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
+            {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
+            {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
+          {%- endfor -%}
+          {%- assign arr = keys | split: ',' | sort | reverse -%}
+          <div class="ranks smb-ranks smb-row">
+            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
+              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
+            {%- endfor -%}
+          </div>
+        {%- endpaginate -%}
+      </div>
+    </section>
+  {%- endfor -%}
+
+  <section class="sec dark smb-end" aria-labelledby="smbT-end">
+    <div class="wrap smb-end__in">
+      <span class="pxfx pxa-wave"><img src="{{ 'sm-px2_monk_pc.webp' | asset_url }}" alt="" width="112" height="112" loading="lazy"></span>
+      <div>
+        <h2 class="h2" id="smbT-end">{{ section.settings.end_titel | escape }}</h2>
+        <p class="muted">{{ section.settings.end_text | escape }}</p>
+      </div>
+      <div class="smb-end__ctas">
+        <a class="btn btn-p" href="{{ section.settings.end_link | default: '/pages/werkstatt' }}">{{ section.settings.end_btn | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        {%- if section.settings.end_link2_text != blank -%}<a class="btn btn-g" href="{{ section.settings.end_link2 | default: '/pages/anfragen' }}">{{ section.settings.end_link2_text | escape }}</a>{%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  {%- if collection.description != blank and section.settings.beschreibung -%}
+    <section class="sec paper smb-desc"><div class="wrap"><details><summary>{{ section.settings.beschreibung_titel | escape }}</summary><div class="smb-desc__t">{{ collection.description }}</div></details></div></section>
+  {%- endif -%}
+</div>
+<script>
+  (function(){
+    var g = document.querySelector('[data-smb-more]'), b = document.querySelector('[data-smb-morebtn]');
+    if (!g || !b) return;
+    var mq = matchMedia('(max-width: 760px)');
+    function set(){ var open = g.classList.contains('is-open'); b.hidden = !mq.matches || open; }
+    b.addEventListener('click', function(){ g.classList.add('is-open'); set(); });
+    (mq.addEventListener ? mq.addEventListener('change', set) : mq.addListener(set)); set();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "SM Beliebt: Rangliste",
+  "tag": "section",
+  "class": "section smh-section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Kopfbereich" },
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Beliebt · echte Rangliste" },
+    { "type": "text", "id": "titel_1", "label": "Überschrift, erste Zeile", "default": "Die Bestseller." },
+    { "type": "text", "id": "titel_2", "label": "Überschrift, zweite Zeile (metallisch)", "default": "Gezählt, nicht geschätzt." },
+    { "type": "textarea", "id": "text", "label": "Einleitung", "info": "[bestellungen] wird durch die aktuelle Gesamtzahl ersetzt.", "default": "Sortiert nach echten Bestellungen, [bestellungen] seit 2020. Jede neue Bestellung zählt sofort mit, die Reihenfolge ändert sich also laufend." },
+    { "type": "header", "content": "Insgesamt" },
+    { "type": "text", "id": "top_chip", "label": "Sprungmarke", "default": "Insgesamt" },
+    { "type": "text", "id": "top_eyebrow", "label": "Zeile über der Überschrift", "default": "Platz 1 bis [anzahl]" },
+    { "type": "text", "id": "top_titel", "label": "Überschrift", "default": "Insgesamt am meisten bestellt" },
+    { "type": "text", "id": "top_text", "label": "Text", "default": "Über alle Kategorien hinweg, vom Anstecker bis zum Hausschild." },
+    { "type": "range", "id": "top_anzahl", "label": "Anzahl", "min": 4, "max": 24, "step": 4, "default": 12 },
+    { "type": "text", "id": "mehr_text", "label": "Knopf am Handy (zeigt den Rest)", "default": "Alle [anzahl] Plätze zeigen" },
+    { "type": "textarea", "id": "ausschluss", "label": "Ausschließen (Handles, kommagetrennt)", "info": "Zusatzartikel, Gravur-Zusätze und Meilensteine sind schon ausgenommen.", "default": "ewige-rose-gartenstecker,unsichtbares-befestigungsset-bolzen-und-gewindestifte,sonderanfertigungskosten,sonderanfertigung-dhl-paket,influencer-package-no-invoice-special-packaging,kopie-von-passender-schluesselanhaenger-band-braun" },
+    { "type": "header", "content": "Abschluss" },
+    { "type": "text", "id": "end_titel", "label": "Überschrift", "default": "Nichts Passendes dabei?" },
+    { "type": "text", "id": "end_text", "label": "Text", "default": "In der Werkstatt wird aus Deinem Foto oder Deiner Idee ein eigenes Motiv." },
+    { "type": "text", "id": "end_btn", "label": "Knopf", "default": "Werkstatt öffnen" },
+    { "type": "url", "id": "end_link", "label": "Knopf-Link" },
+    { "type": "text", "id": "end_link2_text", "label": "Zweiter Knopf", "default": "Sonderanfertigung anfragen" },
+    { "type": "url", "id": "end_link2", "label": "Zweiter Knopf, Link" },
+    { "type": "checkbox", "id": "beschreibung", "label": "Kollektionsbeschreibung unten aufklappbar zeigen", "default": true },
+    { "type": "text", "id": "beschreibung_titel", "label": "Titel der Beschreibung", "default": "Mehr über unsere Bestseller" }
+  ],
+  "blocks": [
+    {
+      "type": "kategorie",
+      "name": "Kategorie",
+      "settings": [
+        { "type": "collection", "id": "kollektion", "label": "Kollektion" },
+        { "type": "text", "id": "titel", "label": "Überschrift (leer = Name der Kollektion)" },
+        { "type": "text", "id": "eyebrow", "label": "Zeile darüber", "default": "Top [anzahl]" },
+        { "type": "text", "id": "text", "label": "Kurzer Text" },
+        { "type": "range", "id": "anzahl", "label": "Anzahl", "min": 4, "max": 12, "step": 4, "default": 8 },
+        { "type": "text", "id": "link_text", "label": "Knopf", "default": "Alle ansehen" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "SM Beliebt: Rangliste" } ]
+}
+{% endschema %}
