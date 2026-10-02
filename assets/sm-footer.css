@@ -72,8 +72,10 @@
 @media (min-width: 750px){.smf-chev{display:none}.smf-col summary{cursor:default}}
 @media (max-width: 749px){
   .smf-top{grid-template-columns:minmax(0,1fr)}
-  .smf-nl{grid-template-columns:84px minmax(0,1fr);gap:14px;padding:18px 16px}
-  .smf-px{width:84px}
+  /* Newsletter am Handy: Text über die volle Breite, Jakob schaut oben rechts über den Rand */
+  .smf-nl{grid-template-columns:minmax(0,1fr);gap:0;padding:20px 18px;margin-top:34px}
+  .smf-px{position:absolute;right:14px;top:-40px;width:66px;margin:0;z-index:1}
+  .smf-eyebrow,.smf-nl-h{padding-right:76px}
   .smf-form{flex-direction:column}
   .smf-form button{width:100%}
   .smf-cols{grid-template-columns:minmax(0,1fr);gap:8px}

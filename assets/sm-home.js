@@ -5,6 +5,9 @@
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  /* Höhe des festen Headers (mit Zeitstrahl) als --smh-hdr, damit die Story-Bühne darunter klebt statt verdeckt zu werden */
+  const hdrEl = document.querySelector('.shopify-section-header-sticky, [id$="__header"]');
+  if (hdrEl){ const setH = () => document.documentElement.style.setProperty('--smh-hdr', Math.round(hdrEl.getBoundingClientRect().height) + 'px'); setH(); if (window.ResizeObserver) new ResizeObserver(setH).observe(hdrEl); }
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 /* Pixel-Animationen: Partikel im Pixel-Stil über den Pixel-Bildern
    Markup: <span class="pxfx" data-fx="sparks:.6:.67:14;steam:.8:.4:3"><img …></span>
@@ -179,7 +182,7 @@ const PXFX = (() => {
       const per = {}; let shown = 0;
       Q.forEach(q => { let on; if (k === 'alle'){ per[q.dataset.rp] = (per[q.dataset.rp] || 0) + 1; on = per[q.dataset.rp] <= 2 && shown < 8; } else on = q.dataset.rp === k && shown < 8; q.hidden = !on; if (on) shown++; });
     };
-    rc.addEventListener('click', e => { const b = e.target.closest('[data-rp]'); if (!b) return; $$('[data-rp]', rc).forEach(x => x.setAttribute('aria-pressed', String(x === b))); draw(b.dataset.rp); });
+    rc.addEventListener('click', e => { const b = e.target.closest('[data-rp]'); if (!b) return; $$('[data-rp]', rc).forEach(x => x.setAttribute('aria-pressed', String(x === b))); draw(b.dataset.rp); qs.scrollLeft = 0; });
     draw('alle');
   }
   const lb = $('#smhLb'), ugc = $('#homeUgc');

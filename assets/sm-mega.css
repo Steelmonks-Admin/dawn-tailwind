@@ -106,3 +106,15 @@
 .smm-mob .mob-acc{margin:18px 0 0}
 .smm-mob .mob-btn{display:inline-flex;align-items:center;padding:13px 20px;border-radius:999px;background:#0044cc;color:#fff;font-weight:600;font-size:15px;text-decoration:none}
 @media (prefers-reduced-motion: reduce){.smm-mg .mg-box,.smm .mc-i img,.smm .mg-prev img.big,.smm-ink{transition:none}.smm-mg .mg-p.on,.smm-mob{animation:none}}
+/* 990 bis 1399 px (Tablet quer, kleine Laptops): Menü kompakter, damit das Logo nicht auf 0 px zusammengedrückt wird */
+@media screen and (min-width: 990px) and (max-width: 1399px){
+  header.header{padding-inline:2.6rem;column-gap:1.6rem}
+  header.header .header__heading{min-width:100px}
+  .smm-nav .smm-nb{padding:1rem 2.3rem 1rem .7rem;font-size:1.25rem}
+  .smm-nav .smm-nb .icon-caret{right:.6rem}
+}
+@media screen and (min-width: 990px) and (max-width: 1199px){
+  .smm-nav .smm-top{gap:.5rem}
+  .smm-nav .smm-nb{padding:1rem 1.9rem 1rem .5rem;font-size:1.08rem}
+  .smm-nav .smm-nb .icon-caret{right:.4rem}
+}

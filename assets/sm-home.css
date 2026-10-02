@@ -475,3 +475,36 @@ body:has(.smh #entstehung):not([class*="overflow-hidden"]):not(.cc-scrolling-dis
 /* Lichtbox liegt direkt im body über dem Header */
 .smh.smh-lbw{position:relative;z-index:1001;isolation:auto;background:none;overflow:visible}
 .smh [hidden]{display:none!important}
+/* Kartenstapel: Höhe folgt der Kartengröße, Pfeile sitzen unter der Karte statt auf Preis und Bewertung */
+.smh .deck{height:auto;container-type:inline-size}
+.smh .deck-set{position:relative;height:calc(var(--cw) + 150px);--cw:min(360px,78cqw)}
+.smh .deck-set .dcard{width:var(--cw)}
+.smh .dcard h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.25}
+.smh .deck-nav{position:static;transform:none;justify-content:center;margin-top:2px}
+@media (max-width: 960px){.smh .deck{height:auto;margin-top:14px}
+.smh .deck-set{--cw:min(300px,72cqw);height:calc(var(--cw) + 140px)}}
+/* Story: Bühne klebt unter dem festen Header; am Handy passt sich die Bühne an kurze Bildschirme an, Beschriftung ohne Umbruch */
+.smh .story-sticky{top:var(--smh-hdr,0px);height:calc(100vh - var(--smh-hdr,0px));height:calc(100svh - var(--smh-hdr,0px))}
+@media (max-width: 960px){.smh .sstage{aspect-ratio:auto;height:clamp(150px,calc(100svh - var(--smh-hdr,0px) - 400px),calc((100vw - 32px) * .625))}
+.smh .sstage svg{width:76%;height:calc(100% - 78px);top:calc(50% - 18px)}
+.smh .sstage .ro{flex-direction:column;gap:1px;left:14px;right:14px;bottom:10px;font-size:9.6px;line-height:1.5}
+.smh .sstage .ro span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+@media (max-width: 960px) and (max-height: 720px){.smh .story-input{display:none}
+.smh .story .eyebrow{display:none}
+.smh .steps{margin-top:10px}
+.smh .steps h3{font-size:20px}
+.smh .steps p{font-size:14px;line-height:1.5;margin-top:6px}
+.smh .srail{margin-top:12px}
+.smh .sstage .ro span:last-child{display:none}
+.smh .sstage svg{height:calc(100% - 44px);width:80%;top:calc(50% - 10px)}}
+/* Anstecker: Preis bricht als Ganzes in die nächste Zeile statt in eine schmale Spalte */
+.smh .pins-list button{flex-wrap:wrap;column-gap:12px;row-gap:2px}
+.smh .pins-list button>span:first-child{flex:1 1 auto}
+.smh .pins-list button .tnum,.smh .pdeck figcaption .tnum{white-space:nowrap;margin-left:auto}
+.smh .pdeck figcaption{flex-wrap:wrap;row-gap:2px}
+@media (max-width: 760px){
+/* Serie und Bewertungen am Handy: Wischreihen bis an den Bildschirmrand */
+.smh .bl-story,.smh .quotes{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter);scroll-padding-inline:var(--gutter)}
+.smh .quotes{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:82%;overflow-x:auto;scroll-snap-type:x mandatory;padding-block:4px 14px;scrollbar-width:none}
+.smh .quotes::-webkit-scrollbar{display:none}
+.smh .quote{scroll-snap-align:start;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.04),0 12px 26px -20px rgba(0,0,0,.35)}}

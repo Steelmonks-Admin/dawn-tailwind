@@ -143,3 +143,11 @@ body:has([data-smr-panel]:not([hidden]) .smr-card) .cart-freeship-confirm--open 
   .milestones__timeline--shine-animation::after { animation: none !important; }
   .smr-confetti { display: none; }
 }
+/* Handy: kein weißer Streifen unter der Linie, Mönch, Punkte und Pfeil stehen über den Rand hinaus auf der Seite */
+@media screen and (max-width: 749px) {
+  .smr-bar { background: transparent; border-bottom: 0; }
+  .smr-mline { height: 22px; overflow: visible; }
+  .smr-mline__track { top: auto; bottom: 0; margin-top: 0; }
+  .smr-mpt, .smr-mmonk, .smr-mchev { top: calc(100% - 6px); }
+  .smr-mchev { box-shadow: 0 1px 4px rgba(0, 0, 0, .25); }
+}
