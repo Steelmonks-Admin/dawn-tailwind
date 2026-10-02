@@ -369,27 +369,40 @@ PAGES.sonderanfertigung = function(){
 /* Wappen */
 PAGES.wappen = function(){
   const root = $('#p-wappen');
-  // Wappen-Preis: Schildpreis nach Größe und Oberfläche (Werkstatt-Tabelle) + Vorlage (50/150/250 €).
-  // Zwei Lagen: teurere Lage voll, günstigere Lage zu 50 %. 100 cm und ab drei Lagen im Angebot.
-  const VOR = [['datei','Fertige Datei',50,'Vektor oder gute Grafik'],['foto','Foto / Zeichnung',150,'wir zeichnen neu'],['neu','Keine Vorlage',250,'Neuentwurf']];
-  const SIZE = [[22.5,59,69],[45,89,99],[55,99,129],[75,169,199],[100,null,null]];
+  // Wappen-Preis nach der Preisliste des Kundenservice (wappen-v2). DIESELBEN Regeln rechnet das
+  // CS-System in orchestrator/app/wappen.py nach (Repo Orvus-Ltd/customer-service); jede Anfrage
+  // trägt die Zeile „Kalkulation: wappen-v2 …“, damit das Angebot exakt diesen Preis übernimmt.
+  // Wer hier eine Zahl ändert, ändert sie dort mit und hebt die Version an.
+  // Regeln: Schild nach BREITE auf die nächste Tabellenzeile aufgerundet (Pulver oder Premium);
+  // zwei Lagen: teurere voll, günstigere zu 50 %; Design: Datei 25, Foto oder Neuentwurf 50,
+  // mehrlagig 50; Befestigung 9,45, ab 150 € Warenwert kostenlos; Verpackung 12 ab 75 cm;
+  // DHL-Versand 4,95. Ab 100 cm und ab drei Lagen im Angebot. Gerechnet wird in Cent.
+  const CALC_VERSION = 'wappen-v2';
+  const VOR = [['datei','Fertige Datei',2500,'Vektor oder gute Grafik'],['foto','Foto / Zeichnung',5000,'wir zeichnen neu'],['neu','Keine Vorlage',5000,'Neuentwurf']];
+  const ROWS = [[20,5250,7350],[25,6000,8400],[30,6750,9450],[40,8925,12495],[50,11250,15750],[60,15375,21525],[80,21525,30135],[100,28875,40425]];
+  const SIZE = [22.5, 45, 55, 75, 100], OPEN_CM = 100;
   const LAGEN = [[1,'1 Lage','einfarbig'],[2,'2 Lagen','2. Lage zu 50 %'],[3,'3 oder mehr','im Angebot']];
-  const PREM = ['Cortenstahl (Rost)','Edelstahl'], BOLT = 9.45;
+  const PREM = ['Cortenstahl (Rost)','Edelstahl'], BOLT = 945, BOLT_FREE = 15000, DESIGN_MULTI = 5000, PACK = 1200, PACK_CM = 75, SHIP = 495;
   const S = { v:'foto', s:55, m:'Schwarz (RAL 9005)', m2:'Gold', lagen:1, bolt:false }; let shown = 0;
-  const cmS = v => String(v).replace('.', ',') + ' cm', eur0 = v => eur(v).replace(',00', '');
+  const cmS = v => String(v).replace('.', ',') + ' cm', eur0 = v => eur(v).replace(',00', ''), c2e = c => c / 100;
   const btn = (grp, k, cur, b, sm, pre) => '<button type="button" data-' + grp + '="' + k + '" aria-pressed="' + (String(k) === String(cur)) + '">' + (pre || '') + '<b>' + b + '</b><small>' + sm + '</small></button>';
-  const layerPrice = (size, mat) => { const s = SIZE.find(x => x[0] === size); return s[PREM.includes(mat) ? 2 : 1]; };
+  const rowFor = size => ROWS.find(r => size <= r[0]);
+  const layerPrice = (size, mat) => { if (size >= OPEN_CM) return null; const r = rowFor(size); return r ? r[PREM.includes(mat) ? 2 : 1] : null; };
+  const halfUp = c => Math.floor((c + 1) / 2);
   function price(){
     const v = VOR.find(x => x[0] === S.v), p1 = layerPrice(S.s, S.m), p2 = S.lagen === 2 ? layerPrice(S.s, S.m2) : 0;
     const open = p1 == null || S.lagen >= 3 || (S.lagen === 2 && p2 == null);
-    const full = S.lagen === 2 ? Math.max(p1, p2) : p1, half = S.lagen === 2 ? Math.min(p1, p2) / 2 : 0;
-    return { v, p1, p2, full, half, open, total: open ? null : full + half + v[2] + (S.bolt ? BOLT : 0) };
+    if (open) return { v, open, total: null };
+    const full = S.lagen === 2 ? Math.max(p1, p2) : p1, half = S.lagen === 2 ? halfUp(Math.min(p1, p2)) : 0;
+    const design = S.lagen === 2 ? DESIGN_MULTI : v[2], goods = full + half + design;
+    const bolt = S.bolt ? (goods >= BOLT_FREE ? 0 : BOLT) : null, pack = S.s >= PACK_CM ? PACK : 0;
+    return { v, p1, p2, full, half, design, goods, bolt, pack, open, total: c2e(goods + (bolt || 0) + pack + SHIP) };
   }
   const shield = $('#wpShield'), top = $('#wpShieldTop'); shield.style.setProperty('--m', CREST_PLATE); top.style.setProperty('--m', CREST_TOP);
   function draw(){
     const p = price();
-    $('#wpVor').innerHTML = VOR.map(x => btn('v', x[0], S.v, x[1], '+ ' + eur0(x[2]) + ' · ' + x[3])).join('');
-    $('#wpSize').innerHTML = SIZE.map(x => btn('s', x[0], S.s, cmS(x[0]), x[1] == null ? 'im Angebot' : eur0(x[PREM.includes(S.m) ? 2 : 1]))).join('');
+    $('#wpVor').innerHTML = VOR.map(x => btn('v', x[0], S.v, x[1], '+ ' + eur0(c2e(S.lagen === 2 ? DESIGN_MULTI : x[2])) + ' · ' + x[3])).join('');
+    $('#wpSize').innerHTML = SIZE.map(x => { const c = layerPrice(x, S.m); return btn('s', x, S.s, cmS(x), c == null ? 'im Angebot' : eur0(c2e(c))); }).join('');
     $('#wpMat').innerHTML = MATS.map(m => btn('m', m[0], S.m, shortMat(m[0]), PREM.includes(m[0]) ? 'Premium' : m[1], txI(m[0], 22))).join('');
     $('#wpLagen').innerHTML = LAGEN.map(x => btn('lg', x[0], S.lagen, x[1], x[2])).join('');
     $('#wpMat2G').hidden = S.lagen !== 2;
@@ -398,10 +411,14 @@ PAGES.wappen = function(){
     const L = [];
     if (S.lagen === 2 && !p.open){
       const firstIs1 = p.p1 >= p.p2, mf = firstIs1 ? S.m : S.m2, mh = firstIs1 ? S.m2 : S.m;
-      L.push(['Lage ' + (firstIs1 ? 1 : 2) + ' · ' + cmS(S.s) + ' · ' + shortMat(mf), eur(p.full)], ['Lage ' + (firstIs1 ? 2 : 1) + ' · ' + shortMat(mh) + ' · 50 %', eur(p.half)]);
-    } else L.push([cmS(S.s) + ' · ' + shortMat(S.m) + (S.lagen === 2 ? ' + ' + shortMat(S.m2) : S.lagen >= 3 ? ' · 3+ Lagen' : ''), p.open ? 'im Angebot' : eur(p.full)]);
-    L.push(['Vorlage: ' + p.v[1], eur(p.v[2])]);
-    if (S.bolt) L.push(['Unsichtbare Befestigung', eur(BOLT)]);
+      L.push(['Lage 1 · ' + cmS(S.s) + ' · ' + shortMat(mf), eur(c2e(p.full))], ['Lage 2 · ' + shortMat(mh) + ' · 50 %', eur(c2e(p.half))]);
+    } else L.push([cmS(S.s) + ' · ' + shortMat(S.m) + (S.lagen === 2 ? ' + ' + shortMat(S.m2) : S.lagen >= 3 ? ' · 3+ Lagen' : ''), p.open ? 'im Angebot' : eur(c2e(p.full))]);
+    if (!p.open){
+      L.push(['Design: ' + (S.lagen === 2 ? 'mehrlagig' : p.v[1]), eur(c2e(p.design))]);
+      if (S.bolt) L.push(['Unsichtbare Befestigung', p.bolt ? eur(c2e(p.bolt)) : 'kostenlos ab 150 €']);
+      if (p.pack) L.push(['Verpackung ab 75 cm', eur(c2e(p.pack))]);
+      L.push(['DHL-Versand', eur(c2e(SHIP))]);
+    }
     L.push(['Bis zu 3 Entwürfe', 'inklusive']);
     $('#wpBreak').innerHTML = L.map(r => '<div><span>' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>').join('');
     if (p.total == null){ shown = 0; $('#wpPrice').textContent = 'im Angebot'; $('#wpPrice').classList.add('ask'); $('#wpStickyP').textContent = 'Dein Wappen · Preis im Angebot'; }
@@ -415,7 +432,7 @@ PAGES.wappen = function(){
   function tween(to){ const el = $('#wpPrice'), from = shown; shown = to; if (RM || !from){ el.textContent = eur(to); return; } const t0 = performance.now(); const f = t => { const k = Math.min(1, (t - t0) / 500); el.textContent = eur(from + (to - from) * ease(k)); if (k < 1) requestAnimationFrame(f); else el.textContent = eur(to); }; requestAnimationFrame(f); }
   root.addEventListener('click', e => { const b = e.target.closest('[data-v],[data-s],[data-m],[data-m2],[data-lg]'); if (!b || !b.closest('#wpCalc')) return; if (b.dataset.v) S.v = b.dataset.v; if (b.dataset.s) S.s = +b.dataset.s; if (b.dataset.m) S.m = b.dataset.m; if (b.dataset.m2) S.m2 = b.dataset.m2; if (b.dataset.lg){ S.lagen = +b.dataset.lg; if (S.lagen === 2 && S.m2 === S.m) S.m2 = plateOf(S.m); } draw(); });
   $('#wpBolt').addEventListener('change', e => { S.bolt = e.target.checked; draw(); });
-  $('#wpGo').addEventListener('click', () => { const p = price(); askFor({ topic:'wappen', size:cmS(S.s), mat:S.m, multi:S.lagen > 1, calc:{ Vorlage:p.v[1], Lagen: S.lagen === 2 ? '2 (' + shortMat(S.m) + ' auf ' + shortMat(S.m2) + ')' : S.lagen >= 3 ? '3 oder mehr' : '1', Befestigung: S.bolt ? 'unsichtbar (+9,45 €)' : 'ohne', Richtpreis: p.total != null ? eur(p.total) + ' laut Rechner' : 'im Angebot' } }); });
+  $('#wpGo').addEventListener('click', () => { const p = price(); const kalk = CALC_VERSION + ' s=' + S.s + ' m=' + (PREM.includes(S.m) ? 'prem' : 'std') + (S.lagen === 2 ? ' m2=' + (PREM.includes(S.m2) ? 'prem' : 'std') : '') + ' l=' + S.lagen + ' v=' + S.v + ' k=' + (S.bolt ? 1 : 0) + (p.total != null ? ' p=' + p.total.toFixed(2) : ''); askFor({ topic:'wappen', size:cmS(S.s), mat:S.m, multi:S.lagen > 1, calc:{ Vorlage:p.v[1], Lagen: S.lagen === 2 ? '2 (' + shortMat(S.m) + ' auf ' + shortMat(S.m2) + ')' : S.lagen >= 3 ? '3 oder mehr' : '1', Befestigung: S.bolt ? (p.bolt ? 'unsichtbar (+9,45 €)' : 'unsichtbar (kostenlos ab 150 €)') : 'ohne', Richtpreis: p.total != null ? eur(p.total) + ' laut Rechner' : 'im Angebot', Kalkulation: kalk } }); });
   // Laufband
   const W = sgBy('wappen').concat(SG.filter(g => g.k === 'sg_anfr_028' || g.k === 'sg_tpl_1508f4'));
   const half = Math.ceil(W.length / 2), row = (list, off) => list.map((g, i) => '<img src="' + img(g.k) + '" alt="' + esc(g.cap) + '" data-wi="' + (i + off) + '" loading="lazy">').join('');
