@@ -2,7 +2,7 @@
   Steelmonks Magazin & Ratgeber: Blog-Übersicht mit Themen-Tags, Suche, optionaler Serie und Produkt-Kacheln (aus dem Prototyp).
   Eine Sektion für alle Blogs; Texte, Themen und Kacheln kommen aus den Einstellungen des jeweiligen Templates (blog.magazin.json, blog.ratgeber-*.json).
 {%- endcomment -%}
-<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ settings.type_body_font | font_modify: 'weight', '800' | font_url }}" as="font" type="font/woff2" crossorigin>
 {{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
 {{ 'sm-magazin.css' | asset_url | stylesheet_tag }}
 {%- liquid

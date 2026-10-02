@@ -7,7 +7,6 @@
 {%- assign smnl_country = localization.country.iso_code -%}
 {%- if smnl_country == 'DE' or smnl_country == 'AT' -%}
 <style>
-  @font-face{font-family:"SM Stencil";src:url({{ 'sm-bigshoulders-900.woff2' | asset_url }}) format("woff2");font-weight:900;font-display:swap}
   .smnl{--n:#0b0c0e;--b:#eef0f2;--s:#aeb5bb;--t:#c9ced2;--l:#9aa1a7;--blau:#0044cc;--hell:#6f9bff;--f:var(--font-body-family,Poppins,system-ui,sans-serif)}
   .smnl [hidden]{display:none!important}
   .smnl .smnl-back,.smnl .smnl-clip,.smnl .smnl-handle{display:block}
@@ -35,7 +34,7 @@
   .smnl-step{position:relative;display:flex;flex-direction:column;gap:14px}
   .smnl-eye{margin:0;display:flex;align-items:center;gap:8px;font:500 11px/1.2 "IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--hell)}
   .smnl-eye.ok{color:#4fc27f}
-  .smnl-h{margin:0;font-family:"SM Stencil","Arial Narrow",Impact,sans-serif;font-weight:900;font-size:48px;line-height:.9;letter-spacing:.005em;text-transform:uppercase;color:#fff;max-width:300px;outline:none}
+  .smnl-h{margin:0;font-family:var(--f);font-weight:800;font-size:34px;line-height:.98;letter-spacing:-.02em;text-transform:uppercase;color:#fff;max-width:300px;outline:none}
   .smnl-h span{color:var(--hell)}
   .smnl-p{margin:0;font-size:15px;line-height:1.5;color:var(--t)}
   .smnl-form{display:flex;flex-direction:column;gap:10px;margin:2px 0 0}

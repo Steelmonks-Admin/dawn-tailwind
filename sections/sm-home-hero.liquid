@@ -1,5 +1,5 @@
 {%- comment -%} Neue Startseite: Einstieg mit Überschrift, „Für wen?“-Auswahl und Kartenstapel der meistbestellten Stücke je Zielgruppe {%- endcomment -%}
-<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ settings.type_body_font | font_modify: 'weight', '800' | font_url }}" as="font" type="font/woff2" crossorigin>
 {{ 'sm-home.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'sm-home.js' | asset_url }}" defer></script>
 {%- liquid

@@ -1,5 +1,5 @@
 {%- comment -%} Steelmonks: Sonderanfertigung, Wappen, Firmenschild, Galerie. Inhalte in snippets/sm-sonder-*.liquid (aus dem Prototyp erzeugt). {%- endcomment -%}
-<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ settings.type_body_font | font_modify: 'weight', '800' | font_url }}" as="font" type="font/woff2" crossorigin>
 {{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
 {%- case section.settings.seite -%}
   {%- when 'wappen' -%}{%- render 'sm-sonder-wappen' -%}

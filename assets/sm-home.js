@@ -83,18 +83,18 @@ const PXFX = (() => {
   /* Scroll-Story: eigener Text auf der Schnittvorlage, dann Laser, Farbe, Wand */
   const story = $('#entstehung');
   if (story){
-    const MEAS = $('#meas'), F_DISP = 'Big Shoulders Stencil Display, Arial Narrow, Impact, sans-serif';
+    const MEAS = $('#meas'), F_DISP = 'Poppins, Segoe UI, system-ui, sans-serif';
     const textWidth = (t, size, weight, spacing) => { MEAS.setAttribute('font-family', F_DISP); MEAS.setAttribute('font-size', size); MEAS.setAttribute('font-weight', weight); MEAS.setAttribute('letter-spacing', spacing || 0); MEAS.textContent = t || ' '; try { return MEAS.getComputedTextLength() || (t || ' ').length * size * .5; } catch (e){ return (t || ' ').length * size * .5; } };
     const setText = () => {
       const t1 = ($('#storyText').value || ' ').toUpperCase(), t2 = ($('#storyText2').value || '').toUpperCase();
-      let f1 = 118; const w1 = textWidth(t1, f1, 900, 0); if (w1 > 500) f1 = Math.max(40, f1 * 500 / w1);
+      let f1 = 118; const w1 = textWidth(t1, f1, 800, 0); if (w1 > 500) f1 = Math.max(40, f1 * 500 / w1);
       let f2 = 34; const w2 = t2 ? textWidth(t2, f2, 800, 8) : 0; if (w2 > 400) f2 = Math.max(16, f2 * 400 / w2);
       const y1 = t2 ? 150 + f1 * .36 : 170 + f1 * .36;
       ['s1', 'sb1'].forEach(id => { const el = $('#' + id); el.textContent = t1; el.setAttribute('font-size', f1.toFixed(1)); el.setAttribute('y', y1.toFixed(1)); });
       ['s2', 'sb2'].forEach(id => { const el = $('#' + id); el.textContent = t2; el.setAttribute('font-size', f2.toFixed(1)); });
     };
     $('#storyText').addEventListener('input', setText); $('#storyText2').addEventListener('input', setText);
-    (document.fonts && document.fonts.load ? document.fonts.load('900 110px "Big Shoulders Stencil Display"') : Promise.resolve()).then(setText, setText);
+    (document.fonts && document.fonts.load ? document.fonts.load('800 110px Poppins') : Promise.resolve()).then(setText, setText);
     const steps = $$('#steps li'), rail = $$('#srail button');
     let last = -1, tick = false;
     const upd = () => {

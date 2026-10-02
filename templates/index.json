@@ -79,7 +79,7 @@
             "produkte": [
               "rundes-grillschild",
               "neugieriges-eichhornchen-rost-baumstecker",
-              "ewige-rose-gartenstecker"
+              "sterne-rost-garten-stele"
             ],
             "say": "Das Grillschild hängt meistens in 45 cm, das wählen 57 %."
           }
@@ -137,11 +137,11 @@
           "keine-gewalt-gegen-retter-anstecker",
           "feuerwehr-schlusselanhanger-dfv-signet",
           "monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
-          "ewige-rose-gartenstecker",
           "zunftschild-geschenk-fur-handwerker-personalisiert",
           "hausnummer-mit-namen-einweihungsgeschenk",
           "modernes-strassenschild-einweihungsgeschenk",
-          "zunft-anhanger-geschenk-fur-handwerker"
+          "zunft-anhanger-geschenk-fur-handwerker",
+          "eisernes-kreuz-schluesselanhaenger"
         ],
         "btn_text": "Alle ansehen"
       }
@@ -354,7 +354,7 @@
             "y": 86,
             "gross": false,
             "titel": "Die Blumen",
-            "text": "Unsere Ewige Rose welkt nie und wurde über 3.400-mal bestellt. It’s Sign Time!"
+            "text": "Bei uns wächst im Garten auch Stahl: Das Neugierige Eichhörnchen wurde über 750-mal bestellt und braucht nie Wasser. It’s Sign Time!"
           }
         }
       },

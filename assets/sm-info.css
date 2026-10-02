@@ -1,11 +1,11 @@
 /* Steelmonks – Montage & Pflege, Oberflächen (aus dem Prototyp erzeugt). Basis: sm-sonder.css */
 .smx .in-top{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
-.smx .in-hero .sa-h1{font-size:clamp(43.2px,5.8vw,86.4px)}
+.smx .in-hero .sa-h1{font-size:clamp(31.1px,4.2vw,62.2px)}
 .smx .in-kit{position:relative;border-radius:24px;overflow:hidden;background:#15181b;box-shadow:0 40px 80px -40px rgba(0,0,0,.8)}
 .smx .in-kit img{width:100%;aspect-ratio:1/1;object-fit:cover}
 .smx .in-kit .facts{position:absolute;left:14px;right:14px;bottom:14px;display:flex;flex-wrap:wrap;gap:8px}
 .smx .in-kit .facts span{padding:.45em .8em;border-radius:999px;background:rgba(11,12,14,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font-size:13.12px}
-.smx .in-kit .facts b{font-family:var(--f-display);font-weight:900;font-size:16.8px;margin-right:4px}
+.smx .in-kit .facts b{font-family:var(--f-display);font-weight:800;font-size:13.8px;margin-right:4px}
 .smx .in-kit-wrap{position:relative}
 .smx .in-kit-wrap .pxfx{position:absolute;left:-100px;bottom:-4px}
 .smx .in-kit-wrap .pxfx img{width:96px;height:auto}
@@ -13,13 +13,13 @@
 .smx .in-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .smx .in-step{position:relative;border-radius:20px;overflow:hidden;background:var(--white);box-shadow:var(--shadow)}
 .smx .in-step img{width:100%;aspect-ratio:4/3;object-fit:cover}
-.smx .in-step .n{position:absolute;left:14px;top:12px;font-family:var(--f-display);font-weight:900;font-size:41.6px;line-height:1;color:#fff;text-shadow:0 4px 16px rgba(0,0,0,.55)}
+.smx .in-step .n{position:absolute;left:14px;top:12px;font-family:var(--f-display);font-weight:800;font-size:34.1px;line-height:1;color:#fff;text-shadow:0 4px 16px rgba(0,0,0,.55)}
 .smx .in-step div{padding:16px 18px 20px;display:grid;gap:6px}
 .smx .in-step b{font-size:17.28px;font-weight:600}
 .smx .in-step p{font-size:14.72px;color:var(--ink-2);line-height:1.55}
 .smx .in-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
 .smx .in-facts div{padding:18px;border-radius:18px;background:var(--night);color:var(--blank)}
-.smx .in-facts b{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(28.8px,2.6vw,38.4px);line-height:1}
+.smx .in-facts b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(23.6px,2.1vw,31.5px);line-height:1}
 .smx .in-facts span{display:block;margin-top:6px;font-size:13.44px;color:var(--steel);line-height:1.4}
 .smx .in-note{margin-top:18px;display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:16px;background:var(--white);box-shadow:var(--shadow);font-size:14.72px;color:var(--ink-2)}
 .smx .in-note b{color:var(--ink)}
@@ -87,7 +87,7 @@
 .smx .of-grid button .t{display:grid;gap:2px;padding:10px 12px 12px}
 .smx .of-grid button b{font-size:15.68px;font-weight:600}
 .smx .of-grid button small{font-size:11.84px;color:var(--ink-3)}
-.smx .of-grid button em{font-style:normal;font-family:var(--f-display);font-weight:900;font-size:19.2px;color:var(--blau);margin-top:4px}
+.smx .of-grid button em{font-style:normal;font-family:var(--f-display);font-weight:800;font-size:15.7px;color:var(--blau);margin-top:4px}
 .smx .of-grid button:hover{transform:translateY(-3px)}
 .smx .of-grid button[aria-selected="true"]{box-shadow:0 0 0 3px var(--blau),0 22px 40px -22px rgba(11,12,14,.5);transform:translateY(-3px)}
 .smx .of-grid button[aria-selected="true"]::after{content:"";position:absolute;left:50%;bottom:-17px;translate:-50% 0;border:10px solid transparent;border-bottom-color:var(--white);filter:drop-shadow(0 -2px 0 rgba(0,0,0,.04))}
@@ -102,10 +102,10 @@
 .smx .of-kv small{display:block;font-family:var(--f-mono);font-size:9.92px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
 .smx .of-kv b{display:block;margin-top:4px;font-size:15.2px;font-weight:600}
 .smx .of-data{margin-top:14px;font-size:14.4px;color:var(--ink-2)}
-.smx .of-data b{font-family:var(--f-display);font-weight:900;font-size:24px;color:var(--blau);margin-right:4px}
+.smx .of-data b{font-family:var(--f-display);font-weight:800;font-size:19.7px;color:var(--blau);margin-right:4px}
 .smx .of-pc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .smx .of-pc div{padding:20px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(238,240,242,.1)}
-.smx .of-pc i{font-family:var(--f-display);font-weight:900;font-style:normal;font-size:35.2px;line-height:1;color:var(--laser)}
+.smx .of-pc i{font-family:var(--f-display);font-weight:800;font-style:normal;font-size:28.9px;line-height:1;color:var(--laser)}
 .smx .of-pc b{display:block;margin-top:8px;font-size:16.8px;font-weight:600}
 .smx .of-pc p{margin-top:6px;font-size:14.4px;color:var(--steel);line-height:1.5}
 .smx .of-tbl{overflow-x:auto;border-radius:20px;box-shadow:var(--shadow);background:var(--white)}
@@ -125,7 +125,7 @@
 .smx .in-help{grid-template-columns:1fr}
 .smx .of-pick{grid-template-columns:1fr}
 .smx .of-big{max-width:420px;aspect-ratio:4/3}}
-@media (max-width: 620px){.smx .in-hero .sa-h1{font-size:clamp(38.4px,11vw,51.2px)}
+@media (max-width: 620px){.smx .in-hero .sa-h1{font-size:clamp(27.6px,7.9vw,36.9px)}
 .smx .in-steps{grid-template-columns:1fr}
 .smx .in-step{display:grid;grid-template-columns:120px minmax(0,1fr)}
 .smx .in-step img{height:100%;aspect-ratio:auto}

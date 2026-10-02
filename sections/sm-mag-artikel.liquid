@@ -3,7 +3,7 @@
   Inhalt = article.content. Solange eine überarbeitete Fassung noch nicht freigegeben ist, kann sie im Metafeld smk.inhalt_neu liegen und wird dann hier gezeigt.
   Produkt-Kachel: Metafeld smk.kachel (Vorlage aus snippets/sm-mag-cta.liquid), sonst Einstellung „kachel“.
 {%- endcomment -%}
-<link rel="preload" href="{{ 'sm-bigshoulders-900.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ settings.type_body_font | font_modify: 'weight', '800' | font_url }}" as="font" type="font/woff2" crossorigin>
 {{ 'sm-sonder.css' | asset_url | stylesheet_tag }}
 {{ 'sm-magazin.css' | asset_url | stylesheet_tag }}
 {{ 'sm-artikel.css' | asset_url | stylesheet_tag }}

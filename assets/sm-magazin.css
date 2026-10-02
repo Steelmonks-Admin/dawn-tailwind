@@ -1,7 +1,7 @@
 /* Steelmonks Magazin – Blog-Übersicht (aus dem Prototyp erzeugt, sm-port). Basis-Stile kommen aus sm-sonder.css */
 .smx .bl-hero{padding-bottom:clamp(28px,4vw,48px)}
 .smx .bl-top{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
-.smx .bl-hero .sa-h1{font-size:clamp(43.2px,5.8vw,86.4px)}
+.smx .bl-hero .sa-h1{font-size:clamp(31.1px,4.2vw,62.2px)}
 .smx .bl-search .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .smx .bl-search{position:relative;margin-top:26px;max-width:520px}
 .smx .bl-search input{width:100%;height:56px;padding:0 118px 0 50px;border-radius:999px;border:1px solid rgba(238,240,242,.2);background:rgba(255,255,255,.06);color:var(--blank);font:inherit;font-size:16px;transition:border-color .2s,background .2s}
@@ -10,7 +10,7 @@
 .smx .bl-search svg{position:absolute;left:18px;top:50%;translate:0 -50%;width:20px;height:20px;color:var(--steel);pointer-events:none}
 .smx .bl-search button{position:absolute;right:6px;top:6px;height:44px;padding:0 18px}
 .smx .bl-stats{display:flex;flex-wrap:wrap;gap:12px 32px;margin-top:26px}
-.smx .bl-stats b{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(28.8px,2.6vw,38.4px);line-height:1;color:var(--blank)}
+.smx .bl-stats b{display:block;font-family:var(--f-display);font-weight:800;font-size:clamp(23.6px,2.1vw,31.5px);line-height:1;color:var(--blank)}
 .smx .bl-stats span{font-size:12.8px;color:var(--steel)}
 .smx .bl-feat{position:relative;display:block;border-radius:24px;overflow:hidden;background:var(--anth);color:var(--blank);text-decoration:none;box-shadow:0 40px 80px -40px rgba(0,0,0,.8);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .smx .bl-feat:hover{transform:translateY(-4px)}
@@ -56,7 +56,7 @@
 .smx .bl-cta::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(11,12,14,.96) 12%,rgba(11,12,14,.55) 55%,rgba(11,12,14,.1))}
 .smx .bl-cta div{display:grid;gap:8px;padding:22px}
 .smx .bl-cta small{font-family:var(--f-mono);font-size:10.56px;letter-spacing:.12em;text-transform:uppercase;color:var(--laser)}
-.smx .bl-cta b{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(25.6px,2.3vw,33.6px);line-height:.95}
+.smx .bl-cta b{font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:clamp(18.4px,1.7vw,24.2px);line-height:.95}
 .smx .bl-cta span{font-size:14.4px;color:rgba(255,255,255,.78)}
 .smx .bl-cta .btn{justify-self:start;margin-top:6px}
 .smx .bl-more{display:flex;justify-content:center;margin-top:28px}
@@ -69,7 +69,7 @@
 .smx .bl-part .im{aspect-ratio:3/2;overflow:hidden}
 .smx .bl-part img{width:100%;height:100%;object-fit:cover;filter:grayscale(.35) contrast(1.05);transition:filter .4s,scale .6s}
 .smx .bl-part:hover img{filter:none;scale:1.05}
-.smx .bl-part .n{position:absolute;left:12px;top:10px;font-family:var(--f-display);font-weight:900;font-size:41.6px;line-height:1;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.6)}
+.smx .bl-part .n{position:absolute;left:12px;top:10px;font-family:var(--f-display);font-weight:800;font-size:34.1px;line-height:1;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.6)}
 .smx .bl-part b{padding:14px 16px 18px;font-size:15.68px;font-weight:600;line-height:1.3}
 .smx .bl-nav{display:flex;gap:8px;align-items:center}
 .smx .bl-nav button{width:48px;height:48px;border-radius:50%;border:1px solid rgba(238,240,242,.25);background:transparent;color:var(--blank);font-size:20.8px;cursor:pointer;transition:border-color .2s,background .2s}
@@ -81,14 +81,14 @@
 .smx .bl-rub img{width:54px;height:54px;object-fit:contain;image-rendering:pixelated;margin-bottom:4px}
 .smx .bl-rub b{font-size:16px;font-weight:600;line-height:1.25}
 .smx .bl-rub span{font-size:12.8px;color:var(--ink-3)}
-.smx .bl-rub i{font-style:normal;font-family:var(--f-display);font-weight:900;font-size:25.6px;line-height:1;color:var(--blau)}
+.smx .bl-rub i{font-style:normal;font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1;color:var(--blau)}
 @media (max-width: 980px){.smx .bl-top{grid-template-columns:1fr}
 .smx .bl-feat-wrap .pxfx{display:none}
 .smx .bl-feat-wrap{max-width:560px}
 .smx .bl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .smx .bl-story{grid-auto-columns:minmax(230px,42%)}
 .smx .bl-rub{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width: 620px){.smx .bl-hero .sa-h1{font-size:clamp(38.4px,11vw,51.2px)}
+@media (max-width: 620px){.smx .bl-hero .sa-h1{font-size:clamp(27.6px,7.9vw,36.9px)}
 .smx .bl-search input{height:52px;padding-right:16px}
 .smx .bl-search button{display:none}
 .smx .bl-stats{gap:10px 22px}
