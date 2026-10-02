@@ -3,14 +3,180 @@
     "main": {
       "type": "sm-beliebt",
       "blocks": {
+        "por_zunftanhangergesch": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "zunft-anhanger-geschenk-fur-handwerker",
+            "kurz": "Zunftanhänger",
+            "seit": "März 2023",
+            "untertitel": "„Zunftanhänger“ zeigt das Zunftzeichen Deines Handwerks als Schlüsselanhänger aus 2 mm Stahl, gefertigt in Deutschland.",
+            "lead": "Für Gesellen, Meister und Azubis",
+            "gewerke": "Zimmerer, Elektriker, Tischler, Dachdecker, Schornsteinfeger, Maurer",
+            "chips": "",
+            "fakt": "Ein Klassiker zur Meisterprüfung, gerne mit gravierter Rückseite.",
+            "oberflaechen": "",
+            "groessen": "",
+            "monate": "6,10,11",
+            "saison": "Vor Weihnachten und im Juli",
+            "zitat": "Alles wie gewünscht, Liefertermin nicht ganz eingehalten. Aber war auch nicht problematisch.",
+            "zitat_datum": "15.09.2026",
+            "extra": "keiner",
+            "knopf": "Ansehen"
+          }
+        },
+        "por_zunftschildgeschen": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "zunftschild-geschenk-fur-handwerker-personalisiert",
+            "kurz": "Zunftschild",
+            "seit": "März 2023",
+            "untertitel": "Bei diesem Zunftschild suchst Du das Zeichen Deines Gewerks aus und ergänzt Namen oder Betrieb.",
+            "lead": "Für Meister und ihre Betriebe",
+            "gewerke": "Zimmerer, Dachdecker, Maurer, Elektriker, Klempner, Tischler",
+            "chips": "",
+            "fakt": "Oft zur bestandenen Meisterprüfung oder für die eigene Werkstatt-Wand.",
+            "oberflaechen": "Schwarz:57,Anthrazit:22,Edelstahl:11,Cortenstahl:10",
+            "groessen": "10cm:1,22.5cm:16,45cm:34,55cm:40,75cm:8",
+            "monate": "4,5,6,10,11",
+            "saison": "Frühsommer und vor Weihnachten, sonst übers ganze Jahr",
+            "zitat": "Es sieht Mega gut aus und ist Qualitativ spitze!",
+            "zitat_datum": "19.09.2026",
+            "extra": "gewerke",
+            "knopf": "Gestalten"
+          }
+        },
+        "por_feuerwehrschlussel": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "feuerwehr-schlusselanhanger-dfv-signet",
+            "kurz": "Signet Anhänger",
+            "seit": "Dezember 2022",
+            "untertitel": "Das Signet des Deutschen Feuerwehrverbandes als Anhänger für den Schlüsselbund.",
+            "lead": "Für Feuerwehrfrauen und Feuerwehrmänner",
+            "gewerke": "",
+            "chips": "Freiwillige Feuerwehr, Berufsfeuerwehr, Jugendfeuerwehr, als Geschenk von Familie und Kameraden",
+            "fakt": "Fast jeder lässt auch die Rückseite gravieren, und 8 von 10 wählen ein Lederband.",
+            "oberflaechen": "",
+            "groessen": "",
+            "monate": "0,1,2,10,11",
+            "saison": "November bis März",
+            "zitat": "Sehr schönes Produkt, super kurze Lieferung. Vielen Dank",
+            "zitat_datum": "23.09.2026",
+            "extra": "keiner",
+            "knopf": "Gestalten"
+          }
+        },
+        "por_modernesstrassensc": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "modernes-strassenschild-einweihungsgeschenk",
+            "kurz": "Modernes Straßenschild",
+            "seit": "Februar 2021",
+            "untertitel": "„Modernes Straßenschild“ ist ein Hausschild für Fassade, Zaun oder Eingang aus 2 mm Stahl, gefertigt in unserer Werkstatt in Deutschland.",
+            "lead": "Für die Fassade, oft direkt nach dem Umzug",
+            "gewerke": "",
+            "chips": "Einzug, Einweihungsgeschenk, Hauswand",
+            "fakt": "Schwarz und Anthrazit liegen gleichauf, am liebsten 50 cm breit.",
+            "oberflaechen": "Anthrazit:43,Schwarz:42,Edelstahl:7,Cortenstahl:5,Weiß:2",
+            "groessen": "30cm:23,50cm:29,70cm:25,90cm:9,110cm:6",
+            "monate": "2,3,4,5,6",
+            "saison": "März bis Juli, die Umzugszeit",
+            "zitat": "Schnelle Lieferung, gute Qualität",
+            "zitat_datum": "24.09.2026",
+            "extra": "keiner",
+            "knopf": "Ansehen"
+          }
+        },
+        "por_keinegewaltgegenre": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "keine-gewalt-gegen-retter-anstecker",
+            "kurz": "Keine Gewalt",
+            "seit": "November 2024",
+            "untertitel": "Der Anstecker zur Aktion „Keine Gewalt gegen Retter“ aus 2 mm Stahl, gefertigt in unserer Werkstatt in Deutschland.",
+            "lead": "Für alle, die hinter unseren Rettern stehen",
+            "gewerke": "",
+            "chips": "Feuerwehr, Rettungsdienst, THW, Unterstützer der Aktion",
+            "fakt": "Im Schnitt 6 Pins pro Bestellung, oft gleich für die ganze Wache.",
+            "oberflaechen": "",
+            "groessen": "",
+            "monate": "10",
+            "saison": "Seit dem Start im November 2024",
+            "zitat": "Schnelle Lieferung, gute Qualität und eine super Action gegen Gewalt. Trage es im Dienst und wurde schon öfter drauf angesprochen.",
+            "zitat_datum": "12.04.2025",
+            "extra": "aktion",
+            "knopf": "Ansehen"
+          }
+        },
+        "por_monogrammpersonali": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "monogramm-personalisierte-wanddekoration-hochzeitsgeschenk",
+            "kurz": "Ivy",
+            "seit": "November 2021",
+            "untertitel": "„Ivy“ rahmt den Anfangsbuchstaben eures Nachnamens mit einem feinen Blattkranz ein.",
+            "lead": "Für Paare",
+            "gewerke": "",
+            "chips": "zur Hochzeit, zum Jahrestag, zum Einzug",
+            "fakt": "Das meistgenannte Wort in den Bewertungen: „Geschenk“.",
+            "oberflaechen": "Schwarz:44,Anthrazit:27,Edelstahl:15,Cortenstahl:7,Gold:5",
+            "groessen": "22.5cm:28,45cm:41,55cm:26,75cm:5",
+            "monate": "4,5,6,7,11",
+            "saison": "Mai bis August zur Hochzeitssaison und vor Weihnachten",
+            "zitat": "Sehr schönes Wandschild (Ivy)! Sorgfältig gearbeitet, ohne scharfe Kanten, sehr stabil. Die Lieferung war sehr schnell und die Ware gut verpackt! Das Personalisieren des Schildes war sehr einfach durchzuführen.",
+            "zitat_datum": "11.09.2026",
+            "extra": "keiner",
+            "knopf": "Ansehen"
+          }
+        },
+        "por_hausnummermitnamen": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "hausnummer-mit-namen-einweihungsgeschenk",
+            "kurz": "Hausnummer mit Namen",
+            "seit": "November 2021",
+            "untertitel": "„Hausnummer mit Namen“ ist ein Hausnummernschild für Fassade oder Eingang aus 2 mm Stahl, gefertigt in unserer Werkstatt in Deutschland.",
+            "lead": "Für alle, die gerade eingezogen sind",
+            "gewerke": "",
+            "chips": "das eigene Zuhause, Einweihungsgeschenk, Hauseingang",
+            "fakt": "Anthrazit ist hier die klare Nr. 1, mehr als jede zweite Hausnummer.",
+            "oberflaechen": "Anthrazit:54,Schwarz:35,Edelstahl:5,Cortenstahl:4,Weiß:1",
+            "groessen": "30cm:36,50cm:40,70cm:16,90cm:5,110cm:3",
+            "monate": "10,11",
+            "saison": "November und Dezember, als Geschenk zum neuen Zuhause",
+            "zitat": "Sehr schöne Verarbeitung. Wir auf der neuen Fassade montiert.",
+            "zitat_datum": "25.06.2026",
+            "extra": "keiner",
+            "knopf": "Ansehen"
+          }
+        },
+        "por_baumdeslebensfamil": {
+          "type": "portraet",
+          "settings": {
+            "produkt": "baum-des-lebens-familienschild-personalisiert",
+            "kurz": "Baum des Lebens",
+            "seit": "November 2020",
+            "untertitel": "Der Baum des Lebens trägt bei diesem Wandschild eure Familiennamen in den Ästen.",
+            "lead": "Für Familien",
+            "gewerke": "",
+            "chips": "mit allen Namen, zur Hochzeit, fürs Wohnzimmer",
+            "fakt": "Am liebsten in 45 cm, fast jedes zweite.",
+            "oberflaechen": "Schwarz:33,Anthrazit:28,Edelstahl:20,Cortenstahl:11,Gold:4",
+            "groessen": "22.5cm:29,45cm:44,55cm:24,75cm:3",
+            "monate": "4,5,6,7",
+            "saison": "Mai bis August",
+            "zitat": "Euer Schild hab ich an der Front meines Hauses angebracht. Es sieht sehr schön aus und ist wirklich eine Zierde.",
+            "zitat_datum": "23.09.2026",
+            "extra": "keiner",
+            "knopf": "Ansehen"
+          }
+        },
         "kat_anhanger": {
           "type": "kategorie",
           "settings": {
             "kollektion": "anhanger",
-            "titel": "Schlüsselanhänger",
-            "eyebrow": "Top [anzahl]",
-            "text": "Signet, Zunft, Foto und Name: am Schlüsselbund jeden Tag dabei.",
-            "anzahl": 8,
+            "titel": "Anhänger",
+            "anzahl": 12,
             "link_text": "Alle Anhänger"
           }
         },
@@ -19,9 +185,7 @@
           "settings": {
             "kollektion": "schilder",
             "titel": "Wandschilder",
-            "eyebrow": "Top [anzahl]",
-            "text": "Monogramme, Bäume, Zunftschilder und Motive für die Wand.",
-            "anzahl": 8,
+            "anzahl": 12,
             "link_text": "Alle Wandschilder"
           }
         },
@@ -30,9 +194,7 @@
           "settings": {
             "kollektion": "hausschilder",
             "titel": "Hausschilder",
-            "eyebrow": "Top [anzahl]",
-            "text": "Hausnummern, Straßenschilder und Klingelschilder für draußen.",
-            "anzahl": 8,
+            "anzahl": 12,
             "link_text": "Alle Hausschilder"
           }
         },
@@ -41,9 +203,7 @@
           "settings": {
             "kollektion": "pins-und-anstecker",
             "titel": "Anstecker",
-            "eyebrow": "Top [anzahl]",
-            "text": "Klein, günstig und auf Pixel-Karten verschickt.",
-            "anzahl": 8,
+            "anzahl": 12,
             "link_text": "Alle Anstecker"
           }
         },
@@ -52,9 +212,7 @@
           "settings": {
             "kollektion": "zunftzeichen",
             "titel": "Für Handwerker",
-            "eyebrow": "Top [anzahl]",
-            "text": "Zunftzeichen für jedes Gewerk, als Schild, Anhänger oder Anstecker.",
-            "anzahl": 8,
+            "anzahl": 12,
             "link_text": "Alle Zunftzeichen"
           }
         },
@@ -62,10 +220,8 @@
           "type": "kategorie",
           "settings": {
             "kollektion": "feuerwehr-geschenke",
-            "titel": "Für die Feuerwehr",
-            "eyebrow": "Top [anzahl]",
-            "text": "Signet, Anstecker und Schilder für die Wache und zu Hause.",
-            "anzahl": 8,
+            "titel": "Für Feuerwehr",
+            "anzahl": 12,
             "link_text": "Alle Feuerwehr-Geschenke"
           }
         },
@@ -74,14 +230,20 @@
           "settings": {
             "kollektion": "rost-gartendeko",
             "titel": "Garten",
-            "eyebrow": "Top [anzahl]",
-            "text": "Baumstecker, Blumenstecker und Tiere aus Stahl und Rost.",
-            "anzahl": 8,
+            "anzahl": 12,
             "link_text": "Alle Gartendeko"
           }
         }
       },
       "block_order": [
+        "por_zunftanhangergesch",
+        "por_zunftschildgeschen",
+        "por_feuerwehrschlussel",
+        "por_modernesstrassensc",
+        "por_keinegewaltgegenre",
+        "por_monogrammpersonali",
+        "por_hausnummermitnamen",
+        "por_baumdeslebensfamil",
         "kat_anhanger",
         "kat_schilder",
         "kat_hausschilder",
@@ -90,7 +252,18 @@
         "kat_feuerwehr_geschenke",
         "kat_rost_gartendeko"
       ],
-      "settings": {}
+      "settings": {
+        "eyebrow": "Die Lieblinge unserer Kunden",
+        "titel": "Beliebt",
+        "text": "[bestellungen] Bestellungen seit 2020, und das sind die Stücke, die immer wieder bestellt werden. Die Spitzenreiter stellen wir einzeln vor: für wen sie sind, wie sie am liebsten bestellt werden und wann sie Saison haben.",
+        "blase": "Wusstest Du? Kein Gewerk bestellt so viele Zunftschilder wie die Zimmerer.",
+        "aktion_text": "Gestartet im November 2024, gemeinsam mit Influencern aus Feuerwehr und Rettungsdienst und unseren Partnern.",
+        "aktion_ig": "@sina_setale, @74_locke, @jasminchen.b, @berliner.retterherz",
+        "aktion_link": "shopify://pages/keine-gewalt-gegen-retter",
+        "aktion_z1": "50.624",
+        "aktion_z2": "51.950",
+        "aktion_z3": "Ø 6,2"
+      }
     },
     "trusted": {
       "type": "apps",

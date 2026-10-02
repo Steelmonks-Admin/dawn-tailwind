@@ -1,8 +1,8 @@
 {%- comment -%}
-  Beliebt-Seite: echte Rangliste nach dem Metafeld steelmonks.bestellungen (Grundwert = alle DE-Bestellungen seit 2020, der Flow zählt neue Bestellungen dazu).
-  Oben „Insgesamt“ aus der Kollektion „all“ (die ersten 250 nach Bestseller-Sortierung), darunter je Block eine Kategorie mit ihren meistbestellten Stücken.
-  Nicht gezählt werden Zusatzartikel (Meilensteine, Gravur-Zusätze, „zusätzlich“, Befestigungssets) und die Handles aus „Ausschließen“.
-  Sortierung in Liquid: Schlüssel „Bestellungen+100000000 - (1999 - Position)“ als Text sortieren, umdrehen, Position zurückrechnen.
+  Beliebt-Seite wie im Prototyp: Kopf mit Kennzahlen, Porträts der Spitzenreiter (Blöcke „Porträt“), Rangliste mit Kategorie-Auswahl (Blöcke „Kategorie“).
+  Rangfolge nach dem Metafeld steelmonks.bestellungen (alle DE-Bestellungen seit 2020, der Flow zählt neue dazu), live in Liquid sortiert:
+  Schlüssel „Bestellungen+100000000 - (1999 - Position)“ als Text sortieren, umdrehen, Position zurückrechnen.
+  „Alle“ = Kollektion all (die ersten 250 nach Bestseller-Sortierung). Nicht gezählt: Meilensteine, Gravur-Zusätze, „zusätzlich“, Befestigungssets, Handles aus „Ausschließen“.
 {%- endcomment -%}
 {{ 'sm-home.css' | asset_url | stylesheet_tag }}
 {{ 'sm-beliebt.css' | asset_url | stylesheet_tag }}
@@ -15,149 +15,359 @@
     render 'sm-bestellungen'
   endcapture
   assign smb_total = smb_total | strip
+  assign smb_mon = 'J,F,M,A,M,J,J,A,S,O,N,D' | split: ','
+  assign smb_arr_svg = '<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 -%}
+
+{%- comment -%} Gesamtrangliste: Reihenfolge der Produkt-IDs (für die Plätze der Porträts) und die Karten für „Alle“ {%- endcomment -%}
+{%- assign smb_ids = '' -%}
+{%- capture smb_all_cards -%}
+  {%- assign c = collections['all'] -%}
+  {%- paginate c.products by 250 -%}
+    {%- assign keys = '' -%}
+    {%- for p in c.products -%}
+      {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
+      {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
+      {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 -%}{%- if n == 0 -%}{%- continue -%}{%- endif -%}
+      {%- assign nk = n | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
+      {%- capture keys -%}{{ keys }}{{ nk }}-{{ k }},{%- endcapture -%}
+    {%- endfor -%}
+    {%- assign arr = keys | split: ',' | sort | reverse -%}
+    {%- for x in arr limit: 60 -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
+      {%- capture smb_ids -%}{{ smb_ids }}{{ c.products[idx].id }},{%- endcapture -%}
+      {%- if forloop.index <= smb_top -%}<div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>{%- endif -%}
+    {%- endfor -%}
+  {%- endpaginate -%}
+{%- endcapture -%}
+{%- assign smb_id_list = smb_ids | split: ',' -%}
+
+{%- comment -%} Gewerke-Bilder aus der Zunftzeichen-Kollektion: Kurzname (erste 6 Buchstaben) = Bild; das Mosaik zeigt die Gewerke aus der Einstellung {%- endcomment -%}
+{%- assign smb_zmap = '' -%}{%- assign smb_mosaic = '' -%}
+{%- assign zc = collections[section.settings.gewerke_kollektion] -%}
+{%- if zc != blank -%}
+  {%- paginate zc.products by 250 -%}
+    {%- for p in zc.products -%}
+      {%- if p.type != 'Zunft-Schilder' or p.featured_media == blank or p.handle == section.settings.gewerke_ohne -%}{%- continue -%}{%- endif -%}
+      {%- assign zk = p.title | downcase | slice: 0, 6 -%}{%- assign zu = p.featured_media | image_url: width: 120 -%}
+      {%- capture smb_zmap -%}{{ smb_zmap }}|{{ zk }}={{ zu }}{%- endcapture -%}
+    {%- endfor -%}
+  {%- endpaginate -%}
+{%- endif -%}
+{%- assign smb_zmap = smb_zmap | split: '|' -%}
+{%- assign mg = section.settings.mosaik_gewerke | split: ',' -%}
+{%- for g in mg -%}{%- assign gn = g | strip -%}{%- assign gk = gn | downcase | slice: 0, 6 | append: '=' -%}
+  {%- for e in smb_zmap -%}{%- assign e6 = e | slice: 0, 7 -%}{%- if e6 == gk -%}{%- assign gu = e | remove_first: gk | replace: 'width=120', 'width=160' -%}{%- capture smb_mosaic -%}{{ smb_mosaic }}<img src="{{ gu }}" alt="{{ gn | escape }}" title="{{ gn | escape }}" loading="lazy" width="80" height="80">{%- endcapture -%}{%- break -%}{%- endif -%}{%- endfor -%}
+{%- endfor -%}
+
+{%- comment -%} Porträts nach Platz sortieren {%- endcomment -%}
+{%- assign pkeys = '' -%}
+{%- for block in section.blocks -%}
+  {%- if block.type != 'portraet' or block.settings.produkt == blank -%}{%- continue -%}{%- endif -%}
+  {%- assign pid = block.settings.produkt.id | append: '' -%}{%- assign rk = 999 -%}
+  {%- for id in smb_id_list -%}{%- if id == pid -%}{%- assign rk = forloop.index -%}{%- break -%}{%- endif -%}{%- endfor -%}
+  {%- assign rkk = rk | plus: 1000 -%}{%- assign bk = forloop.index0 | plus: 100 -%}
+  {%- capture pkeys -%}{{ pkeys }}{{ rkk }}-{{ bk }},{%- endcapture -%}
+{%- endfor -%}
+{%- assign pkeys = pkeys | split: ',' | sort -%}
+
 <div class="smh smb" data-smh="beliebt">
-  <div class="h-hero dark smb-hero">
-    <div class="wrap smb-hero__in">
-      <div class="smb-hero__copy">
-        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
-        <h1 class="display">{{ section.settings.titel_1 | escape }}<span class="st">{{ section.settings.titel_2 | escape }}</span></h1>
-        {%- if section.settings.text != blank -%}<p class="lead">{{ section.settings.text | escape | replace: '[bestellungen]', smb_total }}</p>{%- endif -%}
-        <nav class="smb-jump" aria-label="Zu den Kategorien springen">
-          <a class="chip" href="#smb-insgesamt">{{ section.settings.top_chip | escape }}</a>
-          {%- for block in section.blocks -%}{%- assign c = block.settings.kollektion -%}{%- if c != blank -%}<a class="chip" href="#smb-{{ block.id }}">{{ block.settings.titel | default: c.title | escape }}</a>{%- endif -%}{%- endfor -%}
-        </nav>
+  <div class="b-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a> / <span>{{ collection.title | default: 'Beliebt' | escape }}</span></nav>
+      <div class="top">
+        <div>
+          <p class="eyebrow" style="margin-top:14px">{{ section.settings.eyebrow | escape }}</p>
+          <h1 class="display">{{ section.settings.titel | escape }}</h1>
+          {%- if section.settings.text != blank -%}<p class="muted b-lead">{{ section.settings.text | escape | replace: '[bestellungen]', smb_total }}</p>{%- endif -%}
+        </div>
+        {%- if section.settings.blase != blank -%}<div class="b-jakob"><span class="pxfx pxa-bob" data-fx="twinkle:.5:.06:2"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="Pixel-Art: Jakob mit Pokal" width="84" height="110"></span><p class="bubble2">{{ section.settings.blase | escape }}</p></div>{%- endif -%}
       </div>
-      <div class="smb-hero__px" aria-hidden="true"><span class="pxfx pxa-bob" data-fx="twinkle:.5:.2:1.2"><img src="{{ 'sm-px3_jakob_trophy.webp' | asset_url }}" alt="" width="160" height="209"></span></div>
+      <div class="b-stats">
+        <div><b class="tnum">{{ smb_total }}</b><span>{{ section.settings.stat1_text | escape }}</span></div>
+        <div><b class="tnum">{{ section.settings.stat2_zahl | escape }}</b><span>{{ section.settings.stat2_text | escape }}</span></div>
+        <div><b class="tnum"><span data-ts-rating>{{ section.settings.ts_note | escape }}</span> ★</b><span><span data-ts-count>{{ section.settings.ts_anzahl | escape }}</span> Bewertungen bei Trusted Shops</span></div>
+      </div>
+      <nav class="b-jump" aria-label="Zu den Porträts springen">
+        {%- for x in pkeys -%}{%- assign parts = x | split: '-' -%}{%- assign bi = parts[1] | minus: 100 -%}{%- assign rk = parts[0] | minus: 1000 -%}{%- assign b = section.blocks[bi] -%}
+          <a class="chip" href="#por-{{ forloop.index0 }}">{% if rk < 999 %}#{{ rk }} {% endif %}{{ b.settings.kurz | default: b.settings.produkt.title | escape }}</a>
+        {%- endfor -%}
+        <a class="chip chip--top" href="#rangliste">{{ section.settings.rank_titel | escape }}</a>
+      </nav>
     </div>
   </div>
 
-  {%- comment -%} Insgesamt {%- endcomment -%}
-  <section class="sec paper smb-sec" id="smb-insgesamt" aria-labelledby="smbT-top">
-    <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">{{ section.settings.top_eyebrow | replace: '[anzahl]', smb_top | escape }}</p><h2 class="h2" id="smbT-top">{{ section.settings.top_titel | escape }}</h2></div>{%- if section.settings.top_text != blank -%}<p class="muted">{{ section.settings.top_text | escape }}</p>{%- endif -%}</div>
-      {%- assign c = collections['all'] -%}
-      {%- paginate c.products by 250 -%}
-        {%- assign keys = '' -%}
-        {%- for p in c.products -%}
-          {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
-          {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
-          {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 -%}{%- if n == 0 -%}{%- continue -%}{%- endif -%}
-          {%- assign nk = n | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
-          {%- capture keys -%}{{ keys }}{{ nk }}-{{ k }},{%- endcapture -%}
-        {%- endfor -%}
-        {%- assign arr = keys | split: ',' | sort | reverse -%}
-        <div class="ranks smb-ranks smb-ranks--top" data-smb-more>
-          {%- for x in arr limit: smb_top -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
-            <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
-          {%- endfor -%}
+  <div id="portraits">
+  {%- for x in pkeys -%}
+    {%- assign parts = x | split: '-' -%}{%- assign bi = parts[1] | minus: 100 -%}{%- assign rk = parts[0] | minus: 1000 -%}
+    {%- assign b = section.blocks[bi] -%}{%- assign p = b.settings.produkt -%}{%- assign i = forloop.index0 -%}{%- assign odd = i | modulo: 2 -%}
+    <section class="por{% if i == 0 %} dark{% endif %}{% if odd == 1 %} flip{% endif %}" id="por-{{ i }}" aria-labelledby="porT{{ i }}" {{ b.shopify_attributes }}>
+      <div class="wrap por-grid">
+        <div class="por-media">
+          <span class="por-rank" aria-hidden="true">#{% if rk < 999 %}{{ rk }}{% else %}{{ i | plus: 1 }}{% endif %}</span>
+          <div class="por-main">{%- if p.featured_media -%}{{ p.featured_media | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '500, 750, 1000', sizes: '(max-width: 900px) 92vw, 600px', alt: p.title, data-por-main: '' }}{%- endif -%}</div>
+          {%- assign imgs = p.media | where: 'media_type', 'image' -%}
+          {%- if imgs.size > 1 -%}<div class="por-thumbs">{%- for m in imgs limit: 3 -%}<button type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-por-src="{{ m | image_url: width: 1000 }}" aria-label="Bild {{ forloop.index }}"><img src="{{ m | image_url: width: 140 }}" alt="" loading="lazy" width="64" height="64"></button>{%- endfor -%}</div>{%- endif -%}
         </div>
-      {%- endpaginate -%}
-      {%- if smb_top > 6 -%}<button class="btn btn-g smb-more" type="button" data-smb-morebtn hidden>{{ section.settings.mehr_text | replace: '[anzahl]', smb_top | escape }}</button>{%- endif -%}
-    </div>
-  </section>
+        <div>
+          <p class="eyebrow">Platz {% if rk < 999 %}{{ rk }}{% else %}{{ i | plus: 1 }}{% endif %}{% if b.settings.seit != blank %} · seit {{ b.settings.seit | escape }}{% endif %}</p>
+          <h2 class="display" id="porT{{ i }}" style="margin-top:8px">{{ p.title | escape }}</h2>
+          {%- if b.settings.untertitel != blank -%}<p class="sub">{{ b.settings.untertitel | escape }}</p>{%- endif -%}
+          <div class="por-meta"><span class="price tnum">{% render 'sm-home-price', product: p %}</span><span class="r">{% render 'sm-home-rating', product: p %} Bewertungen</span><span class="badge {% if i == 0 %}blue{% else %}hot{% endif %}">{% render 'sm-home-sold', product: p %}</span></div>
 
-  {%- comment -%} Kategorien {%- endcomment -%}
-  {%- for block in section.blocks -%}
-    {%- assign c = block.settings.kollektion -%}{%- if c == blank -%}{%- continue -%}{%- endif -%}
-    {%- assign bt = block.settings.titel | default: c.title -%}{%- assign bn = block.settings.anzahl -%}
-    {%- capture bg -%}{% cycle 'beton', 'paper' %}{%- endcapture -%}
-    <section class="sec smb-sec smb-sec--{{ bg }}" id="smb-{{ block.id }}" aria-labelledby="smbT-{{ block.id }}" {{ block.shopify_attributes }}>
-      <div class="wrap">
-        <div class="sec-head"><div><p class="eyebrow">{{ block.settings.eyebrow | default: 'Top [anzahl]' | replace: '[anzahl]', bn | escape }}</p><h2 class="h2" id="smbT-{{ block.id }}">{{ bt | escape }}</h2>{%- if block.settings.text != blank -%}<p class="muted smb-sub">{{ block.settings.text | escape }}</p>{%- endif -%}</div>
-          <a class="btn btn-i smb-all" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-        {%- paginate c.products by 250 -%}
-          {%- assign keys = '' -%}
-          {%- for p in c.products -%}
-            {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
-            {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
-            {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
-            {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
-          {%- endfor -%}
-          {%- assign arr = keys | split: ',' | sort | reverse -%}
-          <div class="ranks smb-ranks smb-row">
-            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
-              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
-            {%- endfor -%}
-          </div>
-        {%- endpaginate -%}
+          {%- if b.settings.lead != blank -%}
+            <div class="who"><h3>Wer kauft das?</h3><p class="lead2">{{ b.settings.lead | escape }}</p>
+              <div class="chips">
+                {%- assign gw = b.settings.gewerke | split: ',' -%}
+                {%- for g in gw -%}{%- assign gn = g | strip -%}{%- assign gk = gn | downcase | slice: 0, 6 | append: '=' -%}{%- assign gimg = '' -%}
+                  {%- for e in smb_zmap -%}{%- assign e6 = e | slice: 0, 7 -%}{%- if e6 == gk -%}{%- assign gimg = e | remove_first: gk -%}{%- break -%}{%- endif -%}{%- endfor -%}
+                  {%- if gimg != blank -%}<span class="c2"><img src="{{ gimg }}" alt="" loading="lazy" width="26" height="26">{{ gn | escape }}</span>{%- else -%}<span class="c2 t">{{ gn | escape }}</span>{%- endif -%}
+                {%- endfor -%}
+                {%- assign ch = b.settings.chips | split: ',' -%}{%- for g in ch -%}<span class="c2 t">{{ g | strip | escape }}</span>{%- endfor -%}
+              </div>
+              {%- if b.settings.fakt != blank -%}<p class="fact">{{ b.settings.fakt | escape }}</p>{%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- assign fins = b.settings.oberflaechen | remove: ' ' | split: ',' -%}{%- assign sizes = b.settings.groessen | remove: ' ' | split: ',' -%}{%- assign mons = b.settings.monate | remove: ' ' | prepend: ',' | append: ',' -%}
+          {%- if fins.size > 0 or sizes.size > 0 or b.settings.monate != blank -%}
+            <div class="fav">
+              {%- if fins.size > 0 -%}
+                <div><h3>Lieblings-Oberfläche</h3>
+                  <div class="txbar" role="img" aria-label="{% for f in fins limit: 5 %}{% assign fp = f | split: ':' %}{{ fp[0] }} {{ fp[1] }} Prozent{% unless forloop.last %}, {% endunless %}{% endfor %}">
+                    {%- for f in fins limit: 5 -%}{%- assign fp = f | split: ':' -%}{%- assign fk = fp[0] | downcase | replace: 'ß', 'ss' | replace: 'cortenstahl', 'corten' -%}<i class="tx-{{ fk }}" style="width:{{ fp[1] }}%"></i>{%- endfor -%}
+                  </div>
+                  <div class="txleg">{%- for f in fins limit: 4 -%}{%- assign fp = f | split: ':' -%}{%- assign fk = fp[0] | downcase | replace: 'ß', 'ss' | replace: 'cortenstahl', 'corten' -%}<div><i class="tx tx-{{ fk }}" style="width:14px;height:14px"></i>{{ fp[0] | escape }}<b>{{ fp[1] }} %</b></div>{%- endfor -%}</div>
+                </div>
+              {%- endif -%}
+              {%- if sizes.size > 0 -%}
+                {%- assign top_s = '' -%}{%- assign top_v = -1 -%}{%- assign mx = 0 -%}{%- assign round = false -%}
+                {%- for s in sizes -%}{%- assign sp = s | split: ':' -%}{%- assign v = sp[1] | plus: 0 -%}{%- assign cm = sp[0] | remove: 'cm' | plus: 0 -%}
+                  {%- if v > top_v -%}{%- assign top_v = v -%}{%- assign top_s = sp[0] -%}{%- endif -%}{%- if cm > mx -%}{%- assign mx = cm -%}{%- endif -%}
+                  {%- if sp[0] == '22.5cm' or sp[0] == '45cm' -%}{%- assign round = true -%}{%- endif -%}
+                {%- endfor -%}
+                {%- if round -%}
+                  <div><h3>Lieblings-Größe</h3><div class="szvis" role="img" aria-label="Am häufigsten {{ top_s | replace: 'cm', ' cm' | replace: '.', ',' }}">
+                    {%- for s in sizes -%}{%- assign sp = s | split: ':' -%}{%- assign cm = sp[0] | remove: 'cm' | plus: 0 -%}{%- assign d = cm | times: 0.85 | at_least: 16 | round -%}
+                      <div class="c{% if sp[0] == top_s %} top{% endif %}"><i style="width:{{ d }}px;height:{{ d }}px"></i><b>{{ sp[0] | replace: 'cm', ' cm' | replace: '.', ',' }}</b><span>{{ sp[1] }} %</span></div>
+                    {%- endfor -%}
+                  </div></div>
+                {%- else -%}
+                  <div><h3>Lieblings-Breite</h3><div class="szbars">
+                    {%- for s in sizes -%}{%- assign sp = s | split: ':' -%}{%- assign cm = sp[0] | remove: 'cm' | plus: 0 -%}{%- assign w = cm | times: 100.0 | divided_by: mx | round -%}
+                      <div{% if sp[0] == top_s %} class="top"{% endif %}><span>{{ sp[0] | replace: 'cm', ' cm' }}</span><i style="width:{{ w }}%"></i><span>{{ sp[1] }} %</span></div>
+                    {%- endfor -%}
+                  </div></div>
+                {%- endif -%}
+              {%- endif -%}
+              {%- if b.settings.monate != blank -%}
+                <div style="grid-column:1 / -1"><h3>Hochsaison</h3>
+                  <div class="cal" role="img" aria-label="Hochsaison {{ b.settings.saison | escape }}">{%- for m in smb_mon -%}{%- assign mk = ',' | append: forloop.index0 | append: ',' -%}<span{% if mons contains mk %} class="on"{% endif %}><i></i>{{ m }}</span>{%- endfor -%}</div>
+                  {%- if b.settings.saison != blank -%}<p class="cal-t">{{ b.settings.saison | escape }}</p>{%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if b.settings.zitat != blank -%}<blockquote class="por-quote"><q>{{ b.settings.zitat | escape }}</q><small>★★★★★ · verifizierte Bewertung{% if b.settings.zitat_datum != blank %} · {{ b.settings.zitat_datum | escape }}{% endif %}</small></blockquote>{%- endif -%}
+
+          {%- if b.settings.extra == 'aktion' -%}
+            {%- assign xp = all_products[section.settings.aktion_zusatz] -%}
+            <div class="camp">
+              <b class="camp-t">{{ section.settings.aktion_titel | escape }}</b>
+              <div class="n"><div><b>{{ section.settings.aktion_z1 | escape }}</b><span>{{ section.settings.aktion_t1 | escape }}</span></div><div><b>{{ section.settings.aktion_z2 | escape }}</b><span>{{ section.settings.aktion_t2 | escape }}</span></div><div><b>{{ section.settings.aktion_z3 | escape }}</b><span>{{ section.settings.aktion_t3 | escape }}</span></div></div>
+              <span class="duo pxfx pxa-bob" data-fx="twinkle:.07:.25:1.6"><img src="{{ 'sm-px2_duo_pin.webp' | asset_url }}" alt="" loading="lazy" width="110" height="110"></span>
+              {%- if section.settings.aktion_text != blank -%}<p class="camp-p">{{ section.settings.aktion_text | escape }}</p>{%- endif -%}
+              {%- if section.settings.aktion_ig != blank -%}<div class="ig">{%- assign igs = section.settings.aktion_ig | split: ',' -%}{%- for g in igs -%}<span>{{ g | strip | escape }}</span>{%- endfor -%}</div>{%- endif -%}
+              <div class="logos"><img src="{{ 'sm-logo_thw.png' | asset_url }}" alt="THW-Bundesvereinigung" loading="lazy" width="40" height="40"><img src="{{ 'sm-logo_blaulicht.png' | asset_url }}" alt="Blaulicht Magazin" loading="lazy" width="191" height="30"></div>
+              {%- if section.settings.aktion_link != blank -%}<a class="link camp-a" href="{{ section.settings.aktion_link }}">Zur Aktionsseite →</a>{%- endif -%}
+            </div>
+            {%- if xp != blank and p.selected_or_first_available_variant.available -%}
+              {%- assign v1 = p.selected_or_first_available_variant -%}{%- assign v2 = xp.selected_or_first_available_variant -%}
+              <div class="extra calc" data-wache data-v1="{{ v1.id }}" data-v2="{{ v2.id }}" data-p1="{{ v1.price }}" data-p2="{{ v2.price }}">
+                <h3 class="eyebrow">Für die ganze Wache</h3>
+                <label for="wache-{{ section.id }}">Wie viele Anstecker? <b data-wache-n>10</b></label>
+                <input type="range" id="wache-{{ section.id }}" min="1" max="60" value="10">
+                <div class="out"><span class="muted">1 × {{ v1.price | money }} + <span data-wache-e>9</span> × {{ v2.price | money }}</span><b data-wache-p>{{ v2.price | times: 9 | plus: v1.price | money }}</b></div>
+                <button class="btn btn-p btn-s" type="button" data-wache-add>In den Warenkorb</button>
+              </div>
+            {%- endif -%}
+          {%- elsif b.settings.extra == 'gewerke' and smb_mosaic != blank -%}
+            <div class="extra"><h3 class="eyebrow">{{ section.settings.gewerke_titel | escape }}</h3><div class="mosaic">{{ smb_mosaic }}</div><a class="link" href="{{ p.url }}">Zum {{ p.title | escape }} →</a></div>
+          {%- endif -%}
+
+          <div class="por-ctas"><a class="btn {% if i == 0 %}btn-p{% else %}btn-i{% endif %}" href="{{ p.url }}">{{ b.settings.knopf | default: 'Ansehen' | escape }} {{ smb_arr_svg }}</a></div>
+        </div>
       </div>
     </section>
   {%- endfor -%}
+  </div>
 
-  <section class="sec dark smb-end" aria-labelledby="smbT-end">
-    <div class="wrap smb-end__in">
-      <span class="pxfx pxa-wave"><img src="{{ 'sm-px2_monk_pc.webp' | asset_url }}" alt="" width="112" height="112" loading="lazy"></span>
-      <div>
-        <h2 class="h2" id="smbT-end">{{ section.settings.end_titel | escape }}</h2>
-        <p class="muted">{{ section.settings.end_text | escape }}</p>
+  <section class="rank-sec" id="rangliste" aria-labelledby="rankT">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">{{ section.settings.rank_eyebrow | escape }}</p><h2 class="h2" id="rankT" data-rank-h>{{ section.settings.rank_titel | escape }}</h2></div>
+        <div class="fchips rank-chips" role="group" aria-label="Nach Kategorie filtern">
+          <button class="chip" type="button" data-rank="alle" data-h="{{ section.settings.rank_titel | escape }}" aria-pressed="true">Alle</button>
+          {%- for block in section.blocks -%}{%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}{%- assign bt = block.settings.titel | default: block.settings.kollektion.title -%}
+            <button class="chip" type="button" data-rank="{{ block.id }}" data-h="Top {{ block.settings.anzahl }} · {{ bt | escape }}" aria-pressed="false">{{ bt | escape }}</button>
+          {%- endfor -%}
+        </div>
       </div>
-      <div class="smb-end__ctas">
-        <a class="btn btn-p" href="{{ section.settings.end_link | default: '/pages/werkstatt' }}">{{ section.settings.end_btn | escape }} <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        {%- if section.settings.end_link2_text != blank -%}<a class="btn btn-g" href="{{ section.settings.end_link2 | default: '/pages/anfragen' }}">{{ section.settings.end_link2_text | escape }}</a>{%- endif -%}
-      </div>
+      <div class="rgrid" data-rank-p="alle">{{ smb_all_cards }}</div>
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign c = block.settings.kollektion -%}{%- assign bn = block.settings.anzahl -%}
+        <div class="rank-cat" data-rank-p="{{ block.id }}" hidden {{ block.shopify_attributes }}>
+          <div class="rgrid">
+          {%- paginate c.products by 250 -%}
+            {%- assign keys = '' -%}
+            {%- for p in c.products -%}
+              {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
+              {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
+              {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
+              {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
+            {%- endfor -%}
+            {%- assign arr = keys | split: ',' | sort | reverse -%}
+            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
+              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
+            {%- endfor -%}
+          {%- endpaginate -%}
+          </div>
+          <div class="rank-all"><a class="btn btn-i" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} {{ smb_arr_svg }}</a></div>
+        </div>
+      {%- endfor -%}
+      <button class="btn btn-g rank-more" type="button" data-rank-more hidden>{{ section.settings.mehr_text | escape }}</button>
     </div>
   </section>
 
   {%- if collection.description != blank and section.settings.beschreibung -%}
-    <section class="sec paper smb-desc"><div class="wrap"><details><summary>{{ section.settings.beschreibung_titel | escape }}</summary><div class="smb-desc__t">{{ collection.description }}</div></details></div></section>
+    <section class="smb-desc"><div class="wrap"><details><summary>{{ section.settings.beschreibung_titel | escape }}</summary><div class="smb-desc__t">{{ collection.description }}</div></details></div></section>
   {%- endif -%}
 </div>
 <script>
   (function(){
-    var g = document.querySelector('[data-smb-more]'), b = document.querySelector('[data-smb-morebtn]');
-    if (!g || !b) return;
+    var root = document.querySelector('.smb'); if (!root) return;
+    /* Porträt-Bilder wechseln */
+    root.addEventListener('click', function(e){
+      var b = e.target.closest('[data-por-src]'); if (!b) return;
+      var m = b.closest('.por-media'), img = m && m.querySelector('[data-por-main]'); if (!img) return;
+      img.removeAttribute('srcset'); img.src = b.getAttribute('data-por-src');
+      m.querySelectorAll('[data-por-src]').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+    });
+    /* Rangliste: Kategorie wählen, am Handy erst 8 Plätze */
+    var chips = root.querySelector('.rank-chips'), h = root.querySelector('[data-rank-h]'), more = root.querySelector('[data-rank-more]');
     var mq = matchMedia('(max-width: 760px)');
-    function set(){ var open = g.classList.contains('is-open'); b.hidden = !mq.matches || open; }
-    b.addEventListener('click', function(){ g.classList.add('is-open'); set(); });
-    (mq.addEventListener ? mq.addEventListener('change', set) : mq.addListener(set)); set();
+    function cur(){ return root.querySelector('[data-rank-p]:not([hidden])'); }
+    function upd(){ var p = cur(); if (!p || !more) return; var n = p.querySelectorAll('.rk').length; more.hidden = !mq.matches || n <= 8 || p.classList.contains('is-open'); }
+    if (chips) chips.addEventListener('click', function(e){
+      var b = e.target.closest('[data-rank]'); if (!b) return;
+      chips.querySelectorAll('[data-rank]').forEach(function(x){ x.setAttribute('aria-pressed', String(x === b)); });
+      root.querySelectorAll('[data-rank-p]').forEach(function(p){ p.hidden = p.getAttribute('data-rank-p') !== b.getAttribute('data-rank'); });
+      if (h) h.textContent = b.getAttribute('data-h'); upd();
+    });
+    if (more) more.addEventListener('click', function(){ var p = cur(); if (p) p.classList.add('is-open'); upd(); });
+    (mq.addEventListener ? mq.addEventListener('change', upd) : mq.addListener(upd)); upd();
+    /* Trusted Shops live */
+    var tr = root.querySelectorAll('[data-ts-rating]'), tc = root.querySelectorAll('[data-ts-count]');
+    function apply(g){ var r = String(Math.round(g.r * 100) / 100).replace('.', ','), n = Number(g.n).toLocaleString('de-DE'); tr.forEach(function(x){ x.textContent = r; }); tc.forEach(function(x){ x.textContent = n; }); }
+    var c = null; try { c = JSON.parse(sessionStorage.getItem('smhTs') || 'null'); } catch (e) {}
+    if (c) apply(c); else fetch('https://integrations.etrusted.com/feeds/grades/v1/channels/chl-056f6db9-2266-48bf-8c7b-44c1673f979d/touchpoints/all/feed.json', { credentials: 'omit' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){ if (!d || !d.grades) return; var g = { r: (d.grades['365days'] || {}).rating, n: (d.grades.overall || {}).count }; if (!g.r || !g.n) return; apply(g); try { sessionStorage.setItem('smhTs', JSON.stringify(g)); } catch (e) {} }).catch(function(){});
+    /* Für die ganze Wache: 1 Anstecker + weitere zum Zusatzpreis */
+    var w = root.querySelector('[data-wache]');
+    if (w){
+      var r = w.querySelector('input[type=range]'), p1 = +w.dataset.p1, p2 = +w.dataset.p2;
+      var eur = function(c){ return (c / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); };
+      var u = function(){ var n = +r.value; w.querySelector('[data-wache-n]').textContent = n; w.querySelector('[data-wache-e]').textContent = n - 1; w.querySelector('[data-wache-p]').textContent = eur(p1 + (n - 1) * p2); };
+      r.addEventListener('input', u); u();
+      w.querySelector('[data-wache-add]').addEventListener('click', function(){
+        var n = +r.value, items = [{ id: +w.dataset.v1, quantity: 1 }]; if (n > 1) items.push({ id: +w.dataset.v2, quantity: n - 1 });
+        var cd = document.querySelector('cart-drawer'), btn = this; btn.disabled = true;
+        fetch('/cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ items: items, sections: 'cart-drawer,cart-icon-bubble', sections_url: location.pathname }) })
+          .then(function(x){ return x.json(); })
+          .then(function(s){ btn.disabled = false; if (s.status) { alert(s.description || s.message); return; } if (cd && s.sections && cd.renderContents) { cd.classList.remove('is-empty'); cd.renderContents(s); if (window.publish && window.PUB_SUB_EVENTS) publish(PUB_SUB_EVENTS.cartUpdate, { source: 'sm-beliebt', cartData: s }); } else location.href = '/cart'; })
+          .catch(function(){ btn.disabled = false; location.href = '/cart'; });
+      });
+    }
   })();
 </script>
 
 {% schema %}
 {
-  "name": "SM Beliebt: Rangliste",
+  "name": "SM Beliebt",
   "tag": "section",
   "class": "section smh-section",
-  "max_blocks": 12,
+  "max_blocks": 24,
   "settings": [
     { "type": "header", "content": "Kopfbereich" },
-    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Beliebt · echte Rangliste" },
-    { "type": "text", "id": "titel_1", "label": "Überschrift, erste Zeile", "default": "Die Bestseller." },
-    { "type": "text", "id": "titel_2", "label": "Überschrift, zweite Zeile (metallisch)", "default": "Gezählt, nicht geschätzt." },
-    { "type": "textarea", "id": "text", "label": "Einleitung", "info": "[bestellungen] wird durch die aktuelle Gesamtzahl ersetzt.", "default": "Sortiert nach echten Bestellungen, [bestellungen] seit 2020. Jede neue Bestellung zählt sofort mit, die Reihenfolge ändert sich also laufend." },
-    { "type": "header", "content": "Insgesamt" },
-    { "type": "text", "id": "top_chip", "label": "Sprungmarke", "default": "Insgesamt" },
-    { "type": "text", "id": "top_eyebrow", "label": "Zeile über der Überschrift", "default": "Platz 1 bis [anzahl]" },
-    { "type": "text", "id": "top_titel", "label": "Überschrift", "default": "Insgesamt am meisten bestellt" },
-    { "type": "text", "id": "top_text", "label": "Text", "default": "Über alle Kategorien hinweg, vom Anstecker bis zum Hausschild." },
-    { "type": "range", "id": "top_anzahl", "label": "Anzahl", "min": 4, "max": 24, "step": 4, "default": 12 },
-    { "type": "text", "id": "mehr_text", "label": "Knopf am Handy (zeigt den Rest)", "default": "Alle [anzahl] Plätze zeigen" },
+    { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Die Lieblinge unserer Kunden" },
+    { "type": "text", "id": "titel", "label": "Überschrift", "default": "Beliebt" },
+    { "type": "textarea", "id": "text", "label": "Einleitung", "info": "[bestellungen] = aktuelle Gesamtzahl" },
+    { "type": "text", "id": "blase", "label": "Sprechblase von Jakob" },
+    { "type": "text", "id": "stat1_text", "label": "Kennzahl 1 (Bestellungen), Text", "default": "Bestellungen seit 2020" },
+    { "type": "text", "id": "stat2_zahl", "label": "Kennzahl 2, Zahl", "default": "50.600+" },
+    { "type": "text", "id": "stat2_text", "label": "Kennzahl 2, Text", "default": "Pins „Keine Gewalt gegen Retter“ verschickt" },
+    { "type": "text", "id": "ts_note", "label": "Trusted-Shops-Note (Startwert, wird live ersetzt)", "default": "4,83" },
+    { "type": "text", "id": "ts_anzahl", "label": "Trusted-Shops-Anzahl (Startwert)", "default": "6.634" },
+    { "type": "header", "content": "Porträts" },
+    { "type": "text", "id": "gewerke_kollektion", "label": "Kollektion für Gewerke-Bilder (Handle)", "default": "zunftzeichen" },
+    { "type": "text", "id": "gewerke_ohne", "label": "Ohne dieses Produkt (Handle)", "default": "zunftschild-geschenk-fur-handwerker-personalisiert" },
+    { "type": "text", "id": "gewerke_titel", "label": "Mosaik-Überschrift", "default": "50 Gewerke zur Auswahl" },
+    { "type": "text", "id": "mosaik_gewerke", "label": "Gewerke im Mosaik (kommagetrennt)", "default": "Dachdecker, Fliesenleger, Mechaniker, Zimmerer, Maurer, Gerüstbauer, Parkettleger, Betonbauer, Anlagenmechaniker, Tischler, Steinmetz, Schlosser" },
+    { "type": "header", "content": "Aktion Keine Gewalt gegen Retter" },
+    { "type": "text", "id": "aktion_titel", "label": "Titel", "default": "Die Aktion „Keine Gewalt gegen Retter“" },
+    { "type": "text", "id": "aktion_z1", "label": "Zahl 1", "default": "50.624" },
+    { "type": "text", "id": "aktion_t1", "label": "Text 1", "default": "Pins verschickt" },
+    { "type": "text", "id": "aktion_z2", "label": "Zahl 2", "default": "51.950" },
+    { "type": "text", "id": "aktion_t2", "label": "Text 2", "default": "Unterstützer auf der Aktionsseite" },
+    { "type": "text", "id": "aktion_z3", "label": "Zahl 3", "default": "Ø 6,2" },
+    { "type": "text", "id": "aktion_t3", "label": "Text 3", "default": "Pins pro Bestellung" },
+    { "type": "textarea", "id": "aktion_text", "label": "Text" },
+    { "type": "text", "id": "aktion_ig", "label": "Instagram (kommagetrennt)" },
+    { "type": "url", "id": "aktion_link", "label": "Aktionsseite" },
+    { "type": "text", "id": "aktion_zusatz", "label": "Produkt für weitere Anstecker (Handle)", "default": "keine-gewalt-gegen-retter-anstecker-zusaetzlich" },
+    { "type": "header", "content": "Rangliste" },
+    { "type": "text", "id": "rank_eyebrow", "label": "Zeile über der Überschrift", "default": "Rangliste · alle Bestellungen seit 2020" },
+    { "type": "text", "id": "rank_titel", "label": "Überschrift", "default": "Die Top 24" },
+    { "type": "range", "id": "top_anzahl", "label": "Plätze bei „Alle“", "min": 8, "max": 36, "step": 4, "default": 24 },
+    { "type": "text", "id": "mehr_text", "label": "Knopf am Handy (zeigt den Rest)", "default": "Weitere Plätze zeigen" },
     { "type": "textarea", "id": "ausschluss", "label": "Ausschließen (Handles, kommagetrennt)", "info": "Zusatzartikel, Gravur-Zusätze und Meilensteine sind schon ausgenommen.", "default": "ewige-rose-gartenstecker,unsichtbares-befestigungsset-bolzen-und-gewindestifte,sonderanfertigungskosten,sonderanfertigung-dhl-paket,influencer-package-no-invoice-special-packaging,kopie-von-passender-schluesselanhaenger-band-braun" },
-    { "type": "header", "content": "Abschluss" },
-    { "type": "text", "id": "end_titel", "label": "Überschrift", "default": "Nichts Passendes dabei?" },
-    { "type": "text", "id": "end_text", "label": "Text", "default": "In der Werkstatt wird aus Deinem Foto oder Deiner Idee ein eigenes Motiv." },
-    { "type": "text", "id": "end_btn", "label": "Knopf", "default": "Werkstatt öffnen" },
-    { "type": "url", "id": "end_link", "label": "Knopf-Link" },
-    { "type": "text", "id": "end_link2_text", "label": "Zweiter Knopf", "default": "Sonderanfertigung anfragen" },
-    { "type": "url", "id": "end_link2", "label": "Zweiter Knopf, Link" },
     { "type": "checkbox", "id": "beschreibung", "label": "Kollektionsbeschreibung unten aufklappbar zeigen", "default": true },
     { "type": "text", "id": "beschreibung_titel", "label": "Titel der Beschreibung", "default": "Mehr über unsere Bestseller" }
   ],
   "blocks": [
     {
+      "type": "portraet",
+      "name": "Porträt",
+      "settings": [
+        { "type": "product", "id": "produkt", "label": "Produkt" },
+        { "type": "text", "id": "kurz", "label": "Kurzname für die Sprungmarke" },
+        { "type": "text", "id": "seit", "label": "Seit (z. B. November 2024)" },
+        { "type": "textarea", "id": "untertitel", "label": "Untertitel" },
+        { "type": "text", "id": "lead", "label": "Wer kauft das? Überschrift" },
+        { "type": "text", "id": "gewerke", "label": "Gewerke mit Bild (kommagetrennt)" },
+        { "type": "text", "id": "chips", "label": "Weitere Stichworte (kommagetrennt)" },
+        { "type": "text", "id": "fakt", "label": "Fakt" },
+        { "type": "text", "id": "oberflaechen", "label": "Oberflächen in Prozent", "info": "z. B. Schwarz:57,Anthrazit:22,Edelstahl:11,Cortenstahl:10" },
+        { "type": "text", "id": "groessen", "label": "Größen in Prozent, aufsteigend", "info": "z. B. 22.5cm:16,45cm:34,55cm:40,75cm:8" },
+        { "type": "text", "id": "monate", "label": "Hochsaison-Monate", "info": "0 = Januar bis 11 = Dezember, z. B. 4,5,6,10,11" },
+        { "type": "text", "id": "saison", "label": "Hochsaison, Text" },
+        { "type": "textarea", "id": "zitat", "label": "Bewertung" },
+        { "type": "text", "id": "zitat_datum", "label": "Datum der Bewertung" },
+        { "type": "select", "id": "extra", "label": "Zusatz", "options": [ { "value": "keiner", "label": "Keiner" }, { "value": "aktion", "label": "Aktion und Wachen-Rechner" }, { "value": "gewerke", "label": "Gewerke-Mosaik" } ], "default": "keiner" },
+        { "type": "text", "id": "knopf", "label": "Knopf", "default": "Ansehen" }
+      ]
+    },
+    {
       "type": "kategorie",
-      "name": "Kategorie",
+      "name": "Kategorie (Rangliste)",
       "settings": [
         { "type": "collection", "id": "kollektion", "label": "Kollektion" },
-        { "type": "text", "id": "titel", "label": "Überschrift (leer = Name der Kollektion)" },
-        { "type": "text", "id": "eyebrow", "label": "Zeile darüber", "default": "Top [anzahl]" },
-        { "type": "text", "id": "text", "label": "Kurzer Text" },
-        { "type": "range", "id": "anzahl", "label": "Anzahl", "min": 4, "max": 12, "step": 4, "default": 8 },
+        { "type": "text", "id": "titel", "label": "Name (leer = Name der Kollektion)" },
+        { "type": "range", "id": "anzahl", "label": "Plätze", "min": 4, "max": 24, "step": 4, "default": 12 },
         { "type": "text", "id": "link_text", "label": "Knopf", "default": "Alle ansehen" }
       ]
     }
   ],
-  "presets": [ { "name": "SM Beliebt: Rangliste" } ]
+  "presets": [ { "name": "SM Beliebt" } ]
 }
 {% endschema %}
