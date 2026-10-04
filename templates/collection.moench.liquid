@@ -2,14 +2,16 @@
 {%- comment -%}
   Bruder Funke (Testversion): Produktdaten einer Kollektion als JSON, abgerufen von assets/sm-monk.js
   über /collections/<handle>?view=moench&sort_by=best-selling. Kein Backend, nur was Shopify ohnehin ausliefert.
-  Hilfs-, Marker-, Gravur-, Geschenkverpackungs- und Ewige-Rose-Produkte sowie seo.hidden-Produkte fallen hier schon serverseitig heraus.
+  Hilfs-, Marker-, Gravur-, Geschenkverpackungs- und Ewige-Rose-Produkte, seo.hidden-Produkte und alles mit dem Tag
+  "internal production" fallen hier schon serverseitig heraus. Nur mit settings.sm_monk_enabled, sonst {"p":[]}.
   Felder: h Handle, t Titel, u URL, p ab-Preis (Cent), q Höchstpreis, k Vergleichspreis (Cent), i Bild (klein), z personalisierbar,
-  n Bestellungen (steelmonks.bestellungen), y Produkttyp, ip Tag "internal production", rv/rc Bewertung.
+  n Bestellungen (steelmonks.bestellungen), y Produkttyp, rv/rc Bewertung.
 {%- endcomment -%}
+{%- if settings.sm_monk_enabled -%}
 {%- liquid
   assign x_types = 'Meilenstein,PPLR_HIDDEN_PRODUCT,Befestigungsset,Versand,Sonderanfertigung,Gravur,Gift Cards,Gutschein,Geschenkverpackung' | split: ','
   assign x_handles = 'zusaetzlich,zusatzlich,zusatsliche,gravur,passend,item-personalization,ewige-rose,befestigung,geschenkverpackung,geschenktute,geschenktuete,dein-wunsch,gutschein,gratisversand,10-discount,mystery-geschenk' | split: ','
-  assign x_tags = 'PPLR_HIDDEN_PRODUCT,! PACK-SLIP_HIDDEN,! PACK-SLIP_NON-PRIMARY,! PACK-SLIP_GIFT-WRAPPING,Werkstatt' | split: ','
+  assign x_tags = 'PPLR_HIDDEN_PRODUCT,! PACK-SLIP_HIDDEN,! PACK-SLIP_NON-PRIMARY,! PACK-SLIP_GIFT-WRAPPING,Werkstatt,internal production' | split: ','
 -%}
 {%- paginate collection.products by 60 -%}
 {"c":{{ collection.handle | json }},"ti":{{ collection.title | json }},"n":{{ collection.products_count | default: 0 }},"p":[
@@ -43,23 +45,15 @@
     assign url = p.url
   -%}
   {%- unless skip -%}
+    {%- capture pz -%}{%- render 'sm-monk-pz', p: p -%}{%- endcapture -%}
     {%- liquid
-      assign pz = 1
-      if p.tags contains 'Mengenwahl'
-        assign pz = 0
-      endif
-      assign cz = p.metafields.customify.cstmfy_req.value | append: ''
-      if cz == '1'
-        assign pz = 1
-      elsif cz != ''
-        assign pz = 0
-      endif
       assign rv = p.metafields.reviews.rating.value.rating | default: 0
       assign rc = p.metafields.reviews.rating_count.value | default: 0
     -%}
     {%- unless first -%},{%- endunless -%}{%- assign first = false -%}
-    {"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ url | json }},"p":{{ p.price_min }},"q":{{ p.price_max }},"k":{{ p.compare_at_price_min | default: 0 }},"i":{{ p.featured_image | image_url: width: 300 | json }},"z":{{ pz }},"n":{{ p.metafields.steelmonks.bestellungen.value | default: 0 }},"y":{{ p.type | json }},"ip":{% if p.tags contains 'internal production' %}1{% else %}0{% endif %},"rv":{{ rv | json }},"rc":{{ rc | json }}}
+    {"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ url | json }},"p":{{ p.price_min }},"q":{{ p.price_max }},"k":{{ p.compare_at_price_min | default: 0 }},"i":{{ p.featured_image | image_url: width: 300 | json }},"z":{{ pz }},"n":{{ p.metafields.steelmonks.bestellungen.value | default: 0 }},"y":{{ p.type | json }},"rv":{{ rv | json }},"rc":{{ rc | json }}}
   {%- endunless -%}
 {%- endfor -%}
 ]}
 {%- endpaginate -%}
+{%- else -%}{"p":[]}{%- endif -%}

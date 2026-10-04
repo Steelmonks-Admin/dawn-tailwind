@@ -1,0 +1,22 @@
+{%- comment -%}
+  Bruder Funke (Testversion): gibt 1 aus, wenn Produkt p mit Wunschtext personalisiert wird, sonst 0.
+  Eine Quelle für Kontext (sm-monk), Produkt-CTA (main-product) und Kartendaten (collection.moench).
+  Gutschein: 0. customify.cstmfy_req "1": 1, jeder andere gesetzte Wert: 0. Sonst: 0 mit Tag "Mengenwahl", ansonsten 1.
+{%- endcomment -%}
+{%- liquid
+  assign pz = 1
+  if p.gift_card?
+    assign pz = 0
+  else
+    if p.tags contains 'Mengenwahl'
+      assign pz = 0
+    endif
+    assign cz = p.metafields.customify.cstmfy_req.value | append: ''
+    if cz == '1'
+      assign pz = 1
+    elsif cz != ''
+      assign pz = 0
+    endif
+  endif
+  echo pz
+-%}

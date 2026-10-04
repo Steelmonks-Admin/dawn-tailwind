@@ -8,6 +8,8 @@
 #smMonk button,#smMonk a{font-family:inherit;text-transform:none;min-width:0}
 #smMonk img{max-width:none;max-height:none}
 .smmk-vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* Dawn blendet leere Divs aus (base.css: div:empty{display:none}). Diese leeren Divs braucht der Mönch sichtbar. */
+html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{display:block}
 .smmk-px{image-rendering:pixelated;image-rendering:crisp-edges}
 
 /* Darsteller */
@@ -32,7 +34,7 @@
 #smMonk .smmk-floaty img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* Dialogbox */
-#smMonk .smmk-box{position:absolute;left:264px;bottom:calc(24px + var(--lift));width:380px;max-height:60%;display:none;flex-direction:column;background:var(--paper);color:var(--ink);pointer-events:auto;z-index:30;font-size:15.5px;text-align:left;
+#smMonk .smmk-box{position:absolute;left:calc(264px + var(--ox,0px));bottom:calc(24px + var(--lift));width:380px;max-height:min(60%,380px);display:none;flex-direction:column;background:var(--paper);color:var(--ink);pointer-events:auto;z-index:30;font-size:15.5px;text-align:left;
   box-shadow:-4px 0 0 0 var(--frame),4px 0 0 0 var(--frame),0 -4px 0 0 var(--frame),0 4px 0 0 var(--frame),inset -4px -4px 0 0 var(--frame2),inset 4px 4px 0 0 #fff,8px 12px 0 0 rgba(9,10,12,.18);transform-origin:0 100%}
 #smMonk .smmk-box.on{display:flex}
 #smMonk .smmk-box::before{content:"";position:absolute;left:-16px;bottom:46px;width:12px;height:16px;background:var(--frame);clip-path:polygon(100% 0,100% 100%,0 50%);transition:opacity .2s}
@@ -80,7 +82,9 @@
 #smMonk .smmk-card{width:var(--cw,172px);background:#fff;box-shadow:0 0 0 3px var(--frame),6px 8px 0 rgba(9,10,12,.2);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;font-size:12.5px;line-height:1.35}
 #smMonk .smmk-card .im{display:block;width:100%;height:118px;object-fit:cover;background:#ece9e1}
 #smMonk .smmk-card .in{padding:9px 10px 10px;display:flex;flex-direction:column;flex:1}
-#smMonk .smmk-card b.ti{font-size:13.5px;line-height:1.25;margin:0 0 4px;display:block}
+#smMonk .smmk-card b.ti{font-size:13.5px;line-height:1.25;margin:0 0 2px;display:block}
+#smMonk .smmk-ty{display:block;font-size:11.5px;line-height:1.3;color:var(--muted);font-weight:500;margin:0 0 4px}
+#smMonk .smmk-row .smmk-ty{display:inline;font-size:11px;margin:0}
 #smMonk .smmk-price{font-weight:700}
 #smMonk .smmk-tax{color:var(--muted);font-size:11.5px}
 #smMonk .smmk-tax a{color:inherit;text-decoration:underline;pointer-events:auto}
@@ -137,7 +141,7 @@
 
 /* Klassische Ansicht */
 #smMonk.classic .smmk-actor,#smMonk.classic .smmk-shadow{display:none!important}
-#smMonk.classic .smmk-box{left:24px}
+#smMonk.classic .smmk-box{left:calc(24px + var(--ox,0px))}
 #smMonk.m.classic .smmk-box{left:0}
 #smMonk .smmk-cmsg{display:grid;grid-template-columns:48px 1fr;gap:10px;margin:0 0 10px;align-items:start}
 #smMonk .smmk-av{width:48px;height:48px;background-repeat:no-repeat;background-size:66px 120px;background-position:-9px 0;image-rendering:pixelated;background-color:#e8f0ff;border:2px solid var(--frame)}
@@ -149,4 +153,5 @@
 .smmk-rm .smmk-spot::after{animation:none}
 @media (prefers-reduced-motion: reduce){#smMonk .smmk-actor .bob,#smMonk .smmk-ch::before,.smmk-spot::after{animation:none!important}}
 html.smmk-out [data-smr-monk],html.smmk-out [data-smr-mmonk]{visibility:hidden}
+html.smmk-sheet #smNlTz{visibility:hidden!important}
 html.smmk-sheet [id^="trustbadge-container"],html.smmk-sheet [id^="trustbadge-container"] *{visibility:hidden!important;pointer-events:none!important}
