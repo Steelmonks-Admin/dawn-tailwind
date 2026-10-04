@@ -36,10 +36,10 @@ const asset = k => (k === 'rail' ? S.railSrc : (CTX.ab || '') + (ASSETS[k] || ''
 /* ---------- Zielgruppen: "Name|Kollektions-Handles|1 = auch als Chip im Hero" ---------- */
 const AUD_CFG = ['Handwerker|geschenke-fur-handwerker,zunftzeichen|1', 'Feuerwehr|feuerwehr-geschenke|1', 'Paare|geschenke-fur-paare|1', 'Familie|geschenke-fur-familien|1',
   'Zuhause|einweihungsgeschenke|1', 'Für ihn|gechenke-fur-ihn', 'Für sie|geschenke-fur-sie', 'Eltern|geschenke-fur-eltern', 'Soldaten|geschenke-fuer-bundeswehr-soldaten-und-veteranen',
-  'THW|thw-geschenke', 'Sportler|geschenke-fur-sportler', 'Tierfreunde|pferde-geschenke,tiere-aus-metall', 'Motorrad|motorrad-geschenke', 'Garten|rost-gartendeko'];
+  'THW|thw-geschenke', 'Tierfreunde|pferde-geschenke,tiere-aus-metall', 'Motorrad|motorrad-geschenke', 'Garten|rost-gartendeko'];
 const WHO = {Handwerker:['für Handwerker','sparks'], Feuerwehr:['für Feuerwehrleute','sparks'], Paare:['für Paare','petals'], Familie:['für Familien','twinkle'], Zuhause:['fürs Zuhause','dust'],
   'Für ihn':['für ihn','sparks'], 'Für sie':['für sie','petals'], Eltern:['für Eltern','twinkle'], Soldaten:['für Soldaten','sparks'], THW:['für THW-Helfer','sparks'],
-  Sportler:['für Sportler','twinkle'], Tierfreunde:['für Tierfreunde','petals'], Motorrad:['für Motorradfahrer','dust'], Garten:['für den Garten','petals']};
+  Tierfreunde:['für Tierfreunde','petals'], Motorrad:['für Motorradfahrer','dust'], Garten:['für den Garten','petals']};
 const AUD = AUD_CFG.map(s => { const p = String(s).split('|'), x = WHO[p[0]] || ['für ' + p[0], 'twinkle']; return {l:p[0], hs:(p[1] || '').split(',').filter(Boolean), who:x[0], hero:p[2] === '1', fx:x[1]}; });
 const audBy = l => AUD.find(a => a.l === l);
 const audByColl = c => AUD.find(a => a.hs.includes(c));
@@ -890,14 +890,31 @@ async function navTo(href, cue, say){
 async function opener(){
   const k = pageKind();
   if (k === 'home') return giftStep1(hello());
-  if (k === 'acoll'){ const a = audByColl(CTX.c); await ensureOut('sketch', 'leap'); newTurn(); await speak([...hello(), {t:`Geschenke ${a.who}, da kenn ich mich aus. Sag mir noch Dein Budget, dann zeig ich Dir die drei beliebtesten.`, emote:'bulb'}]); return budgetChips(a); }
-  if (k === 'coll'){
+  if (k === 'acoll'){
+    /* erst ins Regal schauen, dann nur versprechen, was sich auch füllen lässt */
+    const a = audByColl(CTX.c), pj = poolSafe(a);
     await ensureOut('sketch', 'leap'); newTurn();
+    const ok = okBudgets(await aw(pj));
+    if (!ok.length){ await speak(hello()); return emptyShelf(a); }
+    await speak([...hello(), {t:`Geschenke ${a.who}, da kenn ich mich aus. ` + (ok.length > 1 ? 'Sag mir noch Dein Budget, dann zeig ich Dir die drei beliebtesten.' : 'Ich zeig Dir die beliebtesten.'), emote:'bulb'}]);
+    return offerBudgets(a, ok);
+  }
+  if (k === 'coll'){
+    if (isWappen()){
+      /* Wappen entstehen nach Vorlage: keine Favoriten versprechen, direkt zum Rechner */
+      await ensureOut('measure', 'leap'); newTurn();
+      await speak([...hello(), {t:'Ein Wappen entsteht nach Deiner Vorlage, darum gibt es hier keine fertigen Favoriten. Soll ich Dich zum Wappen-Rechner bringen?', emote:'bulb'}]);
+      return choices([wappenChoice(), {l:'Mit Mensch sprechen', f:() => human()}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
+    }
+    const here = {l:(($('main h1') || {}).textContent || 'diese Kategorie').trim(), hs:[CTX.c], who:'hier', hero:false, fx:'twinkle'}, pj = poolSafe(here);
+    await ensureOut('sketch', 'leap'); newTurn();
+    const ok = okBudgets(await aw(pj));
+    if (!ok.length){
+      await speak([...hello(), {t:'Schau Dich hier gern in Ruhe um. Soll ich Dir lieber ein Geschenk für jemanden raussuchen?', emote:'?'}]);
+      return choices([{l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
+    }
     await speak([...hello(), {t:'Hier gibt es viel zu sehen. Soll ich Dir die drei beliebtesten aus dieser Kategorie zeigen?', emote:'?'}]);
-    const here = {l:(($('main h1') || {}).textContent || 'diese Kategorie').trim(), hs:[CTX.c], who:'hier', hero:false, fx:'twinkle'};
-    const c = [{l:'Ja, zeig her', f:() => budgetStep(here)}, {l:'Geschenk für jemanden', f:() => giftStep1()}];
-    if (isWappen()) c.push(wappenChoice());
-    return choices(c.concat([{l:'Nein danke', f:() => exitFlow()}]));
+    return choices([{l:'Ja, zeig her', f:() => budgetStep(here)}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
   }
   if (k === 'pdp' || k === 'pdpq' || k === 'pdpgc') return productOpener(k === 'pdp');
   if (k === 'wappen'){
@@ -978,6 +995,7 @@ const audLine = a => a.l === 'Feuerwehr' ? 'Feuerwehr, da kenn ich mich aus.' : 
 function heroChip(a){ return $$('#fchips .chip').find(c => !c.hasAttribute('data-smmk') && c.textContent.trim().toLowerCase() === a.l.toLowerCase()) || null; }
 async function pickAudience(a){
   S.aud = a; S.shown = new Set(); S.pool = null;
+  poolSafe(a); /* das Regal lädt schon, während der Mönch zum Chip geht */
   const chip = CTX.t === 'index' ? heroChip(a) : null;
   if (chip && vis(chip)){
     try { chip.scrollIntoView({block:'nearest', inline:'center'}); } catch (e) {}
@@ -1007,16 +1025,36 @@ async function pickAudience(a){
     await ensureOut('sketch', 'poof');
     await speak({t:audLine(a), emote:'bulb'});
   }
-  return budgetStep(a, true);
+  return budgetStep(a);
 }
-async function budgetStep(a, noPre){
+/* Nur Budgets anbieten, für die das Regal wirklich mindestens zwei Stücke hat. Ohne Daten (Ladefehler) alle, cardsFlow sagt dann ehrlich Bescheid. */
+const BUDGETS = {'30':'bis 30 €', '60':'bis 60 €', mehr:'darf mehr sein'};
+const okBudgets = (list, not) => Object.keys(BUDGETS).filter(b => b !== not && (!list || pick(list, b).tier !== 'none'));
+function poolOf(a){
+  if (S.pool && S.pool.a === a) return Promise.resolve(S.pool.list);
+  return loadPool(a.hs).then(list => { if (S.aud === a || !S.pool) S.pool = {a, list}; return list; });
+}
+const poolSafe = a => poolOf(a).catch(() => null);
+async function budgetStep(a){
   S.aud = a; await ensureOut('sketch', 'poof');
-  await speak('Und was darf es ungefähr kosten?');
-  budgetChips(a);
+  const ok = okBudgets(await aw(poolSafe(a)));
+  if (!ok.length) return emptyShelf(a);
+  if (ok.length > 1) await speak('Und was darf es ungefähr kosten?');
+  return offerBudgets(a, ok);
 }
-function budgetChips(a){
+function offerBudgets(a, ok){
+  if (ok.length === 1) return cardsFlow(a, ok[0]);
+  budgetChips(a, ok);
+}
+function budgetChips(a, ok){
   S.aud = a;
-  choices([{l:'bis 30 €', f:() => cardsFlow(a, '30')}, {l:'bis 60 €', f:() => cardsFlow(a, '60')}, {l:'darf mehr sein', f:() => cardsFlow(a, 'mehr')}]);
+  choices((ok || Object.keys(BUDGETS)).map(b => ({l:BUDGETS[b], f:() => cardsFlow(a, b)})));
+}
+async function emptyShelf(a){
+  await ensureOut('sketch', 'poof');
+  await aw(setPose('shrug')); emote('sweat', 2000);
+  await speak('Fertiges hab ich dafür gerade nichts im Regal. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.');
+  return choices([{l:'Gutschein verschenken', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Andere Gruppe', f:() => giftStep1()}]);
 }
 async function cardsFlow(a, budget){
   S.aud = a; S.budget = budget; S.calm = false;
@@ -1043,7 +1081,8 @@ async function cardsFlow(a, budget){
   if (res.tier === 'none'){
     await aw(setPose('shrug')); emote('sweat', 2000);
     await speak('Dafür finde ich nichts Fertiges. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.');
-    return choices([{l:'Gutschein verschenken', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Anderes Budget', f:() => budgetStep(a)}]);
+    const alt = okBudgets(pool, budget);
+    return choices([{l:'Gutschein verschenken', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, alt.length ? {l:'Anderes Budget', f:() => budgetStep(a)} : {l:'Andere Gruppe', f:() => giftStep1()}]);
   }
   await aw(setPose('sketch'));
   const hd = headPoint(); burst('twinkle', hd.x, hd.y + 30, 24); sfx('sparkle');
@@ -1063,17 +1102,20 @@ function leadLine(a, res){
 }
 function cardLinks(a){
   const host = (!S.mobile && $('.tlinks', trayEl) && trayEl.style.display !== 'none') ? $('.tlinks', trayEl) : choicesEl;
+  /* "Andere Vorschläge" nur, wenn das Regal noch mindestens zwei weitere hergibt; sonst ein anderes Budget, falls das etwas bringt */
+  const list = S.pool ? S.pool.list : null, more = !!list && pick(list, S.budget).tier !== 'none';
+  const alt = !more && list && okBudgets(list, S.budget).length ? {l:'Anderes Budget', link:1, f:() => budgetStep(a)} : null;
   choices([
     {l:'Andere Vorschläge', link:1, f:async () => {
       const res = pick(S.pool ? S.pool.list : [], S.budget);
-      if (res.tier === 'none'){ await speak('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.'); return choices([{l:'Zur Kollektion', href:'/collections/' + a.hs[0]}, {l:'Anderes Budget', f:() => budgetStep(a)}, {l:'Andere Gruppe', f:() => giftStep1()}]); }
+      if (res.tier === 'none'){ await speak('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.'); return choices([{l:'Zur Kollektion', href:'/collections/' + a.hs[0]}].concat(okBudgets(S.pool ? S.pool.list : null, S.budget).length ? [{l:'Anderes Budget', f:() => budgetStep(a)}] : [], [{l:'Andere Gruppe', f:() => giftStep1()}])); }
       await speak(res.tier === 'near' ? 'Eins liegt knapp über Deinem Budget, ist aber beliebt.' : res.items.every(p => +p.n >= 100) ? 'Hier sind noch ein paar, die oft bestellt werden.' : 'Hier sind noch ein paar Ideen.');
       await dealCards(res.items); cardLinks(a);
     }},
     {l:'Alle ansehen', link:1, href:'/collections/' + a.hs[0], say:'Ich bring Dich zur ganzen Kollektion.'},
     {l:'Eigene Idee? Sonderanfertigung', link:1, href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'},
     {l:'Gutschein verschenken', link:1, href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'}
-  ], {focus:false, host});
+  ].map(x => x.l === 'Andere Vorschläge' && !more ? alt : x).filter(Boolean), {focus:false, host});
   const b = $$('.smmk-show', stage).find(x => !x.disabled && x.offsetParent !== null);
   if (b) try { b.focus({preventScroll:true}); } catch (e) {}
 }
