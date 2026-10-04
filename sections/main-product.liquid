@@ -391,6 +391,7 @@
               show_quantity: smk_show_qty
             %}
             {% render 'steelmonks-zunft-konfigurator', product: product %}
+            {%- if settings.sm_monk_enabled -%}<p class="smmk-pcta" style="margin:6px 0 0"><button type="button" class="smmk-cta smmk-cta--link" data-smmk="product">{% if product.tags contains 'Mengenwahl' %}Fragen zu Menge oder Versand?{% else %}Unsicher bei Größe oder Gravur?{% endif %} Frag den Mönch</button></p>{%- endif -%}
           {%- when 'zunft_quantity_tiers' -%}
             {%- comment -%}
               Abgeloest durch snippets/pin-quantity-tiers.liquid, das auf allen

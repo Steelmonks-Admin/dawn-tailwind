@@ -614,6 +614,7 @@
 })();
 </script>
       {%- render 'sm-nl-popup' -%}
+      {%- if settings.sm_monk_enabled -%}{%- render 'sm-monk' -%}{%- endif -%}
       <script src="{{ 'sm-zepto-drawer-sync.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

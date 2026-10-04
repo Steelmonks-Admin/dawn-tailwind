@@ -20,6 +20,7 @@
             {%- assign px = 'sm-' | append: block.settings.pixel | asset_url -%}
             <button class="chip" type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-aud="{{ block.id }}" data-say="{{ block.settings.say | escape }}" data-px="{{ px }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
           {%- endfor -%}
+          {%- if settings.sm_monk_enabled -%}<button class="chip smmk-chip" type="button" data-smmk="someone">Jemand anderes? Frag den Mönch</button>{%- endif -%}
         </div>
       </div>
       <div class="deck" id="deck" aria-live="polite">

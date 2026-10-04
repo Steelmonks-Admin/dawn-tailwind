@@ -1477,5 +1477,17 @@
         "default": "Personalisierte Geschenke aus Stahl: Zunftschilder, Hausnummern, Monogramme und Familienschilder, handgefertigt in Deutschland, mit Deinem Wunschtext."
       }
     ]
+  },
+  {
+    "name": "Mönch Bruder Funke",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "sm_monk_enabled",
+        "label": "Bruder Funke anzeigen (Testversion)",
+        "info": "Schaltet den Mönch und alle Einstiege ein. Testversion ohne KI und ohne Backend. Im Live-Theme aus lassen.",
+        "default": false
+      }
+    ]
   }
 ]

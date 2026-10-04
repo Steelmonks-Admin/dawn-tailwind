@@ -269,6 +269,7 @@
           </localization-form>
         {%- endif -%}
       </div>
+      {%- if settings.sm_monk_enabled -%}{%- render 'sm-monk-btn' -%}{%- endif -%}
       {% render 'header-search', input_id: 'Search-In-Modal' %}
 
       {%- if shop.customer_accounts_enabled -%}

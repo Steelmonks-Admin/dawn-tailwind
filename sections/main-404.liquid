@@ -20,4 +20,7 @@
   <a href="{{ routes.all_products_collection_url }}" class="button">
     {{ 'general.continue_shopping' | t }}
   </a>
+  {%- if settings.sm_monk_enabled -%}
+    <div class="smmk-404"><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt="Bruder Funke zuckt mit den Schultern neben einem leeren Karton" width="176" height="210" loading="lazy"><button type="button" class="smmk-cta" data-smmk="404">Hilf mir suchen</button></div>
+  {%- endif -%}
 </div>
