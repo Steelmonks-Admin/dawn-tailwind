@@ -25,7 +25,7 @@
   const SS = store(window.sessionStorage);
   const push = (event, data) => { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event }, data)); } catch (e) {} };
   const money = (c) => (c / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-  const amt = (c) => (c / 100).toLocaleString('de-DE', { maximumFractionDigits: 0 }) + ' €';
+  const amt = (c) => (c % 100 ? money(c) : (c / 100).toLocaleString('de-DE', { maximumFractionDigits: 0 }) + ' €');
   const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 
   // Pixel-Symbole als SVG (eine Zeile je Pixelreihe)

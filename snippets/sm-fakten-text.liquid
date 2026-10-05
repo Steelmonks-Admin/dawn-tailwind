@@ -5,11 +5,32 @@
     [befestigungsset_preis] 9,45 € · dazu [bestellungen] (alle Bestellungen seit 2020, sm-bestellungen)
   Aufruf: {% render 'sm-fakten-text', text: block.settings.text %}
   Mit Filtern danach: {%- capture t -%}{% render 'sm-fakten-text', text: x %}{%- endcapture -%}{{ t | escape }}
+  Folgt auf [versandfertig], [entwurf] oder [sonder_fertigung] das Wort „Werktage“ oder „Werktagen“, passt die Einzahl:
+  „In [entwurf] Werktagen“ wird bei 1 bis 1 zu „In 1 Werktag“, wie im CS-System (facts.werktagen).
   Die Werte enthalten kein HTML, der Text bleibt also so sicher oder unsicher wie vorher.
 {%- endcomment -%}
 {%- liquid
   assign smft = text | append: ''
   if smft contains '['
+    assign smft_tage = 'versandfertig,entwurf,sonder_fertigung' | split: ','
+    for smft_k in smft_tage
+      assign smft_ph = '[' | append: smft_k | append: '] Werktagen'
+      if smft contains smft_ph
+        assign smft_k2 = smft_k | append: '_werktagen'
+        capture smft_v
+          render 'sm-fakt', key: smft_k2
+        endcapture
+        assign smft = smft | replace: smft_ph, smft_v
+      endif
+      assign smft_ph = '[' | append: smft_k | append: '] Werktage'
+      if smft contains smft_ph
+        assign smft_k2 = smft_k | append: '_werktage'
+        capture smft_v
+          render 'sm-fakt', key: smft_k2
+        endcapture
+        assign smft = smft | replace: smft_ph, smft_v
+      endif
+    endfor
     assign smft_keys = 'versandfertig,versandtag,entwurf,sonder_fertigung,gratisversand_ab,versand_sonder_de,versand_sonder_eu,montage_frei_ab,befestigungsset_preis' | split: ','
     for smft_k in smft_keys
       assign smft_ph = '[' | append: smft_k | append: ']'

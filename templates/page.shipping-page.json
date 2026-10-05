@@ -7,7 +7,7 @@
           "type": "info_grid_item",
           "settings": {
             "icon": "shopify://shop_images/web-icon-timeclock.png",
-            "title": "<p><strong>Unschlagbar schnelle Abwicklung.(durchschnittl. 7 Tage)</strong></p>",
+            "title": "<p><strong>Schnelle Abwicklung: in [versandfertig] Werktagen versandfertig</strong></p>",
             "description": "Unserer Bestellungen werden mit DHL  verschickt. Unsere Lieferfrist beträgt 15 Tage."
           }
         },

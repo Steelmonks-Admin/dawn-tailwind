@@ -16,11 +16,13 @@
     <div class="in-facts" style="margin:0 0 30px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
       <div><b>DHL</b><span>Versand innerhalb Deutschlands</span></div>
       {%- capture smv_gv -%}{% render 'sm-fakt', key: 'gratisversand_ab' %}{%- endcapture -%}
-      <div><b>{% render 'sm-fakt', key: 'versandfertig' %}</b><span>Werktage bis versandfertig</span></div>
+      {%- capture smv_vf -%}{% render 'sm-fakt', key: 'versandfertig' %}{%- endcapture -%}
+      {%- capture smv_vf_einheit -%}{% render 'sm-fakt', key: 'versandfertig_werktage' %}{%- endcapture -%}
+      <div><b>{{ smv_vf }}</b><span>{{ smv_vf_einheit | remove_first: smv_vf | strip }} bis versandfertig</span></div>
       <div><b>{% render 'sm-fakt', key: 'versandtag' %}</b><span>ist Versandtag, für Shop-Artikel und Sonderanfertigungen</span></div>
       <div><b>3 bis 5</b><span>Werktage Versand</span></div>
       <div><b>ab {{ smv_gv }}</b><span>versandkostenfrei in alle Länder, gilt für Shop-Bestellungen</span></div>
-      <div><b>4,95 €</b><span>unter {{ smv_gv }} in Deutschland, nach Österreich und in die EU 12,95 €</span></div>
+      <div><b>4,95 €</b><span>für Shop-Bestellungen unter {{ smv_gv }} in Deutschland, nach Österreich und in die EU 12,95 €</span></div>
       <div><b>{% render 'sm-fakt', key: 'versand_sonder_de' %}</b><span>Versand für Sonderanfertigungen in Deutschland, in die EU {% render 'sm-fakt', key: 'versand_sonder_eu' %}</span></div>
     </div>
     <div class="ft-doc"><nav class="ft-toc" aria-label="Inhalt"><p class="eyebrow">Inhalt</p><ol></ol></nav><article class="ft-body">{% render 'sm-fakten-text', text: page.content %}</article></div>

@@ -40,17 +40,18 @@
         style='background-color:rgba(229, 231, 235, 0.12); padding: 20px;'
         class='twcss-flex twcss-flex-col twcss-items-center twcss-gap-4'
       >
+        {%- capture smsp_title -%}{% render 'sm-fakten-text', text: block.settings.title %}{%- endcapture -%}
         {% if block.settings.icon != blank %}
           <img
             src='{{ block.settings.icon | image_url: width: 50 }}'
-            alt='{{ block.settings.title | strip_html | escape }}'
+            alt='{{ smsp_title | strip_html | escape }}'
             width='50'
             height='50'
             class='twcss-mx-auto twcss-mb-2 twcss-object-contain'
             loading='lazy'
           >
         {% endif %}
-        <h3 class='twcss-text-2xl twcss-font-bold twcss-text-brandwhite'>{% render 'sm-fakten-text', text: block.settings.title %}</h3>
+        <h3 class='twcss-text-2xl twcss-font-bold twcss-text-brandwhite'>{{ smsp_title }}</h3>
         <p class='twcss-text-base twcss-text-brandwhite'>{% render 'sm-fakten-text', text: block.settings.description %}</p>
       </div>
     {% endfor %}

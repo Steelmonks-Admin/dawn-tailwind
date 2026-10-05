@@ -40,6 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
       ? window.SMC_MOUNTING
       : null;
 
+  // Price of the invisible mounting set in cents, from the shop metafield
+  // steelmonks.fakt_befestigungsset_preis (rendered by the section via sm-fakt).
+  // The option label uses the same value; the n8n price step must read it too. 945 is the default.
+  const BOLT_CENTS =
+    Number.isInteger(window.SMC_BOLT_CENTS) && window.SMC_BOLT_CENTS >= 0
+      ? window.SMC_BOLT_CENTS
+      : 945;
+
   const STATUS_TEXTS = {
     FAILED: 'Fehlgeschlagen',
     PREVIEW_READY: 'Vorschau ist fertig',
@@ -1241,11 +1249,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return null; // Return null to indicate custom pricing needed
       }
 
-      // Add mounting set cost if "Befestigung" is selected — unless the set is
+      // Add mounting set cost if "Befestigung" is selected, unless the set is
       // sold as its own cart line (MOUNTING), in which case its price stays separate
       let totalPrice = price;
       if (bolts === 'Befestigung' && !MOUNTING) {
-        totalPrice += 9.45;
+        totalPrice = Math.round(price * 100 + BOLT_CENTS) / 100;
       }
 
       return totalPrice;
