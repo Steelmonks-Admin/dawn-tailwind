@@ -2,8 +2,9 @@
 {%- comment -%}
   Bruder Funke (Testversion): Produktdaten einer Kollektion als JSON, abgerufen von assets/sm-monk.js
   über /collections/<handle>?view=moench&sort_by=best-selling. Kein Backend, nur was Shopify ohnehin ausliefert.
-  Hilfs-, Marker-, Gravur-, Geschenkverpackungs- und Ewige-Rose-Produkte, seo.hidden-Produkte und alles mit dem Tag
-  "internal production" fallen hier schon serverseitig heraus. Nur mit settings.sm_monk_enabled, sonst {"p":[]}.
+  Hilfs-, Marker-, Gravur-, Geschenkverpackungs- und Ewige-Rose-Produkte, seo.hidden-Produkte und Werkstatt-Unikate
+  fallen hier schon serverseitig heraus. Der Tag "internal production" bleibt drin: er steuert nur die Fertigung und
+  steht auf sichtbaren Bestsellern (Signet Anhänger, Zunftanhänger, Eisernes Kreuz). Nur mit settings.sm_monk_enabled, sonst {"p":[]}.
   Felder: h Handle, t Titel, u URL, p ab-Preis (Cent), q Höchstpreis, k Vergleichspreis (Cent), i Bild (klein), z personalisierbar,
   n Bestellungen (steelmonks.bestellungen), y Produkttyp, rv/rc Bewertung.
 {%- endcomment -%}
@@ -11,7 +12,7 @@
 {%- liquid
   assign x_types = 'Meilenstein,PPLR_HIDDEN_PRODUCT,Befestigungsset,Versand,Sonderanfertigung,Gravur,Gift Cards,Gutschein,Geschenkverpackung' | split: ','
   assign x_handles = 'zusaetzlich,zusatzlich,zusatsliche,gravur,passend,item-personalization,ewige-rose,befestigung,geschenkverpackung,geschenktute,geschenktuete,dein-wunsch,gutschein,gratisversand,10-discount,mystery-geschenk' | split: ','
-  assign x_tags = 'PPLR_HIDDEN_PRODUCT,! PACK-SLIP_HIDDEN,! PACK-SLIP_NON-PRIMARY,! PACK-SLIP_GIFT-WRAPPING,Werkstatt,internal production' | split: ','
+  assign x_tags = 'PPLR_HIDDEN_PRODUCT,! PACK-SLIP_HIDDEN,! PACK-SLIP_NON-PRIMARY,! PACK-SLIP_GIFT-WRAPPING,Werkstatt' | split: ','
 -%}
 {%- paginate collection.products by 60 -%}
 {"c":{{ collection.handle | json }},"ti":{{ collection.title | json }},"n":{{ collection.products_count | default: 0 }},"p":[

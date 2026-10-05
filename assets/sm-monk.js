@@ -11,9 +11,9 @@ let CTX = {};
 try { CTX = JSON.parse(CT.textContent); } catch (e) { return; }
 
 /* ---------- Einstellungen ---------- */
-// Harte Regel: nichts mit dem Tag "internal production" empfehlen. Das JSON-Template filtert den Tag schon serverseitig
-// (templates/collection.moench.liquid, x_tags); das hier ist nur die zweite Sicherung, falls "ip" je wieder mitkommt.
-const HIDE_INTERNAL_TAG = true;
+// Der Tag "internal production" steuert nur die Fertigung und steht auf sichtbaren Bestsellern (Signet Anhänger,
+// Zunftanhänger, Eisernes Kreuz). Darum wird er NICHT ausgefiltert. Schalter bleibt für den Fall, dass sich das ändert.
+const HIDE_INTERNAL_TAG = false;
 const HELPER_TYPE = /^(Meilenstein|PPLR_HIDDEN_PRODUCT|Befestigungsset|Versand|Sonderanfertigung|Gravur|Gift Cards|Geschenkverpackung)$/;
 const HELPER_HANDLE = /gratisversand|10-discount|mystery-geschenk|item-personalization|gravur|zusaetzlich|zusatzlich|zusatsliche|befestigung|geschenkt|ewige-rose/;
 
@@ -983,6 +983,7 @@ async function giftStep1(pre){
   await speak((pre || []).concat([{t:'Für wen suchst Du?', emote:'?'}]));
   push('sm_monk_step', {sm_step:'gift_start'});
   audienceChips();
+  hookHeroChips(fc);
   /* Startseite: die Chips im Hero bleiben über Mönch und Box sichtbar */
   if (fc && vis(fc) && !S.mobile) requestAnimationFrame(() => reveal(fc));
 }
@@ -990,6 +991,20 @@ async function someoneElse(pre){
   await ensureOut('sketch', 'leap');
   await speak((pre || []).concat([{t:'Für wen denn? Such Dir eine Gruppe aus.', emote:'?'}]));
   choices(AUD.filter(a => !a.hero).map(a => ({l:a.l, f:() => pickAudience(a)})).concat([{l:'Zurück', f:() => giftStep1()}]));
+}
+/* Klickt der Besucher während der Frage "Für wen suchst Du?" selbst einen Hero-Chip, gilt das als Antwort.
+   Nur echte Klicks (isTrusted) und nur solange die Zielgruppen-Knöpfe in der Box stehen. */
+function hookHeroChips(fc){
+  if (!fc || CTX.t !== 'index' || fc._smmkHook) return;
+  fc._smmkHook = true;
+  fc.addEventListener('click', e => {
+    if (!e.isTrusted || !S.out) return;
+    const c = e.target.closest('.chip[data-aud]'); if (!c) return;
+    const asking = choicesEl && [...choicesEl.querySelectorAll('.smmk-ch')].some(b => b.textContent.trim() === 'Jemand anderes');
+    if (!asking) return;
+    const a = AUD.find(x => x.hero && x.l.toLowerCase() === c.textContent.trim().toLowerCase());
+    if (a) pickAudience(a);
+  });
 }
 const audLine = a => a.l === 'Feuerwehr' ? 'Feuerwehr, da kenn ich mich aus.' : `Geschenke ${a.who}, gute Wahl.`;
 function heroChip(a){ return $$('#fchips .chip').find(c => !c.hasAttribute('data-smmk') && c.textContent.trim().toLowerCase() === a.l.toLowerCase()) || null; }
