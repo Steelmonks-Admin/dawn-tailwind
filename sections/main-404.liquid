@@ -21,6 +21,6 @@
     {{ 'general.continue_shopping' | t }}
   </a>
   {%- if settings.sm_monk_enabled -%}
-    <div class="smmk-404"><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt="Bruder Funke zuckt mit den Schultern neben einem leeren Karton" width="176" height="210" loading="lazy"><button type="button" class="smmk-cta" data-smmk="404">Hilf mir suchen</button></div>
+    <div class="smmk-404"><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt="Bruder Funke zuckt mit den Schultern neben einem leeren Karton" width="176" height="210" loading="lazy"><div><p class="smmk-404-b">Die Seite gibt es nicht. Soll ich Dir beim Suchen helfen?</p><button type="button" class="smmk-ask" data-smmk="404" data-smmk-src="404"><span class="smmk-ask-av"><img src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"></span>Hilf mir suchen</button></div></div>
   {%- endif -%}
 </div>

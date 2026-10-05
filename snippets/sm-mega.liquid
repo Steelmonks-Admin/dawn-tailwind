@@ -55,7 +55,7 @@
     {%- else -%}
       <div class="mg-p mg-p--list" id="{{ pid }}" role="region" aria-label="{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}">
         <div><p class="mg-h">{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</p><ul class="ml two">{%- for c in link.links -%}{%- render 'sm-mega-li', c: c, prev: true -%}{%- endfor -%}</ul></div>
-        <div class="mg-prev" data-sub="Geschenkideen ansehen"><img class="big px" src="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt="" loading="lazy"><div class="cap"><b>Unsicher, was passt?</b><span>Wähle auf der Startseite, für wen Du suchst. Wir zeigen Dir, was andere für diese Person am häufigsten bestellen.</span><br><a href="{{ routes.root_url }}#finder">Zur Auswahl →</a>{% if settings.sm_monk_enabled %}<br><a href="{{ routes.root_url }}#moench" data-smmk="gift">Frag den Mönch →</a>{% endif %}</div></div>
+        <div class="mg-prev" data-sub="Geschenkideen ansehen"><img class="big px" src="{{ 'sm-px3_luis_gift.webp' | asset_url }}" alt="" loading="lazy"><div class="cap"><b>Unsicher, was passt?</b><span>Wähle auf der Startseite, für wen Du suchst. Wir zeigen Dir, was andere für diese Person am häufigsten bestellen.</span><br><a href="{{ routes.root_url }}#finder">Zur Auswahl →</a>{% if settings.sm_monk_enabled %}<br><a href="{{ routes.root_url }}#moench" data-smmk="gift" data-smmk-src="mega">Frag den Mönch →</a>{% endif %}</div></div>
       </div>
     {%- endif -%}
   {%- endif -%}{%- endfor -%}

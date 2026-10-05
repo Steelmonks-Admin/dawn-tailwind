@@ -20,7 +20,7 @@
             {%- assign px = 'sm-' | append: block.settings.pixel | asset_url -%}
             <button class="chip" type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-aud="{{ block.id }}" data-say="{{ block.settings.say | escape }}" data-px="{{ px }}" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</button>
           {%- endfor -%}
-          {%- if settings.sm_monk_enabled -%}<button class="chip smmk-chip" type="button" data-smmk="someone" aria-label="Jemand anderes? Frag den Mönch" title="Jemand anderes? Frag den Mönch" style="width:38px;height:38px;padding:0;overflow:hidden;justify-content:center;align-items:flex-start"><img src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="40" height="73" style="width:40px;height:73px;max-width:none;margin-top:3px;image-rendering:pixelated"></button>{%- endif -%}
+          {%- if settings.sm_monk_enabled -%}<button class="chip smmk-chip" type="button" data-smmk="someone" data-smmk-src="hero" aria-label="Jemand anderes? Frag den Mönch"><span class="smmk-ask-av"><img src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"></span>Jemand anderes?</button>{%- endif -%}
         </div>
       </div>
       <div class="deck" id="deck" aria-live="polite">

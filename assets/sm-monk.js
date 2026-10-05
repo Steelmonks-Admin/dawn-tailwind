@@ -78,7 +78,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp
 const eur = c => '€ ' + (c / 100).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
 const push = (event, extra) => { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({event}, extra || {})); } catch (e) {} };
 
-let stage, actor, box, bbody, choicesEl, sp, emoteEl, lagEl, turnEl, flipEl, sqEl, ppEl, trayEl, fxC, shadowC, spotEl, blurEl, qmEl, dockEl, dockSay, srlog, padEl, menuEl;
+let stage, actor, box, bbody, choicesEl, sp, emoteEl, lagEl, turnEl, flipEl, sqEl, ppEl, trayEl, fxC, shadowC, spotEl, qmEl, dockEl, dockSay, srlog, padEl, menuEl, composeEl;
 let built = false;
 
 /* ---------- Ablauf-Token: ein neuer Ablauf bricht den alten ab ---------- */
@@ -141,7 +141,7 @@ function tsEl(){
 }
 
 /* ---------- Pixel-Bitmaps ---------- */
-const PAL = {'#':'#1b1d22','r':'#e0303a','y':'#ffd23f','w':'#ffffff','b':'#3b8cff','d':'#6b5a2a','o':'#1b1d22'};
+const PAL = {'#':'#1b1d22','r':'#e0303a','y':'#ffd23f','l':'#ff6b1f','w':'#ffffff','b':'#3b8cff','d':'#6b5a2a','o':'#1b1d22'};
 const ICONS = {
   '!':["....##....","....##....","....##....","....##....","....##....","....##....","..........","....##....","....##....",".........."],
   '?':["..####....",".##..##...",".....##...","....##....","...##.....","...##.....","..........","...##.....","...##.....",".........."],
@@ -152,7 +152,7 @@ const ICONS = {
   'zzz':["..........","....####..",".......#..","......#...",".....####.","####......","...#......","..#.......",".#........","####......"],
   'note':["....####..","....#..#..","....#..#..","....#..#..","....#..#..",".###..##..","####.###..",".##..##...","..........",".........."]
 };
-const MARKER = ["ooooooooo","oyyyyyyyo","oyyyyyyyo",".oyyyyyo.","..oyyyo..","...oyo...","....o...."];
+const MARKER = ["ooooooooo","olllllllo","olllllllo",".olllllo.","..olllo..","...olo...","....o...."];
 function bitmapCanvas(rows, scale){
   const hh = rows.length, wd = rows[0].length;
   const c = d.createElement('canvas'); c.width = wd; c.height = hh; const x = c.getContext('2d');
@@ -250,6 +250,18 @@ function sfx(n){
 }
 
 /* ---------- Aufbau der Bühne (erst beim ersten Öffnen) ---------- */
+/* Statuszeile unter dem Namen. Mit der KI-Runde wird daraus 'KI-Assistent · kann sich irren'. */
+const STATUS = 'Testversion, noch ohne KI';
+const SVG = b => '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + b + '</svg>';
+const SPK = '<path d="M2 6h3v-1h1v-1h1v-1h1v-1h2v12h-2v-1h-1v-1h-1v-1h-1v-1h-3z"/>';
+const ICO = {
+  soundOff:SVG(SPK + '<rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/>').replace('<svg', '<svg class="off"'),
+  soundOn:SVG(SPK + '<rect x="11" y="6" width="2" height="4"/><rect x="14" y="4" width="2" height="8"/>').replace('<svg', '<svg class="on"'),
+  menu:SVG('<rect x="1" y="7" width="3" height="3"/><rect x="6" y="7" width="3" height="3"/><rect x="11" y="7" width="3" height="3"/>'),
+  close:SVG('<rect x="2" y="2" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="4" y="4" width="2" height="2"/><rect x="4" y="10" width="2" height="2"/><rect x="6" y="6" width="2" height="2"/><rect x="6" y="8" width="2" height="2"/><rect x="8" y="6" width="2" height="2"/><rect x="8" y="8" width="2" height="2"/><rect x="10" y="4" width="2" height="2"/><rect x="10" y="10" width="2" height="2"/><rect x="12" y="2" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/>'),
+  arrow:SVG('<path d="M1 7h9v-1h-1v-1h-1v-1h-1v-2h2v1h1v1h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-2h1v-1h1v-1h1v-1h-9z"/>')
+};
+const TAXL = 'Alle Preise inkl. MwSt., zzgl. <a href="/policies/shipping-policy">Versand</a>';
 function build(){
   if (built) return; built = true;
   stage = h('div'); stage.id = 'smMonk';
@@ -257,28 +269,31 @@ function build(){
     '<canvas class="smmk-shadow" aria-hidden="true"></canvas>' +
     '<div class="smmk-actor" aria-hidden="true"><div class="lag"><div class="turn"><div class="flip"><div class="sq"><div class="pp"><div class="bob"><img class="sp" alt=""></div></div></div></div></div><div class="emote"></div></div></div>' +
     '<section class="smmk-box" role="dialog" aria-modal="false" aria-labelledby="smmkName">' +
-      '<p class="smmk-plate"><b id="smmkName">Bruder Funke</b> <small><span class="dot1">· </span>Testversion, noch ohne KI</small></p>' +
-      '<div class="smmk-tools"><button type="button" data-tool="sound" aria-label="Ton" aria-pressed="false">&#9834;</button><button type="button" data-tool="menu" aria-label="Menü" aria-expanded="false">&#8943;</button><button type="button" data-tool="close" aria-label="Schließen">&#215;</button></div>' +
-      '<div class="smmk-menu" hidden><button type="button" data-m="sound">Ton an/aus</button><button type="button" data-m="motion">Animationen an/aus</button><button type="button" data-m="classic">Klassische Ansicht</button><button type="button" data-m="human">Mit Mensch sprechen</button></div>' +
+      '<span class="smmk-hav" aria-hidden="true"></span>' +
+      '<p class="smmk-plate"><b id="smmkName">Bruder Funke</b><span class="smmk-tag" aria-hidden="true">Test</span></p>' +
+      '<div class="smmk-tools"><button type="button" data-tool="sound" aria-label="Ton" aria-pressed="false">' + ICO.soundOff + ICO.soundOn + '</button><button type="button" data-tool="menu" aria-label="Menü" aria-haspopup="menu" aria-expanded="false">' + ICO.menu + '</button><button type="button" data-tool="close" aria-label="Schließen">' + ICO.close + '</button></div>' +
+      '<div class="smmk-menu" role="menu" aria-label="Einstellungen" hidden><button type="button" role="menuitemcheckbox" aria-checked="true" data-m="motion">Animationen <span class="st" aria-hidden="true">An</span></button><button type="button" role="menuitemcheckbox" aria-checked="false" data-m="classic">Klassische Ansicht <span class="st" aria-hidden="true">Aus</span></button><button type="button" role="menuitem" data-m="human">Mit Mensch sprechen</button></div>' +
+      '<p class="smmk-sub">' + esc(STATUS) + '</p>' +
       '<div class="smmk-body" tabindex="-1"></div>' +
       '<div class="smmk-adv" aria-hidden="true">&#9660;</div>' +
       '<div class="smmk-choices" role="group" aria-label="Antworten"></div>' +
+      '<form class="smmk-compose" hidden><input type="text" maxlength="200" enterkeyhint="send" autocomplete="off" placeholder="Oder schreib mir, wen Du beschenken willst …" aria-label="Frage an Bruder Funke"><button type="submit" aria-label="Senden">' + ICO.arrow + '</button><p class="smmk-legal"></p></form>' +
     '</section>' +
     '<div class="smmk-tray"></div><canvas class="smmk-fx" aria-hidden="true"></canvas>';
   d.body.appendChild(stage);
   actor = $('.smmk-actor', stage); box = $('.smmk-box', stage); bbody = $('.smmk-body', stage); choicesEl = $('.smmk-choices', stage);
   sp = $('img.sp', actor); emoteEl = $('.emote', actor); lagEl = $('.lag', actor); turnEl = $('.turn', actor); flipEl = $('.flip', actor); sqEl = $('.sq', actor); ppEl = $('.pp', actor);
-  trayEl = $('.smmk-tray', stage); fxC = $('.smmk-fx', stage); shadowC = $('.smmk-shadow', stage); menuEl = $('.smmk-menu', stage);
+  trayEl = $('.smmk-tray', stage); fxC = $('.smmk-fx', stage); shadowC = $('.smmk-shadow', stage); menuEl = $('.smmk-menu', stage); composeEl = $('.smmk-compose', stage);
   FX.ctx = fxC.getContext('2d');
-  spotEl = h('div', 'smmk-spot'); blurEl = h('div', 'smmk-spotblur');
+  spotEl = h('div', 'smmk-spot');
   qmEl = bitmapCanvas(MARKER, 3); qmEl.className = 'smmk-qm'; qmEl.setAttribute('aria-hidden', 'true');
   dockEl = h('button', 'smmk-dock'); dockEl.type = 'button'; dockEl.setAttribute('aria-label', 'Bruder Funke wartet kurz'); dockEl.innerHTML = '<img alt="" src="' + esc(asset('lupe')) + '">';
   dockSay = h('div', 'smmk-dock-say'); dockSay.setAttribute('aria-hidden', 'true');
   srlog = h('div', 'smmk-vh'); srlog.setAttribute('role', 'log'); srlog.setAttribute('aria-live', 'polite');
   padEl = h('div', 'smmk-pad'); padEl.setAttribute('aria-hidden', 'true');
-  [blurEl, spotEl, qmEl, dockEl, dockSay, srlog, padEl].forEach(e => d.body.appendChild(e));
+  [spotEl, qmEl, dockEl, dockSay, srlog, padEl].forEach(e => d.body.appendChild(e));
   drawShadow(); bind(); applyViewport();
-  stage.classList.toggle('rm', S.reduced);
+  stage.classList.toggle('rm', S.reduced); syncMenu();
 }
 
 /* ---------- Darsteller ---------- */
@@ -602,16 +617,15 @@ function spotOn(el, o){
   o = o || {}; spotOff();
   const r = vr(el), pad = 8, top = o.marker ? 40 : pad;
   const x = R(r.x - pad), y = R(r.y - top), wd = R(r.w + pad * 2), ht = R(r.h + pad + top);
+  /* Ecken folgen dem Ziel: dessen Radius plus Abstand */
+  const br = getComputedStyle(el).borderTopLeftRadius || '0', bv = parseFloat(br) || 0, tr = /%/.test(br) ? Math.min(r.w, r.h) * bv / 100 : bv;
+  spotEl.style.setProperty('--r', R(Math.min(tr + pad, Math.min(wd, ht) / 2)) + 'px');
   Object.assign(spotEl.style, {display:'block', left:x + 'px', top:y + 'px', width:wd + 'px', height:ht + 'px'});
   spotEl.classList.toggle('flat', o.dim === false || S.mobile);
   spotEl.classList.toggle('static', !!o.stat || S.reduced);
-  if (o.dim !== false && !S.mobile && !S.reduced && !o.stat){
-    blurEl.style.display = 'block';
-    blurEl.style.clipPath = `path(evenodd,'M0 0H${vpW()}V${vpH()}H0Z M${x} ${y}H${x + wd}V${y + ht}H${x}Z')`;
-  } else blurEl.style.display = 'none';
   spotState = {el, t:performance.now()};
 }
-function spotOff(){ if (!spotEl) return; spotEl.style.display = 'none'; blurEl.style.display = 'none'; spotState = null; }
+function spotOff(){ if (!spotEl) return; spotEl.style.display = 'none'; spotState = null; }
 function markerOn(el){
   qmTarget = el; qmEl.classList.add('on'); placeMarker();
   qmEl.getAnimations().forEach(a => a.cancel());
@@ -698,12 +712,14 @@ async function speak(lines){
     }
   }
 }
-/* Antworten: {l, f} oder {l, href} (Navigation); pri = Hauptknopf, link = Textlink */
+/* Antworten: {l, f} oder {l, href} (Navigation); pri = der eine Hauptweg, link = leiser Ausgang (Ausgänge erkennt EXITS) */
+const EXITS = /^(Was anderes suchen|Mit Mensch sprechen|Danke|Nein danke|Schließen)$/;
 function choices(list, o){
   o = o || {}; const host = o.host || choicesEl;
   choicesEl.innerHTML = ''; host.innerHTML = '';
   list.forEach(c => {
-    const b = h('button', 'smmk-ch' + (c.link ? ' lk' : '') + (c.pri ? ' pri' : '')); b.type = 'button'; b.textContent = c.l;
+    const lk = c.link || (c.link !== 0 && !c.pri && EXITS.test(c.l));
+    const b = h('button', 'smmk-ch' + (lk ? ' lk' : '') + (c.pri ? ' pri' : '')); b.type = 'button'; b.textContent = c.l;
     b.addEventListener('click', () => {
       if (b.disabled) return; $$('.smmk-ch', host).forEach(x => { x.disabled = true; }); markUsed('deeplink');
       S.lastInput = performance.now();
@@ -715,7 +731,7 @@ function choices(list, o){
   requestAnimationFrame(scrollBody);
   if (o.focus !== false && list.length){ try { host.firstChild.focus({preventScroll:true}); } catch (e) {} }
 }
-function allChoices(){ return $$('.smmk-choices .smmk-ch, .smmk-tray .tlinks .smmk-ch', stage); }
+function allChoices(){ return $$('.smmk-choices .smmk-ch', stage); }
 function focusLog(){ try { bbody.focus({preventScroll:true}); } catch (e) {} }
 
 /* Handy: Seite bleibt über dem Sheet scrollbar, Trusted-Shops-Badge macht kurz Platz */
@@ -745,22 +761,31 @@ function tsRect(){
   const inner = $$('*', t).find(e => getComputedStyle(e).position === 'fixed' && e.getBoundingClientRect().width > 20) || $('button', t) || t;
   const r = inner.getBoundingClientRect(); return r.width > 0 ? r : null;
 }
-function placeTray(){
+/* Desktop: Karten neben der Box, wenn sie dort Platz haben (bis vor das Trusted-Shops-Badge). Sonst cw = 0:
+   dann eine flache Leiste aus drei Zeilen über der Box. */
+function trayGeom(n){
   const br = vr(box), ts = tsRect(), lim = ts ? ts.left - 12 : vpW() - 12;
-  const n = $$('.smmk-card', trayEl).length || 3;
   const fits = cw => br.x + br.w + 26 + n * cw + (n - 1) * 12 <= lim;
-  let cw = 172, side = true;
-  if (!fits(172)){ if (fits(150)) cw = 150; else side = false; }
-  trayEl.style.setProperty('--cw', cw + 'px');
-  const tw = n * cw + (n - 1) * 12;
-  let left;
-  if (side){ left = R(br.x + br.w + 26); trayEl.style.bottom = (24 + S.lift) + 'px'; }
-  else { left = Math.max(12, Math.min(R(br.x), R(lim - tw))); trayEl.style.bottom = (24 + S.lift + box.offsetHeight + 22) + 'px'; }
-  trayEl.style.left = left + 'px';
-  /* Linkzeile endet vor dem Trusted-Shops-Badge, genau wie die Karten */
-  const tl = $('.tlinks', trayEl); if (tl) tl.style.maxWidth = Math.max(220, R(lim - left)) + 'px';
+  return {br, lim, cw:fits(180) ? 180 : fits(150) ? 150 : 0};
 }
-function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; $$('.smmk-fly', stage).forEach(e => e.remove()); }
+function placeTray(){
+  const n = $$('.smmk-card, .smmk-row', trayEl).length || 3, g = trayGeom(n), br = g.br;
+  let left;
+  if (trayEl.classList.contains('strip')){
+    left = Math.max(16, R(br.x - 240));
+    trayEl.style.setProperty('--sw', Math.max(300, Math.min(960, R(g.lim - left))) + 'px');
+    trayEl.style.bottom = (24 + S.lift + box.offsetHeight + 18) + 'px';
+  } else if (g.cw){
+    trayEl.style.setProperty('--cw', g.cw + 'px');
+    left = R(br.x + br.w + 26); trayEl.style.bottom = (24 + S.lift) + 'px';
+  } else {
+    /* Fenster nach dem Austeilen schmaler geworden: Karten über die Box */
+    const tw = n * 150 + (n - 1) * 12; trayEl.style.setProperty('--cw', '150px');
+    left = Math.max(12, Math.min(R(br.x), R(g.lim - tw))); trayEl.style.bottom = (24 + S.lift + box.offsetHeight + 22) + 'px';
+  }
+  trayEl.style.left = left + 'px';
+}
+function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; trayEl.classList.remove('strip'); $$('.smmk-fly', stage).forEach(e => e.remove()); }
 function flyOut(el, hp, kfFn, dur){
   const r = vr(el);
   const fly = h('div', 'smmk-fly'); fly.setAttribute('aria-hidden', 'true');
@@ -776,29 +801,44 @@ function fmtCount(n){
   if (n >= 10) return n + '-mal bestellt.';
   return '';
 }
+/* Kurzer Grund unter dem Preis (eine Zeile, Mono): echte Bestellzahl, sonst was das Stück ausmacht */
 function whyLine(p){
-  const a = fmtCount(+p.n || 0);
-  const b = p.z ? 'Mit Deinem Text graviert.' : 'Direkt bestellbar, ohne Gravur.';
-  return a ? a + ' ' + b : b;
+  const a = fmtCount(+p.n || 0).replace(/\.$/, '');
+  return a || (p.z ? 'Mit Deinem Text graviert' : 'Direkt bestellbar');
 }
 /* Wie auf der Seite mit bis zu zwei Stellen, nie aufgerundet; schwache Bewertungen zeigt der Mönch nicht */
 function rating(p){
   const rv = parseFloat(p.rv), rc = +p.rc || 0;
   if (rc < 10 || !rv || rv < 4.5) return '';
-  return ' · ★ ' + (Math.floor(rv * 100 + 1e-6) / 100).toLocaleString('de-DE', {minimumFractionDigits:1, maximumFractionDigits:2}) + ' (' + rc + ')';
+  return (Math.floor(rv * 100 + 1e-6) / 100).toLocaleString('de-DE', {minimumFractionDigits:1, maximumFractionDigits:2}) + ' (' + rc + ')';
 }
 const priceTxt = p => (p.q > p.p ? 'ab ' : '') + eur(p.p);
+/* 'ab € 59,00 · ★ 4,95 (63)' */
+function metaHtml(p){ const r = rating(p); return `<span class="smmk-price">${esc(priceTxt(p))}</span>` + (r ? ` · <span class="smmk-star">★</span> ${esc(r)}` : ''); }
+function showBtn(p, label){
+  const b = h('button', 'smmk-show', (label ? esc(label) + ' ' : '') + ICO.arrow); b.type = 'button';
+  b.setAttribute('aria-label', 'Zeig es mir: ' + p.t); b.addEventListener('click', () => showIt(p, b)); return b;
+}
+/* Zeile: Handy und schmale Desktop-Leiste */
+function rowEl(p){
+  const r = h('div', 'smmk-row');
+  r.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="56" height="56"><div><b>${esc(p.t)}</b><small>${metaHtml(p)}</small><small class="smmk-eb">${esc(p.over ? 'Knapp über Budget' : whyLine(p))}</small></div>`;
+  r.append(showBtn(p)); return r;
+}
+/* Karte: Bild, Titel, Preiszeile, Grund, ein Abzeichen, Knopf */
+function cardEl(p){
+  const c = h('div', 'smmk-card');
+  const bdg = p.over ? '<span class="smmk-bdg fav">Knapp über Budget</span>' : (p.z && fmtCount(+p.n || 0)) ? '<span class="smmk-bdg">Mit Deinem Text</span>' : '';
+  c.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="168" height="126"><div class="in"><b class="ti">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span><span class="smmk-eb">${esc(whyLine(p))}</span>${bdg}</div>`;
+  $('.in', c).append(showBtn(p, 'Zeig es mir')); return c;
+}
 async function dealCards(items){
   items.forEach(p => S.shown.add(p.h));
   ssUpd({recs:Array.from(new Set((SS.recs || []).concat(items.map(p => p.h)))).slice(-24)});
   if (S.mobile){
     const wrap = addNode(h('div', 'smmk-rows'));
-    const els = items.map(p => {
-      const r = h('div', 'smmk-row');
-      r.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="48" height="48"><div><b>${esc(p.t)}${p.y ? ` <span class="smmk-ty">${esc(p.y)}</span>` : ''}</b><small>${priceTxt(p)} · inkl. MwSt., zzgl. Versand${esc(rating(p))}</small><small>${p.over ? '<em style="color:#7a5a00">Knapp über Budget</em> · ' : ''}${p.z ? '<em>Mit Deinem Text</em> · ' : ''}${esc(fmtCount(+p.n || 0) || 'Direkt bestellbar.')}</small></div>`;
-      const btn = h('button', 'smmk-show', 'Zeig es mir'); btn.type = 'button'; btn.setAttribute('aria-label', 'Zeig es mir: ' + p.t); btn.addEventListener('click', () => showIt(p, btn)); r.append(btn);
-      r.style.opacity = 0; wrap.append(r); return r;
-    });
+    const els = items.map(p => { const r = rowEl(p); r.style.opacity = 0; wrap.append(r); return r; });
+    addNode(h('p', 'smmk-taxl', TAXL));
     /* Die Leitzeile und die erste Empfehlung bleiben oben im Sheet sichtbar */
     const lead = $$('.smmk-line', bbody).pop(); S.anchor = lead || wrap;
     scrollBody(); rideSheet();
@@ -812,14 +852,11 @@ async function dealCards(items){
     await aw(Promise.all(flights)); await w(150); return;
   }
   const hp = handPoint();
-  trayEl.innerHTML = '<div class="tcards"></div><div class="tlinks" role="group" aria-label="Weitere Wege"></div>'; trayEl.style.display = 'flex';
+  const strip = !trayGeom(items.length).cw;
+  trayEl.classList.toggle('strip', strip);
+  trayEl.innerHTML = '<div class="tcards"></div><p class="smmk-taxl">' + TAXL + '</p>'; trayEl.style.display = 'flex';
   const cards = $('.tcards', trayEl);
-  const els = items.map(p => {
-    const c = h('div', 'smmk-card');
-    c.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="172" height="118"><div class="in"><b class="ti">${esc(p.t)}</b>${p.y ? `<span class="smmk-ty">${esc(p.y)}</span>` : ''}<div><span class="smmk-price">${priceTxt(p)}</span><span class="smmk-tax">${esc(rating(p))}</span></div><div class="smmk-tax">inkl. MwSt., zzgl. <a href="/policies/shipping-policy">Versand</a></div><div>${p.over ? '<span class="smmk-bdg fav">Knapp über Budget</span>' : ''}${p.z ? '<span class="smmk-bdg">Mit Deinem Text</span>' : ''}</div><div class="smmk-why">${esc(whyLine(p))}</div></div>`;
-    const btn = h('button', 'smmk-show', 'Zeig es mir'); btn.type = 'button'; btn.setAttribute('aria-label', 'Zeig es mir: ' + p.t); btn.addEventListener('click', () => showIt(p, btn)); $('.in', c).append(btn);
-    c.style.opacity = 0; cards.append(c); return c;
-  });
+  const els = items.map(p => { const c = strip ? rowEl(p) : cardEl(p); c.style.opacity = 0; cards.append(c); return c; });
   placeTray(); const flights = [];
   for (const c of els){
     sfx('deal');
@@ -957,7 +994,7 @@ async function opener(){
       /* Wappen entstehen nach Vorlage: keine Favoriten versprechen, direkt zum Rechner */
       await ensureOut('measure', 'leap'); newTurn();
       await speak([...hello(), {t:'Ein Wappen entsteht nach Deiner Vorlage, darum gibt es hier keine fertigen Favoriten. Soll ich Dich zum Wappen-Rechner bringen?', emote:'bulb'}]);
-      return choices([wappenChoice(), {l:'Mit Mensch sprechen', f:() => human()}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
+      return choices([Object.assign(wappenChoice(), {pri:1}), {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
     }
     const here = {l:(($('main h1') || {}).textContent || 'diese Kategorie').trim(), hs:[CTX.c], who:'hier', hero:false, fx:'twinkle'}, pj = poolSafe(here);
     await ensureOut('sketch', 'leap'); newTurn();
@@ -967,7 +1004,7 @@ async function opener(){
       return choices([{l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
     }
     await speak([...hello(), {t:'Hier gibt es viel zu sehen. Soll ich Dir die drei beliebtesten aus dieser Kategorie zeigen?', emote:'?'}]);
-    return choices([{l:'Ja, zeig her', f:() => budgetStep(here)}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
+    return choices([{l:'Ja, zeig her', pri:1, f:() => budgetStep(here)}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
   }
   if (k === 'pdp' || k === 'pdpq' || k === 'pdpgc') return productOpener(k === 'pdp');
   if (k === 'wappen'){
@@ -986,25 +1023,25 @@ async function opener(){
   if (k === 'cartEmpty'){
     await ensureOut('sketch', 'leap'); newTurn();
     await speak([...hello(), {t:'Noch leer hier. Soll ich Dir in drei Klicks ein Geschenk raussuchen?', emote:'bulb'}]);
-    return choices([{l:'Ja, gern', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
+    return choices([{l:'Ja, gern', pri:1, f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
   }
   if (k === 'track') return orderFlow(hello());
   if (k === 'faq') return faqTopics(hello());
   if (k === 'kontakt'){
     await ensureOut('sketch', 'leap'); newTurn();
     await speak([...hello(), 'Bevor Du schreibst: Vielleicht kann ich Dir direkt helfen. Sonst ist das Formular hier genau richtig.']);
-    return choices([{l:'Wo ist meine Bestellung?', f:() => orderFlow()}, {l:'Eine Frage', f:() => faqTopics()}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Zum Formular', f:() => kontaktGuide()}]);
+    return choices([{l:'Wo ist meine Bestellung?', f:() => orderFlow()}, {l:'Eine Frage', f:() => faqTopics()}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Zum Formular', pri:1, f:() => kontaktGuide()}]);
   }
   if (k === 'sonder'){
     await ensureOut('sketch', 'leap'); newTurn();
     await speak([...hello(), {t:'Eine eigene Idee? Beschreib sie hier im Formular. Unser Team meldet sich mit einem Angebot bei Dir.', emote:'bulb'}]);
-    return choices([{l:'Zeig mir das Formular', f:() => sonderGuide()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]);
+    return choices([{l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]);
   }
   if (k === 'article'){
     const a = audBy(artAud());
     await ensureOut('sketch', 'leap'); newTurn();
     await speak([...hello(), {t:`Du liest über ${a.l === 'Feuerwehr' ? 'die Feuerwehr' : 'das Handwerk'}? Ich hab drei Geschenkideen, die oft bestellt werden.`, emote:'bulb'}]);
-    return choices([{l:'Zeig her', f:() => budgetStep(a)}, {l:'Nein danke', f:() => exitFlow()}]);
+    return choices([{l:'Zeig her', pri:1, f:() => budgetStep(a)}, {l:'Nein danke', f:() => exitFlow()}]);
   }
   if (k === 'searchZero'){
     await ensureOut('search', 'leap'); newTurn(); stage.querySelector('.smmk-actor').classList.add('sway');
@@ -1019,7 +1056,8 @@ async function opener(){
 }
 async function notFound(){
   const inl = $('.smmk-404');
-  if (inl && !S.out){ const im = $('img', inl); if (im){ const r = vr(im); burst('dust', r.x + r.w / 2, r.y + r.h * .7, 26); } inl.style.visibility = 'hidden'; }
+  /* nur die Figur verschwindet, Sprechblase und Knopf bleiben stehen */
+  if (inl && !S.out){ const im = $(':scope > img', inl); if (im){ const r = vr(im); burst('dust', r.x + r.w / 2, r.y + r.h * .7, 26); im.style.visibility = 'hidden'; } }
   await ensureOut('shrug', inl ? 'poof' : 'leap'); newTurn();
   await speak([...hello(), {t:'Hier ist leider nichts. Selbst mein Karton ist leer. Wonach suchst Du?', emote:'?'}]);
   choices([{l:'Geschenk finden', f:() => giftStep1()}, {l:'Frage stellen', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}]);
@@ -1117,9 +1155,13 @@ function offerBudgets(a, ok){
   if (ok.length === 1) return cardsFlow(a, ok[0]);
   budgetChips(a, ok);
 }
+/* Hauptweg ist die Preisspanne mit den meisten passenden Stücken im Regal */
+const bandCount = (list, b) => list.filter(p => !S.shown.has(p.h) && (b === '30' ? p.p <= 3000 : b === '60' ? p.p <= 6000 : p.p > 6000)).length;
 function budgetChips(a, ok){
-  S.aud = a;
-  choices((ok || Object.keys(BUDGETS)).map(b => ({l:BUDGETS[b], f:() => cardsFlow(a, b)})));
+  S.aud = a; ok = ok || Object.keys(BUDGETS);
+  const list = S.pool && S.pool.a === a ? S.pool.list : null;
+  const best = list ? ok.reduce((m, b) => bandCount(list, b) > bandCount(list, m) ? b : m, ok[0]) : null;
+  choices(ok.map(b => ({l:BUDGETS[b], pri:b === best ? 1 : 0, f:() => cardsFlow(a, b)})));
 }
 async function emptyShelf(a){
   await ensureOut('sketch', 'poof');
@@ -1145,7 +1187,7 @@ async function cardsFlow(a, budget){
   if (err || !pool){
     await aw(setPose('shrug')); emote('sweat', 2000);
     await speak('Das Regal klemmt gerade. Schau gern direkt in die Kollektion, da findest Du alles.');
-    return choices([{l:'Zur Kollektion', href:'/collections/' + a.hs[0]}, {l:'Zurück', f:() => giftStep1()}]);
+    return choices([{l:'Zur Kollektion', pri:1, href:'/collections/' + a.hs[0]}, {l:'Zurück', f:() => giftStep1()}]);
   }
   S.pool = {a, list:pool};
   const res = pick(pool, budget);
@@ -1172,21 +1214,20 @@ function leadLine(a, res){
   return pre + (all100 ? `Das bestellen die meisten ${a.who}:` : `Das passt gut ${a.who}:`);
 }
 function cardLinks(a){
-  const host = (!S.mobile && $('.tlinks', trayEl) && trayEl.style.display !== 'none') ? $('.tlinks', trayEl) : choicesEl;
   /* "Andere Vorschläge" nur, wenn das Regal noch mindestens zwei weitere hergibt; sonst ein anderes Budget, falls das etwas bringt */
   const list = S.pool ? S.pool.list : null, more = !!list && pick(list, S.budget).tier !== 'none';
-  const alt = !more && list && okBudgets(list, S.budget).length ? {l:'Anderes Budget', link:1, f:() => budgetStep(a)} : null;
+  const alt = !more && list && okBudgets(list, S.budget).length ? {l:'Anderes Budget', f:() => budgetStep(a)} : null;
   choices([
-    {l:'Andere Vorschläge', link:1, f:async () => {
+    {l:'Andere Vorschläge', f:async () => {
       const res = pick(S.pool ? S.pool.list : [], S.budget);
       if (res.tier === 'none'){ await speak('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.'); return choices([{l:'Zur Kollektion', href:'/collections/' + a.hs[0]}].concat(okBudgets(S.pool ? S.pool.list : null, S.budget).length ? [{l:'Anderes Budget', f:() => budgetStep(a)}] : [], [{l:'Andere Gruppe', f:() => giftStep1()}])); }
       await speak(res.tier === 'near' ? 'Eins liegt knapp über Deinem Budget, ist aber beliebt.' : res.items.every(p => +p.n >= 100) ? 'Hier sind noch ein paar, die oft bestellt werden.' : 'Hier sind noch ein paar Ideen.');
       await dealCards(res.items); cardLinks(a);
     }},
     {l:'Alle ansehen', link:1, href:'/collections/' + a.hs[0], say:'Ich bring Dich zur ganzen Kollektion.'},
-    {l:'Eigene Idee? Sonderanfertigung', link:1, href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'},
-    {l:'Gutschein verschenken', link:1, href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'}
-  ].map(x => x.l === 'Andere Vorschläge' && !more ? alt : x).filter(Boolean), {focus:false, host});
+    {l:'Sonderanfertigung', link:1, href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'},
+    {l:'Gutschein', link:1, href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'}
+  ].map(x => x.l === 'Andere Vorschläge' && !more ? alt : x).filter(Boolean), {focus:false});
   const b = $$('.smmk-show', stage).find(x => !x.disabled && x.offsetParent !== null);
   if (b) try { b.focus({preventScroll:true}); } catch (e) {}
 }
@@ -1201,11 +1242,11 @@ async function productOpener(pers){
   await ensureOut('sketch', 'leap'); newTurn(); S.sizeDone = false;
   if (CTX.gc){
     await speak([...hello(), {t:'Beim Gutschein wählst Du den Betrag selbst. Soll ich Dir zeigen, wo?', emote:'bulb'}]);
-    return choices([{l:'Zeig mir, wo', f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
+    return choices([{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
   }
   if (pers){
     await speak([...hello(), {t:'Dieses Stück wird mit Deinem Wunschtext graviert. Soll ich Dir zeigen, wo Du ihn eingibst?', emote:'bulb'}]);
-    const c = [{l:'Ja, zeig es mir', f:() => pdpGuide(true)}];
+    const c = [{l:'Ja, zeig es mir', pri:1, f:() => pdpGuide(true)}];
     if (sizeFieldset()) c.push({l:'Welche Größe passt?', f:() => sizeAnswer(true)});
     c.push({l:'Wann kommt es an?', f:() => whenAnswer(true)});
     if (isWappen()) c.push(wappenChoice());
@@ -1213,7 +1254,7 @@ async function productOpener(pers){
     return choices(c);
   }
   await speak([...hello(), {t:'Dieses Stück gibt es ohne Gravur, direkt zum Bestellen. Die Menge wählst Du hier auf der Seite.', emote:'bulb'}]);
-  return choices([{l:'Zeig mir, wo', f:() => pdpGuide(false)}, {l:'Versand und Lieferzeit', f:() => whenAnswer(false)}, {l:'Was anderes suchen', f:() => giftStep1()}]);
+  return choices([{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Versand und Lieferzeit', f:() => whenAnswer(false)}, {l:'Was anderes suchen', f:() => giftStep1()}]);
 }
 async function pdpGuide(pers, fromCue){
   if (fromCue) await ensureOut('curator', 'poof'); else { await ensureOut('sketch', 'poof'); await aw(setPose('curator')); }
@@ -1269,7 +1310,7 @@ async function orderFlow(pre){
     return choices([{l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt'}, say:'Ich bring Dich zum Kontaktformular.'}, {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await speak('Klar. Worum geht es?'); mainMenu(); }}, {l:'Danke', f:() => exitFlow()}]);
   }
   await speak('Auf der Seite Sendungsverfolgung findest Du die Antworten zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.');
-  choices([{l:'Zur Sendungsverfolgung', href:'/pages/sendungsverfolgung', say:'Ich bring Dich hin.'}, {l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt'}, say:'Ich bring Dich zum Kontaktformular.'}, {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await speak('Klar. Worum geht es?'); mainMenu(); }}]);
+  choices([{l:'Zur Sendungsverfolgung', pri:1, href:'/pages/sendungsverfolgung', say:'Ich bring Dich hin.'}, {l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt'}, say:'Ich bring Dich zum Kontaktformular.'}, {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await speak('Klar. Worum geht es?'); mainMenu(); }}]);
 }
 /* FAQ: Themen führen zur FAQ-Seite und markieren dort die passende Gruppe */
 /* [Knopf, FAQ-Gruppe, Satzteil nach "Hier sind unsere Antworten"] */
@@ -1381,7 +1422,7 @@ async function itemGet(g){
   await speak(g.rec ? 'Gute Wahl! Das wird ein schönes Geschenk.' : 'Gute Wahl! Liegt im Warenkorb.');
   const onCart = CTX.t === 'cart';
   choices([
-    onCart ? {l:'Weiter stöbern', f:() => exitFlow()} : {l:'Zum Warenkorb', f:() => openCart()},
+    onCart ? {l:'Weiter stöbern', f:() => exitFlow()} : {l:'Zum Warenkorb', pri:1, f:() => openCart()},
     {l:'Noch ein Geschenk finden', f:async () => { if (floatTile){ floatTile.remove(); floatTile = null; } await aw(setPose('sketch')); return giftStep1(); }},
     {l:onCart ? 'Danke' : 'Weiter stöbern', f:() => exitFlow()}
   ]);
@@ -1398,7 +1439,8 @@ async function exitFlow(){
   if (floatTile){ floatTile.remove(); floatTile = null; }
   const inl = $('.smmk-404');
   S.tuck = false;
-  if (!S.out){ closeBox(); S.active = false; if (inl) inl.style.visibility = ''; setOx(0); return; }
+  const inlBack = () => { const im = inl && $(':scope > img', inl); if (im) im.style.visibility = ''; };
+  if (!S.out){ closeBox(); S.active = false; inlBack(); setOx(0); return; }
   newTurn(); S.calm = false;
   if (S.pose !== 'sketch' && S.pose !== 'rail') await aw(setPose('sketch', {dust:false}));
   emote('note', 900);
@@ -1406,7 +1448,7 @@ async function exitFlow(){
   await aw(leapBack());
   S.mx = null; S.idleState = null; S.active = false; setYield(''); setOx(0);
   /* erst den 404-Block wieder zeigen, dann den Fokus zurück an den Auslöser */
-  if (inl) inl.style.visibility = '';
+  inlBack();
   const tr = S.trigger && S.trigger.isConnected && vis(S.trigger) ? S.trigger : $$('[data-smmk="open"]').find(vis);
   if (tr) try { tr.focus({preventScroll:true}); } catch (e) {}
 }
@@ -1505,15 +1547,23 @@ function bind(){
     const t = b.dataset.tool;
     if (t === 'close') go(() => exitFlow());
     if (t === 'sound') setSound(!S.sound);
-    if (t === 'menu'){ if (!menuEl.hidden) return closeMenu(true); menuEl.hidden = false; b.setAttribute('aria-expanded', 'true'); $('button', menuEl).focus(); }
+    if (t === 'menu'){ if (!menuEl.hidden) return closeMenu(true); syncMenu(); menuEl.hidden = false; b.setAttribute('aria-expanded', 'true'); $('button', menuEl).focus(); }
   }));
   $$('button', menuEl).forEach(b => b.addEventListener('click', () => {
     const m = b.dataset.m; closeMenu(m !== 'human');
-    if (m === 'sound') setSound(!S.sound);
     if (m === 'motion'){ S.reduced = !S.reduced; stage.classList.toggle('rm', S.reduced); d.documentElement.classList.toggle('smmk-rm', S.reduced); if (S.reduced) fxClear(); }
     if (m === 'classic'){ S.classic = !S.classic; stage.classList.toggle('classic', S.classic); if (S.classic){ fxClear(); clearLaser(); } placeShadow(S.ax, S.ay, S.out); }
     if (m === 'human'){ newTurn('Du: Mit Mensch sprechen'); go(() => human()); }
+    syncMenu();
   }));
+  /* Menü mit Pfeiltasten, wie es role=menu verspricht */
+  menuEl.addEventListener('keydown', e => {
+    const bs = $$('button', menuEl), i = bs.indexOf(d.activeElement); if (i < 0) return;
+    const n = {ArrowDown:i + 1, ArrowUp:i - 1, Home:0, End:bs.length - 1}[e.key]; if (n == null) return;
+    e.preventDefault(); e.stopPropagation(); bs[(n + bs.length) % bs.length].focus();
+  });
+  /* Eingabefeld für die KI-Runde: bis dahin versteckt, ein Absenden lädt nie die Seite neu */
+  composeEl.addEventListener('submit', e => e.preventDefault());
   dockEl.addEventListener('click', () => { if (S.tuck) return untuck(); dockSay.classList.add('on'); if (!cookieBanner()) dockSay.textContent = 'Ich warte, bis das Fenster zu ist.'; });
   d.addEventListener('focusin', e => {
     const t = e.target; if (S.tuck || S.yield || (!S.out && !boxOn()) || !t || t === d.body || !t.closest || t.closest('#smMonk, .smmk-dock, [data-smmk]')) return;
@@ -1535,7 +1585,7 @@ function bind(){
     if ((e.key === 'Enter' || e.key === ' ') && (S.typing || S.waitAdv) && !(ae && ae.closest && ae.closest('#smMonk, input, textarea, select'))){
       e.preventDefault(); kbSwallow = e.key; if (S.typing) S.skip = true; else advanceNow(); return;
     }
-    const inCh = ae && ae.closest && (ae.closest('.smmk-choices, .smmk-tray .tlinks') || ae.matches('.smmk-show'));
+    const inCh = ae && ae.closest && (ae.closest('.smmk-choices') || ae.matches('.smmk-show'));
     if (inCh && ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)){
       const bs = $$('.smmk-show', stage).filter(b => !b.disabled && b.offsetParent !== null).concat(allChoices().filter(b => !b.disabled));
       const i = bs.indexOf(ae); if (i < 0) return;
@@ -1565,16 +1615,20 @@ function bind(){
     S.lag = Math.max(-8, Math.min(8, S.lag - dy * .35));
     if (!lagRaf) lagRaf = requestAnimationFrame(function spring(){ S.lag *= .82; if (Math.abs(S.lag) < .5) S.lag = 0; lagEl.style.transform = `translateY(${R(S.lag)}px)`; lagRaf = S.lag ? requestAnimationFrame(spring) : 0; });
   }, {passive:true});
-  new ResizeObserver(() => { sheetCheck(); rideSheet(); if (!S.mobile && $('.smmk-card', trayEl)) placeTray(); }).observe(box);
+  new ResizeObserver(() => { sheetCheck(); rideSheet(); if (!S.mobile && $('.smmk-card, .smmk-row', trayEl)) placeTray(); }).observe(box);
   addEventListener('resize', applyViewport);
   d.addEventListener('visibilitychange', () => {
     S.hidden = d.hidden;
     d.getAnimations().forEach(a => { try { if (a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('#smMonk')){ if (S.hidden) a.pause(); else a.play(); } } catch (e) {} });
     if (!S.hidden) fxRun();
   });
-  try { mqRM.addEventListener('change', () => { S.reduced = mqRM.matches; stage.classList.toggle('rm', S.reduced); }); } catch (e) {}
+  try { mqRM.addEventListener('change', () => { S.reduced = mqRM.matches; stage.classList.toggle('rm', S.reduced); syncMenu(); }); } catch (e) {}
   setInterval(idleCheck, 500);
   setInterval(poll, 400);
+}
+function syncMenu(){
+  if (!menuEl) return;
+  [['motion', !S.reduced], ['classic', S.classic]].forEach(([m, on]) => { const b = $(`[data-m="${m}"]`, menuEl); if (!b) return; b.setAttribute('aria-checked', String(on)); $('.st', b).textContent = on ? 'An' : 'Aus'; });
 }
 function setSound(on){ S.sound = on; if (on) ac(); $$('.smmk-tools [data-tool=sound]', stage).forEach(b => b.setAttribute('aria-pressed', String(S.sound))); }
 function applyViewport(){

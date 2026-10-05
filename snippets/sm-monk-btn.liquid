@@ -1,4 +1,4 @@
 {%- comment -%} Bruder Funke (Testversion): Mönch-Knopf im Header. Nur mit settings.sm_monk_enabled, nicht auf /pages/werkstatt. {%- endcomment -%}
 {%- unless request.path contains '/pages/werkstatt' -%}
-<button type="button" class="smmk-hb" data-smmk="open" aria-label="Bruder Funke fragen, Testversion ohne KI" aria-expanded="false"><img src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"><b aria-hidden="true">?</b></button>
+<button type="button" class="smmk-hb" data-smmk="open" data-smmk-src="header" aria-label="Bruder Funke fragen, Testversion ohne KI" aria-expanded="false"><i><img src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"></i><b aria-hidden="true">?</b></button>
 {%- endunless -%}
