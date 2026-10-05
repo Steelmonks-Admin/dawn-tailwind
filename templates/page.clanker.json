@@ -222,7 +222,7 @@
         "size_label": "Größe",
         "mounting_label": "Befestigung:",
         "mounting_no_option": "Keine Befestigung",
-        "mounting_with_option": "Unsichtbare Befestigung (+€9,45)",
+        "mounting_with_option": "Unsichtbare Befestigung (+[befestigungsset_preis])",
         "note_label": "Anmerkung zum Design",
         "optional_note": "Optional",
         "note_placeholder": "Hast du noch Wünsche oder Anmerkungen?",

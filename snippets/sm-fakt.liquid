@@ -1,0 +1,111 @@
+{%- comment -%}
+  Zentrale Fakten aus den Shop-Metafeldern steelmonks.fakt_* (im Shopify-Admin unter Inhalte, Metafelder, Shop).
+  Wer dort einen Wert ändert, ändert ihn auf der ganzen Seite. Fehlt ein Metafeld, gilt der Grundwert (Stand 05.10.2026).
+  Aufruf: {% render 'sm-fakt', key: 'versandfertig' %} ergibt „2 bis 5“.
+  Schlüssel:
+    versandfertig („2 bis 5“), versandfertig_min, versandfertig_max   Shop-Artikel versandfertig in Werktagen
+    versandtag („Freitag“)                                             Versand von allem nur an diesem Tag mit DHL
+    entwurf („1 bis 2“), entwurf_min, entwurf_max                      erster Entwurf für Sonderanfertigungen in Werktagen
+    sonder_fertigung („7 bis 10“), sonder_min, sonder_max              Fertigung nach Freigabe in Werktagen
+    gratisversand_ab („99 €“), gratisversand_ab_cent (9900)            Shop-Bestellungen, nicht Sonderanfertigungen
+    versand_sonder_de („4,95 €“), versand_sonder_eu („14,90 €“)        Versand für Sonderanfertigungen
+    montage_frei_ab („150 €“), montage_frei_ab_cent (15000)            Befestigungsset für Sonderanfertigungen gratis ab
+    befestigungsset_preis („9,45 €“), befestigungsset_preis_cent (945)
+    json                                                               alle Werte als JSON für JavaScript (Zahlen in Euro und Cent)
+  Platzhalter in Texten ersetzt snippets/sm-fakten-text.liquid.
+{%- endcomment -%}
+{%- liquid
+  assign smf = shop.metafields.steelmonks
+  assign smf_vf_a = smf.fakt_versandfertig_min.value | default: 2
+  assign smf_vf_b = smf.fakt_versandfertig_max.value | default: 5
+  assign smf_tag = smf.fakt_versandtag.value | default: 'Freitag' | strip
+  assign smf_en_a = smf.fakt_entwurf_min.value | default: 1
+  assign smf_en_b = smf.fakt_entwurf_max.value | default: 2
+  assign smf_so_a = smf.fakt_sonder_min.value | default: 7
+  assign smf_so_b = smf.fakt_sonder_max.value | default: 10
+  assign smf_gv = smf.fakt_gratisversand_ab.value | default: 99.0 | times: 100 | round
+  assign smf_vde = smf.fakt_versand_sonder_de.value | default: 4.95 | times: 100 | round
+  assign smf_veu = smf.fakt_versand_sonder_eu.value | default: 14.9 | times: 100 | round
+  assign smf_mf = smf.fakt_montage_frei_ab.value | default: 150.0 | times: 100 | round
+  assign smf_bs = smf.fakt_befestigungsset_preis.value | default: 9.45 | times: 100 | round
+
+  assign smf_cent = nil
+  assign smf_out = ''
+  case key
+    when 'versandfertig_min'
+      assign smf_out = smf_vf_a
+    when 'versandfertig_max'
+      assign smf_out = smf_vf_b
+    when 'versandfertig'
+      assign smf_lo = smf_vf_a
+      assign smf_hi = smf_vf_b
+    when 'versandtag'
+      assign smf_out = smf_tag
+    when 'entwurf_min'
+      assign smf_out = smf_en_a
+    when 'entwurf_max'
+      assign smf_out = smf_en_b
+    when 'entwurf'
+      assign smf_lo = smf_en_a
+      assign smf_hi = smf_en_b
+    when 'sonder_min'
+      assign smf_out = smf_so_a
+    when 'sonder_max'
+      assign smf_out = smf_so_b
+    when 'sonder_fertigung', 'sonder'
+      assign smf_lo = smf_so_a
+      assign smf_hi = smf_so_b
+    when 'gratisversand_ab'
+      assign smf_cent = smf_gv
+    when 'gratisversand_ab_cent'
+      assign smf_out = smf_gv
+    when 'versand_sonder_de'
+      assign smf_cent = smf_vde
+    when 'versand_sonder_eu'
+      assign smf_cent = smf_veu
+    when 'montage_frei_ab'
+      assign smf_cent = smf_mf
+    when 'montage_frei_ab_cent'
+      assign smf_out = smf_mf
+    when 'befestigungsset_preis'
+      assign smf_cent = smf_bs
+    when 'befestigungsset_preis_cent'
+      assign smf_out = smf_bs
+  endcase
+
+  if smf_lo != nil
+    if smf_lo == smf_hi
+      assign smf_out = smf_lo
+    else
+      assign smf_out = smf_lo | append: ' bis ' | append: smf_hi
+    endif
+  endif
+
+  if smf_cent != nil
+    assign smf_e = smf_cent | divided_by: 100
+    assign smf_c = smf_cent | modulo: 100
+    if smf_c == 0
+      assign smf_out = smf_e | append: ' €'
+    else
+      if smf_c < 10
+        assign smf_c = smf_c | prepend: '0'
+      endif
+      assign smf_out = smf_e | append: ',' | append: smf_c | append: ' €'
+    endif
+  endif
+
+  if key == 'json'
+    capture smf_out
+      echo '{"versandfertigMin":' | append: smf_vf_a | append: ',"versandfertigMax":' | append: smf_vf_b
+      assign smf_tag_j = smf_tag | json
+      echo ',"versandtag":' | append: smf_tag_j
+      echo ',"entwurfMin":' | append: smf_en_a | append: ',"entwurfMax":' | append: smf_en_b
+      echo ',"sonderMin":' | append: smf_so_a | append: ',"sonderMax":' | append: smf_so_b
+      echo ',"gratisversandAbCent":' | append: smf_gv
+      echo ',"versandSonderDeCent":' | append: smf_vde | append: ',"versandSonderEuCent":' | append: smf_veu
+      echo ',"montageFreiAbCent":' | append: smf_mf | append: ',"befestigungssetPreisCent":' | append: smf_bs | append: '}'
+    endcapture
+  endif
+
+  echo smf_out
+-%}

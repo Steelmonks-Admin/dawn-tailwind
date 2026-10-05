@@ -166,7 +166,7 @@
             "image_box_shadow_visible": true,
             "image_max_width": 0,
             "heading": "Ein ideales Geschenk",
-            "text": "<p>Dank der robusten Verarbeitung bleibt das Schild dauerhaft geschützt und rostfrei, besonders in pulverbeschichteten Farben, eine perfekte Geschenkidee für Familien, Paare oder als Andenken für besondere Anlässe.</p>",
+            "text": "<p>Dank der robusten Verarbeitung bleibt das Schild dauerhaft geschützt und wetterfest, ob pulverbeschichtet oder aus rostfreiem Edelstahl, eine perfekte Geschenkidee für Familien, Paare oder als Andenken für besondere Anlässe.</p>",
             "use_feature_highlights": true,
             "flex_justify_content": "end",
             "flex_align_items": "center",
@@ -352,7 +352,7 @@
           "settings": {
             "parent": "",
             "heading": "Ich brauche ein dringendes Geschenk, bis wann hab ich mein Schild? (Produktionszeit)",
-            "content": "<p>Wir verstehen, wie wichtig es ist, besondere Anlässe rechtzeitig zu feiern.</p><p>Normalerweise dauert die Produktion eines Schildes einige Tage, je nach Komplexität und aktuellen Auftragsvolumen.</p><p>Hinzu kommt die Versandzeit. Wenn Du ein Schild dringend benötigst, kontaktiere uns bitte vor Deiner der Bestellung, damit wir die Produktion vorziehen und die besten Versandoptionen für Dich finden können.</p>",
+            "content": "<p>Wir verstehen, wie wichtig es ist, besondere Anlässe rechtzeitig zu feiern.</p><p>Normalerweise ist Dein Schild in [versandfertig] Werktagen versandfertig, je nach Komplexität und aktuellem Auftragsvolumen. Wir versenden jeden [versandtag] mit DHL.</p><p>Hinzu kommt die Versandzeit. Wenn Du ein Schild dringend benötigst, kontaktiere uns bitte vor Deiner der Bestellung, damit wir die Produktion vorziehen und die besten Versandoptionen für Dich finden können.</p>",
             "content_liquid": "",
             "featured": false,
             "featured_content_gradient": "#090a0c,#04c,#04c,#090a0c",

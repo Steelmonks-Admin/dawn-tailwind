@@ -9,7 +9,7 @@
     <li><span class="stars" aria-hidden="true" style="font-size:20.8px">★</span><div><b><span data-ts-rating>{{ section.settings.ts_note }}</span> „Hervorragend“</b><span><span data-ts-count>{{ section.settings.ts_anzahl }}</span> Bewertungen bei Trusted Shops</span></div></li>
     {%- for block in section.blocks -%}
       {%- case block.settings.icon -%}{%- when 'geschenk' -%}{%- assign ic = 'https://cdn.shopify.com/s/files/1/0472/6420/2901/files/opened-gift.png?v=1708352267&width=80' -%}{%- when 'rabatt' -%}{%- assign ic = 'https://cdn.shopify.com/s/files/1/0472/6420/2901/files/discount-tag.png?v=1708352250&width=80' -%}{%- else -%}{%- assign ic = 'https://cdn.shopify.com/s/files/1/0472/6420/2901/files/free-shipping.png?v=1708352230&width=80' -%}{%- endcase -%}
-      <li {{ block.shopify_attributes }}><img src="{{ ic }}" alt="" width="34" height="34" loading="lazy"><div><b>{{ block.settings.titel | escape }}</b><span>{{ block.settings.text | escape }}</span></div></li>
+      <li {{ block.shopify_attributes }}><img src="{{ ic }}" alt="" width="34" height="34" loading="lazy">{%- capture smt_titel -%}{% render 'sm-fakten-text', text: block.settings.titel %}{%- endcapture -%}{%- capture smt_text -%}{% render 'sm-fakten-text', text: block.settings.text %}{%- endcapture -%}<div><b>{{ smt_titel | escape }}</b><span>{{ smt_text | escape }}</span></div></li>
     {%- endfor -%}
   </ul></div>
 </div>
@@ -30,8 +30,8 @@
         { "value": "geschenk", "label": "Geschenk" },
         { "value": "rabatt", "label": "Rabatt" }
       ] },
-      { "type": "text", "id": "titel", "label": "Titel" },
-      { "type": "text", "id": "text", "label": "Text" }
+      { "type": "text", "id": "titel", "label": "Titel", "info": "Platzhalter wie [gratisversand_ab] oder [versandfertig] zeigen die zentralen Fakten aus den Shop-Metafeldern (siehe snippets/sm-fakten-text.liquid)." },
+      { "type": "text", "id": "text", "label": "Text", "info": "Platzhalter wie [gratisversand_ab] oder [versandfertig] zeigen die zentralen Fakten aus den Shop-Metafeldern (siehe snippets/sm-fakten-text.liquid)." }
     ] }
   ],
   "presets": [ { "name": "SM Start: Vertrauen" } ]

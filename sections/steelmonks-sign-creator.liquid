@@ -230,8 +230,8 @@
       "type": "text",
       "id": "mounting_with_option",
       "label": "Mounting - With Option Text",
-      "default": "Unsichtbare Befestigung (+€9,45)",
-      "info": "Text for the 'with mounting' option in the mounting select on page 3."
+      "default": "Unsichtbare Befestigung (+[befestigungsset_preis])",
+      "info": "Text for the 'with mounting' option in the mounting select on page 3. [befestigungsset_preis] shows the price from the shop metafield steelmonks.fakt_befestigungsset_preis."
     },
     {
       "type": "header",
@@ -888,7 +888,8 @@
                       class='smc__select-el twcss-w-full twcss-p-3 twcss-rounded-lg twcss-border twcss-border-gray-300 twcss-appearance-none twcss-cursor-pointer'
                     >
                       <option value='Keine Befestigung'>{{ section.settings.mounting_no_option | default: 'Kein Befestigungssatz' }}</option>
-                      <option value='Befestigung'>{{ section.settings.mounting_with_option | default: 'Unsichtbare Befestigung (+€9,45)' }}</option>
+                      {%- assign smsc_mount = section.settings.mounting_with_option | default: 'Unsichtbare Befestigung (+[befestigungsset_preis])' -%}
+                      <option value='Befestigung'>{% render 'sm-fakten-text', text: smsc_mount %}</option>
                     </select>
                     <span
                       class='smc__select-arrow twcss-absolute twcss-right-3 twcss-top-1/2 twcss-translate-y-[-50%] twcss-pointer-events-none'

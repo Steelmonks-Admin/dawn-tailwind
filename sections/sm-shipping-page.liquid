@@ -43,21 +43,21 @@
         {% if block.settings.icon != blank %}
           <img
             src='{{ block.settings.icon | image_url: width: 50 }}'
-            alt='{{ block.settings.title | escape }}'
+            alt='{{ block.settings.title | strip_html | escape }}'
             width='50'
             height='50'
             class='twcss-mx-auto twcss-mb-2 twcss-object-contain'
             loading='lazy'
           >
         {% endif %}
-        <h3 class='twcss-text-2xl twcss-font-bold twcss-text-brandwhite'>{{ block.settings.title }}</h3>
-        <p class='twcss-text-base twcss-text-brandwhite'>{{ block.settings.description }}</p>
+        <h3 class='twcss-text-2xl twcss-font-bold twcss-text-brandwhite'>{% render 'sm-fakten-text', text: block.settings.title %}</h3>
+        <p class='twcss-text-base twcss-text-brandwhite'>{% render 'sm-fakten-text', text: block.settings.description %}</p>
       </div>
     {% endfor %}
   </section>
 
   <section class='twcss-flex twcss-flex-col twcss-p-10'>
-    {{ section.settings.content }}
+    {% render 'sm-fakten-text', text: section.settings.content %}
   </section>
 </main>
 
@@ -96,7 +96,8 @@
     {
       "type": "richtext",
       "id": "content",
-      "label": "Content"
+      "label": "Content",
+      "info": "Platzhalter wie [versandfertig], [versandtag] oder [gratisversand_ab] zeigen die zentralen Fakten aus den Shop-Metafeldern (Liste in snippets/sm-fakten-text.liquid)."
     },
     {
       "type": "range",
@@ -127,7 +128,8 @@
         {
           "type": "text",
           "id": "description",
-          "label": "Description"
+          "label": "Description",
+          "info": "Platzhalter wie [versandfertig], [versandtag] oder [gratisversand_ab] zeigen die zentralen Fakten aus den Shop-Metafeldern (Liste in snippets/sm-fakten-text.liquid)."
         }
       ]
     }

@@ -47,14 +47,14 @@
             class='featured-accordion__title'
           {% endif %}
         >
-          {{ heading }}
+          {% render 'sm-fakten-text', text: heading %}
         </h3>
         {% render 'icon-plus' %}
         {% render 'icon-minus' %}
       </summary>
       <div>
         <div class='rte'>
-          {{ content_rte }}
+          {% render 'sm-fakten-text', text: content_rte %}
         </div>
         {% if content_liquid != blank %}
           {{- content_liquid -}}

@@ -700,7 +700,7 @@
           "settings": {
             "icon": "shopify://shop_images/web-icon-free-shipping.svg",
             "title": "Kostenfreier Versand",
-            "description": "Wir verschicken alle in unserem Shop verkauften Artikel, versandkostenfrei ab € 99,-."
+            "description": "Wir verschicken alle in unserem Shop verkauften Artikel versandkostenfrei ab [gratisversand_ab]."
           }
         },
         "info_grid_item_tgPqJz": {
@@ -708,7 +708,7 @@
           "settings": {
             "icon": "shopify://shop_images/web-icon-easy-returns.svg",
             "title": "Schnelle Bearbeitung",
-            "description": "Deine Bestellung wird innerhalb unserer kurzen Bearbeitungszeit von 2 bis 5 Werktagen versandt."
+            "description": "Deine Bestellung ist in [versandfertig] Werktagen versandfertig und geht am nächsten [versandtag] mit DHL raus."
           }
         },
         "info_grid_item_rrKbpr": {

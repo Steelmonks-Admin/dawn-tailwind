@@ -9,7 +9,7 @@
         <div class="sa-cut" aria-hidden="true"><i></i><b></b></div>
         <p class="sa-lead">Für Eingang, Empfang, Laden oder das Firmenjubiläum: Wir schneiden Dein Logo aus Stahl, <b>für innen und außen</b>, einlagig oder mehrlagig, als Einzelstück oder in Serie.</p>
         <div class="sa-ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="fsToolSec">Dein Logo in Stahl sehen</button><button class="sa-quiet" type="button" data-scroll="fsForm">Direkt anfragen</button></div>
-        <p class="mono" style="margin-top:18px;color:var(--steel);font-size:11.2px">Kunden u. a.: Spaten · San Miguel · Deutscher Feuerwehrverband · THW</p><div class="sa-proof" style="margin-top:12px"><span>Projekte ab <b>69 €</b></span><span>bis zu <b>3 Entwürfe</b> inklusive</span><span><b>7 bis 10</b> Werktage</span><span>Edelstahl · Corten · RAL</span></div>
+        <p class="mono" style="margin-top:18px;color:var(--steel);font-size:11.2px">Kunden u. a.: Spaten · San Miguel · Deutscher Feuerwehrverband · THW</p><div class="sa-proof" style="margin-top:12px"><span>Projekte ab <b>69 €</b></span><span>bis zu <b>3 Entwürfe</b> inklusive</span><span><b>{% render 'sm-fakt', key: 'sonder_fertigung' %}</b> Werktage</span><span>Edelstahl · Corten · RAL</span></div>
       </div>
       <div class="fs-wall"><figure><img src="{{ 'sm-sg_tpl_1e9c55.webp' | asset_url }}" alt="Firmenlogo als Wandschild"></figure><figure><img src="{{ 'sm-sg_tpl_2ae3eb.webp' | asset_url }}" alt="Logo-Schild in Kreissägen-Form"></figure><figure><img src="{{ 'sm-sg_anfr_010.webp' | asset_url }}" alt="Logo-Schild für ein Fotostudio"></figure><figure><img src="{{ 'sm-sg_anfr_000.webp' | asset_url }}" alt="Schild für einen Barbershop"></figure><span class="px pxfx pxa-bob" data-fx="twinkle:.7:.3:3"><img src="{{ 'sm-px4_jakob_firma.webp' | asset_url }}" alt="Pixel-Art: Jakob zeigt auf ein Firmenschild"></span></div>
     </div>
@@ -71,7 +71,7 @@
     <details open><summary>Was kostet ein Firmenschild?</summary><p>Projekte beginnen bei 69 €. Der Preis hängt von Komplexität, Qualität, Vorlage und Größe ab. Du bekommst zuerst ein unverbindliches Angebot.</p></details>
     <details><summary>Welche Datei brauche ich?</summary><p>Am besten eine Vektor-Datei Deines Logos. Ein gutes Foto oder PNG reicht aber auch, wir zeichnen es sauber nach.</p></details>
     <details><summary>Wie viele Entwürfe sind dabei?</summary><p>Bis zu drei Überarbeitungen sind inklusive. Produziert wird erst nach Deiner Freigabe.</p></details>
-    <details><summary>Wie lange dauert es?</summary><p>Deinen ersten Entwurf bekommst Du in 2 bis 5 Werktagen. Nach Deiner Freigabe fertigen wir in 7 bis 10 Werktagen, danach geht das Schild auf die Reise. Versandkosten richten sich nach der Größe.</p></details>
+    <details><summary>Wie lange dauert es?</summary><p>Deinen ersten Entwurf bekommst Du in {% render 'sm-fakt', key: 'entwurf' %} Werktagen, bei aufwendigen Logos dauert es etwas länger. Nach Deiner Freigabe fertigen wir in {% render 'sm-fakt', key: 'sonder_fertigung' %} Werktagen, am nächsten {% render 'sm-fakt', key: 'versandtag' %} geht das Schild mit DHL auf die Reise. Der Versand kostet {% render 'sm-fakt', key: 'versand_sonder_de' %} innerhalb Deutschlands und {% render 'sm-fakt', key: 'versand_sonder_eu' %} in die EU.</p></details>
   </div></section>
 
   <section class="closing" aria-labelledby="fsEndT"><div class="wrap">

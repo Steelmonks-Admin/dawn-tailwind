@@ -1,15 +1,16 @@
+{%- capture smig_title -%}{% render 'sm-fakten-text', text: block.settings.title %}{%- endcapture -%}
 <article
   class='twcss-flex twcss-flex-col twcss-items-center twcss-gap-3 twcss-text-center twcss-bg-brandwhite twcss-bg-opacity-10 twcss-px-6 twcss-py-8'
 >
   {% comment %} Icon from settings {% endcomment %}
   <img
     src='{{ block.settings.icon | image_url: width: 44 }}'
-    alt='{{ block.settings.title }}'
+    alt='{{ smig_title | strip_html | escape }}'
     width='44'
     height='44'
   >
 
   {% comment %} Title and description from settings {% endcomment %}
-  <h3 class='twcss-text-brandwhite twcss-text-3xl'>{{ block.settings.title }}</h3>
-  <p class='twcss-text-brandwhite twcss-text-xl'>{{ block.settings.description }}</p>
+  <h3 class='twcss-text-brandwhite twcss-text-3xl'>{{ smig_title }}</h3>
+  <p class='twcss-text-brandwhite twcss-text-xl'>{% render 'sm-fakten-text', text: block.settings.description %}</p>
 </article>

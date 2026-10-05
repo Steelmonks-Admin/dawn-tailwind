@@ -1,10 +1,12 @@
 {%- comment -%}
-  Versandhinweis im Warenkorb. Ab 99 € ist der Versand in alle Länder kostenlos (Automatik-Rabatt „Gratisversand!“),
+  Versandhinweis im Warenkorb. Ab dem Shop-Metafeld steelmonks.fakt_gratisversand_ab (Stand 05.10.2026: 99 €) ist der Versand
+  in alle Länder kostenlos (Automatik-Rabatt „Gratisversand!“, dessen Mindestbetrag im Shopify-Admin muss dazu passen),
   darunter kostet er in Deutschland 4,95 €, nach Österreich und in die EU 12,95 € (Stand 29.09.2026).
   Der Drawer und die Warenkorbseite werden nach jeder Änderung neu gerendert, der Betrag stimmt also immer.
-  Grundlage wie beim Belohnungs-Pfad: snippets/sm-cart-basis.liquid (Rabattcodes zählen gegen die 99 €).
+  Grundlage wie beim Belohnungs-Pfad: snippets/sm-cart-basis.liquid (Rabattcodes zählen gegen die Grenze).
 {%- endcomment -%}
-{%- assign smk_free_from = 9900 -%}
+{%- capture smk_free_from -%}{%- render 'sm-fakt', key: 'gratisversand_ab_cent' -%}{%- endcapture -%}
+{%- assign smk_free_from = smk_free_from | strip | plus: 0 -%}
 {%- capture smk_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
 {%- assign smk_basis = smk_basis | strip | plus: 0 -%}
 {%- assign smk_c = localization.country.iso_code -%}

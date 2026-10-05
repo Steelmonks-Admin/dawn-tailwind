@@ -1,3 +1,10 @@
+{%- comment -%}
+  Zeiten (Entwurf, Fertigung, Versandtag) kommen aus den Shop-Metafeldern über sm-fakt.
+  Die Preise im Rechner-Hinweis und in „Wie setzt sich der Preis zusammen?“ (Befestigung 9,45 €, kostenlos ab 150 €, Versand 4,95 €)
+  gehören zur Preisliste wappen-v2 und bleiben fest: Der Rechner in assets/sm-sonder.js (PAGES.wappen) und das CS-System
+  (orchestrator/app/wappen.py) rechnen mit denselben Zahlen. Ändern sich die Metafelder fakt_befestigungsset_preis,
+  fakt_montage_frei_ab oder fakt_versand_sonder_de, müssen alle drei Stellen gemeinsam auf eine neue Version.
+{%- endcomment -%}
 <div class="smx" id="p-wappen" data-smx="wappen" aria-label="Wappen anfertigen lassen">
   <div class="sa-hero gold dark" id="wpHero">
     <div class="wrap sa-grid">
@@ -8,7 +15,7 @@
         <div class="sa-cut" aria-hidden="true"><i></i><b></b></div>
         <p class="sa-lead">Ein Erbstück des 21. Jahrhunderts: nach Deiner Vorlage, einem Foto oder <b>ganz neu entworfen</b>: mehrlagig, farbig und so groß, wie Deine Wand es verträgt.</p>
         <div class="sa-ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="wpCalc">Preis in 20 Sekunden berechnen</button><button class="sa-quiet" type="button" data-scroll="wpWays">Fertige Wappen ab {{ all_products['familienwappen'].price_min | divided_by: 100 }} €</button></div>
-        <div class="sa-proof"><span>ab <b>85 €</b> inkl. Design</span><span>bis zu <b>3 Entwürfe</b> inklusive</span><span><b>7 bis 10</b> Werktage</span><span><span class="stars">★</span> <b>4,82</b> Trusted Shops</span></div>
+        <div class="sa-proof"><span>ab <b>85 €</b> inkl. Design</span><span>bis zu <b>3 Entwürfe</b> inklusive</span><span><b>{% render 'sm-fakt', key: 'sonder_fertigung' %}</b> Werktage</span><span><span class="stars">★</span> <b>4,82</b> Trusted Shops</span></div>
       </div>
       <div class="wp-arch"><div class="frame"><img src="{{ 'sm-sg_anfr_003.webp' | asset_url }}" alt="Mehrlagiges, farbiges Familienwappen aus Stahl"></div><span class="px pxfx pxa-sway" data-fx="twinkle:.5:.4:4"><img src="{{ 'sm-px4_luis_wappen.webp' | asset_url }}" alt="Pixel-Art: Luis hält ein Wappen hoch"></span></div>
     </div>
@@ -102,7 +109,7 @@
     <h2 class="sa-h2" style="font-size:32px;margin-bottom:12px">Fragen zum Wappen</h2>
     <details open><summary>Wie setzt sich der Preis zusammen?</summary><p>Aus Schildpreis, Design und Versand, genau wie in Deinem Angebot. Schildpreis in Schwarz, Anthrazit, Weiß oder Gold: 22,5 cm 60 €, 45 cm 112,50 €, 55 cm 153,75 €, 75 cm 215,25 €; in Cortenstahl-Optik oder satiniertem Edelstahl 84 €, 157,50 €, 215,25 € und 301,35 €. Dazu das Design: fertige Datei 25 €, Foto, Zeichnung oder Neuentwurf 50 €, mehrlagig 50 €. Bei zwei Lagen berechnen wir die günstigere Lage zur Hälfte. Die unsichtbare Befestigung kostet 9,45 €, ab 150 € Warenwert ist sie kostenlos. Versand mit DHL 4,95 €, ab 75 cm kommt die Verpackung mit 12 € dazu. Ab 100 cm und ab drei Lagen bekommst Du ein Angebot.</p></details>
     <details><summary>Kann ich mein Wappen auch farbig bekommen?</summary><p>Ja. Mehrere Lagen in unterschiedlichen Farben oder Materialien geben dem Wappen Tiefe. Den Preis dafür kalkulieren wir im Angebot.</p></details>
-    <details><summary>Wie lange dauert es?</summary><p>Deinen ersten Entwurf bekommst Du in 2 bis 5 Werktagen. Nach Deiner Freigabe fertigen wir in 7 bis 10 Werktagen.</p></details>
+    <details><summary>Wie lange dauert es?</summary><p>Deinen ersten Entwurf bekommst Du in {% render 'sm-fakt', key: 'entwurf' %} Werktagen, bei aufwendigen Motiven dauert es etwas länger. Nach Deiner Freigabe fertigen wir in {% render 'sm-fakt', key: 'sonder_fertigung' %} Werktagen und schicken das Wappen am nächsten {% render 'sm-fakt', key: 'versandtag' %} mit DHL los.</p></details>
     <details><summary>Gibt es Rabatte?</summary><p>Wappen sind als Sonderanfertigung von Angeboten und Rabatten ausgeschlossen.</p></details>
   </div></section>
 
