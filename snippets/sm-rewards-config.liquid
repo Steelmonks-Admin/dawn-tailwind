@@ -1,7 +1,11 @@
 {%- comment -%}
   Belohnungs-Pfad: Stufen (Betrag in €, Marker-Variante), Bilder, Passt-dazu-Artikel, Länder
   Marker-Produkte gratisversand, 10-discount, mystery-geschenk nie archivieren; der Rabatt selbst kommt aus den automatischen Shopify-Rabatten
+  Die erste Stufe (Gratisversand) kommt aus dem Shop-Metafeld steelmonks.fakt_gratisversand_ab (sm-fakt), wie Warenkorb-Hinweis
+  und Zusammenfassung. Der automatische Rabatt „Gratisversand!“ im Shopify-Admin muss denselben Mindestbetrag haben.
 {%- endcomment -%}
+{%- capture smr_gv_cent -%}{%- render 'sm-fakt', key: 'gratisversand_ab_cent' -%}{%- endcapture -%}
+{%- assign smr_gv = smr_gv_cent | strip | plus: 0 | divided_by: 100.0 -%}
 {%- capture smr_addons -%}
   {%- assign smr_defs = 'unsichtbares-befestigungsset-bolzen-und-gewindestifte~42583387242737~mount~mount~Unsichtbares Befestigungsset~Set 3, für alle Motivschilder~Damit hängt Dein Schild mit Abstand vor der Wand.;geschenktute~52137820881162~bag~any~Geschenktüte~Schwarz, zum Verschenken~Schwarze Geschenktüte zum Verschenken.;keine-gewalt-gegen-retter-anstecker~50234404962570~pin~retter~„Keine Gewalt gegen Retter“ Anstecker~Pin für Einsatzkräfte~Zeig Haltung für alle, die im Einsatz helfen.' | split: ';' -%}
   {%- for smr_d in smr_defs -%}
@@ -20,7 +24,7 @@
   {
     "country": {{ localization.country.iso_code | json }},
     "tiers": [
-      { "at": 99, "marker": 45204915880202 },
+      { "at": {{ smr_gv }}, "marker": 45204915880202 },
       { "at": 149, "marker": 45204916535562 },
       { "at": 199, "marker": 45204919943434 }
     ],

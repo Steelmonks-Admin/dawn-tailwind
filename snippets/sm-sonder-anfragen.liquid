@@ -7,7 +7,7 @@
         <p class="eyebrow" style="margin-top:10px">Sonderanfertigung · Wappen · Logo · Serie</p>
         <h1 class="sa-h1" data-split>Deine Idee. <span class="hl">Aus Stahl</span></h1>
         <div class="sa-cut" aria-hidden="true"><i></i><b></b></div>
-        <p class="sa-lead">Wappen, Firmenlogo, Geschenk oder eine ganze Serie: Du schickst uns Deine Idee, wir schicken Dir ein <b>unverbindliches Angebot</b>. Bis zu <b>drei Entwürfe</b> sind inklusive, gefertigt wird in <b>7 bis 10 Werktagen</b>.</p>
+        <p class="sa-lead">Wappen, Firmenlogo, Geschenk oder eine ganze Serie: Du schickst uns Deine Idee, wir schicken Dir ein <b>unverbindliches Angebot</b>. Bis zu <b>drei Entwürfe</b> sind inklusive, gefertigt wird in <b>{% render 'sm-fakt', key: 'sonder_fertigung_werktagen' %}</b>.</p>
         <div class="sa-ctas"><button class="btn btn-p btn-shine" type="button" data-scroll="saForm">Anfrage starten <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><a class="sa-quiet" href="/pages/werkstatt">Bis 75 cm? In 3 Minuten selbst gestalten</a></div>
         <div class="sa-proof"><span><b><span data-count="{{ shop.metafields.steelmonks.bestellungen_gesamt.value | default: 106605 }}">{% render 'sm-bestellungen' %}</span></b> Bestellungen seit 2020</span><span><span class="stars">★</span> <b data-ts-rating>4,82</b> · <span data-ts-count>6.628</span> Bewertungen</span><span>Projekte ab <b>69 €</b></span><span>bis <b>3 × 2 m</b>, größer mehrteilig</span></div>
         
@@ -47,10 +47,10 @@
       {%- assign sa_posen = 'lupe,mass,skizze,laser,kaffee' | split: ',' -%}<span class="walker" id="saWalker" aria-hidden="true">{%- for m in sa_posen -%}<img src="{{ 'sm-pxm_' | append: m | append: '.webp' | asset_url }}" alt="" loading="lazy" decoding="async"{% if forloop.first %} class="on"{% endif %}>{%- endfor -%}</span>
       <li data-rv style="--d:.0s"><span class="n"></span><b>Anfrage</b><p>Beschreib Deine Idee, gern mit Foto, Skizze oder fertiger Datei.</p><em>2 Minuten</em></li>
       <li data-rv style="--d:.1s"><span class="n"></span><b>Angebot</b><p>Du bekommst ein unverbindliches Angebot. Der Preis richtet sich nach Größe, Vorlage und Aufwand.</p><em>unverbindlich</em></li>
-      <li data-rv style="--d:.2s"><span class="n"></span><b>Entwurf</b><p>Unsere Designer zeichnen Dein Motiv. Bis zu drei Überarbeitungen sind inklusive.</p><em>bis 3 Entwürfe</em></li>
-      <li data-rv style="--d:.3s"><span class="n"></span><b>Fertigung</b><p>Lasergeschnitten, auf Wunsch mehrlagig und pulverbeschichtet, mit unsichtbarer Befestigung.</p><em>7 bis 10 Werktage</em></li>
+      <li data-rv style="--d:.2s"><span class="n"></span><b>Entwurf</b><p>Unsere Designer zeichnen Dein Motiv, den ersten Entwurf hast Du in {% render 'sm-fakt', key: 'entwurf_werktagen' %}. Bis zu drei Überarbeitungen sind inklusive.</p><em>bis 3 Entwürfe</em></li>
+      <li data-rv style="--d:.3s"><span class="n"></span><b>Fertigung</b><p>Lasergeschnitten, auf Wunsch mehrlagig und pulverbeschichtet, mit unsichtbarer Befestigung (ab {% render 'sm-fakt', key: 'montage_frei_ab' %} Bestellwert kostenlos).</p><em>{% render 'sm-fakt', key: 'sonder_fertigung_werktage' %}</em></li>
     </ol>
-    <div class="sa-quest-end" data-rv><p>Erst mit Deiner Freigabe des Entwurfs beginnt die Produktion. Versandkosten richten sich nach der Größe.</p><button class="btn btn-p" type="button" data-scroll="saForm">Anfrage starten</button></div>
+    <div class="sa-quest-end" data-rv><p>Erst mit Deiner Freigabe des Entwurfs beginnt die Produktion. Verschickt wird jeden {% render 'sm-fakt', key: 'versandtag' %} mit DHL, für {% render 'sm-fakt', key: 'versand_sonder_de' %} innerhalb Deutschlands.</p><button class="btn btn-p" type="button" data-scroll="saForm">Anfrage starten</button></div>
   </div></section>
 
   <section class="sa-sec sa-night dark"><div class="wrap">
@@ -107,7 +107,7 @@
       <div class="blk"><h3>Eine Welt voller Farben</h3><p>Neben unseren Standardfarben Schwarz, Weiß, Anthrazit und Gold setzen wir jede gewünschte Farbe um. Nenn uns Deinen RAL-Farbton, und wir lassen Dein Stück genau in diesem Ton erstrahlen. Mehrere Lagen in verschiedenen Farben oder Materialien geben Deinem Motiv Tiefe.</p></div>
       <div class="blk"><h3>Der Weg zu Deiner Sonderanfertigung</h3><p>Alles beginnt mit Deiner Vorstellung. Über das Anfrageformular erhalten wir alle Informationen, um Dein Projekt zu starten. Eine beigefügte Datei, ein Foto oder eine Skizze hilft uns, Deine Idee noch besser zu verstehen. Du bekommst einen unverbindlichen Kostenvoranschlag, danach zeichnen unsere Designer Deinen Entwurf. Bis zu drei Überarbeitungen sind inklusive.</p></div>
       <div class="blk"><h3>Einblicke in den Herstellungsprozess</h3><p>Sobald Du den Entwurf freigibst, übertragen wir Dein Design auf unsere Lasermaschine, die es präzise aus Stahl schneidet. Bei mehrlagigen Schildern wiederholen wir den Schnitt, bis alle Teile vorliegen. Auf Wunsch folgen Pulverbeschichtung und Wettergrundierung für dauerhafte Wetterfestigkeit. Mit unserem unsichtbaren Befestigungsset erscheint Dein Schild mit 8 mm Wandabstand wie schwebend.</p></div>
-      <div class="blk"><h3>Von der Idee zur Realität</h3><p>Ob für Dich selbst, als Geschenk oder für Dein Unternehmen: Wir setzen auf Einzigartigkeit und Qualität. Projekte gibt es ab 69 €, gefertigt in 7 bis 10 Werktagen, bis 3 × 2 m am Stück und größer in mehreren Teilen.</p></div>
+      <div class="blk"><h3>Von der Idee zur Realität</h3><p>Ob für Dich selbst, als Geschenk oder für Dein Unternehmen: Wir setzen auf Einzigartigkeit und Qualität. Projekte gibt es ab 69 €, gefertigt in {% render 'sm-fakt', key: 'sonder_fertigung_werktagen' %}, bis 3 × 2 m am Stück und größer in mehreren Teilen.</p></div>
     </div>
   </div></section>
 
@@ -116,8 +116,8 @@
     <details open><summary>Was kostet eine Sonderanfertigung?</summary><p>Das hängt von Größe, Vorlage und Aufwand ab. Kleine Sonderanfertigungen gibt es schon ab 69 €, Wappen ab 85 € inklusive Design. Du bekommst immer zuerst ein unverbindliches Angebot.</p></details>
     <details><summary>Welche Vorlage brauche ich?</summary><p>Alles hilft: eine fertige Datei, ein Foto, eine Skizze oder nur eine Beschreibung. Aus einer fertigen Datei wird Dein Schild am schnellsten und günstigsten.</p></details>
     <details><summary>Wie viele Entwürfe bekomme ich?</summary><p>Bis zu drei Überarbeitungen sind im Preis inbegriffen. Erst mit Deiner Freigabe beginnen wir mit der Produktion.</p></details>
-    <details><summary>Wie lange dauert es?</summary><p>Deinen ersten Entwurf bekommst Du in 2 bis 5 Werktagen. Nach Deiner Freigabe fertigen wir in 7 bis 10 Werktagen und schicken das Stück zu Dir. Die Versandkosten richten sich nach der Größe.</p></details>
-    <details><summary>Wie wird es montiert?</summary><p>Mit unserem unsichtbaren Befestigungsset: Bolzen auf der Rückseite, die Gewindestifte für die Wand liefern wir mit.</p></details>
+    <details><summary>Wie lange dauert es?</summary><p>Deinen ersten Entwurf bekommst Du in {% render 'sm-fakt', key: 'entwurf_werktagen' %}, bei aufwendigen Motiven dauert es etwas länger. Nach Deiner Freigabe fertigen wir in {% render 'sm-fakt', key: 'sonder_fertigung_werktagen' %} und schicken das Stück am nächsten {% render 'sm-fakt', key: 'versandtag' %} mit DHL zu Dir. Der Versand kostet {% render 'sm-fakt', key: 'versand_sonder_de' %} innerhalb Deutschlands und {% render 'sm-fakt', key: 'versand_sonder_eu' %} in die EU.</p></details>
+    <details><summary>Wie wird es montiert?</summary><p>Mit unserem unsichtbaren Befestigungsset: Bolzen auf der Rückseite, die Gewindestifte für die Wand liefern wir mit. Ab {% render 'sm-fakt', key: 'montage_frei_ab' %} Bestellwert ist das Set kostenlos, darunter kostet es {% render 'sm-fakt', key: 'befestigungsset_preis' %}.</p></details>
     <details><summary>Darf ich Logos oder Vereinswappen anfragen?</summary><p>Ja, wenn Du die Rechte daran hast oder vom Rechteinhaber berechtigt bist.</p></details>
   </div></section>
 

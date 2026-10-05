@@ -95,7 +95,7 @@
 
     <div class='cart__warnings smcp-empty'>
       {%- render 'sm-cart-empty' -%}
-      <p class='smc-trust'><span>Gratisversand ab 99 €</span><span>100 % Gl&uuml;cksgarantie</span><span>4,82 &#9733; Trusted Shops</span></p>
+      <p class='smc-trust'><span>Gratisversand ab {% render 'sm-fakt', key: 'gratisversand_ab' %}</span><span>100 % Gl&uuml;cksgarantie</span><span>4,82 &#9733; Trusted Shops</span></p>
     </div>
 
     <form action='{{ routes.cart_url }}' class='cart__contents critical-hidden' method='post' id='cart'>

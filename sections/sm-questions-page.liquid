@@ -1,7 +1,7 @@
 <article class='twcss-flex twcss-flex-col twcss-gap-6' style='padding: {{ section.settings.padding }}px;'>
   <h2>Häufig gestellte Fragen</h2>
   <br>
-  {{ section.settings.content }}
+  {% render 'sm-fakten-text', text: section.settings.content %}
 </article>
 
 <section class='twcss-flex twcss-flex-col twcss-gap-12 twcss-justify-center md:twcss-flex-row'>
@@ -44,7 +44,8 @@
     {
       "type": "richtext",
       "id": "content",
-      "label": "Inhalt"
+      "label": "Inhalt",
+      "info": "Platzhalter wie [versandfertig], [versandtag] oder [gratisversand_ab] zeigen die zentralen Fakten aus den Shop-Metafeldern (Liste in snippets/sm-fakten-text.liquid)."
     },
     {
       "type": "range",

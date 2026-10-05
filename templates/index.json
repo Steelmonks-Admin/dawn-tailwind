@@ -97,8 +97,8 @@
           "type": "punkt",
           "settings": {
             "icon": "versand",
-            "titel": "Gratisversand ab 99 €",
-            "text": "In 2 bis 5 Werktagen versandfertig"
+            "titel": "Gratisversand ab [gratisversand_ab]",
+            "text": "In [versandfertig] Werktagen versandfertig"
           }
         },
         "punkt_2": {

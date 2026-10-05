@@ -1,15 +1,17 @@
 {%- comment -%}
   Zusammenfassung im Warenkorb-Drawer: Zwischensumme, Rabatte, Versand nach Land und Bestellwert, Gesamt.
-  Versand: ab 99 € kostenlos (Grundlage wie Shopify, sm-cart-basis); darunter DE 4,95 €, AT und EU 12,95 €, CH 14,90 CHF,
+  Versand: ab steelmonks.fakt_gratisversand_ab kostenlos (Stand 05.10.2026: 99 €, Grundlage wie Shopify, sm-cart-basis); darunter DE 4,95 €, AT und EU 12,95 €, CH 14,90 CHF,
   Brief ab 2,95 € unter 3,80 €. Den Newsletter-Versandcode trägt sm-rewards.js nach (Liquid sieht keine Versandcodes).
 {%- endcomment -%}
 {%- capture smc_basis -%}{%- render 'sm-cart-basis' -%}{%- endcapture -%}
+{%- capture smc_free_from -%}{%- render 'sm-fakt', key: 'gratisversand_ab_cent' -%}{%- endcapture -%}
 {%- liquid
   assign smc_basis = smc_basis | strip | plus: 0
   assign smc_c = localization.country.iso_code
   assign smc_eu = 'AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE' | split: ','
+  assign smc_free_from = smc_free_from | strip | plus: 0
   assign smc_free = false
-  if smc_basis >= 9900
+  if smc_basis >= smc_free_from
     assign smc_free = true
   endif
   assign smc_ship = 'wird an der Kasse berechnet'

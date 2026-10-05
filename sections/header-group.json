@@ -17,7 +17,7 @@
         "announcement_hHy47U": {
           "type": "announcement",
           "settings": {
-            "text": "🚚 Kostenloser Versand ab 99 €",
+            "text": "🚚 Kostenloser Versand ab [gratisversand_ab]",
             "link": ""
           }
         }
