@@ -105,8 +105,14 @@ function boxOn(){ return box && box.classList.contains('on'); }
 function boxH(){ return boxOn() ? box.offsetHeight : 0; }
 function measureBoxH(){ const v = box.style.visibility; box.style.visibility = 'hidden'; box.classList.add('on'); const hh = box.offsetHeight; box.classList.remove('on'); box.style.visibility = v; return hh; }
 function home(){
-  if (S.mobile){ const bh = boxH() || measureBoxH(); return {x:12 + R(175/3), y:vpH() - S.lift - bh}; }
+  if (S.mobile){ const bh = boxH() || measureBoxH(); return {x:S.mx == null ? mobX0() : S.mx, y:vpH() - S.lift - bh}; }
   return {x:24 + 88 + S.ox, y:vpH() - 24 - S.lift};
+}
+/* Handy: Der Mönch läuft auf der Oberkante des Sheets. S.mx ist sein Platz dort (null = Startplatz links). */
+function mobX0(){ return 12 + R(175 / 3); }
+function clampMx(x, pose){
+  const p = POSES[pose] || POSES[S.pose] || POSES.sketch, s = poseScale(pose || S.pose), half = R(Math.max(p.fx, p.w - p.fx) * s);
+  return Math.max(8 + half, Math.min(vpW() - 8 - half, R(x)));
 }
 function headerBottom(){
   const hd = $('sticky-header') || $('.section-header') || $('header');
@@ -410,6 +416,14 @@ async function leapBack(){
   await anim(rs, [{transform:'scale(.6)', opacity:0}, {transform:'scale(1)', opacity:1}], {duration:300, easing:'steps(3,end)'});
 }
 async function poofIn(pose){
+  if (S.mobile && !S.reduced && !S.classic){
+    const to = home(); S.pose = 'sketch'; sp.src = asset('sketch'); applyPoseGeom('sketch');
+    setFacing(1); showActor(true); placeActor(-90, to.y); sfx('pop');
+    await walkTo(to.x); box.classList.remove('away');
+    burst('twinkle', S.ax, S.ay - 60, 6);
+    if (pose !== 'sketch') await aw(setPose(pose));
+    return;
+  }
   const to = home(); showActor(true); setFacing(1); placeActor(to.x, to.y);
   S.pose = pose; sp.src = asset(pose); applyPoseGeom(pose);
   burst('dust', to.x, to.y - 20, 26); burst('twinkle', to.x, to.y - 60, 8); sfx('pop');
@@ -434,8 +448,42 @@ async function walkTo(x){
   anim(shadowC, [{transform:`translate(${R(S.ax - 15 * k)}px,${R(S.ay - 2.5 * k - 1)}px)`}, {transform:`translate(${R(x - 15 * k)}px,${R(S.ay - 2.5 * k - 1)}px)`}], {duration:dur, easing:`steps(${steps},end)`});
   const dustE = emitter('dust', () => { const m = new DOMMatrixReadOnly(getComputedStyle(actor).transform); return {x:m.m41 - 10 * Math.sign(dx), y:S.ay - 2}; }, .25);
   await anim(actor, [{transform:`translate3d(${S.ax}px,${S.ay}px,0)`}, {transform:`translate3d(${x}px,${S.ay}px,0)`}], {duration:dur, easing:`steps(${steps},end)`});
+  if (S.walkStop != null){ x = S.walkStop; S.walkStop = null; }
   stopEmitter(dustE); actor.classList.remove('walk');
-  placeActor(x, S.ay);
+  placeActor(x, S.ay); if (S.mobile) S.mx = x;
+}
+/* Handy: zu einem Ziel auf der Sheet-Kante laufen. Schwere Posen (Kurator, Maßband, PC, Truhe) gehen als Skizze und
+   wechseln am Ziel zurück, damit nicht die ganze Szene über den Bildschirm rutscht. */
+const HEAVY = {curator:1, measure:1, pc:1, chest:1, coffee:1};
+async function stroll(x, o){
+  o = o || {};
+  if (!S.mobile || !S.out || S.reduced || S.classic) return false;
+  const keep = S.pose, tx = clampMx(x, o.pose || keep);
+  if (Math.abs(tx - S.ax) < 24) return false;
+  if (HEAVY[keep]) await aw(setPose('sketch', {dust:false}));
+  await walkTo(tx); box.classList.remove('away');
+  if (o.face) await paperTurn(o.face);
+  if (HEAVY[keep] && o.back !== false) await aw(setPose(keep));
+  return true;
+}
+/* Handy, Leerlauf: ein kurzer Rundgang über den Bildschirm. Jede Eingabe hält ihn sofort an (wake). */
+async function patrol(){
+  S.patrolling = true;
+  try {
+    const x0 = S.ax, lo = clampMx(0, 'sketch'), hi = clampMx(vpW(), 'sketch');
+    const far = (hi - S.ax) >= (S.ax - lo) ? hi - R((hi - S.ax) * .2) : lo + R((S.ax - lo) * .2);
+    if (HEAVY[S.pose]) await aw(setPose('sketch', {dust:false}));
+    if (!S.patrolling) return;
+    await walkTo(far); box.classList.remove('away');
+    if (!S.patrolling) return;
+    emote('?', 1000); await w(1200);
+    if (!S.patrolling) return;
+    await paperTurn(-S.facing); await w(700);
+    if (!S.patrolling) return;
+    await walkTo(x0); box.classList.remove('away');
+    if (!S.patrolling) return;
+    await paperTurn(1);
+  } finally { S.patrolling = false; }
 }
 
 /* ---------- Laser, Spotlight, Questmarker ---------- */
@@ -526,6 +574,11 @@ function duckCheck(){ if (spotState && S.avoid && spriteHits(S.avoid)) duck(true
 async function laserCore(el, o){
   const spot = o.spot !== false, dim = o.dim !== false;
   spotOff(); trimLines(); if (o.dodge !== false) await dodge(el); reveal(el); await w(80);
+  if (S.mobile && o.walk !== false && !S.calm){
+    const r0 = vr(o.aim || el), cx = r0.x + r0.w / 2;
+    await stroll(cx - 44, {face: cx >= S.ax ? 1 : -1});
+    if (S.out && !S.reduced && !S.classic){ const f = cx >= S.ax ? 1 : -1; if (S.facing !== f) await paperTurn(f); }
+  }
   const ap = aimPoint(vr(o.aim || el)), tx = ap.x, ty = ap.y;
   if (S.reduced || S.classic || S.calm || !S.out){ if (spot) spotOn(el, {dim:false, stat:true}); return; }
   const hp = handPoint();
@@ -1024,6 +1077,9 @@ async function pickAudience(a){
       if (target - homeX > 60){ boxAway = true; await aw(folded()); box.style.visibility = 'hidden'; }
       await walkTo(target);
       if (S.facing !== 1) await paperTurn(1);
+    } else if (S.mobile && !S.reduced && !S.classic){
+      const cr = vr(chip), cx = cr.x + cr.w / 2;
+      await stroll(cx - 44, {pose:'curator', face: cx >= S.ax ? 1 : -1});
     }
     await aw(setPose('curator'));
     await laserAt(chip, {spot:false, keep:700, dodge:false});
@@ -1348,7 +1404,7 @@ async function exitFlow(){
   emote('note', 900);
   closeBox();
   await aw(leapBack());
-  S.idleState = null; S.active = false; setYield(''); setOx(0);
+  S.mx = null; S.idleState = null; S.active = false; setYield(''); setOx(0);
   /* erst den 404-Block wieder zeigen, dann den Fokus zurück an den Auslöser */
   if (inl) inl.style.visibility = '';
   const tr = S.trigger && S.trigger.isConnected && vis(S.trigger) ? S.trigger : $$('[data-smmk="open"]').find(vis);
@@ -1362,11 +1418,19 @@ function steamOff(){ if (steamE) stopEmitter(steamE); steamE = null; }
 function idleCheck(){
   if (!S.out || S.busy || S.typing || S.hidden || S.yield || S.calm || S.anims > 0 || spotState) return;
   const idle = performance.now() - S.lastInput;
-  if (idle >= 20000 && !S.idleState){ S.idleState = 'coffee'; S.prevPose = S.pose; emote(null); setPose('coffee'); steamOn(); }
+  if (S.mobile && !S.reduced && !S.classic && boxOn() && !S.idleState && !S.patrolled && !S.patrolling && idle >= 7000 && idle < 19000){ S.patrolled = true; patrol(); return; }
+  if (idle >= 20000 && !S.idleState && !S.patrolling){ S.idleState = 'coffee'; S.prevPose = S.pose; emote(null); setPose('coffee'); steamOn(); }
   else if (idle >= 80000 && S.idleState === 'coffee'){ S.idleState = 'zzz'; emote('zzz', 0); }
 }
 function wake(){
-  S.lastInput = performance.now();
+  S.lastInput = performance.now(); S.patrolled = false;
+  if (S.patrolling){
+    S.patrolling = false;
+    if (actor.classList.contains('walk')){ const m = new DOMMatrixReadOnly(getComputedStyle(actor).transform); S.walkStop = R(m.m41); }
+    const mine = a => !(typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation);
+    actor.getAnimations().filter(mine).forEach(a => a.cancel()); shadowC.getAnimations().filter(mine).forEach(a => a.cancel());
+    box.classList.remove('away'); emote(null);
+  }
   if (S.idleState){ const back = S.prevPose && S.prevPose !== 'coffee' ? S.prevPose : 'sketch'; S.idleState = null; emote(null); steamOff(); setPose(back); emote('!', 900); }
 }
 
@@ -1459,7 +1523,7 @@ function bind(){
   stage.addEventListener('keydown', () => markUsed('deeplink'), true);
   d.addEventListener('keydown', e => {
     if (!S.out && !boxOn()) return;
-    S.lastInput = performance.now(); if (S.idleState) wake();
+    S.lastInput = performance.now(); if (S.idleState || S.patrolling || S.patrolled) wake();
     if (e.key === 'Escape'){
       if (S.yield) return;
       if (spotState || qmTarget){ spotOff(); markerOff(); return; }
@@ -1483,11 +1547,11 @@ function bind(){
     }
   });
   d.addEventListener('keyup', e => { if (kbSwallow && e.key === kbSwallow){ e.preventDefault(); kbSwallow = null; } });
-  ['pointerdown', 'wheel', 'touchstart'].forEach(ev => d.addEventListener(ev, () => { S.lastInput = performance.now(); if (S.idleState) wake(); }, {passive:true, capture:true}));
+  ['pointerdown', 'wheel', 'touchstart'].forEach(ev => d.addEventListener(ev, () => { S.lastInput = performance.now(); if (S.idleState || S.patrolling || S.patrolled) wake(); }, {passive:true, capture:true}));
   d.addEventListener('pointerdown', e => { if (spotState && performance.now() - spotState.t > 250 && !e.target.closest('#smMonk')){ spotOff(); } if (qmTarget && !e.target.closest('#smMonk') && e.target.closest('a,button,input,label,select')) markerOff(); }, true);
   let tiltRaf = 0, px = 0, lastMove = 0;
   d.addEventListener('pointermove', e => {
-    if (performance.now() - lastMove > 400){ S.lastInput = performance.now(); if (S.idleState) wake(); }
+    if (performance.now() - lastMove > 400){ S.lastInput = performance.now(); if (S.idleState || S.patrolling || S.patrolled) wake(); }
     lastMove = performance.now();
     if (S.mobile || S.reduced || !S.out) return; px = e.clientX;
     if (!tiltRaf) tiltRaf = requestAnimationFrame(() => { tiltRaf = 0; if (S.anims > 0 && actor.getAnimations().length) return; S.tilt = Math.max(-8, Math.min(8, (px - S.ax) / vpW() * 24)); applyTilt(); });
@@ -1519,7 +1583,7 @@ function applyViewport(){
   fxResize(); S.lift = calcLift(); stage.style.setProperty('--lift', S.lift + 'px');
   if (S.out){ applyPoseGeom(S.pose); const hm = home(); placeActor(hm.x, hm.y); }
   sheetCheck();
-  if (was !== S.mobile) clearTray();
+  if (was !== S.mobile){ clearTray(); S.mx = null; }
 }
 
 /* ---------- Öffentliche Schnittstelle für den Loader ---------- */
