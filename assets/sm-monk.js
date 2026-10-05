@@ -21,7 +21,7 @@ const HELPER_HANDLE = /gratisversand|10-discount|mystery-geschenk|item-personali
 const POSES = {
   sketch:  {w:410,h:420,fx:214,fy:406,hx:203,hy:7,  ax:336,ay:186},
   search:  {w:232,h:420,fx:115,fy:418,hx:129,hy:4,  ax:150,ay:120},
-  curator: {w:415,h:420,fx:110,fy:377,hx:97, hy:95, ax:246,ay:165},
+  curator: {w:415,h:420,fx:110,fy:377,hx:97, hy:95, ax:250,ay:152, cw:256},
   measure: {w:420,h:410,fx:157,fy:401,hx:150,hy:62, ax:220,ay:150},
   pc:      {w:353,h:420,fx:101,fy:418,hx:101,hy:5,  ax:200,ay:250},
   shrug:   {w:352,h:420,fx:144,fy:418,hx:144,hy:4,  ax:220,ay:200},
@@ -32,17 +32,95 @@ const POSES = {
 const ASSETS = {sketch:'sm-px4_monk_sketch.webp', search:'sm-px3_monk_search.webp', curator:'sm-px4_monk_curator.webp', measure:'sm-px4_monk_measure.webp', pc:'sm-px2_monk_pc.webp',
   shrug:'sm-px3_monk_shrug.webp', coffee:'sm-px3_monk_coffee.webp', chest:'sm-px2_chest.webp', lupe:'sm-pxm_lupe.webp'};
 const asset = k => (k === 'rail' ? S.railSrc : (CTX.ab || '') + (ASSETS[k] || ''));
+/* Gleiche Körperhöhe in jeder Pose: (fy - hy) x bodyScale entspricht den 399 Quellpixeln der Skizze */
+Object.keys(POSES).forEach(k => { const p = POSES[k]; p.bs = p.mini ? 1 : Math.max(1, Math.min(1.45, 399 / Math.max(1, p.fy - p.hy))); });
+/* Kurator ohne Galerie: nur Mönch, Hand und Zeigestab bleiben sichtbar (Quellpixel, umgerechnet in Prozent von 415 x 420).
+   Enger als der erste Entwurf, damit kein Streifen von Rahmen und Pfosten stehen bleibt. */
+const CURATOR_CLIP = 'polygon(' + [[0,0],[145,0],[145,191],[196,191],[249,148],[256,149],[256,155],[206,197],[206,218],[178,224],[178,360],[166,360],[166,420],[0,420]].map(([x, y]) => (x / 415 * 100).toFixed(2) + '% ' + (y / 420 * 100).toFixed(2) + '%').join(',') + ')';
+/* Requisiten-Posen: Staub und Plopp beim Wechsel, nie damit laufen */
+const PROP = {pc:1, chest:1, measure:1};
+/* Gesicht je Pose in Quellpixeln: Augen [x,y,w,h], Mund [x,y,w,h]. Pc, Kaffee und Truhe haben keins. */
+const FACE = {
+  sketch:  {eyes:[[198,61,16,13],[221,55,16,14]], mouth:[210,81,24,13]},
+  shrug:   {eyes:[[129,60,18,9],[154,67,18,8]], mouth:[128,82,34,13]},
+  search:  {eyes:[[150,112,22,22]], mouth:[113,142,32,15]},
+  measure: {eyes:[[150,122,17,13],[170,116,13,14]], mouth:[162,138,22,14]},
+  curator: {eyes:[[101,134,14,12],[117,130,10,13]], mouth:[108,150,20,11]}
+};
+const SKIN = [0xfa,0xb6,0x79], LID = [0x68,0x32,0x1e], BEARD = [0xd1,0x8c,0x64];
 
 /* ---------- Zielgruppen: "Name|Kollektions-Handles|1 = auch als Chip im Hero" ---------- */
 const AUD_CFG = ['Handwerker|geschenke-fur-handwerker,zunftzeichen|1', 'Feuerwehr|feuerwehr-geschenke|1', 'Paare|geschenke-fur-paare|1', 'Familie|geschenke-fur-familien|1',
   'Zuhause|einweihungsgeschenke|1', 'Für ihn|gechenke-fur-ihn', 'Für sie|geschenke-fur-sie', 'Eltern|geschenke-fur-eltern', 'Soldaten|geschenke-fuer-bundeswehr-soldaten-und-veteranen',
-  'THW|thw-geschenke', 'Tierfreunde|pferde-geschenke,tiere-aus-metall', 'Motorrad|motorrad-geschenke', 'Garten|rost-gartendeko'];
+  'THW|thw-geschenke', 'Tierfreunde|pferde-geschenke,tiere-aus-metall', 'Motorrad|motorrad-geschenke', 'Garten|rost-gartendeko',
+  /* Hobbys: erscheinen nur, wenn das Regal mindestens zwei Stücke in einem Budget hergibt (okBudgets) */
+  'Angler|angeln-geschenkideen', 'Fußballer|fussball-geschenke', 'Musiker|geschenke-fur-musiker', 'Sportler|geschenke-fur-sportler,geschenke-fuer-sportler',
+  'Grillfans|grillgeschenke-und-dekoration', 'Garage und Werkstatt|garagenschilder'];
 const WHO = {Handwerker:['für Handwerker','sparks'], Feuerwehr:['für Feuerwehrleute','sparks'], Paare:['für Paare','petals'], Familie:['für Familien','twinkle'], Zuhause:['fürs Zuhause','dust'],
   'Für ihn':['für ihn','sparks'], 'Für sie':['für sie','petals'], Eltern:['für Eltern','twinkle'], Soldaten:['für Soldaten','sparks'], THW:['für THW-Helfer','sparks'],
-  Tierfreunde:['für Tierfreunde','petals'], Motorrad:['für Motorradfahrer','dust'], Garten:['für den Garten','petals']};
+  Tierfreunde:['für Tierfreunde','petals'], Motorrad:['für Motorradfahrer','dust'], Garten:['für den Garten','petals'],
+  Angler:['für Angler','sparks'], 'Fußballer':['für Fußballer','confetti'], Musiker:['für Musiker','twinkle'], Sportler:['für Sportler','sparks'],
+  Grillfans:['für Grillfans','sparks'], 'Garage und Werkstatt':['für Garage und Werkstatt','sparks']};
+/* Beispiel für den Wunschtext, nur bei Stücken mit freiem Text (z = 1) */
+const AUD_EX = {Feuerwehr:'z. B. mit Name und Wache', Handwerker:'z. B. mit Name und Gewerk', Paare:'z. B. mit Euren Namen', Familie:'z. B. mit allen Namen', Zuhause:'z. B. mit Eurem Familiennamen',
+  THW:'z. B. mit Name und Ortsverband', Soldaten:'z. B. mit Name und Einheit'};
 const AUD = AUD_CFG.map(s => { const p = String(s).split('|'), x = WHO[p[0]] || ['für ' + p[0], 'twinkle']; return {l:p[0], hs:(p[1] || '').split(',').filter(Boolean), who:x[0], hero:p[2] === '1', fx:x[1]}; });
 const audBy = l => AUD.find(a => a.l === l);
+/* Längere Knopfbeschriftung, wo der Kurzname mehrdeutig ist */
+const AUD_LBL = {'Für sie':'Für sie (Frau, Freundin, Mama)', 'Für ihn':'Für ihn (Mann, Freund, Papa)'};
+const audChip = a => AUD_LBL[a.l] || a.l;
 const audByColl = c => AUD.find(a => a.hs.includes(c));
+/* Quelle für „Nr. 1 bei …“ und die Leitzeile, je Zielgruppe (erste Kollektion) */
+const SRC = {Feuerwehr:'Feuerwehr-Geschenken', Handwerker:'Handwerker-Geschenken', Paare:'Geschenken für Paare', Familie:'Familiengeschenken', Zuhause:'Einweihungsgeschenken',
+  THW:'THW-Geschenken', Soldaten:'Geschenken für Soldaten', Motorrad:'Motorrad-Geschenken', Angler:'Geschenken für Angler', Musiker:'Geschenken für Musiker', Sportler:'Geschenken für Sportler'};
+const BELIEBT = {l:'Beliebt', hs:['beliebt'], who:'aus der Beliebt-Liste', hero:false, fx:'twinkle', src:'den beliebtesten Stücken'};
+
+
+/* ---------- Texte: je Schlüssel zwei oder drei Varianten, gewählt mit einem Zufallswert pro Seitenaufruf (nichts gespeichert) ---------- */
+const SEED = Math.floor(Math.random() * 9973);
+const LINES = {
+  hello:['Grüß Dich, ich bin Bruder Funke! Noch helfe ich mit Knöpfen, die KI zieht erst später ins Kloster ein.',
+    'Grüß Dich, ich bin Bruder Funke! Noch zeig ich Dir alles mit Knöpfen, die KI zieht erst später ins Kloster ein.'],
+  late:['Noch wach? Die Werkstatt schläft, ich nicht.'],
+  back:['Schön, dass Du wieder da bist.', 'Da bist Du ja wieder.'],
+  who:['Für wen suchst Du?', 'Wen willst Du beschenken?'],
+  Handwerker:['Handwerk hat goldenen Boden. Bei uns ist er aus Stahl.', 'Handwerker? Da sprühen bei mir die Funken.'],
+  Feuerwehr:['Feuerwehr? Da brenn ich für.', 'Feuerwehr, da kenn ich mich aus.'],
+  Paare:['Ach, die Liebe. Da wird sogar Stahl weich.', 'Für zwei? Da wird mir ganz warm ums Herz.'],
+  Familie:['Familie geht immer. Am liebsten mit allen Namen drauf.', 'Für die ganze Familie? Schöne Idee.'],
+  Zuhause:['Neues Zuhause? Dann fehlt nur noch das Schild an der Tür.', 'Fürs Zuhause, da hab ich was im Regal.'],
+  budget:['Und was darf es kosten? Ich verrat\'s auch keinem.', 'Und was darf es ungefähr kosten?'],
+  search:['Moment, ich kletter mal ins oberste Regal.', 'Moment, ich schau ins Regal.', 'Moment, ich blätter kurz durchs Regal.'],
+  itemGet:['Zack, im Korb. Ich hätte es genauso gemacht.', 'Gute Wahl! Liegt im Warenkorb.'],
+  learn:['Das lerne ich noch. Such Dir solange was aus.'],
+  err:['Da hakt was. Versuch es gleich noch mal oder nimm einen Knopf.'],
+  slow:['Das dauert gerade länger als sonst. Versuch es gleich noch mal oder nimm einen Knopf.']
+};
+function line(k, fb){ const L = LINES[k]; if (!L) return fb || ''; return L[(SEED + k.length) % L.length]; }
+const audLine = a => LINES[a.l] ? line(a.l) : `Geschenke ${a.who}, gute Wahl.`;
+
+/* ---------- Versand: Zahlen wie auf /pages/fragen (Herstellung, DHL, Gratisversand, Vorlauf, kein Express) ---------- */
+const SHIP = {prod:[2, 5], dhl:[3, 5], free:9900, fee:495, weeks:4, express:false};
+const WD = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+const MO = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+function addWorkdays(d0, n){ const t = new Date(d0); t.setHours(12, 0, 0, 0); while (n > 0){ t.setDate(t.getDate() + 1); if (t.getDay() !== 0 && t.getDay() !== 6) n--; } return t; }
+function subWorkdays(d0, n){ const t = new Date(d0); t.setHours(12, 0, 0, 0); while (n > 0){ t.setDate(t.getDate() - 1); if (t.getDay() !== 0 && t.getDay() !== 6) n--; } return t; }
+const fmtDay = t => `${WD[t.getDay()]}, ${t.getDate()}. ${MO[t.getMonth()]}`;
+const euro = c => (c / 100).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+/* Lieferfenster ab heute in Werktagen (Montag bis Freitag) */
+function shipLine(){
+  const now = new Date(), a = addWorkdays(now, SHIP.prod[0] + SHIP.dhl[0]), b = addWorkdays(now, SHIP.prod[1] + SHIP.dhl[1]);
+  return `Wir fertigen meist in ${SHIP.prod[0]} bis ${SHIP.prod[1]} Werktagen, dann ist DHL in Deutschland ${SHIP.dhl[0]} bis ${SHIP.dhl[1]} Werktage unterwegs. Heute bestellt kommt es also meist zwischen ${fmtDay(a)} und ${fmtDay(b)} an.`;
+}
+function shipCost(){ return `Ab ${euro(SHIP.free).replace(',00', '')} ist der Versand gratis, darunter kostet er in Deutschland ${euro(SHIP.fee)}.`; }
+/* 1. November bis 24. Dezember: spätester Bestelltag für Weihnachten (oberes Ende von Fertigung plus Versand) */
+function xmasLine(){
+  const now = new Date(), y = now.getFullYear(), x = new Date(y, 11, 24, 12);
+  if (now < new Date(y, 10, 1) || now > x) return '';
+  const by = subWorkdays(x, SHIP.prod[1] + SHIP.dhl[1]);
+  return by < now ? 'Für Weihnachten wird es jetzt knapp, Express gibt es bei uns leider nicht.' : `Für Weihnachten bestell am besten bis ${fmtDay(by)}.`;
+}
+const noExpress = () => SHIP.express ? '' : `Express gibt es bei uns nicht. Für einen festen Termin bestell am besten ${SHIP.weeks} Wochen vorher.`;
 
 /* ---------- Zustand ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
@@ -51,19 +129,34 @@ const S = {
   mobile:false, busy:false, typing:false, anims:0, waitAdv:false, skip:false, greeted:false,
   ax:0, ay:0, tilt:0, lag:0, idleState:null, lastInput:performance.now(), prevPose:null, hidden:false,
   yield:false, active:false, lift:0, railSrc:'', aud:null, budget:null, shown:new Set(), pool:null, trigger:null, used:false,
-  ox:0, tuck:false, sizeDone:false, anchor:null, duck:false
+  ox:0, tuck:false, anchor:null, duck:false, done:{}, zOpened:false, fast:false, dealt:false, compose:false, typed:false,
+  patrolDone:false, micro:0, t0:0, outcome:'', keepBand:false, mouth:false, blink:false
 };
 let SS = {};
 const SKEY = 'smMonk';
 function ssRead(){ if (!S.used) return SS; try { return JSON.parse(sessionStorage.getItem(SKEY)) || {}; } catch (e) { return {}; } }
 /* Vor der ersten Eingabe (nur bei Deep Links möglich) bleibt alles im Speicher der Seite, nichts in sessionStorage */
 function ssUpd(p){ SS = Object.assign(ssRead(), p); if (!S.used) return; try { sessionStorage.setItem(SKEY, JSON.stringify(SS)); } catch (e) {} }
-function markUsed(entry){
+
+/* ---------- Messung: nur dataLayer, erst nach der ersten Eingabe, nie getippter Text ---------- */
+let TURN = 0, QUEUE = [];
+function dl(ev){ try { (window.dataLayer = window.dataLayer || []).push(ev); } catch (e) {} }
+function push(event, extra){
+  const ev = Object.assign({event}, extra || {}, {sm_page_type:pageKind(), sm_turn:TURN});
+  if (!S.used){ if (event === 'sm_monk_open') QUEUE.unshift(ev); else QUEUE.push(ev); if (QUEUE.length > 40) QUEUE.length = 40; return; }
+  dl(ev);
+}
+function ecomm(event, list, items){
+  push(event, {ecommerce:{item_list_id:'sm_monk', item_list_name:list, items:items.map((p, i) => ({item_id:p.h, item_name:p.t, item_variant:p.cv && p.cv.l ? fmtSize(p.cv.l) : '', index:p.idx != null ? p.idx : i, price:+(((p.cv ? p.cv.c : p.p) || 0) / 100).toFixed(2)}))}});
+}
+function markUsed(){
   if (S.used) return; S.used = true;
   let st = {}; try { st = JSON.parse(sessionStorage.getItem(SKEY)) || {}; } catch (e) {}
-  SS = Object.assign(st, SS, {u:1}); try { sessionStorage.setItem(SKEY, JSON.stringify(SS)); } catch (e) {}
+  SS = Object.assign(st, SS, {u:1}); S.fast = !!st.op; SS.op = (st.op || 0) + 1;
+  if (S.compose) SS.ci = 1;
+  try { sessionStorage.setItem(SKEY, JSON.stringify(SS)); } catch (e) {}
   if (SS.rb == null) checkCart();
-  push('sm_monk_open', {sm_entry:entry});
+  const q = QUEUE; QUEUE = []; q.forEach(dl);
 }
 
 const $ = (s, r) => (r || d).querySelector(s);
@@ -71,14 +164,16 @@ const $$ = (s, r) => Array.from((r || d).querySelectorAll(s));
 const R = Math.round;
 const ABORT = {abort:1};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const now = () => performance.now();
 const vpW = () => d.documentElement.clientWidth || innerWidth;
 const vpH = () => innerHeight;
 const vis = e => !!(e && e.getClientRects().length && e.getBoundingClientRect().height > 0 && getComputedStyle(e).visibility !== 'hidden');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const eur = c => '€ ' + (c / 100).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
-const push = (event, extra) => { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({event}, extra || {})); } catch (e) {} };
+/* '22.5cm' wird '22,5 cm' */
+const fmtSize = v => String(v || '').trim().replace(/(\d)\.(\d)/g, '$1,$2').replace(/(\d)\s*(cm|mm|m)\b/gi, '$1 $2');
 
-let stage, actor, box, bbody, choicesEl, sp, emoteEl, lagEl, turnEl, flipEl, sqEl, ppEl, trayEl, fxC, shadowC, spotEl, qmEl, dockEl, dockSay, srlog, padEl, menuEl, composeEl;
+let stage, actor, box, bbody, choicesEl, sp, faceC, emoteEl, lagEl, turnEl, flipEl, sqEl, ppEl, trayEl, fxC, fxB, shadowC, spotEl, qmEl, dockEl, dockWrap, dockSay, srlog, padEl, menuEl, composeEl, inputEl;
 let built = false;
 
 /* ---------- Ablauf-Token: ein neuer Ablauf bricht den alten ab ---------- */
@@ -96,11 +191,13 @@ function anim(el, kf, opts){
   return a.finished.then(() => {}, () => {}).finally(() => { S.anims--; });
 }
 function h(tag, cls, html){ const e = d.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+const still = () => S.reduced || S.classic;
 
 /* ---------- Geometrie ---------- */
 function vr(el){ const a = el.getBoundingClientRect(); return {x:a.left, y:a.top, w:a.width, h:a.height}; }
 function sc(){ return S.mobile ? 1/3 : 1/2; }
-function poseScale(n){ return POSES[n].mini ? 1 : sc(); }
+/* Skalierung je Pose inklusive Körperhöhen-Ausgleich (bodyScale) */
+function poseScale(n){ const p = POSES[n] || POSES.sketch; return p.mini ? 1 : sc() * p.bs; }
 function boxOn(){ return box && box.classList.contains('on'); }
 function boxH(){ return boxOn() ? box.offsetHeight : 0; }
 function measureBoxH(){ const v = box.style.visibility; box.style.visibility = 'hidden'; box.classList.add('on'); const hh = box.offsetHeight; box.classList.remove('on'); box.style.visibility = v; return hh; }
@@ -111,7 +208,7 @@ function home(){
 /* Handy: Der Mönch läuft auf der Oberkante des Sheets. S.mx ist sein Platz dort (null = Startplatz links). */
 function mobX0(){ return 12 + R(175 / 3); }
 function clampMx(x, pose){
-  const p = POSES[pose] || POSES[S.pose] || POSES.sketch, s = poseScale(pose || S.pose), half = R(Math.max(p.fx, p.w - p.fx) * s);
+  const n = pose || S.pose, p = POSES[n] || POSES.sketch, s = poseScale(n), wd = p.cw || p.w, half = R(Math.max(p.fx, wd - p.fx) * s);
   return Math.max(8 + half, Math.min(vpW() - 8 - half, R(x)));
 }
 function headerBottom(){
@@ -167,86 +264,139 @@ function emoteCanvas(kind){
   (ICONS[kind] || ICONS['!']).forEach((row, yy) => { for (let i = 0; i < row.length; i++){ const ch = row[i]; if (ch !== '.'){ x.fillStyle = ch === '#' ? '#1b1d22' : (PAL[ch] || '#000'); x.fillRect(3 + i, 2 + yy, 1, 1); } } });
   c.className = 'smmk-emo'; return c;
 }
+/* Pop-in .4, 1.25, 1 in drei Stufen, danach ein leises Wackeln */
+function popIn(c){
+  if (still()) return;
+  c.animate([{transform:'translateY(6px) scale(.4)'}, {transform:'translateY(2px) scale(1.25)'}, {transform:'translateY(0) scale(1)'}], {duration:200, easing:'steps(3,end)'});
+  c.animate([{transform:'translateY(0)'}, {transform:'translateY(-1px)'}], {duration:800, delay:200, iterations:Infinity, easing:'steps(2,end)'});
+}
+/* Schatten: Kern plus heller Rand, liest sich auf Nacht und Papier */
 function drawShadow(){
-  const c = shadowC; c.width = 30; c.height = 5; const x = c.getContext('2d'); x.clearRect(0,0,30,5);
-  [[8,22],[3,27],[1,29],[3,27],[8,22]].forEach(([a,b], y) => { x.fillStyle = 'rgba(9,10,12,.26)'; x.fillRect(a, y, b - a, 1); });
+  const c = shadowC; c.width = 30; c.height = 6; const x = c.getContext('2d'); x.clearRect(0,0,30,6);
+  const rows = [[8,22],[3,27],[1,29],[3,27],[8,22]];
+  x.fillStyle = 'rgba(255,255,255,.10)'; rows.forEach(([a,b], y) => { x.fillRect(a - 1, y, b - a + 2, 1); }); x.fillRect(8, 5, 14, 1);
+  x.fillStyle = 'rgba(0,0,0,.42)'; rows.forEach(([a,b], y) => { x.fillRect(a, y, b - a, 1); });
 }
 
-/* ---------- Partikel ---------- */
-const FX = {ctx:null, cell:3, parts:[], ems:[], raf:0};
+/* ---------- Partikel: hinten (Staub, Dampf, Bodenwolken) und vorne (Funken, Glitzer, Konfetti) ---------- */
+const FX = {cell:3, parts:[], ems:[], raf:0, cf:null, cb:null, dark:false};
 const FXC = {
   dust:['#cfc6b4','#b9ae98','#e6dfd0'], sparks:['#fff3b0','#ffd23f','#ff8a1f','#ffffff'],
   confetti:['#e0303a','#ffd23f','#3b8cff','#36c46b','#ff7ad9','#ffffff'], twinkle:['#ffffff','#fff3b0','#bfe0ff'],
-  petals:['#ffb3c8','#ff8fb1','#ffd6e2'], steam:['rgba(255,255,255,.75)','rgba(255,255,255,.55)']
+  petals:['#ffb3c8','#ff8fb1','#ffd6e2'], steam:['rgba(255,255,255,.75)','rgba(255,255,255,.55)'], conv:['#ffffff','#ffd23f']
 };
-function fxResize(){ const cw = Math.ceil(vpW() / FX.cell), ch = Math.ceil(vpH() / FX.cell); fxC.width = cw; fxC.height = ch; fxC.style.width = (cw * FX.cell) + 'px'; fxC.style.height = (ch * FX.cell) + 'px'; }
-function spawn(type, x, y){
-  const r = Math.random, cols = FXC[type] || FXC.dust, col = cols[Math.floor(r() * cols.length)];
+const BACK = {dust:1, steam:1, ground:1};
+function fxResize(){ [fxC, fxB].forEach(c => { const cw = Math.ceil(vpW() / FX.cell), ch = Math.ceil(vpH() / FX.cell); c.width = cw; c.height = ch; c.style.width = (cw * FX.cell) + 'px'; c.style.height = (ch * FX.cell) + 'px'; }); }
+function spawn(type, x, y, o){
+  o = o || {};
+  const r = Math.random, cols = type === 'ground' ? (FX.dark ? ['#6d675e', '#8a8378'] : FXC.dust) : (FXC[type] || FXC.dust), col = cols[Math.floor(r() * cols.length)];
   const p = {type, x, y, vx:0, vy:0, g:0, life:40, age:0, col, size:1, ph:r() * 6};
   if (type === 'dust'){ p.vx = (r() - .5) * 3.2; p.vy = -r() * 1.4; p.g = .03; p.life = 24 + r() * 18; p.size = r() < .4 ? 2 : 1; }
+  if (type === 'ground'){ const dir = o.dir || (r() < .5 ? -1 : 1); p.vx = dir * (1.5 + r() * 1.5); p.vy = -(.2 + r() * .6); p.g = .05; p.life = 18 + r() * 8; p.size = 2; p.y0 = y; p.top = y - (S.mobile ? 12 : 18); }
   if (type === 'sparks'){ p.vx = (r() - .5) * 7; p.vy = -r() * 6 - 1; p.g = .32; p.life = 16 + r() * 16; }
   if (type === 'confetti'){ p.vx = (r() - .5) * 6; p.vy = -r() * 7 - 2; p.g = .16; p.life = 80 + r() * 40; p.size = r() < .5 ? 2 : 1; }
-  if (type === 'twinkle'){ p.vx = (r() - .5) * 2; p.vy = (r() - .5) * 2; p.life = 26 + r() * 18; p.size = 2; }
+  if (type === 'twinkle'){ p.vx = (r() - .5) * 1.2; p.vy = (r() - .5) * 1.2; p.life = 22 + r() * 14; p.size = 2; }
   if (type === 'petals'){ p.vx = (r() - .5) * 2; p.vy = -r() * 2; p.g = .03; p.life = 80 + r() * 40; p.size = 2; }
   if (type === 'steam'){ p.vx = (r() - .5) * .5; p.vy = -.5 - r() * .5; p.g = -.004; p.life = 50 + r() * 30; p.size = r() < .5 ? 2 : 1; }
+  if (type === 'conv'){ p.x = x + o.dx; p.y = y + o.dy; p.vx = -o.dx / 8; p.vy = -o.dy / 8; p.life = 8; p.size = 2; }
   FX.parts.push(p);
 }
-function burst(type, x, y, n){ if (S.reduced || S.classic || S.calm || S.hidden || S.yield || !built) return; for (let i = 0; i < (n || 14); i++) spawn(type, x, y); fxRun(); }
-function emitter(type, getXY, rate){ const e = {type, getXY, rate:rate || .3}; if (S.classic || S.reduced) return e; FX.ems.push(e); fxRun(); return e; }
+const fxOff = () => S.reduced || S.classic || S.calm || S.hidden || S.yield || !built;
+function burst(type, x, y, n){ if (fxOff()) return; for (let i = 0; i < (n || 14); i++) spawn(type, x, y); fxRun(); }
+/* Bodenstaub an den Füßen: dir -1 links, 1 rechts, 0 beide Seiten */
+function groundDust(x, y, n, dir){ if (fxOff()) return; for (let i = 0; i < (n || 6); i++) spawn('ground', x, y, {dir:dir || (i % 2 ? 1 : -1)}); fxRun(); }
+/* Hintergrund unter den Füßen: einmal pro Landung, für dunklen Staub auf dunklem Grund */
+function sampleGround(x, y){
+  try {
+    let e = d.elementFromPoint(Math.max(0, Math.min(vpW() - 1, x)), Math.max(0, Math.min(vpH() - 1, y + 2)));
+    while (e && e !== d.documentElement){ const c = getComputedStyle(e).backgroundColor, m = c.match(/[\d.]+/g); if (m && (m.length < 4 || +m[3] > .1)){ const [r, g, b] = m.map(Number); FX.dark = (r * .299 + g * .587 + b * .114) < 110; return; } e = e.parentElement; }
+    FX.dark = false;
+  } catch (e) {}
+}
+function emitter(type, getXY, rate){ const e = {type, getXY, rate:rate || .3}; if (still()) return e; FX.ems.push(e); fxRun(); return e; }
 function stopEmitter(e){ FX.ems = FX.ems.filter(x => x !== e); }
 function fxRun(){ if (!FX.raf && !S.hidden) FX.raf = requestAnimationFrame(fxStep); }
 function fxStep(){
-  FX.raf = 0; const x = FX.ctx, cell = FX.cell; x.clearRect(0, 0, fxC.width, fxC.height);
-  if (!S.reduced && !S.classic && !S.yield) for (const e of FX.ems){ if (Math.random() < e.rate){ const q = e.getXY(); if (q) spawn(e.type, q.x, q.y); } }
+  FX.raf = 0; const cell = FX.cell; FX.cf.clearRect(0, 0, fxC.width, fxC.height); FX.cb.clearRect(0, 0, fxB.width, fxB.height);
+  if (!still() && !S.yield) for (const e of FX.ems){ if (Math.random() < e.rate){ const q = e.getXY(); if (q) spawn(e.type, q.x, q.y); } }
   FX.parts = FX.parts.filter(p => p.age < p.life);
   for (const p of FX.parts){
     p.age++; p.vy += p.g; p.x += p.vx; p.y += p.vy;
     if (p.type === 'confetti' || p.type === 'petals'){ p.vx *= .97; p.x += Math.sin(p.age / 5 + p.ph) * .6; if (p.vy > 2.2) p.vy = 2.2; }
     if (p.type === 'steam') p.x += Math.sin(p.age / 8 + p.ph) * .3;
+    if (p.type === 'ground'){ p.vx *= .9; if (p.y > p.y0){ p.y = p.y0; p.vy = 0; } if (p.y < p.top) p.y = p.top; p.size = p.age > p.life * .55 ? 1 : 2; }
+    const x = BACK[p.type] ? FX.cb : FX.cf;
     let a = 1 - p.age / p.life; if (p.type === 'twinkle') a = (Math.floor(p.age / 4) % 2) ? .3 : 1;
     x.globalAlpha = Math.max(0, Math.min(1, p.type === 'steam' ? a * .9 : a + .25));
     x.fillStyle = p.col;
     const cx = Math.floor(p.x / cell), cy = Math.floor(p.y / cell);
-    if (p.type === 'twinkle'){ x.fillRect(cx - 1, cy, 3, 1); x.fillRect(cx, cy - 1, 1, 3); } else x.fillRect(cx, cy, p.size, p.size);
+    if (p.type === 'twinkle'){ x.fillRect(cx - 1, cy, 3, 1); x.fillRect(cx, cy - 1, 1, 3); } else x.fillRect(cx, cy - p.size + 1, p.size, p.size);
   }
-  x.globalAlpha = 1;
+  FX.cf.globalAlpha = 1; FX.cb.globalAlpha = 1;
   if ((FX.parts.length || FX.ems.length) && !S.hidden) fxRun();
 }
-function fxClear(){ FX.parts = []; FX.ems = []; if (FX.ctx) FX.ctx.clearRect(0, 0, fxC.width, fxC.height); }
+function fxClear(){ FX.parts = []; FX.ems = []; if (FX.cf){ FX.cf.clearRect(0, 0, fxC.width, fxC.height); FX.cb.clearRect(0, 0, fxB.width, fxB.height); } }
 
-/* ---------- Ton (aus, bis der Besucher ihn einschaltet; nie im ruhigen Modus) ---------- */
-const SND = {ctx:null};
+/* ---------- Ton (aus, bis der Besucher ihn einschaltet; nie im ruhigen Modus). Alles über einen Master mit Kompressor. ---------- */
+const SND = {ctx:null, out:null};
 function ac(){
   if (!S.sound || S.calm) return null;
   try {
-    if (!SND.ctx) SND.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!SND.ctx){
+      const c = SND.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const g = c.createGain(); g.gain.value = .6; const k = c.createDynamicsCompressor(); g.connect(k).connect(c.destination); SND.out = g;
+    }
     if (SND.ctx.state === 'suspended') SND.ctx.resume();
   } catch (e) { return null; }
   return SND.ctx;
 }
-function tone(f, dur, type, vol, f2){
-  const c = ac(); if (!c) return; const t = c.currentTime; dur = dur || .04;
+function tone(f, dur, type, vol, f2, at){
+  const c = ac(); if (!c) return; const t = c.currentTime + (at || 0); dur = dur || .04;
   const o = c.createOscillator(), g = c.createGain(); o.type = type || 'square'; o.frequency.setValueAtTime(f, t);
   if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
-  g.gain.setValueAtTime(vol || .035, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur + .02);
+  g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol || .035, t + .004); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g).connect(SND.out); o.start(t); o.stop(t + dur + .02);
 }
 function noise(dur, vol, f){
   const c = ac(); if (!c) return; const t = c.currentTime;
   const b = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate); const ch = b.getChannelData(0);
   for (let i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / ch.length);
   const s = c.createBufferSource(); s.buffer = b; const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.setValueAtTime(f, t); bp.frequency.exponentialRampToValueAtTime(f * 3, t + dur);
-  const g = c.createGain(); g.gain.value = vol; s.connect(bp).connect(g).connect(c.destination); s.start(t);
+  const g = c.createGain(); g.gain.value = vol; s.connect(bp).connect(g).connect(SND.out); s.start(t);
 }
-function blip(first){ if (first){ tone(88, .07, 'square', .03); return; } const base = 110 + Math.random() * 30, semi = Math.random() * 4 - 2; tone(base * Math.pow(2, semi / 12), .04); }
-function sfx(n){
+/* Stimme: Dreieck um 118 Hz mit 4 Hz Vibrato, Tonhöhe je Vokal, am Satzende drei Halbtöne tiefer */
+const VOW = {a:0, 'ä':1, e:2, i:4, o:-1, 'ö':0, u:-3, 'ü':3};
+function voice(v, last){
+  const c = ac(); if (!c) return; const t = c.currentTime, semi = (VOW[v] || 0) - (last ? 3 : 0), f = 118 * Math.pow(2, semi / 12);
+  const o = c.createOscillator(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+  o.type = 'triangle'; o.frequency.setValueAtTime(f, t); lfo.frequency.value = 4; lg.gain.value = f * .03; lfo.connect(lg).connect(o.frequency);
+  g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.09, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + (last ? .14 : .08));
+  o.connect(g).connect(SND.out); o.start(t); lfo.start(t); o.stop(t + .18); lfo.stop(t + .18);
+}
+function sfx(n, i){
   if (!S.sound || S.calm) return;
   if (n === 'whoosh') noise(.32, .05, 500);
   if (n === 'thud') tone(110, .12, 'sine', .12, 40);
   if (n === 'pop') tone(330, .06, 'square', .03, 660);
   if (n === 'deal') noise(.06, .06, 2400);
-  if (n === 'sparkle') [880, 1175, 1568].forEach((f, i) => setTimeout(() => tone(f, .07, 'square', .025), i * 70));
+  if (n === 'sparkle') [880, 1175, 1568].forEach((f, k) => tone(f, .07, 'square', .025, 0, k * .07));
   if (n === 'laser') tone(1400, .18, 'square', .02, 500);
+  if (n === 'charge') tone(400, .12, 'square', .02, 1600);
+  if (n === 'tick') tone(1600, .012, 'square', .018);
+  if (n === 'confirm') { tone(784, .06, 'square', .025); tone(1175, .09, 'square', .025, 0, .06); }
+  if (n === 'open') [523, 659, 784].forEach((f, k) => tone(f, .06, 'square', .022, 0, k * .05));
+  if (n === 'close') [784, 659, 523].forEach((f, k) => tone(f, .06, 'square', .022, 0, k * .05));
+  if (n === 'chime2') { tone(988, .1, 'triangle', .05); tone(1319, .16, 'triangle', .05, 0, .1); }
+  if (n === 'step') tone(i % 2 ? 1100 : 900, .025, 'square', .012);
+}
+/* Kleine Fanfaren zu den Emotes */
+function sting(kind){
+  if (!S.sound || S.calm) return;
+  if (kind === '!') { tone(523, .05, 'square', .025); tone(784, .08, 'square', .025, 0, .05); }
+  if (kind === '?') tone(440, .16, 'square', .022, 660);
+  if (kind === 'bulb') { tone(1568, .05, 'triangle', .04); tone(2093, .12, 'triangle', .035, 0, .05); }
+  if (kind === 'sweat') tone(660, .2, 'triangle', .03, 330);
+  if (kind === 'heart') { tone(659, .12, 'sine', .05); tone(988, .2, 'sine', .04, 0, .1); }
 }
 
 /* ---------- Aufbau der Bühne (erst beim ersten Öffnen) ---------- */
@@ -266,9 +416,10 @@ function build(){
   if (built) return; built = true;
   stage = h('div'); stage.id = 'smMonk';
   stage.innerHTML =
-    '<canvas class="smmk-shadow" aria-hidden="true"></canvas>' +
-    '<div class="smmk-actor" aria-hidden="true"><div class="lag"><div class="turn"><div class="flip"><div class="sq"><div class="pp"><div class="bob"><img class="sp" alt=""></div></div></div></div></div><div class="emote"></div></div></div>' +
-    '<section class="smmk-box" role="dialog" aria-modal="false" aria-labelledby="smmkName">' +
+    '<canvas class="smmk-shadow" aria-hidden="true"></canvas><canvas class="smmk-fxb" aria-hidden="true"></canvas>' +
+    '<div class="smmk-actor" aria-hidden="true"><div class="lag"><div class="turn"><div class="flip"><div class="sq"><div class="pp"><div class="bob"><img class="sp" alt=""><canvas class="face"></canvas></div></div></div></div></div><div class="emote"></div></div></div>' +
+    /* Nicht modaler Dialog: das Attribut open schaltet zusammen mit .on, show() wird nie gerufen (kein Fokussprung) */
+    '<dialog class="smmk-box" aria-labelledby="smmkName">' +
       '<span class="smmk-hav" aria-hidden="true"></span>' +
       '<p class="smmk-plate"><b id="smmkName">Bruder Funke</b><span class="smmk-tag" aria-hidden="true">Test</span></p>' +
       '<div class="smmk-tools"><button type="button" data-tool="sound" aria-label="Ton" aria-pressed="false">' + ICO.soundOff + ICO.soundOn + '</button><button type="button" data-tool="menu" aria-label="Menü" aria-haspopup="menu" aria-expanded="false">' + ICO.menu + '</button><button type="button" data-tool="close" aria-label="Schließen">' + ICO.close + '</button></div>' +
@@ -278,59 +429,141 @@ function build(){
       '<div class="smmk-adv" aria-hidden="true">&#9660;</div>' +
       '<div class="smmk-choices" role="group" aria-label="Antworten"></div>' +
       '<form class="smmk-compose" hidden><input type="text" maxlength="200" enterkeyhint="send" autocomplete="off" placeholder="Oder schreib mir, wen Du beschenken willst …" aria-label="Frage an Bruder Funke"><button type="submit" aria-label="Senden">' + ICO.arrow + '</button><p class="smmk-legal"></p></form>' +
-    '</section>' +
+    '</dialog>' +
     '<div class="smmk-tray"></div><canvas class="smmk-fx" aria-hidden="true"></canvas>';
   d.body.appendChild(stage);
   actor = $('.smmk-actor', stage); box = $('.smmk-box', stage); bbody = $('.smmk-body', stage); choicesEl = $('.smmk-choices', stage);
-  sp = $('img.sp', actor); emoteEl = $('.emote', actor); lagEl = $('.lag', actor); turnEl = $('.turn', actor); flipEl = $('.flip', actor); sqEl = $('.sq', actor); ppEl = $('.pp', actor);
-  trayEl = $('.smmk-tray', stage); fxC = $('.smmk-fx', stage); shadowC = $('.smmk-shadow', stage); menuEl = $('.smmk-menu', stage); composeEl = $('.smmk-compose', stage);
-  FX.ctx = fxC.getContext('2d');
+  sp = $('img.sp', actor); faceC = $('canvas.face', actor); emoteEl = $('.emote', actor); lagEl = $('.lag', actor); turnEl = $('.turn', actor); flipEl = $('.flip', actor); sqEl = $('.sq', actor); ppEl = $('.pp', actor);
+  trayEl = $('.smmk-tray', stage); fxC = $('.smmk-fx', stage); fxB = $('.smmk-fxb', stage); shadowC = $('.smmk-shadow', stage); menuEl = $('.smmk-menu', stage); composeEl = $('.smmk-compose', stage); inputEl = $('input', composeEl);
+  FX.cf = fxC.getContext('2d'); FX.cb = fxB.getContext('2d');
   spotEl = h('div', 'smmk-spot');
   qmEl = bitmapCanvas(MARKER, 3); qmEl.className = 'smmk-qm'; qmEl.setAttribute('aria-hidden', 'true');
+  /* Während der Mönch wartet (Zepto, Warenkorb), hält ein offener Dialog um den Kopf das Newsletter-Popup zurück */
+  dockWrap = h('dialog', 'smmk-yd'); dockWrap.setAttribute('aria-label', 'Bruder Funke wartet');
   dockEl = h('button', 'smmk-dock'); dockEl.type = 'button'; dockEl.setAttribute('aria-label', 'Bruder Funke wartet kurz'); dockEl.innerHTML = '<img alt="" src="' + esc(asset('lupe')) + '">';
+  dockWrap.append(dockEl, h('span', 'smmk-dock-emo'));
   dockSay = h('div', 'smmk-dock-say'); dockSay.setAttribute('aria-hidden', 'true');
   srlog = h('div', 'smmk-vh'); srlog.setAttribute('role', 'log'); srlog.setAttribute('aria-live', 'polite');
   padEl = h('div', 'smmk-pad'); padEl.setAttribute('aria-hidden', 'true');
-  [spotEl, qmEl, dockEl, dockSay, srlog, padEl].forEach(e => d.body.appendChild(e));
+  [spotEl, qmEl, dockWrap, dockSay, srlog, padEl].forEach(e => d.body.appendChild(e));
   drawShadow(); bind(); applyViewport();
   stage.classList.toggle('rm', S.reduced); syncMenu();
+  preload();
 }
+
+/* ---------- Posen vorladen: jede einmal dekodieren, damit beim Wechsel kein leeres Bild aufblitzt ---------- */
+const IMG = {};
+let preloaded = null;
+function preload(){
+  if (preloaded) return preloaded;
+  preloaded = Promise.all(Object.keys(ASSETS).filter(k => k !== 'lupe').map(k => { const im = new Image(); im.decoding = 'async'; im.src = asset(k); IMG[k] = im; return (im.decode ? im.decode() : Promise.resolve()).catch(() => {}); }));
+  return preloaded;
+}
+function ready(n){ const im = IMG[n]; if (!im || n === 'rail') return Promise.resolve(); return Promise.race([(im.decode ? im.decode() : Promise.resolve()).catch(() => {}), sleep(1200)]); }
 
 /* ---------- Darsteller ---------- */
 function placeActor(x, y){ S.ax = R(x); S.ay = R(y); actor.style.transform = `translate3d(${S.ax}px,${S.ay}px,0)`; placeShadow(S.ax, S.ay); }
+const shadowXY = (x, y) => { const k = S.mobile ? 3 : 4; return `translate(${R(x - 15 * k)}px,${R(y - 2.5 * k - 1)}px)`; };
 function placeShadow(x, y, show){
-  const k = S.mobile ? 3 : 4, wd = 30 * k, ht = 5 * k;
-  shadowC.style.width = wd + 'px'; shadowC.style.height = ht + 'px';
-  shadowC.style.transform = `translate(${R(x - wd / 2)}px,${R(y - ht / 2 - 1)}px)`;
+  const k = S.mobile ? 3 : 4;
+  shadowC.style.width = (30 * k) + 'px'; shadowC.style.height = (6 * k) + 'px';
+  shadowC.style.transform = shadowXY(x, y);
   shadowC.style.display = (show !== false) && S.out && !S.classic ? 'block' : 'none';
 }
+/* Schatten reagiert auf Höhe: schmaler und blasser, je höher er springt */
+function shadowHop(dy, ms){ if (still()) return; anim(shadowC, [{scale:'1 1', opacity:1}, {scale:`${Math.max(.5, 1 - dy * .02)} 1`, opacity:Math.max(.35, 1 - dy * .05)}, {scale:'1 1', opacity:1}], {duration:ms, easing:'steps(3,end)'}); }
 function applyPoseGeom(n){
-  const p = POSES[n], s = poseScale(n);
-  sp.style.width = (p.w * s) + 'px'; sp.style.height = (p.h * s) + 'px';
-  sp.style.left = R(-p.fx * s) + 'px'; sp.style.top = R(-p.fy * s) + 'px';
+  const p = POSES[n] || POSES.sketch, s = poseScale(n);
+  const geo = {width:(p.w * s) + 'px', height:(p.h * s) + 'px', left:R(-p.fx * s) + 'px', top:R(-p.fy * s) + 'px'};
+  Object.assign(sp.style, geo); Object.assign(faceC.style, geo);
+  sp.style.clipPath = faceC.style.clipPath = n === 'curator' ? CURATOR_CLIP : '';
   emoteEl.style.transform = `translate(${R(S.facing * (p.hx - p.fx) * s) - 16}px,${R((p.hy - p.fy) * s) - 40}px)`;
 }
+function swapSrc(n){
+  const im = IMG[n]; sp.src = n === 'rail' ? asset('rail') : (im && im.src) || asset(n);
+  applyPoseGeom(n); faceFor(n);
+}
+/* Posenwechsel ohne Verschwinden: ein kurzer Stauch-Streck-Hüpfer, Bildtausch am tiefsten Punkt */
 async function setPose(n, o){
-  o = o || {}; const pop = o.pop !== false, dust = o.dust !== false;
-  const changed = S.pose !== n; S.pose = n;
-  sp.src = asset(n); applyPoseGeom(n);
-  if (!pop || !S.out || !changed) return;
-  if (dust) burst('dust', S.ax, S.ay - 4, 12);
-  sfx('pop');
-  if (S.reduced) return anim(ppEl, [{opacity:0}, {opacity:1}], {duration:150});
-  return anim(ppEl, [{transform:'scale(.6)', opacity:0}, {transform:'scale(1)', opacity:1}], {duration:450, easing:'steps(4,end)'});
+  o = o || {};
+  if (S.pose === n){ applyPoseGeom(n); return; }
+  S.pose = n;
+  await ready(n);
+  if (S.pose !== n) return;
+  if (!S.out || o.pop === false || still()){ swapSrc(n); return; }
+  const a = anim(sqEl, [{transform:'scale(1,1)'}, {transform:'scale(1.08,.86)', offset:.35}, {transform:'scale(.96,1.06)', offset:.7}, {transform:'scale(1,1)'}], {duration:240, easing:'steps(4,end)'});
+  emoteEl.style.visibility = 'hidden';
+  await sleep(84);
+  if (S.pose === n) swapSrc(n);
+  emoteEl.style.visibility = '';
+  if (PROP[n] && o.dust !== false){ groundDust(S.ax, S.ay, 6); sfx('pop'); }
+  await a;
 }
 function handPoint(){ const p = POSES[S.pose], s = poseScale(S.pose); return {x:S.ax + S.facing * (p.ax - p.fx) * s, y:S.ay + (p.ay - p.fy) * s}; }
 function headPoint(){ const p = POSES[S.pose], s = poseScale(S.pose); return {x:S.ax + S.facing * (p.hx - p.fx) * s, y:S.ay + (p.hy - p.fy) * s}; }
-let emoteTimer = 0;
-function emote(kind, ms){
-  clearTimeout(emoteTimer); emoteEl.innerHTML = '';
-  if (!kind) return;
-  const c = emoteCanvas(kind); emoteEl.append(c);
-  if (!S.reduced) c.animate([{transform:'translateY(6px) scale(.5)', opacity:0}, {transform:'translateY(0) scale(1)', opacity:1}], {duration:240, easing:'steps(3,end)'});
-  if (ms !== 0) emoteTimer = setTimeout(() => { emoteEl.innerHTML = ''; }, ms || 1500);
+
+/* ---------- Gesicht: Mund und Lider als Pixel-Flicken über dem Sprite ---------- */
+const FACEP = {};
+function facePatch(n){
+  if (FACEP[n] !== undefined) return FACEP[n];
+  const f = FACE[n], im = IMG[n]; if (!f || !im || !im.naturalWidth) return null;
+  FACEP[n] = null;
+  try {
+    const c = d.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; const x = c.getContext('2d', {willReadFrequently:true}); x.drawImage(im, 0, 0);
+    /* Mundinneres und Augen erkennen (weiß oder blau, rot, dunkel mit b >= g), mit Haut, Bart und Lidstrich übermalen. Rest bleibt durchsichtig. */
+    const mk = (r, eye) => {
+      const [rx, ry, rw, rh] = r, src = x.getImageData(rx, ry, rw, rh), D = src.data, out = x.createImageData(rw, rh), O = out.data, hits = [];
+      for (let j = 0; j < rh; j++) for (let i = 0; i < rw; i++){ const k = (j * rw + i) * 4, R0 = D[k], G = D[k + 1], B = D[k + 2], A = D[k + 3]; if (A > 100 && ((R0 > 190 && G > 180 && B > 170) || B >= G)) hits.push([i, j]); }
+      if (!hits.length) return null;
+      const ys = hits.map(q => q[1]), xs = hits.map(q => q[0]), mid = (Math.min(...ys) + Math.max(...ys)) >> 1, x0 = Math.min(...xs), x1 = Math.max(...xs);
+      const put = (i, j, c3) => { const k = (j * rw + i) * 4; O[k] = c3[0]; O[k + 1] = c3[1]; O[k + 2] = c3[2]; O[k + 3] = 255; };
+      hits.forEach(([i, j]) => put(i, j, eye || j <= mid ? SKIN : BEARD));
+      for (let i = x0 + (eye ? 1 : 2); i <= x1 - (eye ? 1 : 2); i++){ put(i, mid, LID); put(i, Math.min(rh - 1, mid + 1), LID); }
+      return {d:out, x:rx, y:ry};
+    };
+    FACEP[n] = {mouth:mk(f.mouth, false), eyes:f.eyes.map(e => mk(e, true)).filter(Boolean)};
+  } catch (e) { FACEP[n] = null; }
+  return FACEP[n];
 }
-function talk(on){ actor.classList.toggle('talk', on); }
+let faceN = '';
+function faceFor(n){ const p = POSES[n] || POSES.sketch; faceN = n; if (faceC.width !== p.w) faceC.width = p.w; if (faceC.height !== p.h) faceC.height = p.h; drawFace(); }
+function drawFace(){
+  if (!faceC) return; const x = faceC.getContext('2d'); x.clearRect(0, 0, faceC.width, faceC.height);
+  if (still() || !S.out) return;
+  const f = FACE[faceN] ? facePatch(faceN) : null; if (!f) return;
+  if (!S.mouth && f.mouth) x.putImageData(f.mouth.d, f.mouth.x, f.mouth.y);
+  if (S.blink) f.eyes.forEach(e => x.putImageData(e.d, e.x, e.y));
+}
+function mouth(open){ if (S.mouth === open) return; S.mouth = open; drawFace(); }
+/* Blinzeln alle 2,5 bis 6 s, manchmal doppelt; nur wenn er draußen steht und nichts tut */
+let blinkT = 0;
+function blinkLoop(){
+  clearTimeout(blinkT);
+  blinkT = setTimeout(async () => {
+    if (S.out && !S.busy && !S.typing && !S.hidden && !S.yield && !still() && !S.calm){
+      const n = Math.random() < .15 ? 2 : 1;
+      for (let i = 0; i < n; i++){ S.blink = true; drawFace(); await sleep(110); S.blink = false; drawFace(); if (i < n - 1) await sleep(120); }
+    }
+    blinkLoop();
+  }, 2500 + Math.random() * 3500);
+}
+
+/* ---------- Emotes ---------- */
+let emoteTimer = 0, emoteCur = null, emoteKind = '';
+function emote(kind, ms){
+  clearTimeout(emoteTimer);
+  const old = emoteCur; emoteCur = null; emoteKind = kind || '';
+  if (old){
+    if (!kind && !still()){
+      const r = old.getBoundingClientRect(); burst('twinkle', r.left + 4, r.top + 4, 1); burst('twinkle', r.right - 4, r.top + 8, 1);
+      old.getAnimations().forEach(a => a.cancel());
+      old.animate([{transform:'scale(1)'}, {transform:'scale(.5)'}, {transform:'scale(0)'}], {duration:120, easing:'steps(2,end)', fill:'forwards'}).finished.then(() => old.remove(), () => old.remove());
+    } else old.remove();
+  }
+  if (!kind) return;
+  const c = emoteCanvas(kind); emoteEl.append(c); emoteCur = c; popIn(c); sting(kind);
+  if (ms !== 0) emoteTimer = setTimeout(() => { if (emoteCur === c) emote(null); }, ms || 1500);
+}
 function setFacing(f){ S.facing = f; flipEl.style.transform = `scaleX(${f})`; applyPoseGeom(S.pose); }
 async function paperTurn(f){
   if (S.facing === f) return;
@@ -338,15 +571,34 @@ async function paperTurn(f){
   await anim(turnEl, [{transform:'rotateY(0deg)'}, {transform:'rotateY(90deg)'}], {duration:80, easing:'steps(2,end)'});
   setFacing(f);
   await anim(turnEl, [{transform:'rotateY(-90deg)'}, {transform:'rotateY(0deg)'}], {duration:80, easing:'steps(2,end)'});
+  applyTilt();
+}
+/* Kurzer Blick zur Seite (neue Antworten, Karte unter dem Zeiger), danach zurück */
+let glanceT = 0;
+async function glance(x, ms){
+  if (!S.out || still() || S.busy && S.anims > 0) return;
+  const f = x >= S.ax ? 1 : -1; if (f === S.facing) return;
+  clearTimeout(glanceT); const back = S.facing; await paperTurn(f);
+  glanceT = setTimeout(() => { if (S.out && !S.anims && S.facing === f) paperTurn(back); }, ms || 600);
 }
 function showActor(on){
   S.out = on; actor.style.display = on ? 'block' : 'none';
   d.documentElement.classList.toggle('smmk-out', on);
   $$('[data-smmk="open"]').forEach(b => b.setAttribute('aria-expanded', String(on)));
   placeShadow(S.ax, S.ay, on);
-  if (!on){ emote(null); talk(false); }
+  if (!on){ emote(null); mouth(false); } else drawFace();
 }
-function applyTilt(){ const t = (S.out && !S.mobile && !S.reduced) ? R(S.tilt) : 0; turnEl.style.transform = t ? `rotate(${t}deg)` : ''; }
+/* Neigung als Scherung: Füße bleiben stehen, Pixelzeilen bleiben waagerecht */
+function applyTilt(){ const t = (S.out && !S.mobile && !S.reduced) ? Math.max(-3, Math.min(3, S.tilt)) : 0; turnEl.style.transform = t ? `skewX(${(-t).toFixed(1)}deg)` : ''; }
+/* Kleiner Hüpfer mit Landestauchung, der Schatten wird dabei schmaler */
+async function hop(dy, ms){
+  if (still() || !S.out) return; ms = ms || 160;
+  shadowHop(dy, ms * .75);
+  await anim(ppEl, [{transform:'translateY(0)'}, {transform:`translateY(${-dy}px)`}, {transform:'translateY(0)'}], {duration:ms * .75, easing:'steps(3,end)'});
+  await anim(sqEl, [{transform:'scale(1.1,.9)'}, {transform:'scale(1,1)'}], {duration:ms * .25, easing:'steps(2,end)'});
+}
+function landSquash(){ return anim(sqEl, [{transform:'scale(1.14,.82)'}, {transform:'scale(.94,1.08)'}, {transform:'scale(1,1)'}], {duration:200, easing:'steps(3,end)'}); }
+const stretch = (sx, sy) => anim(sqEl, [{transform:`scale(${sx},${sy})`}, {transform:`scale(${sx},${sy})`}], {duration:70});
 
 /* Sprungbahn: echter Hüpfer mit seitlichem Schwung */
 function arcPath(from, to, rise, swing){
@@ -358,7 +610,7 @@ function flightKF(path, t0, t1, O, sizeAt, spriteH, ry0, ry1){
   const N = 12, kf = [];
   for (let i = 0; i <= N; i++){
     const u = i / N, t = t0 + (t1 - t0) * u, q = path(t), sz = sizeAt(t), f = 800 / (800 - sz.z);
-    const px = O.x + (q.x - O.x) / f, py = O.y + (q.y - O.y) / f, k = Math.min(1, sz.H / spriteH / f);
+    const px = O.x + (q.x - O.x) / f, py = O.y + (q.y - O.y) / f, k = Math.min(1.6, sz.H / spriteH / f);
     kf.push({offset:u, transform:`translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,${sz.z.toFixed(1)}px) rotateY(${(ry0 + (ry1 - ry0) * u).toFixed(1)}deg) scale(${k.toFixed(3)})`});
   }
   return kf;
@@ -371,48 +623,80 @@ function railSprite(){
 function useRail(rs){
   S.railSrc = rs.currentSrc || rs.src;
   const nw = rs.naturalWidth || 66, nh = rs.naturalHeight || 120;
-  POSES.rail = {w:nw, h:nh, fx:R(nw / 2), fy:nh - 1, hx:R(nw / 2), hy:2, ax:R(nw * .6), ay:R(nh * .4), mini:1};
+  POSES.rail = {w:nw, h:nh, fx:R(nw / 2), fy:nh - 1, hx:R(nw / 2), hy:2, ax:R(nw * .6), ay:R(nh * .4), mini:1, bs:1};
 }
-/* Auftritt: Sprung aus der Leiste */
-async function leapOut(landPose){
-  const rs = railSprite(); const to = home();
-  if (!rs || S.reduced){ return poofIn(landPose); }
+/* Landung: Bodenwolken links und rechts, Hintergrund einmal abtasten */
+function landFx(x, y){ sampleGround(x, y); sfx('thud'); groundDust(x - 10, y, 4, -1); groundDust(x + 10, y, 4, 1); }
+/* Auftritt: Ducken, „!“, Absprung aus der Leiste, Landung. o.apex läuft am höchsten Punkt (Handy: Sheet fährt hoch). */
+async function leapOut(landPose, o){
+  o = o || {};
+  const rs = railSprite();
+  if (!rs || S.reduced) return poofIn(landPose, o);
+  await ready(landPose);
   const rr = vr(rs), from = {x:rr.x + rr.w / 2, y:rr.y + rr.h};
   useRail(rs);
-  const ex = emoteCanvas('!'); ex.style.position = 'absolute'; ex.style.transform = `translate(${R(from.x - 16)}px,${R(rr.y - 36)}px)`; stage.append(ex);
-  sfx('pop');
-  await anim(rs, [{transform:'translateY(0) scaleY(1)'}, {transform:'translateY(2px) scaleY(.95)'}], {duration:220, easing:'steps(2,end)', fill:'forwards'});
+  const ex = emoteCanvas('!'); ex.style.position = 'absolute'; ex.style.transformOrigin = '50% 100%'; ex.style.left = R(from.x - 16) + 'px'; ex.style.top = R(rr.y - 36) + 'px'; stage.append(ex);
+  if (!still()) ex.animate([{transform:'scale(.4)'}, {transform:'scale(1.25)'}, {transform:'scale(1)'}], {duration:200, easing:'steps(3,end)'});
+  sting('!');
+  await anim(rs, [{transform:'translateY(0) scaleY(1)'}, {transform:'translateY(3px) scaleY(.9)'}], {duration:320, easing:'steps(2,end)', fill:'forwards'});
   rs.getAnimations().forEach(a => a.cancel()); ex.remove();
-  S.pose = 'rail'; sp.src = asset('rail'); setFacing(1); applyPoseGeom('rail');
-  showActor(true); placeShadow(to.x, to.y, true);
+  S.pose = 'rail'; sp.src = asset('rail'); setFacing(1); applyPoseGeom('rail'); faceFor('rail');
+  showActor(true);
+  const to = home(); placeShadow(to.x, to.y, true);
   const O = {x:to.x, y:to.y - 100}; stage.style.perspectiveOrigin = `${O.x}px ${O.y}px`;
   const h0 = rr.h, h1 = drawnH(landPose);
   const path = arcPath(from, to, 50, S.mobile ? 40 : 70);
   const sizeAt = t => { const e = t * t; return {H:h0 + (h1 - h0) * e, z:-300 * (1 - e)}; };
-  const skf = []; for (let i = 0; i <= 10; i++){ const t = i / 10; skf.push({offset:t, opacity:t < .5 ? 0 : (t - .5) * 2, transform:`translate(${R(to.x - 60)}px,${R(to.y - 10)}px) scale(${(.2 + .8 * t).toFixed(2)})`}); }
+  const skf = []; for (let i = 0; i <= 10; i++){ const t = i / 10; skf.push({offset:t, opacity:t < .5 ? 0 : (t - .5) * 2, transform:shadowXY(to.x, to.y) + ` scale(${(.2 + .8 * t).toFixed(2)})`}); }
   sfx('whoosh');
   anim(shadowC, skf, {duration:650});
+  stretch(.9, 1.15);
   const k1 = flightKF(path, 0, .5, O, sizeAt, POSES.rail.h, 0, 90);
   actor.style.transform = k1[k1.length - 1].transform;
   await aw(anim(actor, k1, {duration:325, easing:'linear'}));
-  S.pose = landPose; sp.src = asset(landPose); applyPoseGeom(landPose); flipEl.style.transform = 'scaleX(-1)';
+  const ap = o.apex ? o.apex() : null;
+  S.pose = landPose; swapSrc(landPose); flipEl.style.transform = 'scaleX(-1)';
   const k2 = flightKF(path, .5, 1, O, sizeAt, h1, 90, 180);
   actor.style.transform = k2[k2.length - 1].transform;
   await aw(anim(actor, k2, {duration:325, easing:'linear'}));
   setFacing(1); placeActor(to.x, to.y);
-  sfx('thud'); burst('dust', to.x, to.y - 3, 26); burst('twinkle', to.x, to.y - h1 * .6, 6);
-  await anim(sqEl, [{transform:'scale(1.14,.82)'}, {transform:'scale(.94,1.08)'}, {transform:'scale(1,1)'}], {duration:200, easing:'steps(3,end)'});
+  landFx(to.x, to.y);
+  await landSquash();
+  if (ap) await ap;
+  if (S.mobile){ const hm = home(); if (hm.y !== S.ay) placeActor(hm.x, hm.y); }
 }
-/* Abgang: winken, zurück in die Leiste */
+/* 404: Sprung aus dem Bild auf der Seite (Fußpunkt unten Mitte), Pose bleibt das Schulterzucken */
+async function leapFromImg(im, pose, o){
+  o = o || {};
+  if (!im || S.reduced || still()){ if (im) im.style.visibility = 'hidden'; return poofIn(pose, o); }
+  await ready(pose);
+  const r = vr(im), from = {x:r.x + r.w / 2, y:r.y + r.h};
+  S.pose = pose; swapSrc(pose); setFacing(1); showActor(true); im.style.visibility = 'hidden';
+  const to = home(), h0 = r.h || 210, h1 = drawnH(pose);
+  actor.style.transform = `translate3d(${R(from.x)}px,${R(from.y)}px,0) scale(${(h0 / h1).toFixed(3)})`;
+  placeShadow(to.x, to.y, true);
+  const O = {x:to.x, y:to.y - 100}, path = arcPath(from, to, 70, 0), sizeAt = t => ({H:h0 + (h1 - h0) * t, z:0});
+  await anim(sqEl, [{transform:'scale(1.08,.9)'}, {transform:'scale(1.08,.9)'}], {duration:160});
+  stretch(.9, 1.15); sfx('whoosh');
+  const kf = flightKF(path, 0, 1, O, sizeAt, h1, 0, 0);
+  actor.style.transform = kf[kf.length - 1].transform;
+  const ap = o.apex ? setTimeout(o.apex, 260) : 0;
+  await aw(anim(actor, kf, {duration:520, easing:'linear'}));
+  clearTimeout(ap);
+  placeActor(to.x, to.y); landFx(to.x, to.y); await landSquash();
+}
+/* Abgang: zwei Hüpfer, Notenzeichen, Absprung zurück in die Leiste */
 async function leapBack(){
   const rs = railSprite();
   if (!rs || S.reduced){ await poofOut(); return; }
+  await paperTurn(1);
+  emote('note', 900); sfx('chime2');
+  await hop(6, 160); await hop(6, 160);
   const rr = vr(rs), to = {x:rr.x + rr.w / 2, y:rr.y + rr.h}, from = {x:S.ax, y:S.ay};
   useRail(rs);
-  await anim(sqEl, [{transform:'rotate(0deg)'}, {transform:'rotate(-7deg)'}, {transform:'rotate(6deg)'}, {transform:'rotate(-7deg)'}, {transform:'rotate(6deg)'}, {transform:'rotate(0deg)'}], {duration:700, easing:'steps(5,end)'});
   const cur = S.pose, h1 = drawnH(cur), h0 = rr.h;
-  burst('dust', from.x, from.y - 3, 16);
-  await anim(sqEl, [{transform:'scale(1.1,.85)'}, {transform:'scale(1,1)'}], {duration:120, easing:'steps(2,end)'});
+  groundDust(from.x, from.y, 4);
+  stretch(.92, 1.12);
   const O = {x:from.x, y:from.y - 100}; stage.style.perspectiveOrigin = `${O.x}px ${O.y}px`;
   const path = arcPath(from, to, 50, S.mobile ? 40 : 70);
   const sizeAt = t => { const e = 1 - (1 - t) * (1 - t); return {H:h1 + (h0 - h1) * e, z:-300 * e}; };
@@ -421,84 +705,95 @@ async function leapBack(){
   const k1 = flightKF(path, 0, .5, O, sizeAt, h1, 0, 90);
   actor.style.transform = k1[k1.length - 1].transform;
   await anim(actor, k1, {duration:325, easing:'linear'});
-  S.pose = 'rail'; sp.src = asset('rail'); applyPoseGeom('rail'); flipEl.style.transform = 'scaleX(-1)';
+  S.pose = 'rail'; sp.src = asset('rail'); applyPoseGeom('rail'); faceFor('rail'); flipEl.style.transform = 'scaleX(-1)';
   const k2 = flightKF(path, .5, 1, O, sizeAt, POSES.rail.h, 90, 180);
   actor.style.transform = k2[k2.length - 1].transform;
   await anim(actor, k2, {duration:325, easing:'linear'});
   shadowC.getAnimations().forEach(a => a.cancel());
   showActor(false); setFacing(1);
-  burst('twinkle', to.x, to.y - 20, 8);
-  await anim(rs, [{transform:'scale(.6)', opacity:0}, {transform:'scale(1)', opacity:1}], {duration:300, easing:'steps(3,end)'});
+  /* die Leiste fängt ihn auf: kurzer Plopp und vier Staubzellen */
+  sfx('pop'); groundDust(to.x, to.y, 4);
+  await anim(rs, [{transform:'translateY(0) scale(1)'}, {transform:'translateY(2px) scale(1.1,.88)'}, {transform:'translateY(0) scale(1)'}], {duration:240, easing:'steps(3,end)'});
 }
-async function poofIn(pose){
-  if (S.mobile && !S.reduced && !S.classic){
-    const to = home(); S.pose = 'sketch'; sp.src = asset('sketch'); applyPoseGeom('sketch');
-    setFacing(1); showActor(true); placeActor(-90, to.y); sfx('pop');
-    await walkTo(to.x); box.classList.remove('away');
-    burst('twinkle', S.ax, S.ay - 60, 6);
-    if (pose !== 'sketch') await aw(setPose(pose));
-    return;
-  }
+async function poofIn(pose, o){
+  o = o || {};
+  await ready(pose);
   const to = home(); showActor(true); setFacing(1); placeActor(to.x, to.y);
-  S.pose = pose; sp.src = asset(pose); applyPoseGeom(pose);
-  burst('dust', to.x, to.y - 20, 26); burst('twinkle', to.x, to.y - 60, 8); sfx('pop');
-  if (S.reduced) return anim(actor, [{opacity:0}, {opacity:1}], {duration:150});
-  return anim(ppEl, [{transform:'scale(.6)', opacity:0}, {transform:'scale(1)', opacity:1}], {duration:450, easing:'steps(4,end)'});
+  S.pose = pose; swapSrc(pose);
+  if (o.apex) o.apex();
+  if (S.reduced || still()) return anim(actor, [{opacity:0}, {opacity:1}], {duration:150});
+  groundDust(to.x, to.y, 8); burst('twinkle', headPoint().x, headPoint().y, 4); sfx('pop');
+  return anim(ppEl, [{transform:'translateY(-14px) scale(.9,1.1)', opacity:0}, {transform:'translateY(0) scale(1.1,.9)', opacity:1, offset:.6}, {transform:'scale(1)', opacity:1}], {duration:240, easing:'steps(4,end)'});
 }
 async function poofOut(){
   if (!S.out) return;
-  burst('dust', S.ax, S.ay - 20, 22);
-  if (!S.reduced) await anim(ppEl, [{transform:'scale(1)', opacity:1}, {transform:'scale(.5)', opacity:0}], {duration:240, easing:'steps(3,end)', fill:'forwards'});
+  if (!S.reduced && !still()){ groundDust(S.ax, S.ay, 6); await anim(ppEl, [{transform:'scale(1)', opacity:1}, {transform:'scale(.5)', opacity:0}], {duration:200, easing:'steps(3,end)', fill:'forwards'}); }
   else await anim(actor, [{opacity:1}, {opacity:0}], {duration:150});
   ppEl.getAnimations().forEach(a => a.cancel());
   showActor(false);
 }
-async function walkTo(x){
-  x = R(x); const dx = x - S.ax; if (!dx) return;
+/* Gehen als Schrittfolge: Kontakt, Schwebe, Kontakt; 3-px-Raster, Ausholen vorher, Nachfedern danach */
+async function walkTo(x, o){
+  o = o || {};
+  if (PROP[S.pose] || S.pose === 'coffee' || S.pose === 'chest' || S.pose === 'rail') await aw(setPose('sketch', {dust:false}));
+  x = clampMx(x); const dx = x - S.ax; if (Math.abs(dx) < 3) return;
   if (S.reduced){ placeActor(x, S.ay); return; }
-  await paperTurn(dx > 0 ? 1 : -1);
-  actor.classList.add('walk'); box.classList.add('away');
-  const dur = Math.abs(dx) / .26, steps = Math.max(2, R(Math.abs(dx) / 3));
-  const k = S.mobile ? 3 : 4;
-  anim(shadowC, [{transform:`translate(${R(S.ax - 15 * k)}px,${R(S.ay - 2.5 * k - 1)}px)`}, {transform:`translate(${R(x - 15 * k)}px,${R(S.ay - 2.5 * k - 1)}px)`}], {duration:dur, easing:`steps(${steps},end)`});
-  const dustE = emitter('dust', () => { const m = new DOMMatrixReadOnly(getComputedStyle(actor).transform); return {x:m.m41 - 10 * Math.sign(dx), y:S.ay - 2}; }, .25);
-  await anim(actor, [{transform:`translate3d(${S.ax}px,${S.ay}px,0)`}, {transform:`translate3d(${x}px,${S.ay}px,0)`}], {duration:dur, easing:`steps(${steps},end)`});
+  const dir = Math.sign(dx);
+  await paperTurn(dir);
+  actor.classList.add('walk'); if (!o.keepBox) box.classList.add('away');
+  const speed = (S.mobile ? 170 : 220) * (o.fast ? 2 : 1), stepMs = o.fast ? 120 : 180, stepPx = speed * stepMs / 1000;
+  S.walkStop = null;
+  await anim(sqEl, [{transform:`skewX(${4 * dir}deg) scale(1.03,.97)`}, {transform:`skewX(${4 * dir}deg) scale(1.03,.97)`}], {duration:80});
+  let cx = S.ax, i = 0;
+  try {
+    while (dir > 0 ? cx < x : cx > x){
+      if (S.walkStop != null) break;
+      const nx = dir > 0 ? Math.min(x, cx + stepPx) : Math.max(x, cx - stepPx), sk = (i % 2 ? 3 : -3) * dir;
+      const from = `translate3d(${R(cx)}px,${S.ay}px,0)`, to = `translate3d(${R(nx)}px,${S.ay}px,0)`;
+      actor.style.transform = to; shadowC.style.transform = shadowXY(nx, S.ay);
+      const n = Math.max(1, R(Math.abs(nx - cx) / 3));
+      anim(shadowC, [{transform:shadowXY(cx, S.ay)}, {transform:shadowXY(nx, S.ay)}], {duration:stepMs, easing:`steps(${n},end)`});
+      anim(sqEl, [{transform:`scale(1.04,.95) skewX(${sk}deg)`}, {transform:`translateY(-4px) scale(.98,1.03) skewX(${sk}deg)`, offset:.5}, {transform:`scale(1.04,.95) skewX(${sk}deg)`}], {duration:stepMs, easing:'steps(3,end)'});
+      await anim(actor, [{transform:from}, {transform:to}], {duration:stepMs, easing:`steps(${n},end)`});
+      cx = nx; S.ax = R(cx); i++;
+      groundDust(cx - dir * 10, S.ay, 3, -dir); sfx('step', i);
+    }
+  } finally { actor.classList.remove('walk'); }
   if (S.walkStop != null){ x = S.walkStop; S.walkStop = null; }
-  stopEmitter(dustE); actor.classList.remove('walk');
   placeActor(x, S.ay); if (S.mobile) S.mx = x;
+  await anim(sqEl, [{transform:`translateX(${3 * dir}px) skewX(${-2 * dir}deg)`}, {transform:'none'}], {duration:100, easing:'steps(2,end)'});
 }
-/* Handy: zu einem Ziel auf der Sheet-Kante laufen. Schwere Posen (Kurator, Maßband, PC, Truhe) gehen als Skizze und
-   wechseln am Ziel zurück, damit nicht die ganze Szene über den Bildschirm rutscht. */
+/* Handy: zu einem Ziel auf der Sheet-Kante laufen. Requisiten-Posen gehen als Skizze und wechseln am Ziel zurück. */
 const HEAVY = {curator:1, measure:1, pc:1, chest:1, coffee:1};
 async function stroll(x, o){
   o = o || {};
   if (!S.mobile || !S.out || S.reduced || S.classic) return false;
   const keep = S.pose, tx = clampMx(x, o.pose || keep);
   if (Math.abs(tx - S.ax) < 24) return false;
-  if (HEAVY[keep]) await aw(setPose('sketch', {dust:false}));
+  if (HEAVY[keep] && keep !== 'curator') await aw(setPose('sketch', {dust:false}));
   await walkTo(tx); box.classList.remove('away');
   if (o.face) await paperTurn(o.face);
-  if (HEAVY[keep] && o.back !== false) await aw(setPose(keep));
+  if (HEAVY[keep] && o.back !== false && S.pose !== keep) await aw(setPose(keep));
   return true;
 }
-/* Handy, Leerlauf: ein kurzer Rundgang über den Bildschirm. Jede Eingabe hält ihn sofort an (wake). */
+/* Handy, Leerlauf: einmal pro Seite ein kurzer Rundgang. Jede Eingabe hält ihn sofort an (wake). */
 async function patrol(){
-  S.patrolling = true;
+  S.patrolling = true; S.patrolDone = true;
   try {
     const x0 = S.ax, lo = clampMx(0, 'sketch'), hi = clampMx(vpW(), 'sketch');
     const far = (hi - S.ax) >= (S.ax - lo) ? hi - R((hi - S.ax) * .2) : lo + R((S.ax - lo) * .2);
-    if (HEAVY[S.pose]) await aw(setPose('sketch', {dust:false}));
+    if (HEAVY[S.pose]) await setPose('sketch', {dust:false});
     if (!S.patrolling) return;
-    await walkTo(far); box.classList.remove('away');
+    await walkTo(far, {keepBox:true});
     if (!S.patrolling) return;
-    emote('?', 1000); await w(1200);
+    emote('?', 1000); await sleep(1200);
     if (!S.patrolling) return;
-    await paperTurn(-S.facing); await w(700);
+    await paperTurn(-S.facing); await sleep(700);
     if (!S.patrolling) return;
-    await walkTo(x0); box.classList.remove('away');
+    await walkTo(x0, {keepBox:true});
     if (!S.patrolling) return;
     await paperTurn(1);
-  } finally { S.patrolling = false; }
+  } catch (e) { if (e !== ABORT) throw e; } finally { S.patrolling = false; }
 }
 
 /* ---------- Laser, Spotlight, Questmarker ---------- */
@@ -508,11 +803,12 @@ function clearLaser(){ laserEls.forEach(e => e.remove()); laserEls = []; }
 const GROUP_W = 660;
 function overlapsGroup(r){ return r.x < S.ox + GROUP_W + 12 && r.x + r.w > S.ox - 12; }
 function groupTop(){
-  const bh = Math.max(boxOn() ? box.offsetHeight : 0, S.mobile ? R(vpH() * .42) : 260) + (S.mobile ? 0 : 24);
+  /* Reserve: die Box wächst nach dem Zeigen meist noch um Zeilen und Knöpfe */
+  const bh = Math.max(boxOn() ? box.offsetHeight : 0, S.mobile ? R(vpH() * .42) : 340) + (S.mobile ? 0 : 24);
   const ah = S.out && !S.classic ? drawnH(S.pose) + 8 : 0;
   return S.mobile ? vpH() - S.lift - bh - ah : vpH() - S.lift - 24 - Math.max(bh, ah);
 }
-function reveal(el){
+function reveal(el, smooth){
   const r = vr(el), top = headerBottom() + 44;
   let bottom = vpH() - S.lift - 40;
   if (S.mobile || overlapsGroup(r)) bottom = Math.min(bottom, groupTop() - 12);
@@ -523,9 +819,13 @@ function reveal(el){
     /* Kurze Seite: unten Platz schaffen, damit sich das Ziel über Mönch und Box schieben lässt */
     const room = d.documentElement.scrollHeight - vpH() - scrollY;
     if (dy > room){ S.padX = (S.padX || 0) + R(dy - room) + 8; sheetCheck(); }
-    window.scrollBy(0, R(dy));
+    window.scrollBy({top:R(dy), behavior:smooth && !S.reduced ? 'smooth' : 'auto'});
+    return true;
   }
+  return false;
 }
+/* Oberkante eines Bereichs knapp unter den Header holen (Produktseite: Titel und Preis bleiben sichtbar) */
+function scrollTopTo(el){ if (!el) return; const r = el.getBoundingClientRect(), t = headerBottom() + 12; if (Math.abs(r.top - t) > 24) window.scrollBy(0, R(r.top - t)); }
 function aimPoint(r){
   let x = r.x + r.w / 2, y = r.y + r.h / 2;
   if (boxOn() && !S.mobile){
@@ -552,22 +852,25 @@ function aimBeam(beam, hp){
   segs.forEach((s, i) => { s.style.left = R(i * L / 4) + 'px'; s.style.width = Math.ceil(L / 4) + 'px'; });
   return segs;
 }
-const folded = () => anim(box, [{transform:'scale(1,1)', opacity:1}, {transform:'scale(1,.05)', opacity:1, offset:.6}, {transform:'scale(.2,.05)', opacity:0}], {duration:200, easing:'steps(4,end)', fill:'forwards'});
-const unfolded = () => anim(box, [{transform:'scale(.2,.05)', opacity:0}, {transform:'scale(1,.05)', opacity:1, offset:.45}, {transform:'scale(1,1)', opacity:1}], {duration:220, easing:'steps(5,end)'});
+/* Box faltet sich zur Spitze ihres Zipfels und wieder auf */
+const FOLD = [{transform:'scale(1,1)', opacity:1}, {transform:'scale(1,.05)', opacity:1, offset:.6}, {transform:'scale(.2,.05)', opacity:0}];
+const folded = () => anim(box, FOLD, {duration:200, easing:'steps(4,end)', fill:'forwards'});
+const unfolded = () => anim(box, FOLD.slice().reverse().map((k, i) => Object.assign({}, k, {offset:[0, .45, 1][i]})), {duration:220, easing:'steps(5,end)'});
 /* Ältere Zeilen weg, damit die Box beim Zeigen kurz bleibt */
-function trimLines(){ if (S.classic || !bbody) return; const ls = $$('.smmk-line, .smmk-echo', bbody); ls.slice(0, -1).forEach(n => n.remove()); }
+function trimLines(){ if (S.classic || S.typed || !bbody) return; const ls = $$('.smmk-line, .smmk-echo, .smmk-src', bbody); ls.slice(0, -1).forEach(n => n.remove()); }
 /* Desktop: Liegt das Ziel hinter Mönch und Box, wechseln beide auf die andere Seite, wenn es dort frei ist */
 function sideOx(right){ if (!right) return 0; const ts = tsRect(), lim = ts ? ts.left - 16 : vpW() - 24; return Math.max(0, R(lim - 650)); }
 function setOx(ox){ S.ox = ox; stage.style.setProperty('--ox', ox + 'px'); }
+/* Seitenwechsel: Box falten, im Laufschritt hinüber, Box daneben wieder aufklappen */
 async function moveSide(ox){
   if (ox === S.ox) return;
-  if (!S.out || S.reduced){ setOx(ox); if (S.out){ const hm = home(); placeActor(hm.x, hm.y); } if (trayEl.style.display !== 'none') placeTray(); return; }
+  if (!S.out || S.reduced || S.classic){ setOx(ox); if (S.out){ const hm = home(); placeActor(hm.x, hm.y); } if (trayEl.style.display !== 'none') placeTray(); return; }
   const showBox = boxOn() && box.style.visibility !== 'hidden';
   if (showBox){ await aw(folded()); box.style.visibility = 'hidden'; }
-  const pose = S.pose;
-  try { await aw(poofOut()); setOx(ox); await aw(poofIn(pose)); }
-  finally { if (showBox){ box.getAnimations().forEach(a => a.cancel()); box.style.visibility = ''; } }
+  try { await walkTo(24 + 88 + ox, {fast:true}); setOx(ox); const hm = home(); placeActor(hm.x, hm.y); await paperTurn(1); }
+  finally { if (showBox){ box.getAnimations().forEach(a => a.cancel()); box.style.visibility = ''; } box.classList.remove('away'); }
   if (showBox) await aw(unfolded());
+  if (trayEl.style.display !== 'none') placeTray();
 }
 async function dodge(el){
   if (S.mobile || !el) return;
@@ -586,16 +889,29 @@ async function laserAt(el, o){
   duckCheck();
 }
 function duckCheck(){ if (spotState && S.avoid && spriteHits(S.avoid)) duck(true); }
+/* Pixelstern an der Stabspitze beim Aufladen */
+function flashStar(p){
+  const s = h('div', 'smmk-flash'); s.setAttribute('aria-hidden', 'true'); s.style.transform = `translate(${R(p.x - 3)}px,${R(p.y - 3)}px)`; stage.append(s);
+  setTimeout(() => s.remove(), 120);
+}
+/* Einschlag: quadratischer Pixelring, der sich in drei Stufen weitet und verblasst */
+function impactRing(x, y){
+  if (still()) return;
+  const r = h('div', 'smmk-ring'); r.setAttribute('aria-hidden', 'true'); r.style.left = R(x) + 'px'; r.style.top = R(y) + 'px'; stage.append(r);
+  r.animate([{width:'12px', height:'12px', margin:'-6px 0 0 -6px', opacity:1}, {width:'36px', height:'36px', margin:'-18px 0 0 -18px', opacity:0}], {duration:210, easing:'steps(3,end)', fill:'forwards'}).finished.then(() => r.remove(), () => r.remove());
+}
 async function laserCore(el, o){
   const spot = o.spot !== false, dim = o.dim !== false;
   spotOff(); trimLines(); if (o.dodge !== false) await dodge(el); reveal(el); await w(80);
   if (S.mobile && o.walk !== false && !S.calm){
     const r0 = vr(o.aim || el), cx = r0.x + r0.w / 2;
-    await stroll(cx - 44, {face: cx >= S.ax ? 1 : -1});
-    if (S.out && !S.reduced && !S.classic){ const f = cx >= S.ax ? 1 : -1; if (S.facing !== f) await paperTurn(f); }
+    await stroll(cx - 44, {face: cx >= S.ax ? 1 : -1, pose:'curator'});
+    if (S.out && !still()){ const f = cx >= S.ax ? 1 : -1; if (S.facing !== f) await paperTurn(f); }
   }
+  if (S.reduced || S.classic || S.calm || !S.out){ const ap0 = aimPoint(vr(o.aim || el)); if (spot) spotOn(el, {dim:false, stat:true}); return ap0; }
+  /* gezeigt wird immer mit dem Kurator-Stab */
+  if (o.pose !== false && S.pose !== 'curator') await aw(setPose('curator', {dust:false}));
   const ap = aimPoint(vr(o.aim || el)), tx = ap.x, ty = ap.y;
-  if (S.reduced || S.classic || S.calm || !S.out){ if (spot) spotOn(el, {dim:false, stat:true}); return; }
   const hp = handPoint();
   const fold = boxOn() && box.style.visibility !== 'hidden' && crossesBox(hp, ap);
   if (fold){ await aw(folded()); box.style.visibility = 'hidden'; }
@@ -603,33 +919,46 @@ async function laserCore(el, o){
   const beam = h('div', 'smmk-beam'); beam._to = {x:tx, y:ty};
   const fade = () => { if (!beam.isConnected) return; anim(beam, [{opacity:1}, {opacity:0}], {duration:160, easing:'steps(2,end)', fill:'forwards'}).then(() => { beam.remove(); laserEls = laserEls.filter(e => e !== beam); }); };
   try {
+    /* Aufladen: drei Funken laufen zur Stabspitze, ein weißer Stern blitzt */
+    sfx('charge');
+    if (!fxOff()){ [[-18, -10], [14, -16], [-6, 18]].forEach(([dx, dy]) => spawn('conv', hp.x, hp.y, {dx, dy})); fxRun(); }
+    await w(60); flashStar(hp); await w(60);
     const segs = aimBeam(beam, hp);
     stage.append(beam); laserEls.push(beam); sfx('laser');
     burst('sparks', hp.x, hp.y, 6);
     for (const s of segs){ s.style.opacity = 1; await w(55); }
-    burst('sparks', tx, ty, 22); sfx('sparkle');
-    if (spot) spotOn(el, {dim});
-    if (spot || fold){ setTimeout(fade, 350); await w(530); } else setTimeout(fade, Math.min(o.keep || 700, 700));
+    impactRing(tx, ty); burst('sparks', tx, ty, 22); sfx('sparkle');
+    if (spot) await spotOn(el, {dim, iris:true});
+    if (spot || fold){ setTimeout(fade, 350); await w(330); } else setTimeout(fade, Math.min(o.keep || 700, 700));
   } catch (e){ beam.remove(); if (fold) unfold(); throw e; }
   if (fold){ unfold(); await aw(unfolded()); }
+  return ap;
 }
+/* Spotlight: Blende zieht sich in vier Stufen vom Dreifachen auf das Ziel zusammen, das Abdunkeln kommt in zwei Stufen */
 function spotOn(el, o){
   o = o || {}; spotOff();
   const r = vr(el), pad = 8, top = o.marker ? 40 : pad;
   const x = R(r.x - pad), y = R(r.y - top), wd = R(r.w + pad * 2), ht = R(r.h + pad + top);
-  /* Ecken folgen dem Ziel: dessen Radius plus Abstand */
   const br = getComputedStyle(el).borderTopLeftRadius || '0', bv = parseFloat(br) || 0, tr = /%/.test(br) ? Math.min(r.w, r.h) * bv / 100 : bv;
   spotEl.style.setProperty('--r', R(Math.min(tr + pad, Math.min(wd, ht) / 2)) + 'px');
   Object.assign(spotEl.style, {display:'block', left:x + 'px', top:y + 'px', width:wd + 'px', height:ht + 'px'});
-  spotEl.classList.toggle('flat', o.dim === false || S.mobile);
+  const flat = o.dim === false || S.mobile;
+  spotEl.classList.toggle('flat', flat);
   spotEl.classList.toggle('static', !!o.stat || S.reduced);
-  spotState = {el, t:performance.now()};
+  spotState = {el, t:now()};
+  if (!o.iris || still()) return Promise.resolve();
+  const k0 = {left:R(x - wd) + 'px', top:R(y - ht) + 'px', width:wd * 3 + 'px', height:ht * 3 + 'px'}, k1 = {left:x + 'px', top:y + 'px', width:wd + 'px', height:ht + 'px'};
+  if (!flat){ k0.boxShadow = '0 0 0 9999px rgba(11,12,14,.2)'; k1.boxShadow = '0 0 0 9999px rgba(11,12,14,.45)'; }
+  return anim(spotEl, [k0, k1], {duration:200, easing:'steps(4,end)'});
 }
-function spotOff(){ if (!spotEl) return; spotEl.style.display = 'none'; spotState = null; }
+function spotOff(){ if (!spotEl) return; spotEl.getAnimations().forEach(a => a.cancel()); spotEl.style.display = 'none'; spotState = null; }
+/* Questmarker fällt aus 40 px und federt zweimal nach */
 function markerOn(el){
   qmTarget = el; qmEl.classList.add('on'); placeMarker();
   qmEl.getAnimations().forEach(a => a.cancel());
-  if (!S.reduced) qmEl.animate([{marginTop:'0px'}, {marginTop:'-8px'}], {duration:300, iterations:Infinity, direction:'alternate', easing:'steps(2,end)'});
+  if (S.reduced) return;
+  qmEl.animate([{marginTop:'-40px'}, {marginTop:'0px', offset:.45}, {marginTop:'-10px', offset:.65}, {marginTop:'0px', offset:.8}, {marginTop:'-3px', offset:.9}, {marginTop:'0px'}], {duration:440, easing:'steps(8,end)'})
+    .finished.then(() => { if (qmTarget === el) qmEl.animate([{marginTop:'0px'}, {marginTop:'-8px'}], {duration:300, iterations:Infinity, direction:'alternate', easing:'steps(2,end)'}); }, () => {});
 }
 function placeMarker(){
   if (!qmTarget) return;
@@ -640,53 +969,82 @@ function placeMarker(){
 function markerOff(){ qmTarget = null; if (qmEl){ qmEl.classList.remove('on'); qmEl.getAnimations().forEach(a => a.cancel()); } }
 
 /* ---------- Dialogbox ---------- */
+function setBoxOpen(on){ box.classList.toggle('on', on); if (on) box.setAttribute('open', ''); else box.removeAttribute('open'); }
+/* Desktop: klappt vom Zipfel aus auf. Handy: Sheet fährt in vier Stufen hoch. */
 function openBox(){
   if (boxOn()) return Promise.resolve();
-  box.classList.add('on'); sheetCheck();
-  if (S.mobile && S.out) placeActor(home().x, home().y);
+  setBoxOpen(true); sheetCheck(); sfx('open');
   if (S.reduced) return anim(box, [{opacity:0}, {opacity:1}], {duration:150});
-  return anim(box, [{transform:'scale(.2,.05)', opacity:0}, {transform:'scale(1,.05)', opacity:1, offset:.45}, {transform:'scale(1,1)', opacity:1}], {duration:260, easing:'steps(5,end)'});
+  if (S.mobile) return anim(box, [{transform:'translateY(100%)'}, {transform:'translateY(0)'}], {duration:200, easing:'steps(4,end)'});
+  return unfolded();
 }
 function closeMenu(refocus){
   menuEl.hidden = true; const mb = $('.smmk-tools [data-tool=menu]', stage); mb.setAttribute('aria-expanded', 'false');
   if (refocus && boxOn()) try { mb.focus({preventScroll:true}); } catch (e) {}
 }
-function closeBox(){ box.classList.remove('on', 'wait', 'away'); closeMenu(false); clearTray(); S.padX = 0; sheetCheck(); }
-function newTurn(echo){
+function closeBox(){ setBoxOpen(false); box.classList.remove('wait', 'away'); box.getAnimations().forEach(a => a.cancel()); box.style.visibility = ''; closeMenu(false); clearTray(); S.padX = 0; sheetCheck(); }
+/* Abgang der Box: faltet sich in den Mönch hinein, statt einfach zu verschwinden */
+async function foldAway(){
+  if (!boxOn()) return;
+  sfx('close');
+  if (!S.reduced && box.style.visibility !== 'hidden') await (S.mobile ? anim(box, [{transform:'translateY(0)'}, {transform:'translateY(100%)'}], {duration:200, easing:'steps(4,end)', fill:'forwards'}) : folded());
+  closeBox();
+}
+/* Neue Runde: Knopf-Runden leeren die Box wie Spieldialoge. Im Tippmodus bleiben die letzten drei Wechsel stehen. */
+let xid = 0;
+function newTurn(echo, o){
+  o = o || {};
   clearTray(); clearLaser(); S.anchor = null; duck(false);
-  if (!S.classic) bbody.innerHTML = '';
+  S.typed = !!o.typed;
+  if (!S.classic){
+    if (S.typed){ xid++; $$('[data-x]', bbody).forEach(n => { if (+n.dataset.x < xid - 2) n.remove(); }); $$(':scope > :not([data-x])', bbody).forEach(n => n.remove()); }
+    else bbody.innerHTML = '';
+  }
   choicesEl.innerHTML = '';
-  if (echo){ const e = h('div', 'smmk-echo'); const s = h('span'); s.textContent = echo; e.append(s); bbody.append(e); }
+  if (echo){ const e = h('div', 'smmk-echo'); const s = h('span'); s.textContent = echo; e.append(s); addNode(e); }
 }
 /* Scrollt den Text ans Ende, außer eine Zeile soll oben stehen bleiben (Handy: Empfehlungen) */
 function scrollBody(){ if (!bbody) return; const a = S.anchor; if (a && a.isConnected){ bbody.scrollTop = Math.max(0, a.getBoundingClientRect().top - bbody.getBoundingClientRect().top + bbody.scrollTop - 6); return; } bbody.scrollTop = bbody.scrollHeight; }
-function addNode(n){ bbody.append(n); scrollBody(); return n; }
+function addNode(n){ if (S.typed) n.dataset.x = xid; bbody.append(n); scrollBody(); return n; }
 let advResolve = null, lineSeq = 0;
 function advanceNow(){ if (advResolve){ const r = advResolve; advResolve = null; r(); } }
+/* Mund und Stimme folgen dem Text: Vokal = offen (mit Ton), Konsonanten im Wechsel, Pausen und Satzzeichen zu */
+const VOWELS = /[aeiouäöüAEIOUÄÖÜ]/;
+function lastVowel(text, i){ for (let j = i + 1; j < text.length; j++){ const c = text[j]; if (VOWELS.test(c)) return false; if ('.!?'.includes(c)) return true; } return true; }
 async function typeInto(el, text){
-  S.typing = true; S.skip = false; talk(true);
+  S.typing = true; S.skip = false;
+  const anim0 = !still() && S.out;
   try {
-    if (S.reduced || S.classic){ el.textContent = text; }
+    if (still()){ el.textContent = text; }
     else {
-      let i = 0;
+      let i = 0, alt = false, lastBounce = 0;
+      const dt = S.fast ? 12 : 20;
       while (i < text.length){
         if (S.skip) break;
         if (S.hidden || S.yield){ await w(120); continue; }
         const ch = text[i++]; el.textContent = text.slice(0, i);
-        if (S.sound && !S.calm && i % 3 === 1) blip(i === 1);
-        let dl = 20; if ('.!?:'.includes(ch)) dl += 150; else if (ch === ',') dl += 70;
+        if (anim0){
+          if (VOWELS.test(ch)){
+            mouth(true); voice(ch.toLowerCase(), lastVowel(text, i - 1));
+            if (now() - lastBounce > 110){ lastBounce = now(); anim(sqEl, [{transform:'scale(1,1)'}, {transform:'scale(1.02,.97)'}], {duration:120, easing:'steps(2,end)'}); }
+          } else if (/[\s.,!?:;„“"()…]/.test(ch)) mouth(false);
+          else { alt = !alt; mouth(alt); }
+          if ('.!?'.includes(ch)) anim(ppEl, [{transform:'translateY(0)'}, {transform:'translateY(2px)'}, {transform:'translateY(0)'}], {duration:160, easing:'steps(2,end)'});
+        }
+        let dl = dt; if ('.!?:'.includes(ch)) dl += 150; else if (ch === ',') dl += 70;
         if (i % 6 === 0) scrollBody();
         await w(dl);
       }
       el.textContent = text;
     }
-  } finally { S.typing = false; talk(false); }
+  } finally { S.typing = false; mouth(false); }
   scrollBody();
 }
 function announce(text){ const p = h('p'); p.textContent = text; srlog.append(p); srlog.removeAttribute('aria-busy'); }
-/* Zeilen: Text oder {t, pose, emote, emoteMs, minMs} */
-async function speak(lines){
-  lines = [].concat(lines);
+/* Zeilen: Text oder {t, pose, emote, emoteMs, minMs}. o.onLast läuft, wenn die letzte Zeile zu tippen beginnt. */
+async function speak(lines, o){
+  o = o || {};
+  lines = [].concat(lines).filter(Boolean);
   for (let i = 0; i < lines.length; i++){
     const L = typeof lines[i] === 'string' ? {t:lines[i]} : lines[i];
     if (L.pose && S.out) await aw(setPose(L.pose));
@@ -698,41 +1056,59 @@ async function speak(lines){
       target = h('p', 'smmk-line'); col.append(target); addNode(row);
     } else target = addNode(h('p', 'smmk-line'));
     target.setAttribute('aria-hidden', 'true');
-    const t0 = performance.now();
+    const t0 = now();
     srlog.setAttribute('aria-busy', 'true');
+    if (i === lines.length - 1 && o.onLast){ const f = o.onLast; o.onLast = null; f(); }
     try { await typeInto(target, L.t); } catch (e){ srlog.removeAttribute('aria-busy'); throw e; }
     announce(L.t);
     target.removeAttribute('aria-hidden'); target.id = 'smmkLn' + (++lineSeq); box.setAttribute('aria-describedby', target.id);
-    if (L.minMs){ const rest = L.minMs - (performance.now() - t0); if (rest > 0) await w(rest); }
+    if (L.minMs){ const rest = L.minMs - (now() - t0); if (rest > 0) await w(rest); }
     if (i < lines.length - 1 && !S.classic && !S.reduced){
       box.classList.add('wait'); S.waitAdv = true;
-      const pause = Math.min(2400, 650 + L.t.length * 16);
+      const pause = Math.min(900, 450 + L.t.length * 8);
       await aw(Promise.race([sleep(pause), new Promise(r => { advResolve = r; })]));
       advResolve = null; S.waitAdv = false; box.classList.remove('wait');
     }
   }
+  if (o.onLast) o.onLast();
+  S.lastInput = now();
 }
-/* Antworten: {l, f} oder {l, href} (Navigation); pri = der eine Hauptweg, link = leiser Ausgang (Ausgänge erkennt EXITS) */
-const EXITS = /^(Was anderes suchen|Mit Mensch sprechen|Danke|Nein danke|Schließen)$/;
+/* Antworten: {l, f} oder {l, href} (Navigation); pri = der eine Hauptweg, link = leiser Ausgang; id = Schritt für die Messung */
+const EXITS = /^(Was anderes suchen|Mit Mensch sprechen|Danke|Nein danke|Schließen|Nein)$/;
+let chFocusT = 0, chDots = false;
 function choices(list, o){
   o = o || {}; const host = o.host || choicesEl;
   choicesEl.innerHTML = ''; host.innerHTML = '';
-  list.forEach(c => {
+  list.filter(Boolean).forEach(c => {
     const lk = c.link || (c.link !== 0 && !c.pri && EXITS.test(c.l));
     const b = h('button', 'smmk-ch' + (lk ? ' lk' : '') + (c.pri ? ' pri' : '')); b.type = 'button'; b.textContent = c.l;
     b.addEventListener('click', () => {
-      if (b.disabled) return; $$('.smmk-ch', host).forEach(x => { x.disabled = true; }); markUsed('deeplink');
-      S.lastInput = performance.now();
+      if (b.disabled) return; $$('.smmk-ch', host).forEach(x => { x.disabled = true; }); markUsed();
+      S.lastInput = now(); TURN++; sfx('confirm');
+      if (S.typing) S.skip = true;
+      if (c.id) push('sm_monk_step', {sm_step:c.id, sm_value:c.v != null ? c.v : c.l});
       if (c.echo !== false) newTurn('Du: ' + c.l); else newTurn();
       go(c.f || (() => navTo(c.href, c.cue, c.say)));
     });
     host.append(b);
   });
+  S.lastInput = now(); chDots = false;
+  host.classList.toggle('many', list.filter(Boolean).length > 8);
   requestAnimationFrame(scrollBody);
-  if (o.focus !== false && list.length){ try { host.firstChild.focus({preventScroll:true}); } catch (e) {} }
+  if (!S.mobile && list.length && boxOn()){ const r = vr(choicesEl); glance(r.x + r.w / 2, 600); }
+  if (o.focus !== false && list.length) focusFirst(host);
+}
+function focusFirst(host){ const b = $('.smmk-ch:not(:disabled)', host || choicesEl); if (b) try { b.focus({preventScroll:true}); } catch (e) {} }
+/* Sprechen und Antworten in einem: Knöpfe erscheinen, sobald die letzte Zeile beginnt, der Fokus springt erst am Ende */
+async function ask(lines, list, o){
+  o = o || {};
+  await speak(lines, {onLast:() => choices(list, Object.assign({}, o, {focus:false}))});
+  if (o.focus !== false) focusFirst(o.host);
 }
 function allChoices(){ return $$('.smmk-choices .smmk-ch', stage); }
 function focusLog(){ try { bbody.focus({preventScroll:true}); } catch (e) {} }
+/* Quelle unter einer Antwort: „Mehr dazu: …“ */
+function sourceLine(src){ if (!src || !src.l) return; const p = h('p', 'smmk-src'); p.append('Mehr dazu: '); if (src.href){ const a = h('a'); a.href = src.href; a.textContent = src.l; p.append(a); } else p.append(src.l); addNode(p); }
 
 /* Handy: Seite bleibt über dem Sheet scrollbar, Trusted-Shops-Badge macht kurz Platz */
 let tsHidden = null;
@@ -741,8 +1117,6 @@ function sheetCheck(){
   padEl.style.height = (sheetCover() + (S.padX || 0)) + 'px';
   const want = S.mobile && boxOn() && !S.yield;
   d.documentElement.classList.toggle('smmk-sheet', want);
-  /* Als Bottom-Sheet ist die Box ein modaler Dialog: so wartet auch das Newsletter-Popup, bis der Mönch fertig ist */
-  box.setAttribute('aria-modal', want ? 'true' : 'false');
   if (want && !tsHidden){ const t = tsEl(); if (t && !/^trustbadge-container/.test(t.id)){ tsHidden = [t, t.style.opacity]; t.style.opacity = '0'; } }
   if (!want && tsHidden){ tsHidden[0].style.opacity = tsHidden[1]; tsHidden = null; }
 }
@@ -750,6 +1124,9 @@ function rideSheet(){
   if (!S.mobile || !S.out || !boxOn()) return;
   if (actor.getAnimations().some(a => a !== rideSheet.a && a.playState === 'running')) return;
   const hm = home(); if (hm.y === S.ay && hm.x === S.ax) return;
+  /* Truhe und Kachel fahren mit der Sheet-Kante mit */
+  const dy = hm.y - S.ay;
+  [propEl, floatTile].forEach(e => { if (!e) return; if (e === propEl) e.style.top = (parseFloat(e.style.top) + dy) + 'px'; else e.style.marginTop = ((parseFloat(e.style.marginTop) || 0) + dy) + 'px'; });
   const from = actor.style.transform; placeActor(hm.x, hm.y); duckCheck();
   laserEls.forEach(b => { if (b.isConnected && b._to) aimBeam(b, handPoint()); });
   if (!S.reduced && !S.hidden && from) rideSheet.a = actor.animate([{transform:from}, {transform:actor.style.transform}], {duration:120, easing:'steps(2,end)'});
@@ -779,74 +1156,102 @@ function placeTray(){
     trayEl.style.setProperty('--cw', g.cw + 'px');
     left = R(br.x + br.w + 26); trayEl.style.bottom = (24 + S.lift) + 'px';
   } else {
-    /* Fenster nach dem Austeilen schmaler geworden: Karten über die Box */
     const tw = n * 150 + (n - 1) * 12; trayEl.style.setProperty('--cw', '150px');
     left = Math.max(12, Math.min(R(br.x), R(g.lim - tw))); trayEl.style.bottom = (24 + S.lift + box.offsetHeight + 22) + 'px';
   }
   trayEl.style.left = left + 'px';
 }
 function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; trayEl.classList.remove('strip'); $$('.smmk-fly', stage).forEach(e => e.remove()); }
+/* Karte fliegt verdeckt aus der Hand und dreht sich im letzten Drittel um */
 function flyOut(el, hp, kfFn, dur){
   const r = vr(el);
   const fly = h('div', 'smmk-fly'); fly.setAttribute('aria-hidden', 'true');
   fly.style.width = R(r.w) + 'px'; fly.style.left = R(r.x) + 'px'; fly.style.top = R(r.y) + 'px';
   fly.style.setProperty('--cw', R(r.w) + 'px');
-  const c = el.cloneNode(true); c.style.opacity = 1; $$('button, a', c).forEach(b => { b.tabIndex = -1; }); fly.append(c); stage.append(fly);
+  const c = el.cloneNode(true); c.style.opacity = 1; c.classList.add('flip'); $$('button, a', c).forEach(b => { b.tabIndex = -1; }); fly.append(c); stage.append(fly);
   const dx = R(hp.x - (r.x + r.w / 2)), dy = R(hp.y - (r.y + r.h / 2));
-  return anim(fly, kfFn(dx, dy), {duration:dur, easing:'cubic-bezier(.2,.8,.3,1)'}).then(() => { el.style.opacity = 1; fly.remove(); return r; });
+  c.animate([{transform:'rotateY(180deg)'}, {transform:'rotateY(180deg)', offset:.7}, {transform:'rotateY(90deg)', offset:.85}, {transform:'rotateY(0deg)'}], {duration:dur, easing:'steps(6,end)'});
+  return anim(fly, kfFn(dx, dy), {duration:dur, easing:'cubic-bezier(.2,.8,.3,1)'}).then(() => {
+    el.style.opacity = 1; fly.remove();
+    /* Landen: leicht schief, in zwei Bildern gerade */
+    if (!still()){ const t = ((Math.random() * 3) - 1.5).toFixed(1); el.animate([{transform:`rotate(${t}deg)`}, {transform:`rotate(${(t / 2).toFixed(1)}deg)`}, {transform:'none'}], {duration:140, easing:'steps(2,end)'}); }
+    return r;
+  });
 }
+/* Wie auf der Seite: ab 1.000 auf Hunderter, ab 100 auf Zehner abgerundet, mit „+“; unter 10 nichts */
 function fmtCount(n){
-  if (n >= 1000) return 'Über ' + (Math.floor(n / 100) * 100).toLocaleString('de-DE') + '-mal bestellt.';
-  if (n >= 100) return 'Über ' + (Math.floor(n / 10) * 10) + '-mal bestellt.';
-  if (n >= 10) return n + '-mal bestellt.';
+  n = +n || 0;
+  if (n >= 1000) return (Math.floor(n / 100) * 100).toLocaleString('de-DE') + '+ Bestellungen';
+  if (n >= 100) return (Math.floor(n / 10) * 10) + '+ Bestellungen';
+  if (n >= 10) return n + ' Bestellungen';
   return '';
 }
-/* Kurzer Grund unter dem Preis (eine Zeile, Mono): echte Bestellzahl, sonst was das Stück ausmacht */
-function whyLine(p){
-  const a = fmtCount(+p.n || 0).replace(/\.$/, '');
-  return a || (p.z ? 'Mit Deinem Text graviert' : 'Direkt bestellbar');
+/* Ein Grund für die Zeile unter dem Preis: Rang in der Kollektion, sonst Bestellzahl, sonst der Wunschtext */
+function whyLine(p, a){
+  if (p.r === 0 || p.r === 1){ const src = p.src || (a && SRC[a.l] && p.ch === a.hs[0] ? SRC[a.l] : p.ct ? '„' + p.ct + '“' : ''); if (src) return `Nr. ${p.r + 1} bei ${src}`; }
+  const c = fmtCount(p.n); if (c) return c;
+  if (p.z) return 'Mit Deinem Wunschtext graviert' + (a && AUD_EX[a.l] ? ', ' + AUD_EX[a.l] : '');
+  return '';
 }
+/* Abzeichen nur, wenn es etwas sagt, das der Grund nicht schon sagt */
+function badgeOf(p, why){ return p.z && !/Wunschtext/.test(why) ? 'Mit Deinem Text' : ''; }
+/* Produkttyp nur, wenn er nicht schon im Titel steht und nicht Standard oder Besonderes Produkt ist */
+function typeOf(p){ const y = String(p.y || '').trim(); if (!y || /^(Standard|Besonderes Produkt)$/i.test(y)) return ''; const t = String(p.t || '').toLowerCase(); return y.split(/[\s-]+/).some(wd => wd.length > 3 && t.includes(wd.toLowerCase())) ? '' : y; }
 /* Wie auf der Seite mit bis zu zwei Stellen, nie aufgerundet; schwache Bewertungen zeigt der Mönch nicht */
 function rating(p){
   const rv = parseFloat(p.rv), rc = +p.rc || 0;
   if (rc < 10 || !rv || rv < 4.5) return '';
   return (Math.floor(rv * 100 + 1e-6) / 100).toLocaleString('de-DE', {minimumFractionDigits:1, maximumFractionDigits:2}) + ' (' + rc + ')';
 }
-const priceTxt = p => (p.q > p.p ? 'ab ' : '') + eur(p.p);
-/* 'ab € 59,00 · ★ 4,95 (63)' */
-function metaHtml(p){ const r = rating(p); return `<span class="smmk-price">${esc(priceTxt(p))}</span>` + (r ? ` · <span class="smmk-star">★</span> ${esc(r)}` : ''); }
+/* Gewählte Größe und Preis: '22,5 cm · € 59,00', sonst ab-Preis */
+function priceHtml(p){
+  if (p.cv && p.cv.l) return `<span class="smmk-price">${esc(fmtSize(p.cv.l))} · ${esc(eur(p.cv.c))}</span>`;
+  return `<span class="smmk-price">${esc((p.q > p.p ? 'ab ' : '') + eur(p.p))}</span>`;
+}
+/* „größer bis“ nur bei Stücken mit Größen: teuerste Größe (je Größe die günstigste Variante) */
+function moreHtml(p){ if (!p.cv || !Array.isArray(p.v)) return ''; const top = Math.max(...p.v.map(v => +v[1])); return top > p.cv.c ? `<small class="smmk-up">größer bis ${esc(eur(top))}</small>` : ''; }
+function metaHtml(p){ const r = rating(p); return priceHtml(p) + (r ? ` · <span class="smmk-star">★</span> ${esc(r)}` : ''); }
+const linkOf = p => p.u + (p.cv && p.cv.id ? '?variant=' + p.cv.id : '');
 function showBtn(p, label){
   const b = h('button', 'smmk-show', (label ? esc(label) + ' ' : '') + ICO.arrow); b.type = 'button';
   b.setAttribute('aria-label', 'Zeig es mir: ' + p.t); b.addEventListener('click', () => showIt(p, b)); return b;
 }
 /* Zeile: Handy und schmale Desktop-Leiste */
-function rowEl(p){
-  const r = h('div', 'smmk-row');
-  r.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="56" height="56"><div><b>${esc(p.t)}</b><small>${metaHtml(p)}</small><small class="smmk-eb">${esc(p.over ? 'Knapp über Budget' : whyLine(p))}</small></div>`;
+function rowEl(p, a){
+  const r = h('div', 'smmk-row'), why = whyLine(p, a);
+  r.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="56" height="56"><div><b>${esc(p.t)}</b><small>${metaHtml(p)}</small>${moreHtml(p)}${why ? `<small class="smmk-eb">${esc(why)}</small>` : ''}</div>`;
   r.append(showBtn(p)); return r;
 }
-/* Karte: Bild, Titel, Preiszeile, Grund, ein Abzeichen, Knopf */
-function cardEl(p){
-  const c = h('div', 'smmk-card');
-  const bdg = p.over ? '<span class="smmk-bdg fav">Knapp über Budget</span>' : (p.z && fmtCount(+p.n || 0)) ? '<span class="smmk-bdg">Mit Deinem Text</span>' : '';
-  c.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="168" height="126"><div class="in"><b class="ti">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span><span class="smmk-eb">${esc(whyLine(p))}</span>${bdg}</div>`;
+/* Karte: Bild, Typ, Titel, Preiszeile, Grund, höchstens ein Abzeichen, Knopf */
+function cardEl(p, a){
+  const c = h('div', 'smmk-card'), why = whyLine(p, a), bdg = badgeOf(p, why), ty = typeOf(p);
+  c.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="168" height="126"><div class="in">${ty ? `<span class="smmk-ty">${esc(ty)}</span>` : ''}<b class="ti">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span>${moreHtml(p)}${why ? `<span class="smmk-eb">${esc(why)}</span>` : ''}${bdg ? `<span class="smmk-bdg">${esc(bdg)}</span>` : ''}</div>`;
   $('.in', c).append(showBtn(p, 'Zeig es mir')); return c;
 }
-async function dealCards(items){
-  items.forEach(p => S.shown.add(p.h));
+/* Zeigt der Besucher auf eine Karte, schaut der Mönch hin; eine Glühbirne höchstens einmal je Karte */
+function cardHover(el){
+  const on = () => { el.classList.add('hov'); if (S.mobile || !S.out || S.busy && S.anims) return; const r = vr(el); glance(r.x + r.w / 2, 1200); if (!el._bulb){ el._bulb = 1; emote('bulb', 900); } };
+  const off = () => el.classList.remove('hov');
+  el.addEventListener('pointerenter', on); el.addEventListener('pointerleave', off);
+  el.addEventListener('focusin', on); el.addEventListener('focusout', off);
+}
+const flick = () => anim(sqEl, [{transform:'none'}, {transform:'skewX(-6deg) translateX(4px)'}, {transform:'none'}], {duration:160, easing:'steps(2,end)'});
+async function dealCards(items, a, list){
+  items.forEach(p => S.shown.add(p.h)); S.dealt = true;
   ssUpd({recs:Array.from(new Set((SS.recs || []).concat(items.map(p => p.h)))).slice(-24)});
+  ecomm('view_item_list', list || ((a ? a.l : 'hier') + '|' + (S.budget || '')), items);
   if (S.mobile){
     const wrap = addNode(h('div', 'smmk-rows'));
-    const els = items.map(p => { const r = rowEl(p); r.style.opacity = 0; wrap.append(r); return r; });
+    const els = items.map(p => { const r = rowEl(p, a); r.style.opacity = 0; wrap.append(r); cardHover(r); return r; });
     addNode(h('p', 'smmk-taxl', TAXL));
-    /* Die Leitzeile und die erste Empfehlung bleiben oben im Sheet sichtbar */
     const lead = $$('.smmk-line', bbody).pop(); S.anchor = lead || wrap;
     scrollBody(); rideSheet();
     const hp = handPoint(), flights = [];
     for (const r of els){
       sfx('deal');
-      if (S.reduced || S.classic || !S.out){ r.style.opacity = 1; continue; }
-      flights.push(flyOut(r, hp, (dx, dy) => [{transform:`translate(${dx}px,${dy}px) scale(.2) rotate(-12deg)`, opacity:0}, {transform:`translate(${R(dx * .85)}px,${R(dy * .85)}px) scale(.3) rotate(-10deg)`, opacity:1, offset:.1}, {transform:'none', opacity:1}], 420).then(rr => burst('sparks', rr.x + 30, rr.y + rr.h / 2, 8)));
+      if (still() || !S.out){ r.style.opacity = 1; continue; }
+      flick();
+      flights.push(flyOut(r, hp, (dx, dy) => [{transform:`translate(${dx}px,${dy}px) scale(.2)`, opacity:0}, {transform:`translate(${R(dx * .85)}px,${R(dy * .85)}px) scale(.3)`, opacity:1, offset:.1}, {transform:'none', opacity:1}], 420).then(rr => burst('sparks', rr.x + 30, rr.y + rr.h / 2, 8)));
       await w(120);
     }
     await aw(Promise.all(flights)); await w(150); return;
@@ -856,12 +1261,13 @@ async function dealCards(items){
   trayEl.classList.toggle('strip', strip);
   trayEl.innerHTML = '<div class="tcards"></div><p class="smmk-taxl">' + TAXL + '</p>'; trayEl.style.display = 'flex';
   const cards = $('.tcards', trayEl);
-  const els = items.map(p => { const c = strip ? rowEl(p) : cardEl(p); c.style.opacity = 0; cards.append(c); return c; });
+  const els = items.map(p => { const c = strip ? rowEl(p, a) : cardEl(p, a); c.style.opacity = 0; cards.append(c); cardHover(c); return c; });
   placeTray(); const flights = [];
   for (const c of els){
     sfx('deal');
-    if (S.reduced || S.classic || !S.out){ c.style.opacity = 1; continue; }
-    flights.push(flyOut(c, hp, (dx, dy) => [{transform:`translate(${dx}px,${dy}px) scale(.15) rotate(-24deg)`, opacity:0}, {transform:`translate(${R(dx * .88)}px,${R(dy * .88 - 12)}px) scale(.24) rotate(-18deg)`, opacity:1, offset:.1}, {transform:`translate(${R(dx * .35)}px,${R(dy * .35 - 40)}px) scale(.7) rotate(8deg)`, opacity:1, offset:.55}, {transform:'none', opacity:1}], 480).then(r => burst('sparks', r.x + r.w / 2, r.y + 30, 10)));
+    if (still() || !S.out){ c.style.opacity = 1; continue; }
+    flick();
+    flights.push(flyOut(c, hp, (dx, dy) => [{transform:`translate(${dx}px,${dy}px) scale(.15)`, opacity:0}, {transform:`translate(${R(dx * .88)}px,${R(dy * .88 - 12)}px) scale(.24)`, opacity:1, offset:.1}, {transform:`translate(${R(dx * .35)}px,${R(dy * .35 - 40)}px) scale(.7)`, opacity:1, offset:.55}, {transform:'none', opacity:1}], 480).then(r => burst('sparks', r.x + r.w / 2, r.y + 30, 10)));
     await w(120);
   }
   await aw(Promise.all(flights)); await w(150);
@@ -869,15 +1275,21 @@ async function dealCards(items){
 
 /* ---------- Produktdaten (gleiche Herkunft, ohne Backend) ---------- */
 const COLL = {};
+const collUrl = (hd, pg) => '/collections/' + encodeURIComponent(hd) + '?view=moench&sort_by=best-selling' + (pg ? '&page=' + pg : '');
+const getJson = u => fetch(u, {credentials:'same-origin'}).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+/* Mehr als 60 Stücke: Seite 2 dazu (höchstens zwei Seiten) */
 function fetchColl(hd){
-  if (!COLL[hd]) COLL[hd] = fetch('/collections/' + encodeURIComponent(hd) + '?view=moench&sort_by=best-selling', {credentials:'same-origin'})
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  if (!COLL[hd]) COLL[hd] = getJson(collUrl(hd))
+    .then(j => (+j.n > 60 && Array.isArray(j.p)) ? getJson(collUrl(hd, 2)).then(j2 => Object.assign(j, {p:j.p.concat(Array.isArray(j2.p) ? j2.p : [])})).catch(() => j) : j)
     .catch(e => { delete COLL[hd]; throw e; });
   return COLL[hd];
 }
 async function loadPool(handles){
   const res = await Promise.allSettled(handles.map(fetchColl)), seen = new Map();
-  res.forEach(r => { if (r.status !== 'fulfilled' || !r.value || !Array.isArray(r.value.p)) return; r.value.p.forEach((p, i) => { const o = seen.get(p.h); if (!o || i < o.pos) seen.set(p.h, Object.assign({}, p, {pos:i})); }); });
+  res.forEach((r, k) => {
+    if (r.status !== 'fulfilled' || !r.value || !Array.isArray(r.value.p)) return;
+    r.value.p.forEach((p, i) => { const o = seen.get(p.h); if (!o || i < o.pos) seen.set(p.h, Object.assign({}, p, {pos:i, ct:r.value.ti || '', ch:handles[k], r:p.r != null ? +p.r : null})); });
+  });
   if (!seen.size && res.every(r => r.status === 'rejected')) throw new Error('keine Daten');
   return Array.from(seen.values()).filter(p => p.p > 0 && p.i && !HELPER_HANDLE.test(p.h) && !HELPER_TYPE.test(p.y || '') && !(HIDE_INTERNAL_TAG && p.ip));
 }
@@ -890,30 +1302,49 @@ function diverse(L, n){
 }
 /* Schwach bewertete Stücke (unter 4 Sternen bei mindestens 5 Bewertungen) rutschen ans Ende */
 const weak = p => (+p.rc || 0) >= 5 && parseFloat(p.rv) > 0 && parseFloat(p.rv) < 4;
-function pick(pool, budget){
-  const cap = budget === '30' ? 3000 : budget === '60' ? 6000 : Infinity;
-  const L = pool.filter(p => !S.shown.has(p.h)).sort((a, b) => (weak(a) - weak(b)) || (b.n - a.n) || (a.pos - b.pos));
-  let inB = L.filter(p => p.p <= cap), tier = 'ok';
-  /* "darf mehr sein": zuerst Stücke ab über 60 €. Gibt es die kaum, die Favoriten ohne Preisgrenze, ehrlich angesagt. */
-  if (budget === 'mehr'){ const hi = L.filter(p => p.p > 6000); if (hi.length >= 2) inB = hi; else tier = 'few'; }
-  let items = diverse(inB, 3);
-  if (items.length < 2 && cap !== Infinity){
-    const near = L.filter(p => p.p > cap && p.p <= cap * 1.2).map(p => Object.assign({}, p, {over:1}));
-    items = diverse(inB.concat(near), 3); tier = 'near';
-  }
-  if (items.length < 2) return {tier:'none', items:[]};
-  return {tier, items};
+/* Preisbänder. Ein Stück passt über seine Größen: gewählt wird die teuerste verfügbare Größe im Band. */
+const BANDS = {b15:{l:'bis 15 €', lo:0, hi:1500, s:'bis 15 €'}, b30:{l:'15 bis 30 €', lo:1500, hi:3000, s:'zwischen 15 und 30 €'},
+  b60:{l:'30 bis 60 €', lo:3000, hi:6000, s:'zwischen 30 und 60 €'}, b60p:{l:'über 60 €', lo:6000, hi:Infinity, s:'über 60 €'}};
+const OLDB = {'30':'b30', '60':'b60', mehr:'b60p'};
+const bandOf = b => typeof b === 'object' && b ? b : BANDS[OLDB[b] || b] || null;
+/* Unter 10 € (Anstecker, Aufnäher): nie auf einem Geschenkplatz, nur als „Kleinigkeit dazu?“ */
+const isMini = p => p.p < 1000;
+const variantsOf = p => (Array.isArray(p.v) && p.v.length) ? p.v.map(v => ({id:v[0], c:+v[1], l:v[2]})) : [{id:0, c:+p.p, l:''}];
+function fitOf(p, b){
+  const B = bandOf(b), V = variantsOf(p), mx = L => L.reduce((m, v) => v.c > m.c ? v : m);
+  if (!B) return {fit:1, v:null};
+  const inB = V.filter(v => v.c > B.lo && v.c <= B.hi);
+  if (inB.length) return {fit:1, v:mx(inB)};
+  if (B.hi !== Infinity){ const below = V.filter(v => v.c <= B.lo && v.c >= .4 * B.hi); if (below.length) return {fit:.5, v:mx(below)}; }
+  return {fit:0, v:null};
 }
+/* Punkte = ln(Bestellungen + 1) x Passung; Passung 1 im Band, 0,5 knapp darunter */
+function scored(pool, b, all){
+  return pool.filter(p => !isMini(p) && (all || !S.shown.has(p.h))).map(p => { const f = fitOf(p, b); return Object.assign({}, p, {fit:f.fit, cv:f.v && f.v.id ? f.v : null, sc:Math.log((+p.n || 0) + 1) * f.fit}); })
+    .filter(p => p.fit > 0).sort((x, y) => (weak(x) - weak(y)) || (y.sc - x.sc) || (x.pos - y.pos));
+}
+function pick(pool, b){
+  const L = scored(pool || [], b);
+  if (L.length < 2) return {tier:'none', items:[]};
+  return {tier:'ok', items:diverse(L, 3)};
+}
+/* Ein Band erscheint nur mit mindestens zwei passenden Stücken, eins davon mitten im Band */
+const bandOk = (list, b) => { const L = scored(list, b, true); return L.length >= 2 && L.some(p => p.fit === 1); };
+const okBudgets = (list, not) => Object.keys(BANDS).filter(b => b !== not && (!list || bandOk(list, b)));
+const bandCount = (list, b) => scored(list, b).filter(p => p.fit === 1).length;
+const minis = list => (list || []).filter(p => isMini(p) && !S.shown.has(p.h)).sort((x, y) => (weak(x) - weak(y)) || ((+y.n || 0) - (+x.n || 0)) || (x.pos - y.pos));
+/* Variante zu einer gespeicherten Karte wiederfinden (Zurück zu meinen Vorschlägen) */
+function withFit(p, b){ const f = fitOf(p, b); return Object.assign({}, p, {fit:f.fit, cv:f.v && f.v.id ? f.v : null}); }
 
 /* ---------- Seitenkontext ---------- */
-const SIZE_RE = /Durchmesser|Größe|Groesse|Breite|Höhe|Länge|Format/i;
+const SIZE_RE = /Durchmesser|Größe|Groesse|Breite|Höhe|Länge|Format|Size/i;
 function pageKind(){
   const t = CTX.t, pg = CTX.pg || '', c = CTX.c || '';
   if (t === 'index') return 'home';
   if (t === 'product') return CTX.gc ? 'pdpgc' : CTX.pz ? 'pdp' : 'pdpq';
   if (t === 'collection') return audByColl(c) ? 'acoll' : 'coll';
   if (t === 'cart') return (+CTX.n > 0) ? 'cart' : 'cartEmpty';
-  if (t === 'search') return CTX.z ? 'searchZero' : 'other';
+  if (t === 'search') return CTX.z ? 'searchZero' : searchQ() ? 'search' : 'other';
   if (t === '404') return '404';
   if (t === 'page'){
     if (/^(sendungsverfolgung|deine-bestellung)$/.test(pg)) return 'track';
@@ -925,163 +1356,255 @@ function pageKind(){
   if ((t === 'article' || t === 'blog') && artAud()) return 'article';
   return 'other';
 }
+function searchQ(){ try { return (new URLSearchParams(location.search).get('q') || '').trim().slice(0, 60); } catch (e) { return ''; } }
 /* Ratgeber-Blogs: nutzliches-fur-die-feuerwehr, nutzliches-fur-handwerker (Vorlagen-Suffix ratgeber-feuerwehr auf der Liste) */
 function artAud(){ const k = (CTX.b || '') + ' ' + (CTX.s || ''); return /feuerwehr/.test(k) ? 'Feuerwehr' : /handwerk/.test(k) ? 'Handwerker' : null; }
 const isWappen = () => /^(familienwappen|modernes-wappen|dein-wunsch-wappen)$/.test(CTX.h || '') || CTX.c === 'wappen';
 const visibleOne = sel => $$(sel).find(vis) || null;
-async function waitFor(fn, ms){ const t0 = performance.now(); let e = fn(); while (!e && performance.now() - t0 < ms){ await w(150); e = fn(); } return e; }
-function sizeFieldset(){ return $$('main fieldset, product-info fieldset, variant-selects .product-form__input').filter(vis).find(f => { const lg = $('legend, label', f); return lg && SIZE_RE.test(lg.textContent); }) || null; }
+async function waitFor(fn, ms){ const t0 = now(); let e = fn(); while (!e && now() - t0 < ms){ await w(150); e = fn(); } return e; }
+const legendOf = f => { const lg = $('legend, label', f); return lg ? lg.textContent.trim().split('\n')[0].trim() : ''; };
+function optionSets(){ return $$('main variant-radios fieldset, main variant-selects fieldset, main fieldset.product-form__input, main variant-selects .product-form__input').filter(vis).filter((f, i, a) => a.indexOf(f) === i); }
+function sizeFieldset(){ return optionSets().find(f => SIZE_RE.test(legendOf(f))) || null; }
+function sizeLabels(fs){ return fs ? $$('input[type=radio]', fs).map(i => ({v:i.value, input:i, label:fs.querySelector(`label[for="${CSS.escape(i.id)}"]`)})) : []; }
+/* Erste Optionsgruppe mit mehreren Werten, die nicht die Größe ist (Design, Oberfläche) */
+function otherOptionSet(){ const sz = sizeFieldset(); return optionSets().find(f => f !== sz && ($$('input[type=radio]', f).length > 1 || $$('option', f).length > 1)) || null; }
+function productInfo(){ return visibleOne('main product-info, main .product__info-wrapper, main .product__info-container') || visibleOne('main h1'); }
+function atcButton(){ return visibleOne('main .product-form__submit, main [name="add"], .product-form__submit'); }
 async function pdpTarget(pers){
   if (CTX.gc){ const v = visibleOne('#ftAmts, main .ft-amts, main variant-selects, main variant-radios, main .product-form__input'); if (v) return {el:v, kind:'amount'}; }
-  if (pers){ const z = await waitFor(() => visibleOne('.pplr-c-button'), 6000); if (z) return {el:z, kind:'pers'}; }
+  if (pers && !S.zOpened){ const z = await waitFor(() => visibleOne('.pplr-c-button'), 6000); if (z) return {el:z, kind:'pers'}; }
   const q = visibleOne('.pin-tiers, .smk-quantity'); if (q) return {el:q, kind:'qty'};
-  const a = visibleOne('main .product-form__submit, main [name="add"], .product-form__submit'); if (a) return {el:a, kind:'atc'};
+  const a = atcButton(); if (a) return {el:a, kind:'atc'};
   return null;
 }
+/* Produktdaten der Seite: erst nach einem Klick, gleiche Herkunft */
+let PRODJ = null;
+function prodJson(){ if (!PRODJ && CTX.h) PRODJ = getJson('/products/' + encodeURIComponent(CTX.h) + '.js').catch(e => { PRODJ = null; throw e; }); return PRODJ || Promise.reject(new Error('kein Produkt')); }
+function selectedVariantId(){ const i = $('main form[action*="/cart/add"] [name="id"]'); return i ? +i.value : 0; }
+/* Je Größe die günstigste verfügbare Variante, aus /products/<handle>.js */
+async function sizeTable(fs){
+  const pj = await prodJson(), name = legendOf(fs).toLowerCase();
+  const opts = (pj.options || []).map(o => typeof o === 'string' ? o : o.name);
+  let oi = opts.findIndex(o => String(o).toLowerCase() === name); if (oi < 0) oi = opts.findIndex(o => SIZE_RE.test(o));
+  if (oi < 0) return null;
+  const by = new Map();
+  (pj.variants || []).forEach(v => { if (!v.available) return; const val = v.options[oi]; const o = by.get(val); if (!o || v.price < o.c) by.set(val, {v:val, c:v.price, id:v.id}); });
+  const order = sizeLabels(fs).map(s => s.v);
+  const rows = order.map(v => by.get(v)).filter(Boolean);
+  const sel = (pj.variants || []).find(v => v.id === selectedVariantId());
+  return {rows, oi, sel, pj};
+}
+const bestsellerSize = fs => { const l = fs && $('label.custom-size-highlight', fs); return l ? (l.getAttribute('label-name') || l.textContent).trim() : ''; };
 function faqGroup(g){ return $(`.ft-faq-g[data-g="${g}"]`); }
 function contactForm(){ return visibleOne('main form[action*="/contact"], main #ContactForm, main .contact form, main form[action*="contact"]') || visibleOne('main form'); }
 
+/* ---------- Runden: eine Form, die später auch eine Server-Antwort (/turn) unverändert darstellt ---------- */
+/* {say:[{t, emote, pose}], mood, chips:[{id, l, pri, link, href, cue}], cards, actions:[{name, target}], form, source:{l, href}} */
+const CHIP = {};
+function chipOf(c){ if (c.f || c.href) return c; const fn = CHIP[c.id]; return Object.assign({}, c, {f:fn ? () => fn(c) : () => routeText(c.l)}); }
+async function act(a){
+  if (!a) return;
+  if (a.name === 'pose'){ if (POSES[a.target]) await aw(setPose(a.target)); return; }
+  const el = typeof a.target === 'string' ? visibleOne(a.target) : a.target; if (!el) return;
+  if (a.name === 'open' && el.tagName === 'DETAILS') el.open = true;
+  if (a.name === 'laser') await laserAt(el, {spot:true, dim:false, aim:a.aim, keep:1600});
+  if (a.name === 'marker') markerOn(el);
+  if (a.name === 'dodge') await dodge(el);
+}
+async function render(t){
+  t = t || {};
+  if (t.mood === 'calm') S.calm = true; else if (t.mood) S.calm = false;
+  for (const a of t.actions || []) await act(a);
+  const say = [].concat(t.say || []).filter(Boolean).map(s => typeof s === 'string' ? {t:s} : s);
+  const chips = (t.chips || []).filter(Boolean).map(chipOf);
+  const later = !!(t.cards && t.cards.length) || !!t.source;
+  if (say.length) await speak(say, later ? {} : {onLast:() => { if (chips.length) choices(chips, {focus:false}); }});
+  if (t.cards && t.cards.length) await dealCards(t.cards, t.aud, t.list);
+  if (t.source) sourceLine(t.source);
+  if (later || !say.length) choices(chips, {focus:false});
+  if (t.form === 'compose' && S.compose) try { inputEl.focus({preventScroll:true}); } catch (e) {}
+  else if (t.focus === 'show'){ const b = $$('.smmk-show', stage).find(x => !x.disabled && x.offsetParent !== null); if (b) try { b.focus({preventScroll:true}); } catch (e) {} }
+  else if (chips.length) focusFirst();
+}
+/* Denkpause um jede asynchrone Quelle: Lupe, „…“, mindestens 400 ms; Fehler und Zeitüberschreitung mit festen Zeilen */
+async function think(job, o){
+  o = o || {}; const t0 = now(), prev = S.pose;
+  if (S.out){ actor.classList.add('sway'); await aw(setPose('search')); emote('…', 0); }
+  let res = null, err = null;
+  try { res = await aw(Promise.race([Promise.resolve(job), sleep(o.ms || 9000).then(() => { throw new Error('timeout'); })])); }
+  catch (e){ if (e === ABORT) throw e; err = e; }
+  const rest = 400 - (now() - t0); if (rest > 0) await w(rest);
+  actor.classList.remove('sway'); if (emoteKind === '…') emote(null);
+  if (err){ if (S.out){ await aw(setPose('shrug')); emote('sweat', 1800); } return {err, line:/timeout/.test(err.message) ? line('slow') : line('err')}; }
+  if (o.back !== false && S.out) await aw(setPose(o.pose || (prev === 'search' ? 'sketch' : prev)));
+  return {res};
+}
+function helpfulChips(topic){
+  return [{l:'Ja', pri:1, id:'helpful', f:async () => { push('sm_monk_answer', {sm_topic:topic, sm_helpful:1}); spotOff(); await aw(setPose('sketch')); emote('heart', 1600); await ask('Freut mich! Wenn noch was ist, frag einfach.', [{l:'Andere Frage', f:() => faqTopics()}, {l:'Geschenk finden', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]); }},
+    {l:'Nein', f:async () => { push('sm_monk_answer', {sm_topic:topic, sm_helpful:0}); spotOff(); await ask('Schade. Unser Team hilft Dir gern persönlich weiter.', [{l:'Mit Mensch sprechen', pri:1, link:0, f:() => human(FAQ_T[topic] || '')}, {l:'Andere Frage', f:() => faqTopics()}]); }}];
+}
+
 /* ---------- Abläufe ---------- */
-async function ensureOut(pose, how){
+async function ensureOut(pose, how, o){
+  o = o || {};
   if (S.out){ const was = boxOn(); await openBox(); if (!was) focusLog(); if (S.pose !== pose) await aw(setPose(pose)); return; }
   if (!boxOn()) newTurn();
   for (let i = 0; i < 150 && S.yield; i++) await w(200);
-  if (!railSprite()) how = 'poof';
-  let opening = null;
-  if (S.mobile){ opening = openBox(); if (how !== 'leap') await aw(opening); }
-  if (how === 'leap') await aw(leapOut(pose)); else await aw(poofIn(pose));
-  await aw(opening || openBox());
+  await aw(Promise.race([preload(), sleep(1500)]));
+  if (!railSprite() && how === 'leap') how = 'poof';
+  /* Würde die Landung das Ziel verdecken, erst sanft scrollen */
+  if (o.target && vis(o.target)){ const r = vr(o.target); if ((S.mobile || overlapsGroup(r)) && r.y + r.h > groupTop() - 12){ if (reveal(o.target, true)) await w(260); } }
+  if (!S.t0) S.t0 = now();
+  const apex = S.mobile ? () => openBox() : null;
+  if (how === 'leap') await aw(leapOut(pose, {apex}));
+  else if (how === 'img') await aw(leapFromImg(o.img, pose, {apex}));
+  else await aw(poofIn(pose, {apex}));
+  await aw(openBox());
+  blinkLoop();
   focusLog();
 }
 function hello(){
-  if (S.greeted || SS.g) { S.greeted = true; return []; }
+  if (S.greeted || SS.g){ S.greeted = true; return []; }
   S.greeted = true; ssUpd({g:1});
-  return ['Grüß Dich! Ich bin Bruder Funke, der Mönch von Steelmonks.', 'Das hier ist meine Testversion: Ich helfe Dir mit Knöpfen, noch ohne KI.'];
+  const hr = new Date().getHours();
+  return [hr >= 22 || hr < 6 ? line('late') : line('hello')];
 }
-function mainMenu(){
-  choices([
-    {l:'Geschenk finden', f:() => giftStep1()},
-    {l:'Wo ist meine Bestellung?', f:() => orderFlow()},
-    {l:'Frage stellen', f:() => faqTopics()},
-    {l:'Mit Mensch sprechen', f:() => human()}
-  ]);
+/* Sitzung mit Vorschlägen: beim erneuten Öffnen geht es dort weiter */
+function sessAud(s){ return s && s.aud ? (audBy(s.aud) || (s.aud === BELIEBT.l ? BELIEBT : null)) : null; }
+function sessionChips(){
+  const s = ssRead(), a = sessAud(s); if (!a || !Array.isArray(s.last) || !s.last.length) return [];
+  const B = BANDS[s.b];
+  return [{l:'Zurück zu meinen Vorschlägen', pri:1, id:'back_recs', f:() => resumeCards()},
+    B ? {l:`Mehr ${a.who} ${B.l}`, id:'more', v:s.b, f:() => { S.shown = new Set(s.shown || []); return cardsFlow(a, s.b); }} : null].filter(Boolean);
 }
+function menuList(){
+  return [{l:'Geschenk finden', id:'gift_start', f:() => giftStep1()}, {l:'Wo ist meine Bestellung?', id:'order', f:() => orderFlow()}, {l:'Frage stellen', id:'faq', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}];
+}
+async function menuStep(pre){ await ensureOut('sketch', 'poof'); await ask((pre || []).concat(['Wobei kann ich Dir helfen?']), menuList()); }
+/* „Was anderes suchen“: Zielgruppe und Budget bleiben, gefragt wird nur, was sich ändert */
+async function changeStep(){
+  const a = S.aud || sessAud(ssRead());
+  if (!a) return giftStep1();
+  await ensureOut('sketch', 'poof');
+  await ask({t:'Klar. Was soll anders sein?', emote:'?'}, [
+    {l:'Für jemand anderen', pri:1, id:'change_aud', f:() => { S.keepBand = true; if (!S.budget) S.budget = ssRead().b || null; return giftStep1(); }},
+    {l:'Anderes Budget', id:'gift_budget', f:() => budgetStep(a, true)},
+    {l:'Ganz was anderes', f:() => menuStep()}]);
+}
+function closeEv(outcome){ if (!S.t0) return; push('sm_monk_close', {sm_outcome:outcome || 'none', sm_turns:TURN, sm_ms:R(now() - S.t0)}); S.t0 = 0; }
 async function navTo(href, cue, say){
   if (!href) return;
   if (say !== false && S.out) await speak(say || 'Ich bring Dich hin.');
   const u = new URL(href, location.href);
   /* Fortsetzen auf der nächsten Seite: der Loader erkennt #moench-r, ohne vorher in den Speicher zu schauen */
   if (cue){ ssUpd({cue:Object.assign({u:u.pathname}, cue)}); u.hash = 'moench-r'; }
-  clearTray(); markerOff(); spotOff();
+  /* Zurück-Taste: diese Seite merkt sich die Vorschläge über denselben Hash */
+  if (S.dealt && Array.isArray(SS.last) && SS.last.length){ try { history.replaceState(history.state, '', location.pathname + location.search + '#moench-r'); } catch (e) {} ssUpd({back:{u:location.pathname, k:'cards'}}); }
+  closeEv(/^\/products\//.test(u.pathname) ? 'product' : /^\/cart/.test(u.pathname) ? 'cart' : /kontakt/.test(u.pathname) ? 'contact' : 'none');
+  clearTray(); markerOff(); spotOff(); clearProp(true);
   if (S.out) await aw(poofOut());
   closeBox();
   location.assign(u.origin === location.origin ? u.pathname + u.search + u.hash : u.href);
 }
 async function opener(){
-  const k = pageKind();
+  const k = pageKind(), ses = sessionChips();
+  if (ses.length && /^(home|acoll|coll|other|404|searchZero|search|article)$/.test(k)){
+    await ensureOut('sketch', k === '404' ? 'poof' : 'leap'); newTurn();
+    return ask([...hello(), {t:line('back') + ' Sollen wir bei Deinen Vorschlägen weitermachen?', emote:'bulb'}], ses.concat([{l:'Was anderes suchen', f:() => changeStep()}, {l:'Nein danke', f:() => exitFlow()}]));
+  }
   if (k === 'home') return giftStep1(hello());
   if (k === 'acoll'){
     /* erst ins Regal schauen, dann nur versprechen, was sich auch füllen lässt */
-    const a = audByColl(CTX.c), pj = poolSafe(a);
+    const a = audByColl(CTX.c);
     await ensureOut('sketch', 'leap'); newTurn();
-    const ok = okBudgets(await aw(pj));
+    const r = await think(poolOf(a));
+    const ok = r.res ? okBudgets(r.res) : [];
+    if (r.res) S.pool = {a, list:r.res};
     if (!ok.length){ await speak(hello()); return emptyShelf(a); }
-    await speak([...hello(), {t:`Geschenke ${a.who}, da kenn ich mich aus. ` + (ok.length > 1 ? 'Sag mir noch Dein Budget, dann zeig ich Dir die drei beliebtesten.' : 'Ich zeig Dir die beliebtesten.'), emote:'bulb'}]);
+    await speak([...hello(), {t:audLine(a) + ' ' + (ok.length > 1 ? 'Sag mir noch Dein Budget, dann zeig ich Dir die meistbestellten.' : 'Ich zeig Dir die meistbestellten.'), emote:'bulb'}]);
     return offerBudgets(a, ok);
   }
   if (k === 'coll'){
     if (isWappen()){
       /* Wappen entstehen nach Vorlage: keine Favoriten versprechen, direkt zum Rechner */
       await ensureOut('measure', 'leap'); newTurn();
-      await speak([...hello(), {t:'Ein Wappen entsteht nach Deiner Vorlage, darum gibt es hier keine fertigen Favoriten. Soll ich Dich zum Wappen-Rechner bringen?', emote:'bulb'}]);
-      return choices([Object.assign(wappenChoice(), {pri:1}), {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
+      return ask([...hello(), {t:'Ein Wappen entsteht nach Deiner Vorlage, darum gibt es hier keine fertigen Favoriten. Soll ich Dich zum Wappen-Rechner bringen?', emote:'bulb'}],
+        [Object.assign(wappenChoice(), {pri:1}), {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
     }
-    const here = {l:(($('main h1') || {}).textContent || 'diese Kategorie').trim(), hs:[CTX.c], who:'hier', hero:false, fx:'twinkle'}, pj = poolSafe(here);
+    const here = {l:(($('main h1') || {}).textContent || 'diese Kategorie').trim(), hs:[CTX.c], who:'hier', hero:false, fx:'twinkle', src:'dieser Kategorie'};
     await ensureOut('sketch', 'leap'); newTurn();
-    const ok = okBudgets(await aw(pj));
-    if (!ok.length){
-      await speak([...hello(), {t:'Schau Dich hier gern in Ruhe um. Soll ich Dir lieber ein Geschenk für jemanden raussuchen?', emote:'?'}]);
-      return choices([{l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
-    }
-    await speak([...hello(), {t:'Hier gibt es viel zu sehen. Soll ich Dir die drei beliebtesten aus dieser Kategorie zeigen?', emote:'?'}]);
-    return choices([{l:'Ja, zeig her', pri:1, f:() => budgetStep(here)}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
+    const r = await think(poolOf(here));
+    const ok = r.res ? okBudgets(r.res) : [];
+    if (r.res) S.pool = {a:here, list:r.res};
+    if (!ok.length) return ask([...hello(), {t:'Schau Dich hier gern in Ruhe um. Soll ich Dir lieber ein Geschenk für jemanden raussuchen?', emote:'?'}], [{l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
+    return ask([...hello(), {t:'Hier gibt es viel zu sehen. Soll ich Dir die meistbestellten aus dieser Kategorie zeigen?', emote:'?'}], [{l:'Ja, zeig her', pri:1, f:() => budgetStep(here)}, {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
   }
   if (k === 'pdp' || k === 'pdpq' || k === 'pdpgc') return productOpener(k === 'pdp');
   if (k === 'wappen'){
     await ensureOut('measure', 'leap'); newTurn();
-    await speak([...hello(), 'Für Dein Wappen rechnet Dir der Rechner hier auf der Seite den Preis aus. Bei Fragen zu Deiner Vorlage hilft Dir unser Team gern weiter.']);
-    return choices([{l:'Mit Mensch sprechen', f:() => human()}, {l:'Schließen', f:() => exitFlow()}]);
+    return ask([...hello(), 'Für Dein Wappen rechnet Dir der Rechner hier auf der Seite den Preis aus. Bei Fragen zu Deiner Vorlage hilft Dir unser Team gern weiter.'], [{l:'Mit Mensch sprechen', f:() => human()}, {l:'Schließen', f:() => exitFlow()}]);
   }
-  if (k === 'cart'){
-    await ensureOut('sketch', 'leap'); newTurn();
-    await speak([...hello(), 'Alles drin? Wenn Du Fragen zu Versand oder Lieferzeit hast, findest Du die Antworten in unseren Versandbedingungen.']);
-    choices([{l:'Versandbedingungen', href:'/pages/versandbedingungen'}, {l:'Noch ein Geschenk finden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}]);
-    /* die Warenkorb-Zeilen bleiben frei: notfalls Seite wechseln, sonst die Seite darüber schieben */
-    const li = visibleOne('main .cart-item'); if (li){ await dodge(li); reveal(li); }
-    return;
-  }
-  if (k === 'cartEmpty'){
-    await ensureOut('sketch', 'leap'); newTurn();
-    await speak([...hello(), {t:'Noch leer hier. Soll ich Dir in drei Klicks ein Geschenk raussuchen?', emote:'bulb'}]);
-    return choices([{l:'Ja, gern', pri:1, f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]);
-  }
+  if (k === 'cart') return cartOpener();
+  if (k === 'cartEmpty') return emptyCart();
   if (k === 'track') return orderFlow(hello());
   if (k === 'faq') return faqTopics(hello());
   if (k === 'kontakt'){
     await ensureOut('sketch', 'leap'); newTurn();
-    await speak([...hello(), 'Bevor Du schreibst: Vielleicht kann ich Dir direkt helfen. Sonst ist das Formular hier genau richtig.']);
-    return choices([{l:'Wo ist meine Bestellung?', f:() => orderFlow()}, {l:'Eine Frage', f:() => faqTopics()}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Zum Formular', pri:1, f:() => kontaktGuide()}]);
+    return ask([...hello(), 'Bevor Du schreibst: Vielleicht kann ich Dir direkt helfen. Sonst ist das Formular hier genau richtig.'], [{l:'Zum Formular', pri:1, f:() => kontaktGuide()}, {l:'Wo ist meine Bestellung?', f:() => orderFlow()}, {l:'Eine Frage', f:() => faqTopics()}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}]);
   }
   if (k === 'sonder'){
     await ensureOut('sketch', 'leap'); newTurn();
-    await speak([...hello(), {t:'Eine eigene Idee? Beschreib sie hier im Formular. Unser Team meldet sich mit einem Angebot bei Dir.', emote:'bulb'}]);
-    return choices([{l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]);
+    return ask([...hello(), {t:'Eine eigene Idee? Beschreib sie hier im Formular. Unser Team meldet sich mit einem Angebot bei Dir.', emote:'bulb'}], [{l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]);
   }
   if (k === 'article'){
     const a = audBy(artAud());
     await ensureOut('sketch', 'leap'); newTurn();
-    await speak([...hello(), {t:`Du liest über ${a.l === 'Feuerwehr' ? 'die Feuerwehr' : 'das Handwerk'}? Ich hab drei Geschenkideen, die oft bestellt werden.`, emote:'bulb'}]);
-    return choices([{l:'Zeig her', pri:1, f:() => budgetStep(a)}, {l:'Nein danke', f:() => exitFlow()}]);
+    return ask([...hello(), {t:`Du liest über ${a.l === 'Feuerwehr' ? 'die Feuerwehr' : 'das Handwerk'}? Ich zeig Dir gern Geschenkideen, die oft bestellt werden.`, emote:'bulb'}], [{l:'Zeig her', pri:1, f:() => budgetStep(a)}, {l:'Nein danke', f:() => exitFlow()}]);
   }
   if (k === 'searchZero'){
-    await ensureOut('search', 'leap'); newTurn(); stage.querySelector('.smmk-actor').classList.add('sway');
-    await speak([...hello(), {t:'Dazu finde ich nichts im Regal. Für wen suchst Du denn? Dann zeig ich Dir, was oft bestellt wird.', emote:'?'}]);
-    actor.classList.remove('sway');
-    return audienceChips();
+    await ensureOut('search', 'leap'); newTurn(); actor.classList.add('sway');
+    try { await speak([...hello(), {t:'Dazu finde ich nichts im Regal. Für wen suchst Du denn? Dann zeig ich Dir, was oft bestellt wird.', emote:'?'}]); } finally { actor.classList.remove('sway'); }
+    return audienceStep();
   }
+  if (k === 'search') return searchOpener();
   if (k === '404') return notFound();
   await ensureOut('sketch', 'leap'); newTurn();
-  await speak([...hello(), 'Wobei kann ich Dir helfen?']);
-  mainMenu();
+  await menuStep(hello());
+}
+/* Suchergebnisse: die Suche wörtlich zurückgeben (als Text, nie als HTML) und den ersten beiden Treffern ausweichen */
+async function searchOpener(){
+  const q = searchQ();
+  const res = $$('main .product-grid > li, main #product-grid > li, main .grid__item, main .card-wrapper').filter(vis).slice(0, 2);
+  await ensureOut('sketch', 'leap', {target:res[0]}); newTurn();
+  if (res.length && !S.mobile){ const a = vr(res[0]), b = vr(res[res.length - 1]); if (overlapsGroup({x:Math.min(a.x, b.x), w:Math.max(a.x + a.w, b.x + b.w) - Math.min(a.x, b.x)})) await dodge(res[res.length - 1]); }
+  await ask([...hello(), {t:`Du suchst nach „${q}“? Ich helf Dir beim Aussuchen.`, emote:'bulb'}], [{l:'Für wen ist es?', pri:1, id:'gift_start', f:() => giftStep1()}, {l:'Wann kommt es an?', f:() => shipAnswer()}, {l:'Nein danke', f:() => exitFlow()}]);
 }
 async function notFound(){
-  const inl = $('.smmk-404');
-  /* nur die Figur verschwindet, Sprechblase und Knopf bleiben stehen */
-  if (inl && !S.out){ const im = $(':scope > img', inl); if (im){ const r = vr(im); burst('dust', r.x + r.w / 2, r.y + r.h * .7, 26); im.style.visibility = 'hidden'; } }
-  await ensureOut('shrug', inl ? 'poof' : 'leap'); newTurn();
-  await speak([...hello(), {t:'Hier ist leider nichts. Selbst mein Karton ist leer. Wonach suchst Du?', emote:'?'}]);
-  choices([{l:'Geschenk finden', f:() => giftStep1()}, {l:'Frage stellen', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}]);
+  const inl = $('.smmk-404'), im = inl && !S.out ? $(':scope > img', inl) : null;
+  await ensureOut('shrug', im && vis(im) ? 'img' : 'leap', {img:im}); newTurn();
+  await ask([...hello(), {t:'Hier ist leider nichts. Selbst mein Karton ist leer. Wonach suchst Du?', emote:'?'}], [{l:'Geschenk finden', pri:1, id:'gift_start', f:() => giftStep1()}, {l:'Frage stellen', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}]);
 }
-function audienceChips(){
-  choices(AUD.filter(a => a.hero).map(a => ({l:a.l, f:() => pickAudience(a)})).concat([{l:'Jemand anderes', f:() => someoneElse()}]));
-}
+function audienceList(){ return AUD.filter(a => a.hero).map(a => ({l:audChip(a), id:'gift_aud', v:a.l, f:() => pickAudience(a)})).concat([{l:'Jemand anderes', id:'gift_aud', v:'andere', f:() => someoneElse()}]); }
+async function audienceStep(pre){ await ask((pre || []).concat([{t:line('who'), emote:'?'}]), audienceList()); }
 async function giftStep1(pre){
-  S.calm = false; spotOff(); markerOff();
-  await ensureOut('sketch', 'leap');
+  S.calm = false; spotOff(); markerOff(); clearProp(true);
+  const fc = $('#fchips'), fcv = fc && vis(fc) ? fc : null;
+  await ensureOut('sketch', 'leap', {target:fcv});
   if (S.ox) await moveSide(0);
-  const fc = $('#fchips');
-  if (fc && vis(fc) && S.out && !S.mobile){ const fr = vr(fc); S.tilt = fr.x + fr.w / 2 > S.ax ? 8 : -8; applyTilt(); }
-  await speak((pre || []).concat([{t:'Für wen suchst Du?', emote:'?'}]));
-  push('sm_monk_step', {sm_step:'gift_start'});
-  audienceChips();
-  hookHeroChips(fc);
+  if (fcv && S.out && !S.mobile){ const fr = vr(fcv); S.tilt = fr.x + fr.w / 2 > S.ax ? 3 : -3; applyTilt(); }
+  hookHeroChips(fcv);
+  await render({say:(pre || []).map(t => ({t})).concat([{t:line('who'), emote:'?'}]), chips:audienceList()});
   /* Startseite: die Chips im Hero bleiben über Mönch und Box sichtbar */
-  if (fc && vis(fc) && !S.mobile) requestAnimationFrame(() => reveal(fc));
+  if (fcv && !S.mobile) requestAnimationFrame(() => reveal(fcv));
 }
+/* Weitere Gruppen nur, wenn ihr Regal mindestens ein Budget füllen kann */
 async function someoneElse(pre){
   await ensureOut('sketch', 'leap');
-  await speak((pre || []).concat([{t:'Für wen denn? Such Dir eine Gruppe aus.', emote:'?'}]));
-  choices(AUD.filter(a => !a.hero).map(a => ({l:a.l, f:() => pickAudience(a)})).concat([{l:'Zurück', f:() => giftStep1()}]));
+  const cand = AUD.filter(a => !a.hero);
+  const r = await think(Promise.all(cand.map(a => poolOf(a).catch(() => null))), {ms:8000});
+  let L = cand;
+  if (r.res){ const keep = cand.filter((a, i) => r.res[i] && okBudgets(r.res[i]).length); if (keep.length) L = keep; }
+  await ask((pre || []).concat([{t:'Für wen denn? Such Dir eine Gruppe aus.', emote:'?'}]), L.map(a => ({l:audChip(a), id:'gift_aud', v:a.l, f:() => pickAudience(a)})).concat([{l:'Zurück', f:() => giftStep1()}]));
 }
 /* Klickt der Besucher während der Frage "Für wen suchst Du?" selbst einen Hero-Chip, gilt das als Antwort.
    Nur echte Klicks (isTrusted) und nur solange die Zielgruppen-Knöpfe in der Box stehen. */
@@ -1094,37 +1617,36 @@ function hookHeroChips(fc){
     const asking = choicesEl && [...choicesEl.querySelectorAll('.smmk-ch')].some(b => b.textContent.trim() === 'Jemand anderes');
     if (!asking) return;
     const a = AUD.find(x => x.hero && x.l.toLowerCase() === c.textContent.trim().toLowerCase());
-    if (a) pickAudience(a);
+    if (a){ TURN++; push('sm_monk_step', {sm_step:'gift_aud', sm_value:a.l}); newTurn('Du: ' + a.l); go(() => pickAudience(a, true)); }
   });
 }
-const audLine = a => a.l === 'Feuerwehr' ? 'Feuerwehr, da kenn ich mich aus.' : `Geschenke ${a.who}, gute Wahl.`;
 function heroChip(a){ return $$('#fchips .chip').find(c => !c.hasAttribute('data-smmk') && c.textContent.trim().toLowerCase() === a.l.toLowerCase()) || null; }
-async function pickAudience(a){
+async function pickAudience(a, clicked){
   S.aud = a; S.shown = new Set(); S.pool = null;
-  poolSafe(a); /* das Regal lädt schon, während der Mönch zum Chip geht */
-  const chip = CTX.t === 'index' ? heroChip(a) : null;
+  poolOf(a).catch(() => {}); /* das Regal lädt schon, während der Mönch zum Chip geht */
+  const chip = CTX.t === 'index' && !clicked ? heroChip(a) : null;
   if (chip && vis(chip)){
     try { chip.scrollIntoView({block:'nearest', inline:'center'}); } catch (e) {}
     reveal(chip); await w(60);
+    const first = !ssRead().hc; ssUpd({hc:1});
     const homeX = home().x; let boxAway = false;
-    if (!S.mobile && !S.reduced && !S.classic){
-      /* neben den Chip stellen, nicht drauf: rechte Kante der Kurator-Pose endet vor dem Chip */
-      const cr = vr(chip); const maxX = vpW() - 140 - 160, reach = R((POSES.curator.w - POSES.curator.fx) * sc()) + 12;
+    if (first && !S.mobile && !still()){
+      /* erster Geschenkweg der Sitzung: neben den Chip laufen, nicht drauf */
+      const cr = vr(chip); const maxX = vpW() - 140 - 160, reach = R(((POSES.curator.cw || POSES.curator.w) - POSES.curator.fx) * poseScale('curator')) + 12;
       let target = Math.max(homeX, Math.min(maxX, cr.x - reach));
-      if (Math.abs(target - homeX) < 40){ target = homeX; S.tilt = cr.x + cr.w / 2 > S.ax ? 8 : -8; applyTilt(); }
+      if (Math.abs(target - homeX) < 40) target = homeX;
       if (target - homeX > 60){ boxAway = true; await aw(folded()); box.style.visibility = 'hidden'; }
-      await walkTo(target);
+      await walkTo(target, {keepBox:true});
       if (S.facing !== 1) await paperTurn(1);
-    } else if (S.mobile && !S.reduced && !S.classic){
+    } else if (first && S.mobile && !still()){
       const cr = vr(chip), cx = cr.x + cr.w / 2;
       await stroll(cx - 44, {pose:'curator', face: cx >= S.ax ? 1 : -1});
-    }
-    await aw(setPose('curator'));
-    await laserAt(chip, {spot:false, keep:700, dodge:false});
+    } else if (!S.mobile){ const cr = vr(chip); S.tilt = cr.x + cr.w / 2 > S.ax ? 3 : -3; applyTilt(); }
+    await laserAt(chip, {spot:false, keep:700, dodge:false, walk:first});
     chip.click(); sfx('sparkle');
     const fig = $('#finderPx'); if (fig && vis(fig)){ const r = vr(fig); burst(a.fx, r.x + r.w / 2, r.y + r.h * .6, 18); }
-    await w(500); clearLaser();
-    if (!S.mobile && !S.reduced && !S.classic && S.ax !== homeX){ await aw(setPose('sketch', {dust:false})); await walkTo(homeX); await paperTurn(1); }
+    await w(400); clearLaser();
+    if (!S.mobile && !still() && S.ax !== homeX){ await aw(setPose('sketch', {dust:false})); await walkTo(homeX, {keepBox:true}); await paperTurn(1); }
     else await aw(setPose('sketch'));
     box.classList.remove('away');
     if (boxAway){ box.getAnimations().forEach(x => x.cancel()); box.style.visibility = ''; await aw(unfolded()); }
@@ -1136,247 +1658,363 @@ async function pickAudience(a){
   }
   return budgetStep(a);
 }
-/* Nur Budgets anbieten, für die das Regal wirklich mindestens zwei Stücke hat. Ohne Daten (Ladefehler) alle, cardsFlow sagt dann ehrlich Bescheid. */
-const BUDGETS = {'30':'bis 30 €', '60':'bis 60 €', mehr:'darf mehr sein'};
-const okBudgets = (list, not) => Object.keys(BUDGETS).filter(b => b !== not && (!list || pick(list, b).tier !== 'none'));
+const POOLS = {};
 function poolOf(a){
-  if (S.pool && S.pool.a === a) return Promise.resolve(S.pool.list);
-  return loadPool(a.hs).then(list => { if (S.aud === a || !S.pool) S.pool = {a, list}; return list; });
+  const key = a.hs.join(',');
+  if (!POOLS[key]) POOLS[key] = loadPool(a.hs).catch(e => { delete POOLS[key]; throw e; });
+  return POOLS[key];
 }
-const poolSafe = a => poolOf(a).catch(() => null);
-async function budgetStep(a){
+async function budgetStep(a, ask2){
   S.aud = a; await ensureOut('sketch', 'poof');
-  const ok = okBudgets(await aw(poolSafe(a)));
+  const r = await think(poolOf(a));
+  if (r.err){ await speak(r.line); return ask('Was darf es ungefähr kosten?', budgetChoices(a, Object.keys(BANDS))); }
+  S.pool = {a, list:r.res};
+  const ok = okBudgets(r.res);
   if (!ok.length) return emptyShelf(a);
-  if (ok.length > 1) await speak('Und was darf es ungefähr kosten?');
-  return offerBudgets(a, ok);
+  if (!ask2 && S.keepBand && S.budget && ok.includes(S.budget)){ S.keepBand = false; return cardsFlow(a, S.budget); }
+  S.keepBand = false;
+  if (ok.length === 1) return cardsFlow(a, ok[0]);
+  return ask(line('budget'), budgetChoices(a, ok));
 }
 function offerBudgets(a, ok){
   if (ok.length === 1) return cardsFlow(a, ok[0]);
-  budgetChips(a, ok);
+  return ask([], budgetChoices(a, ok));
 }
 /* Hauptweg ist die Preisspanne mit den meisten passenden Stücken im Regal */
-const bandCount = (list, b) => list.filter(p => !S.shown.has(p.h) && (b === '30' ? p.p <= 3000 : b === '60' ? p.p <= 6000 : p.p > 6000)).length;
-function budgetChips(a, ok){
-  S.aud = a; ok = ok || Object.keys(BUDGETS);
+function budgetChoices(a, ok){
   const list = S.pool && S.pool.a === a ? S.pool.list : null;
   const best = list ? ok.reduce((m, b) => bandCount(list, b) > bandCount(list, m) ? b : m, ok[0]) : null;
-  choices(ok.map(b => ({l:BUDGETS[b], pri:b === best ? 1 : 0, f:() => cardsFlow(a, b)})));
+  return ok.map(b => ({l:BANDS[b].l, id:'gift_budget', v:b, pri:b === best ? 1 : 0, f:() => cardsFlow(a, b)}));
 }
 async function emptyShelf(a){
   await ensureOut('sketch', 'poof');
   await aw(setPose('shrug')); emote('sweat', 2000);
-  await speak('Fertiges hab ich dafür gerade nichts im Regal. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.');
-  return choices([{l:'Gutschein verschenken', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Andere Gruppe', f:() => giftStep1()}]);
+  await ask('Fertiges hab ich dafür gerade nichts im Regal. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.',
+    [{l:'Gutschein verschenken', id:'gutschein', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Andere Gruppe', f:() => giftStep1()}]);
+}
+const srcOf = a => a.src || SRC[a.l] || `Geschenken ${a.who}`;
+/* Leitzeile nennt Quelle und die echte Sortierung (Bestellungen, gewichtet nach Passung zum Budget) */
+function leadLine(a, items, B){
+  const desc = items.every((p, i) => i === 0 || (+items[i - 1].n || 0) >= (+p.n || 0));
+  const below = items.some(p => p.fit < 1);
+  return `Aus ${srcOf(a)} ${B.s}, ` + (desc ? 'die meistbestellten zuerst' : 'oft bestellt und passend zum Budget') + (below ? '. Manches liegt etwas darunter' : '') + ':';
 }
 async function cardsFlow(a, budget){
-  S.aud = a; S.budget = budget; S.calm = false;
-  push('sm_monk_step', {sm_step:'gift_cards', sm_audience:a.l, sm_budget:budget});
+  S.aud = a; S.budget = budget; S.calm = false; S.keepBand = false;
+  const B = bandOf(budget) || BANDS.b60p;
   await ensureOut('sketch', 'poof');
-  actor.classList.add('sway'); await aw(setPose('search'));
-  let pool = null, err = null;
-  const t0 = performance.now();
-  const job = (S.pool && S.pool.a === a) ? Promise.resolve(S.pool.list) : loadPool(a.hs);
-  job.catch(() => {});
-  try {
-    await speak({t:'Moment, ich schau ins Regal.', emote:'…', emoteMs:900, minMs:500});
-    pool = await aw(job);
-  } catch (e){ if (e === ABORT) throw e; err = e; }
-  if (performance.now() - t0 < 500) await w(500 - (performance.now() - t0));
-  actor.classList.remove('sway');
-  if (err || !pool){
-    await aw(setPose('shrug')); emote('sweat', 2000);
-    await speak('Das Regal klemmt gerade. Schau gern direkt in die Kollektion, da findest Du alles.');
-    return choices([{l:'Zur Kollektion', pri:1, href:'/collections/' + a.hs[0]}, {l:'Zurück', f:() => giftStep1()}]);
+  const job = (S.pool && S.pool.a === a) ? Promise.resolve(S.pool.list) : poolOf(a);
+  const [, r] = await Promise.all([speak({t:line('search')}), think(job, {pose:'sketch'})]);
+  if (r.err){
+    return ask(r.line + ' In der Kollektion findest Du aber alles.', [{l:'Zur Kollektion', pri:1, id:'all', href:'/collections/' + a.hs[0]}, {l:'Zurück', f:() => giftStep1()}]);
   }
-  S.pool = {a, list:pool};
-  const res = pick(pool, budget);
+  S.pool = {a, list:r.res};
+  const res = pick(r.res, budget);
   if (res.tier === 'none'){
     await aw(setPose('shrug')); emote('sweat', 2000);
-    await speak('Dafür finde ich nichts Fertiges. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.');
-    const alt = okBudgets(pool, budget);
-    return choices([{l:'Gutschein verschenken', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', href:'/pages/anfragen', cue:{k:'sonder'}}, alt.length ? {l:'Anderes Budget', f:() => budgetStep(a)} : {l:'Andere Gruppe', f:() => giftStep1()}]);
+    const alt = typeof budget === 'string' ? okBudgets(r.res, budget) : [];
+    return ask('Dafür finde ich nichts Fertiges. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.',
+      [{l:'Gutschein verschenken', id:'gutschein', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}}, alt.length ? {l:'Anderes Budget', id:'gift_budget', f:() => budgetStep(a, true)} : {l:'Andere Gruppe', f:() => giftStep1()}]);
   }
   await aw(setPose('sketch'));
-  const hd = headPoint(); burst('twinkle', hd.x, hd.y + 30, 24); sfx('sparkle');
-  await speak({t:leadLine(a, res), emote:'bulb'});
-  burst(a.fx, S.ax, S.ay - 80, 12);
-  await dealCards(res.items);
-  cardLinks(a);
+  const hd = headPoint(); burst('twinkle', hd.x, hd.y + 8, 6); sfx('sparkle');
+  remember(a, budget, res.items);
+  await render({say:[{t:leadLine(a, res.items, B), emote:'bulb'}], cards:res.items, aud:a, list:a.l + '|' + (B.l || ''), chips:cardChips(a), focus:'show'});
 }
-/* "die meisten" nur, wenn jede Karte mindestens 100-mal bestellt wurde */
-function leadLine(a, res){
-  const all100 = res.items.every(p => +p.n >= 100);
-  let pre = '';
-  if (res.tier === 'near') pre = 'Eins liegt knapp über Deinem Budget, ist aber der Favorit. ';
-  if (res.tier === 'few') pre = 'Über 60 € gibt es hier nur wenig. ' + (res.items.some(p => p.q > 6000) ? 'Einige gibt es aber auch größer, dann kosten sie mehr. ' : '');
-  if (a.who === 'hier') return pre + (all100 ? 'Das wird hier am häufigsten bestellt:' : 'Das passt gut:');
-  return pre + (all100 ? `Das bestellen die meisten ${a.who}:` : `Das passt gut ${a.who}:`);
+function remember(a, budget, items){
+  const B = bandOf(budget);
+  ssUpd({aud:a.l, b:typeof budget === 'string' ? (OLDB[budget] || budget) : null, cap:B && B.hi !== Infinity ? B.hi : null, last:items.map(p => p.h).slice(0, 3), shown:Array.from(S.shown).concat(items.map(p => p.h)).slice(-30)});
 }
-function cardLinks(a){
-  /* "Andere Vorschläge" nur, wenn das Regal noch mindestens zwei weitere hergibt; sonst ein anderes Budget, falls das etwas bringt */
+function cardChips(a){
   const list = S.pool ? S.pool.list : null, more = !!list && pick(list, S.budget).tier !== 'none';
-  const alt = !more && list && okBudgets(list, S.budget).length ? {l:'Anderes Budget', f:() => budgetStep(a)} : null;
-  choices([
-    {l:'Andere Vorschläge', f:async () => {
-      const res = pick(S.pool ? S.pool.list : [], S.budget);
-      if (res.tier === 'none'){ await speak('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.'); return choices([{l:'Zur Kollektion', href:'/collections/' + a.hs[0]}].concat(okBudgets(S.pool ? S.pool.list : null, S.budget).length ? [{l:'Anderes Budget', f:() => budgetStep(a)}] : [], [{l:'Andere Gruppe', f:() => giftStep1()}])); }
-      await speak(res.tier === 'near' ? 'Eins liegt knapp über Deinem Budget, ist aber beliebt.' : res.items.every(p => +p.n >= 100) ? 'Hier sind noch ein paar, die oft bestellt werden.' : 'Hier sind noch ein paar Ideen.');
-      await dealCards(res.items); cardLinks(a);
-    }},
-    {l:'Alle ansehen', link:1, href:'/collections/' + a.hs[0], say:'Ich bring Dich zur ganzen Kollektion.'},
-    {l:'Sonderanfertigung', link:1, href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'},
-    {l:'Gutschein', link:1, href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'}
-  ].map(x => x.l === 'Andere Vorschläge' && !more ? alt : x).filter(Boolean), {focus:false});
-  const b = $$('.smmk-show', stage).find(x => !x.disabled && x.offsetParent !== null);
-  if (b) try { b.focus({preventScroll:true}); } catch (e) {}
+  const c = [];
+  if (more) c.push({l:'Andere Vorschläge', id:'more', f:() => moreCards(a)});
+  else if (list && typeof S.budget === 'string' && okBudgets(list, S.budget).length) c.push({l:'Anderes Budget', id:'gift_budget', f:() => budgetStep(a, true)});
+  if (minis(list).length) c.push({l:'Kleinigkeit dazu?', id:'kleinigkeit', f:() => miniCards(a)});
+  if (a.hs[0]) c.push({l:'Alle ansehen', link:1, id:'all', href:'/collections/' + a.hs[0], say:'Ich bring Dich zur ganzen Kollektion.'});
+  c.push({l:'Was anderes suchen', link:1, f:() => changeStep()});
+  c.push({l:'Sonderanfertigung', link:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'});
+  c.push({l:'Gutschein', link:1, id:'gutschein', href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'});
+  return c;
+}
+async function moreCards(a){
+  const res = pick(S.pool ? S.pool.list : [], S.budget), B = bandOf(S.budget) || BANDS.b60p;
+  if (res.tier === 'none') return ask('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.', [{l:'Zur Kollektion', id:'all', href:'/collections/' + a.hs[0]}, {l:'Was anderes suchen', f:() => changeStep()}]);
+  remember(a, S.budget, res.items);
+  await render({say:[{t:leadLine(a, res.items, B), emote:'bulb'}], cards:res.items, aud:a, list:a.l + '|' + B.l, chips:cardChips(a), focus:'show'});
+}
+async function miniCards(a){
+  const items = minis(S.pool ? S.pool.list : []).slice(0, 3);
+  if (!items.length) return cardChips(a);
+  await render({say:[{t:`Kleinigkeiten unter 10 € aus ${srcOf(a)}, die meistbestellten zuerst:`, emote:'bulb'}], cards:items, aud:a, list:a.l + '|unter 10 €', chips:cardChips(a), focus:'show'});
+}
+/* Zurück zu meinen Vorschlägen: dieselben drei Karten noch einmal austeilen, ohne neu zu fragen */
+async function resumeCards(){
+  const s = ssRead(), a = sessAud(s);
+  if (!a || !Array.isArray(s.last) || !s.last.length) return giftStep1();
+  S.aud = a; S.budget = s.b || (s.cap ? {l:'bis ' + euro(s.cap), lo:0, hi:s.cap, s:'bis ' + euro(s.cap)} : null); S.shown = new Set(s.shown || []);
+  await ensureOut('sketch', 'poof');
+  const r = await think(poolOf(a), {pose:'sketch'});
+  if (r.err) return ask(r.line, [{l:'Zur Kollektion', id:'all', href:'/collections/' + a.hs[0]}, {l:'Was anderes suchen', f:() => changeStep()}]);
+  S.pool = {a, list:r.res};
+  const items = s.last.map(hd => r.res.find(p => p.h === hd)).filter(Boolean).map(p => withFit(p, S.budget || 'b60p'));
+  if (!items.length) return budgetStep(a);
+  await render({say:[{t:'Da sind wir wieder. Hier sind Deine Vorschläge.', emote:'bulb'}], cards:items, aud:a, list:a.l + '|' + ((bandOf(S.budget) || {}).l || ''), chips:cardChips(a), focus:'show'});
 }
 function showIt(p, btn){
   $$('.smmk-show', stage).forEach(b => { b.disabled = true; });
-  push('sm_monk_step', {sm_step:'show_product', sm_handle:p.h});
+  markUsed(); TURN++;
+  ecomm('select_item', (S.aud ? S.aud.l : 'hier') + '|' + ((bandOf(S.budget) || {}).l || ''), [p]);
   newTurn('Du: Zeig es mir');
-  go(() => navTo(p.u, {k:'pdp', h:p.h, z:p.z, t:p.t}, 'Ich bring Dich hin.'));
+  const B = bandOf(S.budget);
+  go(() => navTo(linkOf(p), {k:'pdp', h:p.h, z:p.z, t:p.t, cap:B && B.hi !== Infinity ? B.hi : null, v:p.cv ? p.cv.id : 0, s:p.cv ? p.cv.l : ''}, 'Ich bring Dich hin.'));
 }
 function wappenChoice(){ return {l:'Wappen-Preis berechnen', href:'/pages/dein-wappen', say:'Den Preis rechnet Dir unser Wappen-Rechner aus. Ich bring Dich hin.'}; }
+
+/* ---------- Produktseite: Leitfaden und Checkliste ---------- */
 async function productOpener(pers){
-  await ensureOut('sketch', 'leap'); newTurn(); S.sizeDone = false;
-  if (CTX.gc){
-    await speak([...hello(), {t:'Beim Gutschein wählst Du den Betrag selbst. Soll ich Dir zeigen, wo?', emote:'bulb'}]);
-    return choices([{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
-  }
-  if (pers){
-    await speak([...hello(), {t:'Dieses Stück wird mit Deinem Wunschtext graviert. Soll ich Dir zeigen, wo Du ihn eingibst?', emote:'bulb'}]);
-    const c = [{l:'Ja, zeig es mir', pri:1, f:() => pdpGuide(true)}];
-    if (sizeFieldset()) c.push({l:'Welche Größe passt?', f:() => sizeAnswer(true)});
-    c.push({l:'Wann kommt es an?', f:() => whenAnswer(true)});
-    if (isWappen()) c.push(wappenChoice());
-    c.push({l:'Was anderes suchen', f:() => giftStep1()});
-    return choices(c);
-  }
-  await speak([...hello(), {t:'Dieses Stück gibt es ohne Gravur, direkt zum Bestellen. Die Menge wählst Du hier auf der Seite.', emote:'bulb'}]);
-  return choices([{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Versand und Lieferzeit', f:() => whenAnswer(false)}, {l:'Was anderes suchen', f:() => giftStep1()}]);
+  await ensureOut('sketch', 'leap'); newTurn(); S.done = {};
+  if (CTX.gc) return ask([...hello(), {t:'Beim Gutschein wählst Du den Betrag selbst. Soll ich Dir zeigen, wo?', emote:'bulb'}], [{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
+  const ses = sessionChips();
+  const intro = pers ? 'Dieses Stück wird mit Deinem Wunschtext graviert. Soll ich Dir zeigen, wie es geht?' : 'Dieses Stück gibt es ohne Gravur, direkt zum Bestellen. Soll ich Dir zeigen, wo?';
+  const c = ses.concat([{l:pers ? 'Ja, zeig es mir' : 'Zeig mir, wo', pri:ses.length ? 0 : 1, f:() => pdpGuide(pers)}]);
+  if (sizeFieldset()) c.push({l:'Welche Größe passt?', id:'pdp_size', f:() => sizeAnswer(pers)});
+  c.push({l:'Wann kommt es an?', id:'pdp_when', f:() => whenAnswer(pers)});
+  if (isWappen()) c.push(wappenChoice());
+  c.push({l:'Was anderes suchen', f:() => changeStep()});
+  return ask([...hello(), {t:intro, emote:'bulb'}], c);
 }
-async function pdpGuide(pers, fromCue){
-  if (fromCue) await ensureOut('curator', 'poof'); else { await ensureOut('sketch', 'poof'); await aw(setPose('curator')); }
-  if (fromCue) newTurn();
-  const tg = await pdpTarget(pers);
-  if (!tg){ await aw(setPose('sketch')); await speak('Da bist Du. Hier oben findest Du alles zum Produkt.'); return productChips(pers); }
-  markerOn(tg.el);
-  await laserAt(tg.el, {spot:true, keep:2200, avoid:tg.kind === 'qty' || tg.kind === 'amount' ? [visibleOne('main .product-form__submit, main [name="add"]')] : []});
-  if (tg.kind === 'amount') await speak('Hier wählst Du den Betrag. Darunter kaufst Du den Gutschein, den Code bekommst Du per E-Mail.');
-  else if (tg.kind === 'pers') await speak('Hier klickst Du auf Jetzt personalisieren und gibst Deinen Text ein. Die Vorschau siehst Du sofort.');
-  else if (tg.kind === 'qty') await speak('Hier wählst Du die Menge und legst es in den Warenkorb.');
-  else await speak('Hier legst Du es in den Warenkorb.');
-  productChips(pers);
+/* Nächster Schritt der Checkliste: erst Text eingeben (bis der Zepto-Dialog einmal offen war), dann in den Warenkorb */
+function nextStep(pers){
+  const z = pers && !S.zOpened && !CTX.gc ? visibleOne('.pplr-c-button') : null;
+  if (z) return {l:'Jetzt Text eingeben', id:'pdp_pers', f:async () => { watchZepto(); spotOff(); markerOff(); await laserAt(z, {spot:true, dim:false}); markerOn(z); await ask('Klick hier auf Jetzt personalisieren und gib Deinen Text ein. Die Vorschau siehst Du sofort.', productChoices(pers)); }};
+  return {l:'In den Warenkorb', id:'pdp_atc', f:async () => { spotOff(); markerOff(); const a = atcButton(); if (a){ await laserAt(a, {spot:true, dim:false}); markerOn(a); } await ask(a ? 'Hier legst Du es in den Warenkorb.' : 'Den Warenkorb-Knopf finde ich gerade nicht, schau gleich unter dem Preis.', productChoices(pers)); }};
 }
-function productChips(pers){
-  const c = [];
-  if (!S.sizeDone && !CTX.gc && sizeFieldset()) c.push({l:'Welche Größe passt?', f:() => sizeAnswer(pers)});
-  if (!CTX.gc) c.push({l:'Wann kommt es an?', f:() => whenAnswer(pers)});
-  c.push({l:'Was anderes suchen', f:() => { markerOff(); spotOff(); return giftStep1(); }}, {l:'Danke', f:() => exitFlow()});
-  choices(c);
+/* Checkliste: der nächste Schritt zuerst, beantwortete Fragen fallen raus, der Leitfaden bleibt erreichbar */
+function productChoices(pers, o){
+  o = o || {};
+  const ses = o.session ? sessionChips() : [], nx = nextStep(pers);
+  nx.pri = ses.length ? 0 : 1;
+  const c = ses.concat([nx]);
+  if (!S.done.size && !CTX.gc && sizeFieldset()) c.push({l:'Welche Größe passt?', id:'pdp_size', f:() => sizeAnswer(pers)});
+  if (!S.done.when && !CTX.gc) c.push({l:'Wann kommt es an?', id:'pdp_when', f:() => whenAnswer(pers)});
+  c.push({l:'Zeig mir alles noch mal', link:1, f:() => pdpGuide(pers)});
+  if (!o.session){ const s2 = sessionChips()[0]; if (s2) c.push(Object.assign({}, s2, {pri:0, link:1})); }
+  c.push({l:'Was anderes suchen', f:() => { markerOff(); spotOff(); return changeStep(); }});
+  return c;
 }
-async function sizeAnswer(pers){
-  spotOff(); markerOff(); await ensureOut('measure', 'poof'); await aw(setPose('measure'));
+/* Zepto-Personalisierer: erst nach dem Klick des Besuchers beobachten, ob der Dialog einmal aufging */
+let zObs = null;
+function zeptoOpen(){ return $$('.pplr_crop-modal, #pplr_myModal').some(e => { const s = getComputedStyle(e); return s.display !== 'none' && s.visibility !== 'hidden' && e.getBoundingClientRect().height > 0; }); }
+function watchZepto(){
+  if (zObs || S.zOpened) return;
+  let raf = 0;
+  zObs = new MutationObserver(() => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; if (zeptoOpen()){ S.zOpened = true; zObs.disconnect(); zObs = null; } }); });
+  zObs.observe(d.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style', 'class']});
+  setTimeout(() => { if (zObs){ zObs.disconnect(); zObs = null; } }, 180000);
+}
+/* Zwischen zwei Zeige-Schritten kurz stehen lassen (Klick oder Enter geht weiter) */
+async function hold(ms){
+  if (S.classic) return;
+  box.classList.add('wait'); S.waitAdv = true;
+  try { await aw(Promise.race([sleep(ms || 1400), new Promise(r => { advResolve = r; })])); }
+  finally { advResolve = null; S.waitAdv = false; box.classList.remove('wait'); }
+}
+async function pdpGuide(pers, fromCue, cue){
+  cue = cue || {};
+  await ensureOut('curator', 'poof'); if (fromCue) newTurn();
+  S.done = S.done || {};
+  /* Titel und Preis bleiben oben sichtbar */
+  scrollTopTo(productInfo()); await w(150);
+  /* Die Karte versprach eine Größe; das Bestseller-Skript der Seite wählt sonst die Bestseller-Größe */
   const fs = sizeFieldset();
-  if (!fs){ await speak('Dieses Stück gibt es nur in einer Größe.'); return productChips(pers); }
-  const lg = ($('legend, label', fs).textContent || 'Größe').trim().split('\n')[0].trim();
-  const sel = $('input:checked + label', fs) || fs;
-  S.sizeDone = true;
-  await laserAt(fs, {spot:true, keep:2000, aim:sel});
-  await speak([`Die Größe wählst Du hier bei ${lg}. Gemeint ist immer die längste Seite, bei runden Stücken der Durchmesser.`,
-    'Mein Tipp: Miss vorher den Platz aus, an dem es hängen soll, und kleb Dir ein Stück Papier in der Größe hin. Der Preis passt sich hier direkt an.']);
-  productChips(pers);
+  if (cue.s && fs){ const it = sizeLabels(fs).find(s => s.v === cue.s); if (it && !it.input.checked){ (it.label || it.input).click(); await w(450); } }
+  const cap = cue.cap != null ? cue.cap : (ssRead().cap || null);
+  if (cap && fs && !CTX.gc){
+    let tb = null; try { tb = await aw(sizeTable(fs)); } catch (e){ if (e === ABORT) throw e; }
+    if (tb && tb.sel && tb.sel.price > cap){
+      const fit = tb.rows.filter(r => r.c <= cap).pop();
+      if (fit){
+        const bs = bestsellerSize(fs), bsr = bs && tb.rows.find(r => r.v === bs), lab = sizeLabels(fs).find(s => s.v === fit.v);
+        await laserAt(fs, {spot:true, dim:false, aim:lab && lab.label || fs});
+        await speak(`Für Dein Budget passt ${fmtSize(fit.v)} für ${eur(fit.c)}.` + (bsr && bsr.v !== fit.v ? ` Am häufigsten genommen wird hier ${fmtSize(bsr.v)} für ${eur(bsr.c)}.` : ''));
+        await hold(2200);
+      }
+    }
+  }
+  const og = otherOptionSet();
+  if (og){ await laserAt(og, {spot:true, dim:false}); await speak(legendOf(og) ? `Unter „${legendOf(og)}“ wählst Du die Ausführung.` : 'Hier wählst Du die Ausführung.'); await hold(1400); }
+  const tg = await pdpTarget(pers);
+  if (!tg){ await aw(setPose('sketch')); return ask('Da bist Du. Hier oben findest Du alles zum Produkt.', productChoices(pers, {session:fromCue})); }
+  await laserAt(tg.el, {spot:true, dim:false, keep:2200, avoid:tg.kind === 'qty' || tg.kind === 'amount' ? [atcButton()] : []});
+  markerOn(tg.el);
+  if (tg.kind === 'pers') watchZepto();
+  const say = tg.kind === 'amount' ? 'Hier wählst Du den Betrag. Darunter kaufst Du den Gutschein, den Code bekommst Du per E-Mail.'
+    : tg.kind === 'pers' ? 'Hier klickst Du auf Jetzt personalisieren und gibst Deinen Text ein. Die Vorschau siehst Du sofort.'
+    : tg.kind === 'qty' ? 'Hier wählst Du die Menge und legst es in den Warenkorb.' : 'Hier legst Du es in den Warenkorb.';
+  await ask(say, productChoices(pers, {session:fromCue}));
+}
+/* Größe: Beschriftungen von der Seite, Preise aus /products/<handle>.js, Bestseller-Abzeichen aus dem DOM */
+async function sizeAnswer(pers){
+  spotOff(); markerOff(); await ensureOut('measure', 'poof');
+  const fs = sizeFieldset();
+  if (!fs) return ask('Dieses Stück gibt es nur in einer Größe.', productChoices(pers));
+  S.done.size = true;
+  const r = await think(sizeTable(fs), {ms:6000, pose:'measure'});
+  const tb = r.res, rows = tb ? tb.rows : [], say = [];
+  const bs = bestsellerSize(fs), bsr = bs && rows.find(x => x.v === bs), lo = rows[0], hi = rows[rows.length - 1];
+  if (rows.length > 1){
+    if (bsr){
+      let t = `Am häufigsten genommen: ${fmtSize(bsr.v)} für ${eur(bsr.c)}.`;
+      if (bsr !== lo) t += ` Kleiner geht ab ${eur(lo.c)} (${fmtSize(lo.v)})` + (bsr !== hi ? `, groß bis ${eur(hi.c)} (${fmtSize(hi.v)}).` : '.');
+      else if (bsr !== hi) t += ` Groß geht bis ${eur(hi.c)} (${fmtSize(hi.v)}).`;
+      say.push(t);
+    } else say.push(`Es gibt ${rows.length} Größen, von ${fmtSize(lo.v)} für ${eur(lo.c)} bis ${fmtSize(hi.v)} für ${eur(hi.c)}.`);
+    const cap = ssRead().cap; if (cap){ const fit = rows.filter(x => x.c <= cap).pop(); if (fit) say.push(`Für Dein Budget passt ${fmtSize(fit.v)} für ${eur(fit.c)}.`); }
+  } else say.push(`Die Größe wählst Du hier bei ${legendOf(fs) || 'Größe'}.`);
+  /* steht so in den FAQ („Wie werden eure Größen angegeben?“) */
+  say.push('Gemessen wird bei eckigen Stücken die längste Seite, bei runden der Durchmesser.');
+  const lab = sizeLabels(fs).find(s => s.v === (bsr ? bsr.v : '')) || sizeLabels(fs).find(s => s.input.checked);
+  await render({actions:[{name:'pose', target:'measure'}, {name:'laser', target:fs, aim:lab && lab.label}], say:say.slice(0, 3), chips:productChoices(pers)});
+}
+/* Lieferzeit: Zahlen aus den FAQ, Fenster ab heute in Werktagen */
+function oberflaeche(){ const f = optionSets().find(x => /Oberfl/i.test(legendOf(x))); const i = f && $('input:checked', f); return i ? i.value : ''; }
+function shipSay(){
+  const say = [shipLine()];
+  if (/corten/i.test(oberflaeche())) say.push('Cortenstahl dauert ein paar Tage länger, weil wir ihn vorrosten.');
+  say.push(xmasLine() || noExpress());
+  return say;
 }
 async function whenAnswer(pers){
   spotOff(); markerOff(); await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
-  await speak('Wir fertigen jedes Stück selbst in unserer Werkstatt. Wie lange Fertigung und Versand gerade dauern und was der Versand kostet, steht in unseren Versandbedingungen.');
-  const c = [{l:'Versandbedingungen', href:'/pages/versandbedingungen'}];
-  if (CTX.t === 'product') c.push({l:'Zurück zum Produkt', f:async () => { await speak('Klar. Was möchtest Du noch wissen?'); productChips(pers === undefined ? !!CTX.pz : pers); }});
-  else c.push({l:'Andere Frage', f:async () => { await speak('Wobei kann ich Dir helfen?'); mainMenu(); }});
-  choices(c);
+  S.done.when = true;
+  const acc = $$('details').find(x => /Produktionszeit/i.test(($('summary', x) || {}).textContent || ''));
+  const c = CTX.t === 'product' ? productChoices(pers === undefined ? !!CTX.pz : pers) : menuList();
+  /* erst die Seite zeigen (Produktionszeit aufklappen und anlasern), dann die Rechnung, damit der Text stehen bleibt */
+  await render({actions:acc ? [{name:'open', target:acc}, {name:'laser', target:acc}] : [], say:shipSay(), chips:[c[0], {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}].concat(c.slice(1))});
+}
+async function shipAnswer(){
+  await ensureOut('sketch', 'poof');
+  await render({say:shipSay().concat([shipCost()]).slice(0, 3), source:{l:'Versandbedingungen', href:'/pages/versandbedingungen'}});
+  await ask('Hat das geholfen?', helpfulChips('Versand'));
 }
 /* Bestellung: ruhiger Modus, die Testversion kann noch nicht nachschauen */
 async function orderFlow(pre){
   S.calm = true; markerOff(); spotOff();
-  push('sm_monk_step', {sm_step:'order'});
   await ensureOut('pc', 'leap'); await aw(setPose('pc', {dust:false}));
   await speak((pre || []).concat(['Ich helfe Dir gern. In meiner Testversion kann ich Bestellungen aber noch nicht selbst nachschauen.']));
-  const onTrack = pageKind() === 'track';
-  if (onTrack){
+  const back = {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await menuStep(['Klar.']); }};
+  if (pageKind() === 'track'){
     const acc = visibleOne('main details') || visibleOne('main .accordion__item');
     if (acc) await laserAt(acc, {spot:true, dim:false, keep:1600});
-    await speak('Hier unten beantworten wir die häufigsten Fragen zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.');
-    return choices([{l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt'}, say:'Ich bring Dich zum Kontaktformular.'}, {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await speak('Klar. Worum geht es?'); mainMenu(); }}, {l:'Danke', f:() => exitFlow()}]);
+    return ask('Hier unten beantworten wir die häufigsten Fragen zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.', [{l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt', topic:'Meine Bestellung'}, say:'Ich bring Dich zum Kontaktformular.'}, back, {l:'Danke', f:() => exitFlow()}]);
   }
-  await speak('Auf der Seite Sendungsverfolgung findest Du die Antworten zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.');
-  choices([{l:'Zur Sendungsverfolgung', pri:1, href:'/pages/sendungsverfolgung', say:'Ich bring Dich hin.'}, {l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt'}, say:'Ich bring Dich zum Kontaktformular.'}, {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await speak('Klar. Worum geht es?'); mainMenu(); }}]);
+  await ask('Auf der Seite Sendungsverfolgung findest Du die Antworten zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.', [{l:'Zur Sendungsverfolgung', pri:1, href:'/pages/sendungsverfolgung', say:'Ich bring Dich hin.'}, {l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt', topic:'Meine Bestellung'}, say:'Ich bring Dich zum Kontaktformular.'}, back]);
 }
-/* FAQ: Themen führen zur FAQ-Seite und markieren dort die passende Gruppe */
-/* [Knopf, FAQ-Gruppe, Satzteil nach "Hier sind unsere Antworten"] */
+/* FAQ: Themen führen zur FAQ-Seite, dort zitiert der Mönch die geöffnete Antwort */
 const FAQ = [['Versand und Lieferzeit', 'Versand', 'zu Versand und Lieferzeit'], ['Bestellung und Bezahlung', 'Bestellung', 'zu Bestellung und Bezahlung'],
   ['Material und Produkte', 'Produkte', 'zu Material und Produkten'], ['Montage', 'Montage', 'zur Montage'], ['Rückgabe', 'Rückgabe', 'zur Rückgabe']];
-const faqPhrase = g => (FAQ.find(f => f[1] === g) || [0, 0, 'zu ' + g])[2];
+const FAQ_T = {}; FAQ.forEach(f => { FAQ_T[f[1]] = f[0]; });
 async function faqTopics(pre){
   S.calm = false;
   await ensureOut('sketch', 'leap');
-  const onFaq = pageKind() === 'faq', topics = FAQ.map(([l, g]) => ({l, f:() => faqShow(g, l)})), hu = {l:'Mit Mensch sprechen', f:() => human()};
-  await speak((pre || []).concat([onFaq ? 'Such Dir ein Thema aus, dann zeig ich Dir die Antworten hier auf der Seite. Oder schreib direkt unserem Team.' : 'Worum geht es? Ich bring Dich zu den passenden Antworten.']));
-  choices(onFaq ? [hu].concat(topics) : topics.concat([hu]));
+  const onFaq = pageKind() === 'faq', topics = FAQ.map(([l, g]) => ({l, id:'faq_topic', v:g, f:() => faqShow(g, l)})), hu = {l:'Mit Mensch sprechen', f:() => human()};
+  await ask((pre || []).concat([onFaq ? 'Such Dir ein Thema aus, dann zeig ich Dir die Antworten hier auf der Seite. Oder schreib direkt unserem Team.' : 'Worum geht es? Ich bring Dich zu den passenden Antworten.']), onFaq ? [hu].concat(topics) : topics.concat([hu]));
 }
+function firstSentences(t, n){ const s = String(t || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„])/); return s.slice(0, n).join(' '); }
 async function faqShow(g, label, fromCue){
   if (pageKind() !== 'faq') return navTo('/pages/fragen', {k:'faq', g, l:label}, 'Ich bring Dich zu den Antworten.');
-  if (fromCue){ await ensureOut('search', 'poof'); newTurn(); }
-  push('sm_monk_step', {sm_step:'faq', sm_topic:g});
-  actor.classList.add('sway'); await aw(setPose('search'));
-  await speak({t:'Ich blätter kurz nach.', emote:'…', emoteMs:900, minMs:500});
-  actor.classList.remove('sway');
+  if (fromCue){ await ensureOut('search', 'poof'); newTurn(); push('sm_monk_step', {sm_step:'faq_topic', sm_value:g}); }
+  await Promise.all([speak({t:'Ich blätter kurz nach.'}), think(sleep(200), {pose:S.mobile ? 'sketch' : 'curator'})]);
+  /* den Themen-Chip der Seite selbst klicken, damit ihr eigener gedrückter Zustand gilt */
   const chip = $(`#ftFaqC [data-fc="${g}"]`); if (chip && chip.getAttribute('aria-pressed') !== 'true') chip.click();
   await w(120);
   const grp = faqGroup(g);
-  await aw(setPose(S.mobile ? 'sketch' : 'curator'));
-  if (!grp){ await speak('Die Gruppe finde ich gerade nicht. Schau gern in die Liste hier auf der Seite.'); return faqAfter(); }
-  const det = $('details', grp); if (det) det.open = true;
-  await laserAt(grp, {spot:true, dim:false, keep:1400});
-  const q = det ? ($('summary', det).textContent || '').trim() : '';
-  await speak({t:`Hier sind unsere Antworten ${faqPhrase(g)}.` + (q ? ` Die erste Frage hab ich Dir schon aufgeklappt: „${q}“` : ''), emote:'bulb'});
-  await speak('Hat das geholfen?');
-  faqAfter();
+  if (!grp) return ask('Die Gruppe finde ich gerade nicht. Schau gern in die Liste hier auf der Seite.', [{l:'Andere Frage', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}]);
+  return faqQuote(g, 0);
 }
-function faqAfter(){
-  choices([
-    {l:'Ja, danke', f:async () => { spotOff(); await aw(setPose('sketch')); emote('heart', 1600); await speak('Freut mich! Wenn noch was ist, frag einfach.'); choices([{l:'Andere Frage', f:() => faqTopics()}, {l:'Schließen', f:() => exitFlow()}]); }},
-    {l:'Andere Frage', f:() => { spotOff(); return faqTopics(); }},
-    {l:'Nein, ich frag das Team', f:() => { spotOff(); return human(); }}
-  ]);
+async function faqQuote(g, idx){
+  const grp = faqGroup(g), dets = grp ? $$('details', grp) : [], det = dets[idx];
+  if (!det) return faqTopics();
+  dets.forEach(x => { if (x !== det && x._smmk) x.open = false; }); det._smmk = 1;
+  if (!S.classic && !S.typed) $$('.smmk-line, .smmk-src', bbody).forEach(n => n.remove());
+  const ans = $$(':scope > :not(summary)', det).map(n => n.textContent).join(' ');
+  const next = dets.slice(idx + 1, idx + 3).map((x, k) => { const q = ($('summary', x).textContent || '').trim(); return {l:q.length > 58 ? q.slice(0, 56).replace(/\s+\S*$/, '') + ' …' : q, id:'faq_q', v:g, f:() => faqQuote(g, idx + 1 + k)}; });
+  await render({actions:[{name:'open', target:det}, {name:'laser', target:det}], say:[{t:'Kurz gesagt: ' + firstSentences(ans, 2), emote:'bulb'}], source:{l:`${g} (FAQ)`}});
+  await ask('Hat das geholfen?', helpfulChips(g).concat(next));
 }
-async function human(){
+async function human(topic){
   S.calm = true; markerOff(); spotOff();
   push('sm_monk_step', {sm_step:'human'});
-  if (pageKind() === 'kontakt') return kontaktGuide();
+  if (pageKind() === 'kontakt') return kontaktGuide(false, topic);
   await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
   await speak('Unser Team hilft Dir gern persönlich und antwortet innerhalb von zwei Werktagen. Ich bring Dich zur Kontaktseite.');
   await w(300);
-  return navTo('/pages/kontakt', {k:'kontakt'}, false);
+  return navTo('/pages/kontakt', {k:'kontakt', topic:topic || ''}, false);
 }
-async function kontaktGuide(fromCue){
+async function kontaktGuide(fromCue, topic){
   S.calm = true;
   await ensureOut('sketch', fromCue ? 'poof' : 'leap'); if (fromCue) newTurn();
   const f = contactForm();
-  if (f){ await aw(setPose('curator')); await laserAt(f, {spot:true, dim:false, keep:1600}); }
-  await speak(f ? 'Hier schreibst Du unserem Team. Wir antworten innerhalb von zwei Werktagen.' : 'Auf dieser Seite erreichst Du unser Team. Wir antworten innerhalb von zwei Werktagen.');
+  if (f) await laserAt(f, {spot:true, dim:false, keep:1600});
   S.calm = false;
-  choices([{l:'Danke', f:() => exitFlow()}, {l:'Doch lieber ein Geschenk finden', f:() => giftStep1()}]);
+  const c = [];
+  /* Thema erst nach dem Klick eintragen, nur in ein leeres Feld, keine persönlichen Daten */
+  if (f && topic) c.push({l:'Thema eintragen', pri:1, f:async () => {
+    const ta = f.querySelector('[name="contact[body]"]') || f.querySelector('textarea'), nm = f.querySelector('[name="contact[name]"]') || f.querySelector('input[type="text"]');
+    if (ta && !ta.value.trim()){ ta.value = 'Thema: ' + topic; ta.dispatchEvent(new Event('input', {bubbles:true})); }
+    await ask('Erledigt. Jetzt fehlen nur noch Name, E-Mail und Deine Nachricht.', [{l:'Danke', f:() => exitFlow()}], {focus:false});
+    if (nm) try { nm.focus(); } catch (e) {}
+  }});
+  c.push({l:'Danke', f:() => exitFlow()}, {l:'Doch lieber ein Geschenk finden', f:() => giftStep1()});
+  await ask(f ? 'Hier schreibst Du unserem Team. Wir antworten innerhalb von zwei Werktagen.' + (topic ? ` Soll ich das Thema „${topic}“ schon eintragen?` : '') : 'Auf dieser Seite erreichst Du unser Team. Wir antworten innerhalb von zwei Werktagen.', c);
 }
 async function sonderGuide(fromCue){
   await ensureOut('sketch', fromCue ? 'poof' : 'leap'); if (fromCue) newTurn();
   const f = visibleOne('#saForm') || visibleOne('main form');
-  if (f){ await aw(setPose('curator')); await laserAt(f, {spot:true, dim:false, keep:1600}); }
-  await speak(f ? 'Hier beschreibst Du Deine Idee. Ein Foto oder eine Skizze hilft unserem Team sehr.' : 'Auf dieser Seite beschreibst Du Deine Idee, unser Team meldet sich mit einem Angebot.');
-  choices([{l:'Danke', f:() => exitFlow()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}]);
+  if (f) await laserAt(f, {spot:true, dim:false, keep:1600});
+  await ask(f ? 'Hier beschreibst Du Deine Idee. Ein Foto oder eine Skizze hilft unserem Team sehr.' : 'Auf dieser Seite beschreibst Du Deine Idee, unser Team meldet sich mit einem Angebot.', [{l:'Danke', f:() => exitFlow()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}]);
 }
-/* Item get: nach einem Klick auf den Mönch landet etwas im Warenkorb */
-let floatTile = null, pendingGet = null;
+
+/* ---------- Warenkorb: was die Seite schon weiß ---------- */
+function cartJs(){ return fetch('/cart.js', {credentials:'same-origin', cache:'no-store'}).then(r => r.json()); }
+const hasPersText = c => (c.items || []).some(i => i.properties && Object.keys(i.properties).some(k => k[0] !== '_' && String(i.properties[k] || '').trim()));
+async function cartOpener(){
+  await ensureOut('sketch', 'leap'); newTurn();
+  let c = null; try { c = await aw(cartJs()); } catch (e){ if (e === ABORT) throw e; }
+  const say = [...hello()], chips = [];
+  if (c){
+    const gap = SHIP.free - (c.total_price || 0);
+    if (gap > 0){ say.push(`Noch ${euro(gap)} bis zum Gratisversand. Soll ich Dir was Passendes dafür suchen?`); chips.push({l:'Ja, such mir was', pri:1, id:'cart_gap', v:R(gap / 100), f:() => gapFlow(gap)}); }
+    else say.push('Der Versand ist für Dich gratis.');
+    if (hasPersText(c)) say.push('Schau Dir Deinen Text noch mal an, er steht unter dem Artikel.');
+  }
+  /* die Warenkorb-Zeilen bleiben frei */
+  const li = visibleOne('main .cart-item'); if (li){ await dodge(li); reveal(li); }
+  /* Geschenkverpackung: Beschriftung und Preis von der Seite, angehakt wird nie */
+  const gw = visibleOne('main .smc-gift');
+  if (gw){
+    const tt = (($('b', gw) || {}).textContent || 'Als Geschenk verpacken').trim(), sm = (($('small', gw) || {}).textContent || '').trim();
+    await laserAt(gw, {spot:true, dim:false});
+    say.push(`${tt} kannst Du hier${sm ? ': ' + sm : ''}. Das Häkchen setzt Du selbst.`);
+  }
+  say.push(shipLine());
+  await ask(say, chips.concat([{l:'Noch ein Geschenk finden', f:() => giftStep1()}, {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}, {l:'Mit Mensch sprechen', f:() => human()}]));
+}
+function gapFlow(gap){
+  const a = sessAud(ssRead()) || BELIEBT, t = 'bis ' + euro(gap);
+  return cardsFlow(a, {l:t, lo:0, hi:gap, s:t});
+}
+async function emptyCart(){
+  await ensureOut('sketch', 'leap'); newTurn();
+  const jl = visibleOne('main .smc-mini') || visibleOne('main .smc-empty__body');
+  if (jl) await laserAt(jl, {spot:true, dim:false, keep:900});
+  const ses = sessionChips();
+  await ask([...hello(), {t:'Jakob hat schon Vorschläge, ich such Dir gern gezielter.', emote:'bulb'}], ses.concat([{l:'Ja, such mir was', pri:ses.length ? 0 : 1, id:'gift_start', f:() => giftStep1()}, {l:'Nein danke', f:() => exitFlow()}]));
+}
+
+/* ---------- Item get: nach einem Klick auf den Mönch landet etwas im Warenkorb ---------- */
+let floatTile = null, propEl = null, pendingGet = null;
 /* Bilder aus /cart.js zeigen auf cdn.shopify.com: auf den eigenen /cdn/shop-Pfad umschreiben, damit nichts an Dritte geht */
 function sameOrigin(u){ u = String(u || '').replace(/^(https?:)?\/\/cdn\.shopify\.com\/s\/files\/\d+\/\d+\/\d+\/\d+\//, '/cdn/shop/'); return /^\//.test(u) && !/^\/\//.test(u) ? u + (u.includes('?') ? '&' : '?') + 'width=160' : ''; }
 function realCount(cart){ return (cart.items || []).filter(i => !HELPER_TYPE.test(i.product_type || '') && !HELPER_HANDLE.test(i.handle || '')).reduce((s, i) => s + (i.quantity || 0), 0); }
@@ -1385,7 +2023,7 @@ function cartSoon(){ if (!S.used) return; clearTimeout(cartT); cartT = setTimeou
 async function checkCart(){
   if (cartBusy) return cartSoon(); cartBusy = true;
   try {
-    const c = await (await fetch('/cart.js', {credentials:'same-origin', cache:'no-store'})).json();
+    const c = await cartJs();
     const rc = realCount(c), prev = ssRead().rb;
     ssUpd({rb:rc, nb:c.item_count});
     if (prev != null && rc > prev){
@@ -1396,55 +2034,80 @@ async function checkCart(){
     }
   } catch (e) {} finally { cartBusy = false; }
 }
+const drawerOpen = () => { const x = $('cart-drawer'); return !!(x && x.classList.contains('active')); };
+function dockHeart(){ if (!dockEl || !dockEl.classList.contains('on')) return; const s = $('.smmk-dock-emo', dockWrap); s.innerHTML = ''; const c = emoteCanvas('heart'); s.append(c); popIn(c); sting('heart'); setTimeout(() => { s.innerHTML = ''; }, 2400); }
 let celebrating = false;
+/* Warenkorb-Drawer offen: nur ein Herz am Kopf. Das volle Item get nur, wenn der Drawer innerhalb von 10 s zugeht. */
 async function waitAndCelebrate(){
   if (celebrating) return; celebrating = true;
-  for (let i = 0; i < 600 && (S.yield || blockedNow()); i++) await sleep(200);
-  celebrating = false;
+  try {
+    if (drawerOpen()){
+      dockHeart();
+      const t0 = now(); while (drawerOpen() && now() - t0 < 10000) await sleep(200);
+      if (drawerOpen()){ pendingGet = null; return; }
+    }
+    for (let i = 0; i < 600 && (S.yield || blockedNow()); i++) await sleep(200);
+  } finally { celebrating = false; }
   if (!pendingGet) return;
   const g = pendingGet; pendingGet = null;
   build(); go(() => itemGet(g));
 }
+function clearProp(dust){
+  if (floatTile){ floatTile.remove(); floatTile = null; }
+  if (!propEl) return; const p = propEl; propEl = null;
+  if (dust && !still()){ const r = vr(p); groundDust(r.x + r.w / 2, r.y + r.h, 6); p.animate([{transform:'scale(1)'}, {transform:'scale(1.15,.8)'}, {transform:'scale(0)'}], {duration:180, easing:'steps(3,end)', fill:'forwards'}).finished.then(() => p.remove(), () => p.remove()); }
+  else p.remove();
+}
 async function itemGet(g){
-  S.calm = false; spotOff(); markerOff();
+  S.calm = false; spotOff(); markerOff(); S.outcome = 'cart';
   push('sm_monk_step', {sm_step:'item_get', sm_recommended:g.rec ? 1 : 0});
   await ensureOut(S.out ? S.pose : 'sketch', 'poof'); newTurn();
-  await aw(setPose('chest'));
-  const hd = headPoint();
-  if (floatTile){ floatTile.remove(); floatTile = null; }
-  const tx = R(hd.x - 39), ty0 = R(S.ay - 120 * sc() * 2 * .45), ty1 = R(hd.y - 132);
-  if (!S.classic && g.img){ floatTile = h('div', 'smmk-floaty', `<img alt="" src="${esc(sameOrigin(g.img))}">`); stage.append(floatTile); floatTile.style.transform = `translate(${tx}px,${ty1}px)`; }
-  if (!S.reduced && floatTile) anim(floatTile, [{transform:`translate(${tx}px,${ty0}px) scale(.3)`, opacity:0}, {transform:`translate(${tx}px,${ty1}px) scale(1)`, opacity:1}], {duration:600, easing:'steps(6,end)'});
-  sfx('sparkle');
-  for (let i = 0; i < 4; i++) burst('confetti', S.ax + (i - 1.5) * 50, hd.y - 80, 34);
-  burst('twinkle', tx + 39, ty1 + 20, 12);
+  await aw(setPose('sketch'));
+  clearProp(false);
+  /* Truhe als eigenes Requisit auf dem Boden neben ihm */
+  const k = S.mobile ? .25 : .35, cw = R(350 * k), ch = R(420 * k);
+  const cx = Math.max(cw / 2 + 8, Math.min(vpW() - cw / 2 - 8, S.ax + 70 * S.facing));
+  propEl = h('img', 'smmk-prop'); propEl.alt = ''; propEl.src = asset('chest'); Object.assign(propEl.style, {width:cw + 'px', height:ch + 'px', left:R(cx - cw / 2) + 'px', top:R(S.ay - ch) + 'px'});
+  stage.append(propEl);
+  const mouthP = {x:cx, y:S.ay - ch * .6};
+  if (!still()){
+    await anim(propEl, [{transform:'translateY(-80px)', opacity:0}, {transform:'translateY(0) scale(1.15,.8)', opacity:1, offset:.7}, {transform:'scale(1)', opacity:1}], {duration:260, easing:'steps(4,end)'});
+    groundDust(cx - cw / 2, S.ay, 3, -1); groundDust(cx + cw / 2, S.ay, 3, 1); sfx('thud');
+    await anim(propEl, [{transform:'scaleY(1)'}, {transform:'scaleY(1.1)'}, {transform:'scaleY(1)'}], {duration:160, easing:'steps(2,end)'});
+  }
+  const hd = headPoint(), tx = R(cx - 36), ty = R(hd.y - 70 - 28);
+  if (!S.classic && g.img){
+    floatTile = h('div', 'smmk-floaty', `<img alt="" src="${esc(sameOrigin(g.img))}">`); stage.append(floatTile); floatTile.style.transform = `translate(${tx}px,${ty}px)`;
+    if (!S.reduced) anim(floatTile, [{transform:`translate(${R(mouthP.x - 36)}px,${R(mouthP.y - 28)}px) scale(.3)`, opacity:0}, {transform:`translate(${R((mouthP.x + tx + 36) / 2 - 36 + 10)}px,${R(ty - 24)}px) scale(.85)`, opacity:1, offset:.6}, {transform:`translate(${tx}px,${ty}px) scale(1)`, opacity:1}], {duration:520, easing:'steps(6,end)'});
+    else anim(floatTile, [{opacity:0}, {opacity:1}], {duration:150});
+  }
+  sfx('sparkle'); burst('confetti', mouthP.x, mouthP.y, 40);
+  await w(300);
+  await hop(14, 220); await hop(14, 220);
   emote('heart', 2600);
-  await speak(g.rec ? 'Gute Wahl! Das wird ein schönes Geschenk.' : 'Gute Wahl! Liegt im Warenkorb.');
-  const onCart = CTX.t === 'cart';
-  choices([
-    onCart ? {l:'Weiter stöbern', f:() => exitFlow()} : {l:'Zum Warenkorb', pri:1, f:() => openCart()},
-    {l:'Noch ein Geschenk finden', f:async () => { if (floatTile){ floatTile.remove(); floatTile = null; } await aw(setPose('sketch')); return giftStep1(); }},
-    {l:onCart ? 'Danke' : 'Weiter stöbern', f:() => exitFlow()}
+  await ask(g.rec ? 'Gute Wahl! Das wird ein schönes Geschenk.' : line('itemGet'), [
+    CTX.t === 'cart' ? {l:'Weiter stöbern', f:() => exitFlow()} : {l:'Zum Warenkorb', pri:1, f:() => openCart()},
+    {l:'Noch ein Geschenk finden', f:async () => { clearProp(true); return giftStep1(); }},
+    {l:CTX.t === 'cart' ? 'Danke' : 'Weiter stöbern', f:() => exitFlow()}
   ]);
 }
 async function openCart(){
-  if (floatTile){ floatTile.remove(); floatTile = null; }
+  clearProp(true);
   const dr = $('cart-drawer');
   if (dr && typeof dr.open === 'function' && !S.mobile){ await exitFlow(); dr.open(); return; }
   return navTo('/cart', null, 'Ich bring Dich hin.');
 }
 /* Abgang */
 async function exitFlow(){
-  spotOff(); markerOff(); clearLaser(); clearTray(); steamOff();
-  if (floatTile){ floatTile.remove(); floatTile = null; }
+  spotOff(); markerOff(); clearLaser(); clearTray(); steamOff(); clearProp(true);
+  closeEv(S.outcome || 'none'); S.outcome = '';
   const inl = $('.smmk-404');
   S.tuck = false;
   const inlBack = () => { const im = inl && $(':scope > img', inl); if (im) im.style.visibility = ''; };
-  if (!S.out){ closeBox(); S.active = false; inlBack(); setOx(0); return; }
+  if (!S.out){ closeBox(); S.active = false; inlBack(); setOx(0); setYield(''); return; }
   newTurn(); S.calm = false;
   if (S.pose !== 'sketch' && S.pose !== 'rail') await aw(setPose('sketch', {dust:false}));
-  emote('note', 900);
-  closeBox();
+  await foldAway();
   await aw(leapBack());
   S.mx = null; S.idleState = null; S.active = false; setYield(''); setOx(0);
   /* erst den 404-Block wieder zeigen, dann den Fokus zurück an den Auslöser */
@@ -1453,19 +2116,45 @@ async function exitFlow(){
   if (tr) try { tr.focus({preventScroll:true}); } catch (e) {}
 }
 
-/* ---------- Leerlauf: Kaffee, dann Zzz ---------- */
+/* ---------- Freitext (nur mit ?moench_input=1): lokaler Schlagwort-Router, kein Netz, keine KI ---------- */
+const ROUTE_AUD = [[/feuerwehr/, 'Feuerwehr'], [/\bthw\b/, 'THW'], [/bundeswehr|soldat/, 'Soldaten'], [/handwerk|tischler|schreiner|maurer|zimmerer|elektriker|dachdecker|schlosser|schmied/, 'Handwerker'],
+  [/hochzeit|verlob|jahrestag|valentin|\bpaar/, 'Paare'], [/angel|angler/, 'Angler'], [/fu(ß|ss)ball/, 'Fußballer'], [/musik/, 'Musiker'], [/sport|fitness|läufer/, 'Sportler'],
+  [/grill/, 'Grillfans'], [/garage|werkstatt/, 'Garage und Werkstatt'], [/motorrad|biker/, 'Motorrad'], [/garten/, 'Garten'], [/pferd|hund|katze|tier/, 'Tierfreunde'],
+  [/familie/, 'Familie'], [/umzug|einzug|eigenheim|zuhause/, 'Zuhause'], [/eltern/, 'Eltern']];
+async function routeText(text){
+  const t = String(text || '').toLowerCase();
+  await ensureOut('sketch', 'poof');
+  const m = ROUTE_AUD.find(([re]) => re.test(t)), a = m ? audBy(m[1]) : null;
+  const hit = k => { push('sm_monk_free', {sm_matched:1, sm_route:k}); };
+  if (a){ hit('aud'); return pickAudience(a, true); }
+  if (/geburtstag|geschenk/.test(t)){ hit('gift'); return audienceStep(); }
+  if (/bestellung|paket|sendung/.test(t)){ hit('order'); return orderFlow(); }
+  if (/rückgabe|ruckgabe|storno|kaputt/.test(t)){ hit('human'); return human('Rückgabe'); }
+  if (/größe|groesse|groß|klein/.test(t) && CTX.t === 'product'){ hit('size'); return sizeAnswer(!!CTX.pz); }
+  if (/lieferzeit|wann|versand|liefer/.test(t)){ hit('ship'); return CTX.t === 'product' ? whenAnswer(!!CTX.pz) : shipAnswer(); }
+  push('sm_monk_free', {sm_matched:0});
+  await aw(setPose('shrug')); emote('?', 1400);
+  await render({say:[line('learn')], chips:menuList(), form:'compose'});
+}
+
+/* ---------- Leerlauf: Gewicht verlagern, summen, Kaffee, dann Zzz ---------- */
 let steamE = null;
 function steamOn(){ steamOff(); steamE = emitter('steam', () => { if (S.pose !== 'coffee' || !S.out) return null; const s = poseScale('coffee'); return {x:S.ax + (148 - 110) * s * S.facing, y:S.ay + (175 - 418) * s}; }, .18); }
 function steamOff(){ if (steamE) stopEmitter(steamE); steamE = null; }
 function idleCheck(){
   if (!S.out || S.busy || S.typing || S.hidden || S.yield || S.calm || S.anims > 0 || spotState) return;
-  const idle = performance.now() - S.lastInput;
-  if (S.mobile && !S.reduced && !S.classic && boxOn() && !S.idleState && !S.patrolled && !S.patrolling && idle >= 7000 && idle < 19000){ S.patrolled = true; patrol(); return; }
+  if (S.microBase !== S.lastInput){ S.microBase = S.lastInput; S.micro = 0; }
+  const idle = now() - S.lastInput;
+  if (!still()){
+    if (S.mobile && boxOn() && !S.idleState && !S.patrolDone && !S.patrolling && idle >= 12000 && idle < 19000){ patrol(); return; }
+    if (!S.idleState && S.micro < 1 && idle >= 9000){ S.micro = 1; hop(2, 140); return; }
+    if (!S.idleState && S.micro < 2 && idle >= 14000){ S.micro = 2; emote('note', 1400); return; }
+  }
   if (idle >= 20000 && !S.idleState && !S.patrolling){ S.idleState = 'coffee'; S.prevPose = S.pose; emote(null); setPose('coffee'); steamOn(); }
   else if (idle >= 80000 && S.idleState === 'coffee'){ S.idleState = 'zzz'; emote('zzz', 0); }
 }
 function wake(){
-  S.lastInput = performance.now(); S.patrolled = false;
+  S.lastInput = now();
   if (S.patrolling){
     S.patrolling = false;
     if (actor.classList.contains('walk')){ const m = new DOMMatrixReadOnly(getComputedStyle(actor).transform); S.walkStop = R(m.m41); }
@@ -1487,10 +2176,11 @@ function blockedNow(){
   const de = d.documentElement, bd = d.body;
   if (bd.classList.contains('overflow-hidden') || de.classList.contains('overflow-hidden') || de.classList.contains('smnl-open')) return 'layer';
   const mob = $('#smmMob'); if (mob && !mob.hidden) return 'layer';
-  const dr = $('cart-drawer'); if (dr && dr.classList.contains('active')) return 'layer';
-  const z = $$('.pplr_crop-modal, #pplr_myModal').find(e => { const s = getComputedStyle(e); return s.display !== 'none' && s.visibility !== 'hidden' && e.getBoundingClientRect().height > 0; }); if (z) return 'layer';
+  if (drawerOpen()) return 'layer';
+  if (zeptoOpen()) return 'layer';
   if (cookieBanner()) return 'cookie';
-  if ($$('dialog[open]').some(vis)) return 'layer';
+  /* eigene Dialoge (Box und Warte-Kopf) zählen nicht */
+  if ($$('dialog[open]').some(e => !e.closest('#smMonk') && !e.classList.contains('smmk-yd') && vis(e))) return 'layer';
   return '';
 }
 function poll(){
@@ -1516,6 +2206,10 @@ function setYield(why){
   }
   const dockOn = on && (S.out || boxOn() || S.active);
   dockEl.classList.toggle('on', dockOn);
+  /* Solange der Mönch aktiv ist (auch beim Auftritt und während er wartet), hält ein offener, beschrifteter Dialog das Newsletter-Popup zurück */
+  const hold = dockOn || !!S.active;
+  if (hold !== dockWrap.hasAttribute('open')){ if (hold) dockWrap.setAttribute('open', ''); else dockWrap.removeAttribute('open'); }
+  if (dockOn) dockWrap.removeAttribute('aria-hidden'); else dockWrap.setAttribute('aria-hidden', 'true');
   /* Dock knapp über dem Cookie-Banner, nicht mitten über der Seite */
   const cb = why === 'cookie' ? cookieBanner() : null, cbTop = cb ? cb.getBoundingClientRect().top : 0;
   const dt = cb && cbTop > 160 ? R(cbTop - 62) + 'px' : '';
@@ -1530,6 +2224,7 @@ function coversEl(t){
   if (boxOn() && box.style.visibility !== 'hidden') rs.push(box.getBoundingClientRect());
   if (S.out && !S.classic && !S.duck && sp) rs.push(sp.getBoundingClientRect());
   if (trayEl && trayEl.style.display !== 'none') rs.push(trayEl.getBoundingClientRect());
+  if (propEl) rs.push(propEl.getBoundingClientRect());
   return rs.some(b => b.width && r.left < b.right && r.right > b.left && r.top < b.bottom && r.bottom > b.top);
 }
 function tuck(){
@@ -1538,11 +2233,20 @@ function tuck(){
   setTimeout(() => { if (S.tuck) dockSay.classList.remove('on'); }, 3500);
 }
 function untuck(){ if (!S.tuck) return; S.tuck = false; dockSay.classList.remove('on'); poll(); focusLog(); }
+/* Handy: Eingabefeld bleibt über der Tastatur */
+function kbFix(){
+  if (!stage) return;
+  let kb = 0; const vv = window.visualViewport;
+  if (S.mobile && vv && d.activeElement === inputEl) kb = Math.max(0, R(innerHeight - vv.height - vv.offsetTop));
+  stage.style.setProperty('--kb', kb + 'px');
+}
 
 /* ---------- Bedienung ---------- */
 let kbSwallow = null;
 function bind(){
   box.addEventListener('click', e => { if (e.target.closest('button,input,textarea,a,form,select')) return; if (S.typing) S.skip = true; else advanceNow(); });
+  /* Dialog nie per Escape vom Browser schließen lassen, das regelt der Mönch selbst */
+  box.addEventListener('cancel', e => e.preventDefault());
   $$('.smmk-tools button', stage).forEach(b => b.addEventListener('click', () => {
     const t = b.dataset.tool;
     if (t === 'close') go(() => exitFlow());
@@ -1551,8 +2255,8 @@ function bind(){
   }));
   $$('button', menuEl).forEach(b => b.addEventListener('click', () => {
     const m = b.dataset.m; closeMenu(m !== 'human');
-    if (m === 'motion'){ S.reduced = !S.reduced; stage.classList.toggle('rm', S.reduced); d.documentElement.classList.toggle('smmk-rm', S.reduced); if (S.reduced) fxClear(); }
-    if (m === 'classic'){ S.classic = !S.classic; stage.classList.toggle('classic', S.classic); if (S.classic){ fxClear(); clearLaser(); } placeShadow(S.ax, S.ay, S.out); }
+    if (m === 'motion'){ S.reduced = !S.reduced; stage.classList.toggle('rm', S.reduced); d.documentElement.classList.toggle('smmk-rm', S.reduced); if (S.reduced) fxClear(); drawFace(); }
+    if (m === 'classic'){ S.classic = !S.classic; stage.classList.toggle('classic', S.classic); if (S.classic){ fxClear(); clearLaser(); } placeShadow(S.ax, S.ay, S.out); drawFace(); }
     if (m === 'human'){ newTurn('Du: Mit Mensch sprechen'); go(() => human()); }
     syncMenu();
   }));
@@ -1562,18 +2266,41 @@ function bind(){
     const n = {ArrowDown:i + 1, ArrowUp:i - 1, Home:0, End:bs.length - 1}[e.key]; if (n == null) return;
     e.preventDefault(); e.stopPropagation(); bs[(n + bs.length) % bs.length].focus();
   });
-  /* Eingabefeld für die KI-Runde: bis dahin versteckt, ein Absenden lädt nie die Seite neu */
-  composeEl.addEventListener('submit', e => e.preventDefault());
+  /* Freitext: Enter sendet, höchstens 200 Zeichen, nie ein Seiten-Reload; getippter Text geht nie in die Messung */
+  composeEl.addEventListener('submit', e => {
+    e.preventDefault();
+    const t = inputEl.value.replace(/\s+/g, ' ').trim().slice(0, 200); if (!t) return;
+    inputEl.value = ''; markUsed(); TURN++; S.lastInput = now();
+    newTurn('Du: ' + t, {typed:true}); go(() => routeText(t));
+  });
+  inputEl.addEventListener('focus', () => {
+    kbFix();
+    if (!S.out || S.busy) return;
+    if (S.idleState) wake();
+    const r = vr(box); glance(r.x + r.w / 2, 1500);
+    if (!S.mobile && !S.reduced){ S.tilt = r.x > S.ax ? 2 : -2; applyTilt(); }
+  });
+  inputEl.addEventListener('blur', () => { kbFix(); S.tilt = 0; applyTilt(); });
+  if (window.visualViewport){ visualViewport.addEventListener('resize', kbFix); visualViewport.addEventListener('scroll', kbFix); }
   dockEl.addEventListener('click', () => { if (S.tuck) return untuck(); dockSay.classList.add('on'); if (!cookieBanner()) dockSay.textContent = 'Ich warte, bis das Fenster zu ist.'; });
   d.addEventListener('focusin', e => {
     const t = e.target; if (S.tuck || S.yield || (!S.out && !boxOn()) || !t || t === d.body || !t.closest || t.closest('#smMonk, .smmk-dock, [data-smmk]')) return;
     requestAnimationFrame(() => { if (d.activeElement === t && coversEl(t)) tuck(); });
   });
-  stage.addEventListener('pointerdown', () => markUsed('deeplink'), true);
-  stage.addEventListener('keydown', () => markUsed('deeplink'), true);
+  /* Antworten: leiser Tick beim Zeigen; bleibt der Fokus über 4 s auf den Knöpfen, einmal „…“ */
+  let lastTick = null;
+  const tick = e => { const b = e.target.closest && e.target.closest('.smmk-ch, .smmk-show'); if (b && b !== lastTick){ lastTick = b; sfx('tick'); } };
+  choicesEl.addEventListener('pointerover', tick); choicesEl.addEventListener('focusin', tick);
+  choicesEl.addEventListener('focusin', () => {
+    clearTimeout(chFocusT);
+    chFocusT = setTimeout(() => { if (!chDots && choicesEl.contains(d.activeElement) && !S.typing && !S.busy && S.out){ chDots = true; emote('…', 1200); } }, 4000);
+  });
+  choicesEl.addEventListener('focusout', () => clearTimeout(chFocusT));
+  stage.addEventListener('pointerdown', () => markUsed(), true);
+  stage.addEventListener('keydown', () => markUsed(), true);
   d.addEventListener('keydown', e => {
     if (!S.out && !boxOn()) return;
-    S.lastInput = performance.now(); if (S.idleState || S.patrolling || S.patrolled) wake();
+    S.lastInput = now(); if (S.idleState || S.patrolling) wake();
     if (e.key === 'Escape'){
       if (S.yield) return;
       if (spotState || qmTarget){ spotOff(); markerOff(); return; }
@@ -1597,19 +2324,28 @@ function bind(){
     }
   });
   d.addEventListener('keyup', e => { if (kbSwallow && e.key === kbSwallow){ e.preventDefault(); kbSwallow = null; } });
-  ['pointerdown', 'wheel', 'touchstart'].forEach(ev => d.addEventListener(ev, () => { S.lastInput = performance.now(); if (S.idleState || S.patrolling || S.patrolled) wake(); }, {passive:true, capture:true}));
-  d.addEventListener('pointerdown', e => { if (spotState && performance.now() - spotState.t > 250 && !e.target.closest('#smMonk')){ spotOff(); } if (qmTarget && !e.target.closest('#smMonk') && e.target.closest('a,button,input,label,select')) markerOff(); }, true);
-  let tiltRaf = 0, px = 0, lastMove = 0;
+  ['pointerdown', 'wheel', 'touchstart'].forEach(ev => d.addEventListener(ev, () => { S.lastInput = now(); if (S.idleState || S.patrolling) wake(); }, {passive:true, capture:true}));
+  d.addEventListener('pointerdown', e => { if (spotState && now() - spotState.t > 250 && !e.target.closest('#smMonk')){ spotOff(); } if (qmTarget && !e.target.closest('#smMonk') && e.target.closest('a,button,input,label,select')) markerOff(); }, true);
+  /* Klick auf „Jetzt personalisieren“: ab dann beobachten, ob der Zepto-Dialog aufgeht */
+  d.addEventListener('click', e => { if (S.active && e.isTrusted && e.target.closest && e.target.closest('.pplr-c-button')) watchZepto(); }, true);
+  /* Desktop: Blick zum Zeiger, wenn der länger als 700 ms auf der anderen Seite bleibt */
+  let tiltRaf = 0, px = 0, lastMove = 0, otherSince = 0;
   d.addEventListener('pointermove', e => {
-    if (performance.now() - lastMove > 400){ S.lastInput = performance.now(); if (S.idleState || S.patrolling || S.patrolled) wake(); }
-    lastMove = performance.now();
+    if (now() - lastMove > 400){ S.lastInput = now(); if (S.idleState || S.patrolling) wake(); }
+    lastMove = now();
     if (S.mobile || S.reduced || !S.out) return; px = e.clientX;
-    if (!tiltRaf) tiltRaf = requestAnimationFrame(() => { tiltRaf = 0; if (S.anims > 0 && actor.getAnimations().length) return; S.tilt = Math.max(-8, Math.min(8, (px - S.ax) / vpW() * 24)); applyTilt(); });
+    if (!tiltRaf) tiltRaf = requestAnimationFrame(() => {
+      tiltRaf = 0; if (S.anims > 0 && actor.getAnimations().length) return;
+      S.tilt = Math.max(-3, Math.min(3, (px - S.ax) / vpW() * 12)); applyTilt();
+      const side = px >= S.ax ? 1 : -1;
+      if (side !== S.facing && !S.busy && !S.typing && !S.classic){ if (!otherSince) otherSince = now(); else if (now() - otherSince > 700){ otherSince = 0; glance(px, 1500); } }
+      else otherSince = 0;
+    });
   }, {passive:true});
   let lastTop = scrollY, lagRaf = 0;
   addEventListener('scroll', () => {
     const dy = scrollY - lastTop; lastTop = scrollY;
-    if (spotState && performance.now() - spotState.t > 300) spotOff();
+    if (spotState && now() - spotState.t > 300) spotOff();
     if (qmTarget) placeMarker();
     if (S.mobile || S.reduced || !S.out) return;
     S.lag = Math.max(-8, Math.min(8, S.lag - dy * .35));
@@ -1622,7 +2358,7 @@ function bind(){
     d.getAnimations().forEach(a => { try { if (a.effect && a.effect.target && a.effect.target.closest && a.effect.target.closest('#smMonk')){ if (S.hidden) a.pause(); else a.play(); } } catch (e) {} });
     if (!S.hidden) fxRun();
   });
-  try { mqRM.addEventListener('change', () => { S.reduced = mqRM.matches; stage.classList.toggle('rm', S.reduced); syncMenu(); }); } catch (e) {}
+  try { mqRM.addEventListener('change', () => { S.reduced = mqRM.matches; stage.classList.toggle('rm', S.reduced); syncMenu(); drawFace(); }); } catch (e) {}
   setInterval(idleCheck, 500);
   setInterval(poll, 400);
 }
@@ -1636,24 +2372,31 @@ function applyViewport(){
   stage.classList.toggle('m', S.mobile);
   fxResize(); S.lift = calcLift(); stage.style.setProperty('--lift', S.lift + 'px');
   if (S.out){ applyPoseGeom(S.pose); const hm = home(); placeActor(hm.x, hm.y); }
-  sheetCheck();
+  sheetCheck(); kbFix();
   if (was !== S.mobile){ clearTray(); S.mx = null; }
 }
 
 /* ---------- Öffentliche Schnittstelle für den Loader ---------- */
 function start(intent, el){
   build(); S.active = true; poll();
-  const k = String(intent || 'open');
-  /* Deep Link (?moench=, #moench): noch kein Klick auf dieser Seite, also erst bei der ersten Eingabe im Mönch speichern */
-  if (el !== 'url' || k === 'resume') markUsed(k);
+  const k = String(intent || 'open'), deep = el === 'url';
+  const entry = el && el.nodeType === 1 ? (el.getAttribute('data-smmk-src') || k) : deep ? (k === 'resume' ? 'resume' : 'deeplink') : String(el || k);
+  if (!deep || k === 'resume') markUsed();
   if (el && el.nodeType === 1) S.trigger = el;
-  S.lastInput = performance.now();
+  S.lastInput = now();
+  /* Eingabefeld nur mit ?moench_input=1, nach dem ersten Klick für die Sitzung gemerkt */
+  S.compose = S.compose || /[?&]moench_input=1\b/.test(location.search) || !!ssRead().ci;
+  composeEl.hidden = !S.compose; if (S.compose && S.used && !SS.ci) ssUpd({ci:1});
+  /* Deep Link: ?moench= verschwindet aus der Adresse, sobald der Ablauf startet */
+  if (deep && k !== 'resume' && /[?&]moench=/.test(location.search)){ try { const u = new URL(location.href); u.searchParams.delete('moench'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {} }
   const mob = $('#smmMob'); if (mob && !mob.hidden){ const x = $('.mob-x', mob); if (x) x.click(); }
   if (k === 'resume') return resume();
   if (k === 'open' && (S.out || boxOn())){ go(() => exitFlow()); return; }
+  S.t0 = now(); TURN = 0; S.outcome = '';
+  push('sm_monk_open', {sm_entry:entry});
   go(async () => {
     if ((k === 'gift' || k === 'geschenk') && pageKind() === 'acoll') return opener();
-    if (k === 'gift' || k === 'geschenk'){ await ensureOut('sketch', 'leap'); newTurn(); return giftStep1(hello()); }
+    if (k === 'gift' || k === 'geschenk'){ await ensureOut('sketch', 'leap', {target:$('#fchips')}); newTurn(); return giftStep1(hello()); }
     if (k === 'someone'){ await ensureOut('sketch', 'leap'); newTurn(); return someoneElse(hello()); }
     if (k === 'order' || k === 'bestellung'){ await ensureOut('pc', 'leap'); newTurn(); return orderFlow(hello()); }
     if (k === 'faq'){ await ensureOut('sketch', 'leap'); newTurn(); return faqTopics(hello()); }
@@ -1667,21 +2410,29 @@ function resume(){
   try { if (location.hash === '#moench-r') history.replaceState(history.state, '', location.pathname + location.search); } catch (e) {}
   const st = ssRead(); SS = st;
   const cue = st.cue; if (cue) ssUpd({cue:null});
+  const go2 = fn => { S.greeted = true; S.t0 = now(); TURN = 0; push('sm_monk_open', {sm_entry:'resume'}); go(async () => { await sleep(400); for (let i = 0; i < 40 && blockedNow() === 'cookie'; i++) await sleep(250); return fn(); }); };
   if (cue && cue.u === location.pathname){
-    S.greeted = true;
-    go(async () => {
-      await sleep(400);
-      for (let i = 0; i < 40 && blockedNow() === 'cookie'; i++) await sleep(250);
-      if (cue.k === 'pdp') return pdpGuide(!!(cue.z && CTX.pz !== 0), true);
-      if (cue.k === 'faq') return faqShow(cue.g, cue.l, true);
-      if (cue.k === 'kontakt') return kontaktGuide(true);
-      if (cue.k === 'sonder') return sonderGuide(true);
-    });
-    return;
+    if (cue.k === 'pdp') return go2(() => pdpGuide(!!(cue.z && CTX.pz !== 0), true, cue));
+    if (cue.k === 'faq') return go2(() => faqShow(cue.g, cue.l, true));
+    if (cue.k === 'kontakt') return go2(() => kontaktGuide(true, cue.topic || ''));
+    if (cue.k === 'sonder') return go2(() => sonderGuide(true));
   }
+  /* Zurück-Taste auf die Seite mit den Vorschlägen: dieselben Karten, ohne neu zu fragen */
+  if (st.back && st.back.u === location.pathname && st.back.k === 'cards'){ ssUpd({back:null}); return go2(() => resumeCards()); }
   checkCart();
 }
-window.SMMK = {open:start, version:'test-1', state:() => ({out:S.out, pose:S.pose, ax:S.ax, ay:S.ay, home:built ? home() : null, lift:S.lift, yield:S.yield, mobile:S.mobile, busy:S.busy, typing:S.typing, anims:built ? actor.getAnimations().map(a => a.playState) : []})};
+/* bfcache: beim Verlassen die Box zurücksetzen, beim Zurückkommen mit den Vorschlägen wieder öffnen */
+addEventListener('pagehide', () => {
+  if (!built) return;
+  newFlow(); S.busy = false; S.typing = false; clearTray(); spotOff(); markerOff(); clearLaser(); clearProp(false);
+  if (boxOn()) closeBox(); if (S.out) showActor(false); S.active = false; setYield('');
+});
+addEventListener('pageshow', e => {
+  if (!e.persisted) return;
+  const s = (() => { try { return JSON.parse(sessionStorage.getItem(SKEY)) || {}; } catch (x) { return {}; } })();
+  if (s.u && s.back && s.back.u === location.pathname) start('resume', 'url');
+});
+window.SMMK = {open:start, version:'test-2', shipLine, render, state:() => ({out:S.out, pose:S.pose, ax:S.ax, ay:S.ay, home:built ? home() : null, lift:S.lift, yield:S.yield, mobile:S.mobile, busy:S.busy, typing:S.typing, facing:S.facing, turn:TURN, why:built ? blockedNow() : '', active:d.activeElement ? (d.activeElement.className || d.activeElement.tagName) : '', anims:built ? actor.getAnimations().map(a => a.playState) : []})};
 const q = window.smMonkQ; window.smMonkQ = {push:a => start(a[0], a[1])};
 if (Array.isArray(q)) q.forEach(a => start(a[0], a[1]));
 d.addEventListener('sm:cart-changed', cartSoon);

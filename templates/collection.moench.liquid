@@ -6,7 +6,9 @@
   fallen hier schon serverseitig heraus. Der Tag "internal production" bleibt drin: er steuert nur die Fertigung und
   steht auf sichtbaren Bestsellern (Signet Anhänger, Zunftanhänger, Eisernes Kreuz). Nur mit settings.sm_monk_enabled, sonst {"p":[]}.
   Felder: h Handle, t Titel, u URL, p ab-Preis (Cent), q Höchstpreis, k Vergleichspreis (Cent), i Bild (klein), z personalisierbar,
-  n Bestellungen (steelmonks.bestellungen), y Produkttyp, rv/rc Bewertung.
+  n Bestellungen (steelmonks.bestellungen), y Produkttyp, rv/rc Bewertung, r Rang in der Sortierung (0 = Platz 1),
+  v Größen [[Varianten-ID, Preis in Cent, Optionswert], ...]: nur bei einer Größen-Option (Name Größe/Size oder Werte wie „45cm“),
+  je Größe die günstigste verfügbare Variante, höchstens 6. Seite 2 holt sm-monk.js nur, wenn n über 60 liegt.
 {%- endcomment -%}
 {%- if settings.sm_monk_enabled -%}
 {%- liquid
@@ -51,8 +53,54 @@
       assign rv = p.metafields.reviews.rating.value.rating | default: 0
       assign rc = p.metafields.reviews.rating_count.value | default: 0
     -%}
+    {%- liquid
+      assign so = -1
+      for o in p.options_with_values
+        assign onm = o.name | downcase
+        assign ov0 = o.values.first | strip
+        assign ovc = ov0 | slice: 0
+        if onm contains 'größe' or onm contains 'groesse' or onm contains 'size'
+          assign so = forloop.index0
+        elsif so == -1 and '0123456789' contains ovc and ov0 contains 'cm'
+          assign so = forloop.index0
+        endif
+      endfor
+      assign vjs = ''
+      if so >= 0
+        assign sizes = p.options_with_values[so].values
+        if sizes.size > 1
+          assign vn = 0
+          for sv in sizes
+            if vn >= 6
+              break
+            endif
+            assign best_id = 0
+            assign best_pr = 0
+            for vr in p.variants
+              if vr.available and vr.options[so] == sv
+                if best_id == 0 or vr.price < best_pr
+                  assign best_id = vr.id
+                  assign best_pr = vr.price
+                endif
+              endif
+            endfor
+            if best_id != 0
+              if vn > 0
+                assign vjs = vjs | append: ','
+              endif
+              assign svj = sv | json
+              assign vjs = vjs | append: '[' | append: best_id | append: ',' | append: best_pr | append: ',' | append: svj | append: ']'
+              assign vn = vn | plus: 1
+            endif
+          endfor
+          if vn < 2
+            assign vjs = ''
+          endif
+        endif
+      endif
+    -%}
     {%- unless first -%},{%- endunless -%}{%- assign first = false -%}
-    {"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ url | json }},"p":{{ p.price_min }},"q":{{ p.price_max }},"k":{{ p.compare_at_price_min | default: 0 }},"i":{{ p.featured_image | image_url: width: 300 | json }},"z":{{ pz }},"n":{{ p.metafields.steelmonks.bestellungen.value | default: 0 }},"y":{{ p.type | json }},"rv":{{ rv | json }},"rc":{{ rc | json }}}
+    {"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ url | json }},"p":{{ p.price_min }},"q":{{ p.price_max }},"k":{{ p.compare_at_price_min | default: 0 }},"i":{{ p.featured_image | image_url: width: 300 | json }},"z":{{ pz }},"n":{{ p.metafields.steelmonks.bestellungen.value | default: 0 }},"y":{{ p.type | json }},"rv":{{ rv | json }},"rc":{{ rc | json }},"r":{{ paginate.current_offset | plus: forloop.index0 }}{% if vjs != '' %},"v":[{{ vjs }}]{% endif %}}
   {%- endunless -%}
 {%- endfor -%}
 ]}
