@@ -36,7 +36,7 @@ const asset = k => (k === 'rail' ? S.railSrc : (CTX.ab || '') + (ASSETS[k] || ''
 Object.keys(POSES).forEach(k => { const p = POSES[k]; p.bs = p.mini ? 1 : Math.max(1, Math.min(1.45, 399 / Math.max(1, p.fy - p.hy))); });
 /* Kurator ohne Galerie: nur Mönch, Hand und Zeigestab bleiben sichtbar (Quellpixel, umgerechnet in Prozent von 415 x 420).
    Enger als der erste Entwurf, damit kein Streifen von Rahmen und Pfosten stehen bleibt. */
-const CURATOR_CLIP = 'polygon(' + [[0,0],[145,0],[145,191],[196,191],[249,148],[256,149],[256,155],[206,197],[206,218],[178,224],[178,360],[166,360],[166,420],[0,420]].map(([x, y]) => (x / 415 * 100).toFixed(2) + '% ' + (y / 420 * 100).toFixed(2) + '%').join(',') + ')';
+const CURATOR_CLIP = 'polygon(' + [[0,0],[145,0],[145,191],[196,191],[249,148],[256,149],[256,155],[206,197],[206,218],[178,224],[178,342],[164,342],[164,420],[0,420]].map(([x, y]) => (x / 415 * 100).toFixed(2) + '% ' + (y / 420 * 100).toFixed(2) + '%').join(',') + ')';
 /* Requisiten-Posen: Staub und Plopp beim Wechsel, nie damit laufen */
 const PROP = {pc:1, chest:1, measure:1};
 /* Gesicht je Pose in Quellpixeln: Augen [x,y,w,h], Mund [x,y,w,h]. Pc, Kaffee und Truhe haben keins. */
@@ -281,9 +281,9 @@ function drawShadow(){
 /* ---------- Partikel: hinten (Staub, Dampf, Bodenwolken) und vorne (Funken, Glitzer, Konfetti) ---------- */
 const FX = {cell:3, parts:[], ems:[], raf:0, cf:null, cb:null, dark:false};
 const FXC = {
-  dust:['#cfc6b4','#b9ae98','#e6dfd0'], sparks:['#fff3b0','#ffd23f','#ff8a1f','#ffffff'],
-  confetti:['#e0303a','#ffd23f','#3b8cff','#36c46b','#ff7ad9','#ffffff'], twinkle:['#ffffff','#fff3b0','#bfe0ff'],
-  petals:['#ffb3c8','#ff8fb1','#ffd6e2'], steam:['rgba(255,255,255,.75)','rgba(255,255,255,.55)'], conv:['#ffffff','#ffd23f']
+  dust:['#cfc6b4','#b9ae98','#e6dfd0'], sparks:['#fff1e8','#ff6b1f','#ff8a1f','#ffffff'],
+  confetti:['#e0303a','#ff6b1f','#3b8cff','#36c46b','#ff7ad9','#ffffff'], twinkle:['#ffffff','#fff1e8','#bfe0ff'],
+  petals:['#ffb3c8','#ff8fb1','#ffd6e2'], steam:['rgba(255,255,255,.75)','rgba(255,255,255,.55)'], conv:['#ffffff','#ff8a1f']
 };
 const BACK = {dust:1, steam:1, ground:1};
 function fxResize(){ [fxC, fxB].forEach(c => { const cw = Math.ceil(vpW() / FX.cell), ch = Math.ceil(vpH() / FX.cell); c.width = cw; c.height = ch; c.style.width = (cw * FX.cell) + 'px'; c.style.height = (ch * FX.cell) + 'px'; }); }
@@ -568,9 +568,11 @@ function setFacing(f){ S.facing = f; flipEl.style.transform = `scaleX(${f})`; ap
 async function paperTurn(f){
   if (S.facing === f) return;
   if (S.reduced){ setFacing(f); return; }
-  await anim(turnEl, [{transform:'rotateY(0deg)'}, {transform:'rotateY(90deg)'}], {duration:80, easing:'steps(2,end)'});
+  /* Umdrehen wie ein Papierfigürchen, aber flach: scaleX in Stufen um den Fußpunkt, .turn trägt nur die Neigung */
+  const s0 = S.facing;
+  await anim(flipEl, [{transform:`scaleX(${s0})`}, {transform:`scaleX(${(s0 * .5).toFixed(2)})`}, {transform:'scaleX(0.05)'}], {duration:80, easing:'steps(2,end)'});
   setFacing(f);
-  await anim(turnEl, [{transform:'rotateY(-90deg)'}, {transform:'rotateY(0deg)'}], {duration:80, easing:'steps(2,end)'});
+  await anim(flipEl, [{transform:`scaleX(${(f * .05).toFixed(2)})`}, {transform:`scaleX(${(f * .5).toFixed(2)})`}, {transform:`scaleX(${f})`}], {duration:80, easing:'steps(2,end)'});
   applyTilt();
 }
 /* Kurzer Blick zur Seite (neue Antworten, Karte unter dem Zeiger), danach zurück */
@@ -626,7 +628,7 @@ function useRail(rs){
   POSES.rail = {w:nw, h:nh, fx:R(nw / 2), fy:nh - 1, hx:R(nw / 2), hy:2, ax:R(nw * .6), ay:R(nh * .4), mini:1, bs:1};
 }
 /* Landung: Bodenwolken links und rechts, Hintergrund einmal abtasten */
-function landFx(x, y){ sampleGround(x, y); sfx('thud'); groundDust(x - 10, y, 4, -1); groundDust(x + 10, y, 4, 1); }
+function landFx(x, y){ sampleGround(x, y); actor.classList.toggle('dk', FX.dark); sfx('thud'); groundDust(x - 10, y, 4, -1); groundDust(x + 10, y, 4, 1); }
 /* Auftritt: Ducken, „!“, Absprung aus der Leiste, Landung. o.apex läuft am höchsten Punkt (Handy: Sheet fährt hoch). */
 async function leapOut(landPose, o){
   o = o || {};
@@ -638,8 +640,10 @@ async function leapOut(landPose, o){
   const ex = emoteCanvas('!'); ex.style.position = 'absolute'; ex.style.transformOrigin = '50% 100%'; ex.style.left = R(from.x - 16) + 'px'; ex.style.top = R(rr.y - 36) + 'px'; stage.append(ex);
   if (!still()) ex.animate([{transform:'scale(.4)'}, {transform:'scale(1.25)'}, {transform:'scale(1)'}], {duration:200, easing:'steps(3,end)'});
   sting('!');
-  await anim(rs, [{transform:'translateY(0) scaleY(1)'}, {transform:'translateY(3px) scaleY(.9)'}], {duration:320, easing:'steps(2,end)', fill:'forwards'});
-  rs.getAnimations().forEach(a => a.cancel()); ex.remove();
+  /* Die Leiste setzt ihren Mönch mit translateX(-50%): diese Verschiebung bleibt in jedem Bild erhalten, abgebrochen wird nur die eigene Animation */
+  const rb = railBase(rs), duckA = rs.animate ? rs.animate([{transform:rb + 'translateY(0) scaleY(1)'}, {transform:rb + 'translateY(3px) scaleY(.9)'}], {duration:200, easing:'steps(2,end)', fill:'forwards'}) : null;
+  if (duckA) await duckA.finished.catch(() => {});
+  if (duckA) duckA.cancel(); ex.remove();
   S.pose = 'rail'; sp.src = asset('rail'); setFacing(1); applyPoseGeom('rail'); faceFor('rail');
   showActor(true);
   const to = home(); placeShadow(to.x, to.y, true);
@@ -713,13 +717,16 @@ async function leapBack(){
   showActor(false); setFacing(1);
   /* die Leiste fängt ihn auf: kurzer Plopp und vier Staubzellen */
   sfx('pop'); groundDust(to.x, to.y, 4);
-  await anim(rs, [{transform:'translateY(0) scale(1)'}, {transform:'translateY(2px) scale(1.1,.88)'}, {transform:'translateY(0) scale(1)'}], {duration:240, easing:'steps(3,end)'});
+  const rb = railBase(rs);
+  await anim(rs, [{transform:rb + 'translateY(0) scale(1)'}, {transform:rb + 'translateY(2px) scale(1.1,.88)'}, {transform:rb + 'translateY(0) scale(1)'}], {duration:240, easing:'steps(3,end)'});
 }
+/* Grundtransform des Leisten-Mönchs (translateX(-50%) aus dem CSS). Sein Gehen nutzt translate und rotate, das bleibt unberührt. */
+function railBase(rs){ try { const t = getComputedStyle(rs).transform; return t && t !== 'none' ? t + ' ' : ''; } catch (e) { return ''; } }
 async function poofIn(pose, o){
   o = o || {};
   await ready(pose);
   const to = home(); showActor(true); setFacing(1); placeActor(to.x, to.y);
-  S.pose = pose; swapSrc(pose);
+  S.pose = pose; swapSrc(pose); sampleGround(to.x, to.y); actor.classList.toggle('dk', FX.dark);
   if (o.apex) o.apex();
   if (S.reduced || still()) return anim(actor, [{opacity:0}, {opacity:1}], {duration:150});
   groundDust(to.x, to.y, 8); burst('twinkle', headPoint().x, headPoint().y, 4); sfx('pop');
@@ -803,9 +810,10 @@ function clearLaser(){ laserEls.forEach(e => e.remove()); laserEls = []; }
 const GROUP_W = 660;
 function overlapsGroup(r){ return r.x < S.ox + GROUP_W + 12 && r.x + r.w > S.ox - 12; }
 function groupTop(){
-  /* Reserve: die Box wächst nach dem Zeigen meist noch um Zeilen und Knöpfe */
-  const bh = Math.max(boxOn() ? box.offsetHeight : 0, S.mobile ? R(vpH() * .42) : 340) + (S.mobile ? 0 : 24);
-  const ah = S.out && !S.classic ? drawnH(S.pose) + 8 : 0;
+  /* Reserve: die Box wächst nach dem Zeigen meist noch um Zeilen und Knöpfe. Desktop: ihre volle Höhe (min(60 %, 400 px)).
+     Handy: die echte Sheet-Höhe plus der Kurator, mit dem er zeigt (er ist größer als die Skizze). */
+  const bh = Math.max(boxOn() ? box.offsetHeight : 0, S.mobile ? R(vpH() * .42) : Math.min(R(vpH() * .6), 400)) + (S.mobile ? 0 : 24);
+  const ah = S.out && !S.classic ? Math.max(drawnH(S.pose), S.mobile ? drawnH('curator') : 0) + 8 : 0;
   return S.mobile ? vpH() - S.lift - bh - ah : vpH() - S.lift - 24 - Math.max(bh, ah);
 }
 function reveal(el, smooth){
@@ -902,7 +910,7 @@ function impactRing(x, y){
 }
 async function laserCore(el, o){
   const spot = o.spot !== false, dim = o.dim !== false;
-  spotOff(); trimLines(); if (o.dodge !== false) await dodge(el); reveal(el); await w(80);
+  spotOff(); trimLines(); if (o.dodge !== false) await dodge(o.area || el); reveal(o.area || el); await w(80);
   if (S.mobile && o.walk !== false && !S.calm){
     const r0 = vr(o.aim || el), cx = r0.x + r0.w / 2;
     await stroll(cx - 44, {face: cx >= S.ax ? 1 : -1, pose:'curator'});
@@ -1004,7 +1012,9 @@ function newTurn(echo, o){
   if (echo){ const e = h('div', 'smmk-echo'); const s = h('span'); s.textContent = echo; e.append(s); addNode(e); }
 }
 /* Scrollt den Text ans Ende, außer eine Zeile soll oben stehen bleiben (Handy: Empfehlungen) */
-function scrollBody(){ if (!bbody) return; const a = S.anchor; if (a && a.isConnected){ bbody.scrollTop = Math.max(0, a.getBoundingClientRect().top - bbody.getBoundingClientRect().top + bbody.scrollTop - 6); return; } bbody.scrollTop = bbody.scrollHeight; }
+function scrollBody(){ if (!bbody) return; const a = S.anchor; if (a && a.isConnected) bbody.scrollTop = Math.max(0, a.getBoundingClientRect().top - bbody.getBoundingClientRect().top + bbody.scrollTop - 6); else bbody.scrollTop = bbody.scrollHeight; bodyFade(); }
+/* Angeschnittene ältere Zeilen laufen oben weich aus, statt am Statustext zu kleben */
+function bodyFade(){ bbody.classList.toggle('fade', bbody.scrollTop > 2); }
 function addNode(n){ if (S.typed) n.dataset.x = xid; bbody.append(n); scrollBody(); return n; }
 let advResolve = null, lineSeq = 0;
 function advanceNow(){ if (advResolve){ const r = advResolve; advResolve = null; r(); } }
@@ -1017,7 +1027,7 @@ async function typeInto(el, text){
   try {
     if (still()){ el.textContent = text; }
     else {
-      let i = 0, alt = false, lastBounce = 0;
+      let i = 0, lastBounce = 0;
       const dt = S.fast ? 12 : 20;
       while (i < text.length){
         if (S.skip) break;
@@ -1027,8 +1037,7 @@ async function typeInto(el, text){
           if (VOWELS.test(ch)){
             mouth(true); voice(ch.toLowerCase(), lastVowel(text, i - 1));
             if (now() - lastBounce > 110){ lastBounce = now(); anim(sqEl, [{transform:'scale(1,1)'}, {transform:'scale(1.02,.97)'}], {duration:120, easing:'steps(2,end)'}); }
-          } else if (/[\s.,!?:;„“"()…]/.test(ch)) mouth(false);
-          else { alt = !alt; mouth(alt); }
+          } else mouth(false);
           if ('.!?'.includes(ch)) anim(ppEl, [{transform:'translateY(0)'}, {transform:'translateY(2px)'}, {transform:'translateY(0)'}], {duration:160, easing:'steps(2,end)'});
         }
         let dl = dt; if ('.!?:'.includes(ch)) dl += 150; else if (ch === ',') dl += 70;
@@ -1041,7 +1050,8 @@ async function typeInto(el, text){
   scrollBody();
 }
 function announce(text){ const p = h('p'); p.textContent = text; srlog.append(p); srlog.removeAttribute('aria-busy'); }
-/* Zeilen: Text oder {t, pose, emote, emoteMs, minMs}. o.onLast läuft, wenn die letzte Zeile zu tippen beginnt. */
+/* Zeilen: Text oder {t, pose, emote, emoteMs, minMs}. o.onStart läuft, sobald die erste Zeile zu tippen beginnt
+   (Knöpfe und Karten erscheinen damit sofort, der Text läuft weiter und lässt sich überspringen). */
 async function speak(lines, o){
   o = o || {};
   lines = [].concat(lines).filter(Boolean);
@@ -1058,7 +1068,7 @@ async function speak(lines, o){
     target.setAttribute('aria-hidden', 'true');
     const t0 = now();
     srlog.setAttribute('aria-busy', 'true');
-    if (i === lines.length - 1 && o.onLast){ const f = o.onLast; o.onLast = null; f(); }
+    if (o.onStart){ const f = o.onStart; o.onStart = null; f(); }
     try { await typeInto(target, L.t); } catch (e){ srlog.removeAttribute('aria-busy'); throw e; }
     announce(L.t);
     target.removeAttribute('aria-hidden'); target.id = 'smmkLn' + (++lineSeq); box.setAttribute('aria-describedby', target.id);
@@ -1070,7 +1080,7 @@ async function speak(lines, o){
       advResolve = null; S.waitAdv = false; box.classList.remove('wait');
     }
   }
-  if (o.onLast) o.onLast();
+  if (o.onStart) o.onStart();
   S.lastInput = now();
 }
 /* Antworten: {l, f} oder {l, href} (Navigation); pri = der eine Hauptweg, link = leiser Ausgang; id = Schritt für die Messung */
@@ -1090,6 +1100,8 @@ function choices(list, o){
       if (c.echo !== false) newTurn('Du: ' + c.l); else newTurn();
       go(c.f || (() => navTo(c.href, c.cue, c.say)));
     });
+    /* Vorladen, sobald ein Knopf angepeilt wird (Zeiger, Finger, Tastatur): das Regal liegt beim Klick schon bereit */
+    if (c.pre){ const pf = () => { if (!b._pre){ b._pre = 1; c.pre(); } }; ['pointerenter', 'touchstart', 'focus'].forEach(ev => b.addEventListener(ev, pf, {passive:true})); }
     host.append(b);
   });
   S.lastInput = now(); chDots = false;
@@ -1099,26 +1111,53 @@ function choices(list, o){
   if (o.focus !== false && list.length) focusFirst(host);
 }
 function focusFirst(host){ const b = $('.smmk-ch:not(:disabled)', host || choicesEl); if (b) try { b.focus({preventScroll:true}); } catch (e) {} }
-/* Sprechen und Antworten in einem: Knöpfe erscheinen, sobald die letzte Zeile beginnt, der Fokus springt erst am Ende */
+/* Sprechen und Antworten in einem: Knöpfe erscheinen mit der ersten Zeile, der Fokus springt erst am Ende */
 async function ask(lines, list, o){
   o = o || {};
-  await speak(lines, {onLast:() => choices(list, Object.assign({}, o, {focus:false}))});
+  await speak(lines, {onStart:() => choices(list, Object.assign({}, o, {focus:false}))});
+  keepClear();
   if (o.focus !== false) focusFirst(o.host);
+}
+/* Nach dem Sprechen ist die Box meist gewachsen: liegt sie (oder am Handy der Mönch auf dem Sheet) über dem gezeigten Ziel,
+   rückt die Seite so weit nach, dass das Ziel frei liegt und unter dem Header bleibt. Erst wenn das nicht reicht, tritt er beiseite. */
+function keepClear(){
+  if (!spotState || S.yield || !boxOn() || box.style.visibility === 'hidden') return;
+  const el = spotState.el; if (!el || !el.isConnected) return;
+  const r = vr(el), b = vr(box);
+  let lim = (r.x < b.x + b.w && r.x + r.w > b.x) ? b.y - 12 : Infinity;
+  if (S.mobile && S.out && !S.classic){ duck(false); const sr = sp.getBoundingClientRect(); if (sr.height && r.x < sr.right && r.x + r.w > sr.left) lim = Math.min(lim, sr.top - 8); }
+  const over = r.y + r.h + 8 - lim;
+  if (over > 2){
+    const dy = R(Math.min(over, r.y - 8 - (headerBottom() + 8)));
+    if (dy > 2){
+      const room = d.documentElement.scrollHeight - vpH() - scrollY;
+      if (dy > room){ S.padX = (S.padX || 0) + R(dy - room) + 8; sheetCheck(); }
+      try { window.scrollBy({top:dy, behavior:'instant'}); } catch (e) { window.scrollBy(0, dy); }
+      spotOn(el, {dim:!spotEl.classList.contains('flat'), stat:spotEl.classList.contains('static')});
+      if (qmTarget) placeMarker();
+    }
+  }
+  duckCheck();
 }
 function allChoices(){ return $$('.smmk-choices .smmk-ch', stage); }
 function focusLog(){ try { bbody.focus({preventScroll:true}); } catch (e) {} }
 /* Quelle unter einer Antwort: „Mehr dazu: …“ */
 function sourceLine(src){ if (!src || !src.l) return; const p = h('p', 'smmk-src'); p.append('Mehr dazu: '); if (src.href){ const a = h('a'); a.href = src.href; a.textContent = src.l; p.append(a); } else p.append(src.l); addNode(p); }
 
-/* Handy: Seite bleibt über dem Sheet scrollbar, Trusted-Shops-Badge macht kurz Platz */
-let tsHidden = null;
+/* Handy: Seite bleibt über dem Sheet scrollbar. Das Trusted-Shops-Badge bleibt sichtbar und klickbar:
+   Knöpfe und Eingabe im Sheet lassen seine Ecke frei (--tsw Breite, --tsh Höhe der Ecke über der Sheet-Unterkante). */
 function sheetCover(){ return (S.mobile && boxOn() && !S.yield) ? box.offsetHeight + 150 : 0; }
+let tsKeep = '';
 function sheetCheck(){
   padEl.style.height = (sheetCover() + (S.padX || 0)) + 'px';
   const want = S.mobile && boxOn() && !S.yield;
   d.documentElement.classList.toggle('smmk-sheet', want);
-  if (want && !tsHidden){ const t = tsEl(); if (t && !/^trustbadge-container/.test(t.id)){ tsHidden = [t, t.style.opacity]; t.style.opacity = '0'; } }
-  if (!want && tsHidden){ tsHidden[0].style.opacity = tsHidden[1]; tsHidden = null; }
+  let tw = 0, th = 0;
+  if (want){
+    const t = tsRect(), bb = vpH() - S.lift - (parseFloat(stage.style.getPropertyValue('--kb')) || 0);
+    if (t && t.bottom > bb - 400 && t.top < bb && t.left > vpW() / 2){ tw = R(vpW() - t.left + 6); th = R(bb - t.top + 2); }
+  }
+  const k = tw + ',' + th; if (k !== tsKeep){ tsKeep = k; stage.style.setProperty('--tsw', tw + 'px'); stage.style.setProperty('--tsh', th + 'px'); }
 }
 function rideSheet(){
   if (!S.mobile || !S.out || !boxOn()) return;
@@ -1142,13 +1181,16 @@ function tsRect(){
    dann eine flache Leiste aus drei Zeilen über der Box. */
 function trayGeom(n){
   const br = vr(box), ts = tsRect(), lim = ts ? ts.left - 12 : vpW() - 12;
-  const fits = cw => br.x + br.w + 26 + n * cw + (n - 1) * 12 <= lim;
-  return {br, lim, cw:fits(180) ? 180 : fits(150) ? 150 : 0};
+  const fits = cw => br.x + br.w + 26 + n * cw + (n - 1) * 12 <= lim, room = R(lim - (br.x + br.w + 26));
+  return {br, lim, cw:fits(180) ? 180 : fits(150) ? 150 : 0, col:room >= 220 ? Math.min(320, room) : 0};
 }
 function placeTray(){
   const n = $$('.smmk-card, .smmk-row', trayEl).length || 3, g = trayGeom(n), br = g.br;
   let left;
-  if (trayEl.classList.contains('strip')){
+  if (trayEl.classList.contains('col')){
+    trayEl.style.setProperty('--sw', (g.col || 220) + 'px');
+    left = R(br.x + br.w + 26); trayEl.style.bottom = (24 + S.lift) + 'px';
+  } else if (trayEl.classList.contains('strip')){
     left = Math.max(16, R(br.x - 240));
     trayEl.style.setProperty('--sw', Math.max(300, Math.min(960, R(g.lim - left))) + 'px');
     trayEl.style.bottom = (24 + S.lift + box.offsetHeight + 18) + 'px';
@@ -1161,7 +1203,7 @@ function placeTray(){
   }
   trayEl.style.left = left + 'px';
 }
-function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; trayEl.classList.remove('strip'); $$('.smmk-fly', stage).forEach(e => e.remove()); }
+function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; trayEl.classList.remove('strip', 'col'); $$('.smmk-fly', stage).forEach(e => e.remove()); }
 /* Karte fliegt verdeckt aus der Hand und dreht sich im letzten Drittel um */
 function flyOut(el, hp, kfFn, dur){
   const r = vr(el);
@@ -1210,8 +1252,9 @@ function priceHtml(p){
 }
 /* „größer bis“ nur bei Stücken mit Größen: teuerste Größe (je Größe die günstigste Variante) */
 function moreHtml(p){ if (!p.cv || !Array.isArray(p.v)) return ''; const top = Math.max(...p.v.map(v => +v[1])); return top > p.cv.c ? `<small class="smmk-up">größer bis ${esc(eur(top))}</small>` : ''; }
-function metaHtml(p){ const r = rating(p); return priceHtml(p) + (r ? ` · <span class="smmk-star">★</span> ${esc(r)}` : ''); }
-const linkOf = p => p.u + (p.cv && p.cv.id ? '?variant=' + p.cv.id : '');
+function metaHtml(p){ const r = rating(p); return priceHtml(p) + (r ? ` · <span class="smmk-rt"><span class="smmk-star">★</span> ${esc(r)}</span>` : ''); }
+/* Immer mit Variante: die gewählte Größe, sonst die erste verfügbare (Feld d aus collection.moench) */
+const linkOf = p => { const v = p.cv && p.cv.id ? p.cv.id : +p.d || 0; return p.u + (v ? '?variant=' + v : ''); };
 function showBtn(p, label){
   const b = h('button', 'smmk-show', (label ? esc(label) + ' ' : '') + ICO.arrow); b.type = 'button';
   b.setAttribute('aria-label', 'Zeig es mir: ' + p.t); b.addEventListener('click', () => showIt(p, b)); return b;
@@ -1236,11 +1279,16 @@ function cardHover(el){
   el.addEventListener('focusin', on); el.addEventListener('focusout', off);
 }
 const flick = () => anim(sqEl, [{transform:'none'}, {transform:'skewX(-6deg) translateX(4px)'}, {transform:'none'}], {duration:160, easing:'steps(2,end)'});
-async function dealCards(items, a, list){
+/* o.instant: Karten liegen sofort da, ohne Flug (Zurück zu den Vorschlägen) */
+async function dealCards(items, a, list, o){
+  o = o || {};
   items.forEach(p => S.shown.add(p.h)); S.dealt = true;
   ssUpd({recs:Array.from(new Set((SS.recs || []).concat(items.map(p => p.h)))).slice(-24)});
   ecomm('view_item_list', list || ((a ? a.l : 'hier') + '|' + (S.budget || '')), items);
+  const quick = o.instant || still() || !S.out;
   if (S.mobile){
+    /* Handy: nur die Leitzeile bleibt über den Zeilen stehen, damit Zeilen und Knöpfe ins Sheet passen */
+    if (!S.classic && !S.typed){ const ls = $$('.smmk-line, .smmk-echo, .smmk-src', bbody), lead0 = $$('.smmk-line', bbody).pop(); ls.forEach(n => { if (n !== lead0) n.remove(); }); }
     const wrap = addNode(h('div', 'smmk-rows'));
     const els = items.map(p => { const r = rowEl(p, a); r.style.opacity = 0; wrap.append(r); cardHover(r); return r; });
     addNode(h('p', 'smmk-taxl', TAXL));
@@ -1248,8 +1296,8 @@ async function dealCards(items, a, list){
     scrollBody(); rideSheet();
     const hp = handPoint(), flights = [];
     for (const r of els){
+      if (quick){ r.style.opacity = 1; continue; }
       sfx('deal');
-      if (still() || !S.out){ r.style.opacity = 1; continue; }
       flick();
       flights.push(flyOut(r, hp, (dx, dy) => [{transform:`translate(${dx}px,${dy}px) scale(.2)`, opacity:0}, {transform:`translate(${R(dx * .85)}px,${R(dy * .85)}px) scale(.3)`, opacity:1, offset:.1}, {transform:'none', opacity:1}], 420).then(rr => burst('sparks', rr.x + 30, rr.y + rr.h / 2, 8)));
       await w(120);
@@ -1257,15 +1305,16 @@ async function dealCards(items, a, list){
     await aw(Promise.all(flights)); await w(150); return;
   }
   const hp = handPoint();
-  const strip = !trayGeom(items.length).cw;
-  trayEl.classList.toggle('strip', strip);
+  /* Karten neben der Box; passt das nicht, eine Spalte aus Zeilen neben der Box; erst dann die Leiste über der Box */
+  const g0 = trayGeom(items.length), mode = g0.cw ? '' : g0.col ? 'col' : 'strip';
+  trayEl.classList.toggle('strip', mode === 'strip'); trayEl.classList.toggle('col', mode === 'col');
   trayEl.innerHTML = '<div class="tcards"></div><p class="smmk-taxl">' + TAXL + '</p>'; trayEl.style.display = 'flex';
   const cards = $('.tcards', trayEl);
-  const els = items.map(p => { const c = strip ? rowEl(p, a) : cardEl(p, a); c.style.opacity = 0; cards.append(c); cardHover(c); return c; });
+  const els = items.map(p => { const c = mode ? rowEl(p, a) : cardEl(p, a); c.style.opacity = 0; cards.append(c); cardHover(c); return c; });
   placeTray(); const flights = [];
   for (const c of els){
+    if (quick){ c.style.opacity = 1; continue; }
     sfx('deal');
-    if (still() || !S.out){ c.style.opacity = 1; continue; }
     flick();
     flights.push(flyOut(c, hp, (dx, dy) => [{transform:`translate(${dx}px,${dy}px) scale(.15)`, opacity:0}, {transform:`translate(${R(dx * .88)}px,${R(dy * .88 - 12)}px) scale(.24)`, opacity:1, offset:.1}, {transform:`translate(${R(dx * .35)}px,${R(dy * .35 - 40)}px) scale(.7)`, opacity:1, offset:.55}, {transform:'none', opacity:1}], 480).then(r => burst('sparks', r.x + r.w / 2, r.y + 30, 10)));
     await w(120);
@@ -1320,13 +1369,16 @@ function fitOf(p, b){
 }
 /* Punkte = ln(Bestellungen + 1) x Passung; Passung 1 im Band, 0,5 knapp darunter */
 function scored(pool, b, all){
-  return pool.filter(p => !isMini(p) && (all || !S.shown.has(p.h))).map(p => { const f = fitOf(p, b); return Object.assign({}, p, {fit:f.fit, cv:f.v && f.v.id ? f.v : null, sc:Math.log((+p.n || 0) + 1) * f.fit}); })
+  const B = bandOf(b), mini = !!(B && B.mini);
+  return pool.filter(p => (mini || !isMini(p)) && (all || !S.shown.has(p.h))).map(p => { const f = fitOf(p, b); return Object.assign({}, p, {fit:f.fit, cv:f.v && f.v.id ? f.v : null, sc:Math.log((+p.n || 0) + 1) * f.fit}); })
     .filter(p => p.fit > 0).sort((x, y) => (weak(x) - weak(y)) || (y.sc - x.sc) || (x.pos - y.pos));
 }
+/* Erst alles im Band; Stücke knapp darunter füllen nur auf, wenn das Band keine drei hergibt, und stehen immer hinten */
 function pick(pool, b){
-  const L = scored(pool || [], b);
+  const L = scored(pool || [], b), inB = L.filter(p => p.fit === 1), lo = L.filter(p => p.fit < 1);
   if (L.length < 2) return {tier:'none', items:[]};
-  return {tier:'ok', items:diverse(L, 3)};
+  const items = inB.length >= 3 ? diverse(inB, 3) : inB.concat(diverse(lo, 3 - inB.length));
+  return {tier:'ok', items};
 }
 /* Ein Band erscheint nur mit mindestens zwei passenden Stücken, eins davon mitten im Band */
 const bandOk = (list, b) => { const L = scored(list, b, true); return L.length >= 2 && L.some(p => p.fit === 1); };
@@ -1417,14 +1469,19 @@ async function render(t){
   for (const a of t.actions || []) await act(a);
   const say = [].concat(t.say || []).filter(Boolean).map(s => typeof s === 'string' ? {t:s} : s);
   const chips = (t.chips || []).filter(Boolean).map(chipOf);
-  const later = !!(t.cards && t.cards.length) || !!t.source;
-  if (say.length) await speak(say, later ? {} : {onLast:() => { if (chips.length) choices(chips, {focus:false}); }});
-  if (t.cards && t.cards.length) await dealCards(t.cards, t.aud, t.list);
+  const cards = !!(t.cards && t.cards.length), later = cards || !!t.source;
+  /* Karten fliegen schon, während die Leitzeile tippt; Knöpfe ohne Karten erscheinen mit der ersten Zeile */
+  let dealP = null;
+  const deal = () => { dealP = dealCards(t.cards, t.aud, t.list, t.deal); dealP.catch(() => {}); };
+  if (say.length) await speak(say, {onStart:() => { if (cards) deal(); else if (!later && chips.length) choices(chips, {focus:false}); }});
+  else if (cards) deal();
+  if (dealP) await dealP;
   if (t.source) sourceLine(t.source);
   if (later || !say.length) choices(chips, {focus:false});
   if (t.form === 'compose' && S.compose) try { inputEl.focus({preventScroll:true}); } catch (e) {}
   else if (t.focus === 'show'){ const b = $$('.smmk-show', stage).find(x => !x.disabled && x.offsetParent !== null); if (b) try { b.focus({preventScroll:true}); } catch (e) {} }
   else if (chips.length) focusFirst();
+  keepClear();
 }
 /* Denkpause um jede asynchrone Quelle: Lupe, „…“, mindestens 400 ms; Fehler und Zeitüberschreitung mit festen Zeilen */
 async function think(job, o){
@@ -1450,7 +1507,8 @@ async function ensureOut(pose, how, o){
   if (S.out){ const was = boxOn(); await openBox(); if (!was) focusLog(); if (S.pose !== pose) await aw(setPose(pose)); return; }
   if (!boxOn()) newTurn();
   for (let i = 0; i < 150 && S.yield; i++) await w(200);
-  await aw(Promise.race([preload(), sleep(1500)]));
+  /* alle Posen laden im Hintergrund, gewartet wird nur auf die Landepose */
+  preload(); await aw(ready(pose));
   if (!railSprite() && how === 'leap') how = 'poof';
   /* Würde die Landung das Ziel verdecken, erst sanft scrollen */
   if (o.target && vis(o.target)){ const r = vr(o.target); if ((S.mobile || overlapsGroup(r)) && r.y + r.h > groupTop() - 12){ if (reveal(o.target, true)) await w(260); } }
@@ -1475,7 +1533,7 @@ function sessionChips(){
   const s = ssRead(), a = sessAud(s); if (!a || !Array.isArray(s.last) || !s.last.length) return [];
   const B = BANDS[s.b];
   return [{l:'Zurück zu meinen Vorschlägen', pri:1, id:'back_recs', f:() => resumeCards()},
-    B ? {l:`Mehr ${a.who} ${B.l}`, id:'more', v:s.b, f:() => { S.shown = new Set(s.shown || []); return cardsFlow(a, s.b); }} : null].filter(Boolean);
+    B ? {l:`Mehr ${a.who}`, id:'more', v:s.b, f:() => { S.shown = new Set(s.shown || []); return cardsFlow(a, s.b); }} : null].filter(Boolean);
 }
 function menuList(){
   return [{l:'Geschenk finden', id:'gift_start', f:() => giftStep1()}, {l:'Wo ist meine Bestellung?', id:'order', f:() => orderFlow()}, {l:'Frage stellen', id:'faq', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}];
@@ -1489,7 +1547,8 @@ async function changeStep(){
   await ask({t:'Klar. Was soll anders sein?', emote:'?'}, [
     {l:'Für jemand anderen', pri:1, id:'change_aud', f:() => { S.keepBand = true; if (!S.budget) S.budget = ssRead().b || null; return giftStep1(); }},
     {l:'Anderes Budget', id:'gift_budget', f:() => budgetStep(a, true)},
-    {l:'Ganz was anderes', f:() => menuStep()}]);
+    {l:'Ganz was anderes', f:() => menuStep()},
+    Object.assign({}, SONDER_CH, {link:0}), Object.assign({}, GUTSCHEIN_CH, {l:'Gutschein verschenken', link:0})]);
 }
 function closeEv(outcome){ if (!S.t0) return; push('sm_monk_close', {sm_outcome:outcome || 'none', sm_turns:TURN, sm_ms:R(now() - S.t0)}); S.t0 = 0; }
 async function navTo(href, cue, say){
@@ -1584,7 +1643,7 @@ async function notFound(){
   await ensureOut('shrug', im && vis(im) ? 'img' : 'leap', {img:im}); newTurn();
   await ask([...hello(), {t:'Hier ist leider nichts. Selbst mein Karton ist leer. Wonach suchst Du?', emote:'?'}], [{l:'Geschenk finden', pri:1, id:'gift_start', f:() => giftStep1()}, {l:'Frage stellen', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}]);
 }
-function audienceList(){ return AUD.filter(a => a.hero).map(a => ({l:audChip(a), id:'gift_aud', v:a.l, f:() => pickAudience(a)})).concat([{l:'Jemand anderes', id:'gift_aud', v:'andere', f:() => someoneElse()}]); }
+function audienceList(){ return AUD.filter(a => a.hero).map(a => ({l:audChip(a), id:'gift_aud', v:a.l, pre:() => poolOf(a).catch(() => {}), f:() => pickAudience(a)})).concat([{l:'Jemand anderes', id:'gift_aud', v:'andere', f:() => someoneElse()}]); }
 async function audienceStep(pre){ await ask((pre || []).concat([{t:line('who'), emote:'?'}]), audienceList()); }
 async function giftStep1(pre){
   S.calm = false; spotOff(); markerOff(); clearProp(true);
@@ -1665,7 +1724,7 @@ function poolOf(a){
   return POOLS[key];
 }
 async function budgetStep(a, ask2){
-  S.aud = a; await ensureOut('sketch', 'poof');
+  S.aud = a; spotOff(); markerOff(); await ensureOut('sketch', 'poof');
   const r = await think(poolOf(a));
   if (r.err){ await speak(r.line); return ask('Was darf es ungefähr kosten?', budgetChoices(a, Object.keys(BANDS))); }
   S.pool = {a, list:r.res};
@@ -1700,7 +1759,7 @@ function leadLine(a, items, B){
   return `Aus ${srcOf(a)} ${B.s}, ` + (desc ? 'die meistbestellten zuerst' : 'oft bestellt und passend zum Budget') + (below ? '. Manches liegt etwas darunter' : '') + ':';
 }
 async function cardsFlow(a, budget){
-  S.aud = a; S.budget = budget; S.calm = false; S.keepBand = false;
+  S.aud = a; S.budget = budget; S.calm = false; S.keepBand = false; spotOff(); markerOff();
   const B = bandOf(budget) || BANDS.b60p;
   await ensureOut('sketch', 'poof');
   const job = (S.pool && S.pool.a === a) ? Promise.resolve(S.pool.list) : poolOf(a);
@@ -1723,8 +1782,11 @@ async function cardsFlow(a, budget){
 }
 function remember(a, budget, items){
   const B = bandOf(budget);
-  ssUpd({aud:a.l, b:typeof budget === 'string' ? (OLDB[budget] || budget) : null, cap:B && B.hi !== Infinity ? B.hi : null, last:items.map(p => p.h).slice(0, 3), shown:Array.from(S.shown).concat(items.map(p => p.h)).slice(-30)});
+  ssUpd({aud:a.l, b:typeof budget === 'string' ? (OLDB[budget] || budget) : null, cap:B && B.hi !== Infinity ? B.hi : null, last:items.map(p => p.h).slice(0, 3), lp:items.slice(0, 3).map(cardData), shown:Array.from(S.shown).concat(items.map(p => p.h)).slice(-30)});
 }
+/* Kartendaten für das Zurückkommen: nur, was Karte und Link brauchen (keine Besucherdaten) */
+const CARD_KEYS = ['h', 't', 'u', 'p', 'q', 'i', 'z', 'n', 'y', 'rv', 'rc', 'r', 'ch', 'ct', 'src', 'v', 'd', 'pos'];
+function cardData(p){ const o = {}; CARD_KEYS.forEach(k => { if (p[k] != null) o[k] = p[k]; }); return o; }
 function cardChips(a){
   const list = S.pool ? S.pool.list : null, more = !!list && pick(list, S.budget).tier !== 'none';
   const c = [];
@@ -1733,10 +1795,12 @@ function cardChips(a){
   if (minis(list).length) c.push({l:'Kleinigkeit dazu?', id:'kleinigkeit', f:() => miniCards(a)});
   if (a.hs[0]) c.push({l:'Alle ansehen', link:1, id:'all', href:'/collections/' + a.hs[0], say:'Ich bring Dich zur ganzen Kollektion.'});
   c.push({l:'Was anderes suchen', link:1, f:() => changeStep()});
-  c.push({l:'Sonderanfertigung', link:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'});
-  c.push({l:'Gutschein', link:1, id:'gutschein', href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'});
+  /* Handy: höchstens vier Knöpfe unter den Zeilen; Sonderanfertigung und Gutschein stehen dann unter „Was anderes suchen“ */
+  if (!S.mobile) c.push(SONDER_CH, GUTSCHEIN_CH);
   return c;
 }
+const SONDER_CH = {l:'Sonderanfertigung', link:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'};
+const GUTSCHEIN_CH = {l:'Gutschein', link:1, id:'gutschein', href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'};
 async function moreCards(a){
   const res = pick(S.pool ? S.pool.list : [], S.budget), B = bandOf(S.budget) || BANDS.b60p;
   if (res.tier === 'none') return ask('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.', [{l:'Zur Kollektion', id:'all', href:'/collections/' + a.hs[0]}, {l:'Was anderes suchen', f:() => changeStep()}]);
@@ -1746,20 +1810,33 @@ async function moreCards(a){
 async function miniCards(a){
   const items = minis(S.pool ? S.pool.list : []).slice(0, 3);
   if (!items.length) return cardChips(a);
-  await render({say:[{t:`Kleinigkeiten unter 10 € aus ${srcOf(a)}, die meistbestellten zuerst:`, emote:'bulb'}], cards:items, aud:a, list:a.l + '|unter 10 €', chips:cardChips(a), focus:'show'});
+  /* ab-Preis stimmt immer; manche Kleinigkeiten gibt es in größeren Ausführungen auch über 10 € */
+  const lo = Math.min(...items.map(p => +p.p || 0));
+  await render({say:[{t:`Kleinigkeiten ab ${euro(lo)} aus ${srcOf(a)}, die meistbestellten zuerst:`, emote:'bulb'}], cards:items, aud:a, list:a.l + '|Kleinigkeiten', chips:cardChips(a), focus:'show'});
 }
 /* Zurück zu meinen Vorschlägen: dieselben drei Karten noch einmal austeilen, ohne neu zu fragen */
 async function resumeCards(){
   const s = ssRead(), a = sessAud(s);
   if (!a || !Array.isArray(s.last) || !s.last.length) return giftStep1();
-  S.aud = a; S.budget = s.b || (s.cap ? {l:'bis ' + euro(s.cap), lo:0, hi:s.cap, s:'bis ' + euro(s.cap)} : null); S.shown = new Set(s.shown || []);
+  S.aud = a; S.budget = s.b || (s.cap ? {l:'bis ' + euro(s.cap), lo:0, hi:s.cap, s:'bis ' + euro(s.cap), mini:1} : null); S.shown = new Set(s.shown || []);
+  const fit = p => withFit(p, S.budget || 'b60p'), list = a.l + '|' + ((bandOf(S.budget) || {}).l || '');
+  /* Das Regal lädt im Hintergrund, die gemerkten Karten liegen sofort wieder da (ohne Denkpause und ohne Flug) */
+  const job = (S.pool && S.pool.a === a) ? Promise.resolve(S.pool.list) : poolOf(a); job.catch(() => {});
+  const kept = Array.isArray(s.lp) && s.lp.length ? s.lp.filter(p => p && p.h && p.u).map(fit) : [];
   await ensureOut('sketch', 'poof');
-  const r = await think(poolOf(a), {pose:'sketch'});
+  if (kept.length){
+    await render({say:[{t:'Da sind wir wieder. Hier sind Deine Vorschläge.', emote:'bulb'}], cards:kept, deal:{instant:true}, aud:a, list, focus:'show'});
+    let L = null; try { L = await aw(Promise.race([job, sleep(6000).then(() => null)])); } catch (e){ if (e === ABORT) throw e; }
+    if (L) S.pool = {a, list:L};
+    choices(cardChips(a), {focus:false});
+    return;
+  }
+  const r = await think(job, {pose:'sketch'});
   if (r.err) return ask(r.line, [{l:'Zur Kollektion', id:'all', href:'/collections/' + a.hs[0]}, {l:'Was anderes suchen', f:() => changeStep()}]);
   S.pool = {a, list:r.res};
-  const items = s.last.map(hd => r.res.find(p => p.h === hd)).filter(Boolean).map(p => withFit(p, S.budget || 'b60p'));
+  const items = s.last.map(hd => r.res.find(p => p.h === hd)).filter(Boolean).map(fit);
   if (!items.length) return budgetStep(a);
-  await render({say:[{t:'Da sind wir wieder. Hier sind Deine Vorschläge.', emote:'bulb'}], cards:items, aud:a, list:a.l + '|' + ((bandOf(S.budget) || {}).l || ''), chips:cardChips(a), focus:'show'});
+  await render({say:[{t:'Da sind wir wieder. Hier sind Deine Vorschläge.', emote:'bulb'}], cards:items, deal:{instant:true}, aud:a, list, chips:cardChips(a), focus:'show'});
 }
 function showIt(p, btn){
   $$('.smmk-show', stage).forEach(b => { b.disabled = true; });
@@ -1901,15 +1978,27 @@ async function shipAnswer(){
 /* Bestellung: ruhiger Modus, die Testversion kann noch nicht nachschauen */
 async function orderFlow(pre){
   S.calm = true; markerOff(); spotOff();
-  await ensureOut('pc', 'leap'); await aw(setPose('pc', {dust:false}));
+  /* Handy: ohne Schreibtisch, der würde auf dem Sheet die Fragen darüber verdecken */
+  const pz = S.mobile ? 'sketch' : 'pc';
+  await ensureOut(pz, 'leap'); await aw(setPose(pz, {dust:false}));
   await speak((pre || []).concat(['Ich helfe Dir gern. In meiner Testversion kann ich Bestellungen aber noch nicht selbst nachschauen.']));
   const back = {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await menuStep(['Klar.']); }};
   if (pageKind() === 'track'){
     const acc = visibleOne('main details') || visibleOne('main .accordion__item');
-    if (acc) await laserAt(acc, {spot:true, dim:false, keep:1600});
+    /* „Hier unten“ meint die ganze Liste: sie rückt über Box und Mönch, gezeigt wird auf die erste Frage */
+    if (acc) await laserAt(acc, {spot:true, dim:false, keep:1600, area:listArea(acc)});
+    /* Handy: an den rechten Rand, dort stehen nur die Plus-Zeichen, die Fragen beginnen links */
+    if (acc && S.mobile) await stroll(vpW(), {face:-1});
     return ask('Hier unten beantworten wir die häufigsten Fragen zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.', [{l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt', topic:'Meine Bestellung'}, say:'Ich bring Dich zum Kontaktformular.'}, back, {l:'Danke', f:() => exitFlow()}]);
   }
   await ask('Auf der Seite Sendungsverfolgung findest Du die Antworten zu Sendungsnummer und Versand. Und unser Team schaut gern persönlich nach.', [{l:'Zur Sendungsverfolgung', pri:1, href:'/pages/sendungsverfolgung', say:'Ich bring Dich hin.'}, {l:'Kontakt', href:'/pages/kontakt', cue:{k:'kontakt', topic:'Meine Bestellung'}, say:'Ich bring Dich zum Kontaktformular.'}, back]);
+}
+/* Die gezeigte Frage und die zwei folgenden als ein Bereich (für reveal und dodge), solange er höchstens halb so hoch wie das Fenster ist */
+function listArea(el){
+  const all = $$('main details, main .accordion__item').filter(vis), i = all.indexOf(el), L = i < 0 ? [] : all.slice(i, i + 3);
+  if (L.length < 2) return el;
+  const U = () => { const rs = L.map(e => e.getBoundingClientRect()), x = Math.min(...rs.map(r => r.left)), y = Math.min(...rs.map(r => r.top)); return new DOMRect(x, y, Math.max(...rs.map(r => r.right)) - x, Math.max(...rs.map(r => r.bottom)) - y); };
+  return U().height <= vpH() * .5 ? {getBoundingClientRect:U} : el;
 }
 /* FAQ: Themen führen zur FAQ-Seite, dort zitiert der Mönch die geöffnete Antwort */
 const FAQ = [['Versand und Lieferzeit', 'Versand', 'zu Versand und Lieferzeit'], ['Bestellung und Bezahlung', 'Bestellung', 'zu Bestellung und Bezahlung'],
@@ -1919,7 +2008,7 @@ async function faqTopics(pre){
   S.calm = false;
   await ensureOut('sketch', 'leap');
   const onFaq = pageKind() === 'faq', topics = FAQ.map(([l, g]) => ({l, id:'faq_topic', v:g, f:() => faqShow(g, l)})), hu = {l:'Mit Mensch sprechen', f:() => human()};
-  await ask((pre || []).concat([onFaq ? 'Such Dir ein Thema aus, dann zeig ich Dir die Antworten hier auf der Seite. Oder schreib direkt unserem Team.' : 'Worum geht es? Ich bring Dich zu den passenden Antworten.']), onFaq ? [hu].concat(topics) : topics.concat([hu]));
+  await ask((pre || []).concat([onFaq ? 'Such Dir ein Thema aus, dann zeig ich Dir die Antworten hier auf der Seite. Oder schreib direkt unserem Team.' : 'Worum geht es? Ich bring Dich zu den passenden Antworten.']), topics.concat([hu]));
 }
 function firstSentences(t, n){ const s = String(t || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„])/); return s.slice(0, n).join(' '); }
 async function faqShow(g, label, fromCue){
@@ -1980,12 +2069,18 @@ async function sonderGuide(fromCue){
 function cartJs(){ return fetch('/cart.js', {credentials:'same-origin', cache:'no-store'}).then(r => r.json()); }
 const hasPersText = c => (c.items || []).some(i => i.properties && Object.keys(i.properties).some(k => k[0] !== '_' && String(i.properties[k] || '').trim()));
 async function cartOpener(){
+  /* Warenkorb und Regal parallel: den Lückenfüller bietet er nur an, wenn mindestens zwei Stücke in die Lücke passen */
+  const shelf = poolOf(gapAud()).catch(() => null);
   await ensureOut('sketch', 'leap'); newTurn();
   let c = null; try { c = await aw(cartJs()); } catch (e){ if (e === ABORT) throw e; }
   const say = [...hello()], chips = [];
   if (c){
     const gap = SHIP.free - (c.total_price || 0);
-    if (gap > 0){ say.push(`Noch ${euro(gap)} bis zum Gratisversand. Soll ich Dir was Passendes dafür suchen?`); chips.push({l:'Ja, such mir was', pri:1, id:'cart_gap', v:R(gap / 100), f:() => gapFlow(gap)}); }
+    if (gap > 0){
+      const L = await aw(Promise.race([shelf, sleep(2500).then(() => null)]));
+      if (L && pick(L, gapBand(gap)).tier !== 'none'){ say.push(`Noch ${euro(gap)} bis zum Gratisversand. Soll ich Dir was Passendes dafür suchen?`); chips.push({l:'Ja, such mir was', pri:1, id:'cart_gap', v:R(gap / 100), f:() => gapFlow(gap)}); }
+      else say.push(`Noch ${euro(gap)} bis zum Gratisversand.`);
+    }
     else say.push('Der Versand ist für Dich gratis.');
     if (hasPersText(c)) say.push('Schau Dir Deinen Text noch mal an, er steht unter dem Artikel.');
   }
@@ -2001,10 +2096,10 @@ async function cartOpener(){
   say.push(shipLine());
   await ask(say, chips.concat([{l:'Noch ein Geschenk finden', f:() => giftStep1()}, {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}, {l:'Mit Mensch sprechen', f:() => human()}]));
 }
-function gapFlow(gap){
-  const a = sessAud(ssRead()) || BELIEBT, t = 'bis ' + euro(gap);
-  return cardsFlow(a, {l:t, lo:0, hi:gap, s:t});
-}
+/* Lückenfüller zum Gratisversand: hier zählen auch die Kleinigkeiten unter 10 € */
+const gapBand = gap => { const t = 'bis ' + euro(gap); return {l:t, lo:0, hi:gap, s:t, mini:1}; };
+const gapAud = () => sessAud(ssRead()) || BELIEBT;
+function gapFlow(gap){ return cardsFlow(gapAud(), gapBand(gap)); }
 async function emptyCart(){
   await ensureOut('sketch', 'leap'); newTurn();
   const jl = visibleOne('main .smc-mini') || visibleOne('main .smc-empty__body');
@@ -2060,6 +2155,8 @@ function clearProp(dust){
 }
 async function itemGet(g){
   S.calm = false; spotOff(); markerOff(); S.outcome = 'cart';
+  /* War er schon zu, beginnt hier eine neue Sitzung: erst sm_monk_open, dann der Schritt */
+  if (!S.out && !S.t0){ S.t0 = now(); TURN = 0; push('sm_monk_open', {sm_entry:'item_get'}); }
   push('sm_monk_step', {sm_step:'item_get', sm_recommended:g.rec ? 1 : 0});
   await ensureOut(S.out ? S.pose : 'sketch', 'poof'); newTurn();
   await aw(setPose('sketch'));
@@ -2193,6 +2290,7 @@ function poll(){
   }
   const why = (S.out || boxOn() || S.active) ? blockedNow() : '';
   setYield(why);
+  if (S.mobile && boxOn()) sheetCheck();
   if (qmTarget) placeMarker();
 }
 function setYield(why){
@@ -2238,7 +2336,7 @@ function kbFix(){
   if (!stage) return;
   let kb = 0; const vv = window.visualViewport;
   if (S.mobile && vv && d.activeElement === inputEl) kb = Math.max(0, R(innerHeight - vv.height - vv.offsetTop));
-  stage.style.setProperty('--kb', kb + 'px');
+  stage.style.setProperty('--kb', kb + 'px'); sheetCheck();
 }
 
 /* ---------- Bedienung ---------- */
@@ -2309,9 +2407,6 @@ function bind(){
       return;
     }
     const ae = d.activeElement;
-    if ((e.key === 'Enter' || e.key === ' ') && (S.typing || S.waitAdv) && !(ae && ae.closest && ae.closest('#smMonk, input, textarea, select'))){
-      e.preventDefault(); kbSwallow = e.key; if (S.typing) S.skip = true; else advanceNow(); return;
-    }
     const inCh = ae && ae.closest && (ae.closest('.smmk-choices') || ae.matches('.smmk-show'));
     if (inCh && ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(e.key)){
       const bs = $$('.smmk-show', stage).filter(b => !b.disabled && b.offsetParent !== null).concat(allChoices().filter(b => !b.disabled));
@@ -2319,8 +2414,9 @@ function bind(){
       const n = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? (i + 1) % bs.length : (i - 1 + bs.length) % bs.length;
       bs[n].focus(); e.preventDefault(); return;
     }
-    if ((e.key === 'Enter' || e.key === ' ') && boxOn() && (ae === box || ae === bbody || ae === d.body)){
-      if (S.typing){ S.skip = true; e.preventDefault(); } else if (S.waitAdv){ advanceNow(); e.preventDefault(); }
+    /* Weiter mit Enter oder Leertaste nur, wenn der Fokus in der Box oder auf der Seite selbst liegt; Links und Knöpfe der Seite bleiben unberührt */
+    if ((e.key === 'Enter' || e.key === ' ') && boxOn() && !S.yield && (ae === box || ae === bbody || ae === d.body || !ae)){
+      if (S.typing){ S.skip = true; e.preventDefault(); kbSwallow = e.key; } else if (S.waitAdv){ advanceNow(); e.preventDefault(); kbSwallow = e.key; }
     }
   });
   d.addEventListener('keyup', e => { if (kbSwallow && e.key === kbSwallow){ e.preventDefault(); kbSwallow = null; } });
@@ -2351,6 +2447,7 @@ function bind(){
     S.lag = Math.max(-8, Math.min(8, S.lag - dy * .35));
     if (!lagRaf) lagRaf = requestAnimationFrame(function spring(){ S.lag *= .82; if (Math.abs(S.lag) < .5) S.lag = 0; lagEl.style.transform = `translateY(${R(S.lag)}px)`; lagRaf = S.lag ? requestAnimationFrame(spring) : 0; });
   }, {passive:true});
+  bbody.addEventListener('scroll', bodyFade, {passive:true});
   new ResizeObserver(() => { sheetCheck(); rideSheet(); if (!S.mobile && $('.smmk-card, .smmk-row', trayEl)) placeTray(); }).observe(box);
   addEventListener('resize', applyViewport);
   d.addEventListener('visibilitychange', () => {
@@ -2388,17 +2485,24 @@ function start(intent, el){
   S.compose = S.compose || /[?&]moench_input=1\b/.test(location.search) || !!ssRead().ci;
   composeEl.hidden = !S.compose; if (S.compose && S.used && !SS.ci) ssUpd({ci:1});
   /* Deep Link: ?moench= verschwindet aus der Adresse, sobald der Ablauf startet */
-  if (deep && k !== 'resume' && /[?&]moench=/.test(location.search)){ try { const u = new URL(location.href); u.searchParams.delete('moench'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {} }
-  const mob = $('#smmMob'); if (mob && !mob.hidden){ const x = $('.mob-x', mob); if (x) x.click(); }
+  if (deep && k !== 'resume' && (/[?&]moench=/.test(location.search) || /^#moench/.test(location.hash))){ try { const u = new URL(location.href); u.searchParams.delete('moench'); if (/^#moench/.test(u.hash)) u.hash = ''; history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {} }
+  const mob = $('#smmMob'), menuWas = !!(mob && !mob.hidden); if (menuWas){ const x = $('.mob-x', mob); if (x) x.click(); }
   if (k === 'resume') return resume();
-  if (k === 'open' && (S.out || boxOn())){ go(() => exitFlow()); return; }
+  /* Schon draußen: nur der Kopf im Header schickt ihn weg. Jeder andere Einstieg (Menü, Seite) holt ihn zurück nach vorn. */
+  if (k === 'open' && (S.out || boxOn())){
+    const hdr = el && el.nodeType === 1 && el.getAttribute('data-smmk-src') === 'header';
+    if (hdr && !menuWas && !S.yield && !S.tuck){ go(() => exitFlow()); return; }
+    untuck(); if (S.out){ hop(6, 160); emote('!', 900); }
+    if ($('.smmk-ch:not(:disabled)', choicesEl)) focusFirst(); else focusLog();
+    return;
+  }
   S.t0 = now(); TURN = 0; S.outcome = '';
   push('sm_monk_open', {sm_entry:entry});
   go(async () => {
     if ((k === 'gift' || k === 'geschenk') && pageKind() === 'acoll') return opener();
     if (k === 'gift' || k === 'geschenk'){ await ensureOut('sketch', 'leap', {target:$('#fchips')}); newTurn(); return giftStep1(hello()); }
     if (k === 'someone'){ await ensureOut('sketch', 'leap'); newTurn(); return someoneElse(hello()); }
-    if (k === 'order' || k === 'bestellung'){ await ensureOut('pc', 'leap'); newTurn(); return orderFlow(hello()); }
+    if (k === 'order' || k === 'bestellung'){ await ensureOut(S.mobile ? 'sketch' : 'pc', 'leap'); newTurn(); return orderFlow(hello()); }
     if (k === 'faq'){ await ensureOut('sketch', 'leap'); newTurn(); return faqTopics(hello()); }
     if (k === 'product'){ return productOpener(!!CTX.pz); }
     if (k === '404'){ return notFound(); }
@@ -2410,7 +2514,7 @@ function resume(){
   try { if (location.hash === '#moench-r') history.replaceState(history.state, '', location.pathname + location.search); } catch (e) {}
   const st = ssRead(); SS = st;
   const cue = st.cue; if (cue) ssUpd({cue:null});
-  const go2 = fn => { S.greeted = true; S.t0 = now(); TURN = 0; push('sm_monk_open', {sm_entry:'resume'}); go(async () => { await sleep(400); for (let i = 0; i < 40 && blockedNow() === 'cookie'; i++) await sleep(250); return fn(); }); };
+  const go2 = (fn, pause) => { S.greeted = true; S.t0 = now(); TURN = 0; push('sm_monk_open', {sm_entry:'resume'}); go(async () => { if (pause !== 0) await sleep(400); for (let i = 0; i < 40 && blockedNow() === 'cookie'; i++) await sleep(250); return fn(); }); };
   if (cue && cue.u === location.pathname){
     if (cue.k === 'pdp') return go2(() => pdpGuide(!!(cue.z && CTX.pz !== 0), true, cue));
     if (cue.k === 'faq') return go2(() => faqShow(cue.g, cue.l, true));
@@ -2418,7 +2522,7 @@ function resume(){
     if (cue.k === 'sonder') return go2(() => sonderGuide(true));
   }
   /* Zurück-Taste auf die Seite mit den Vorschlägen: dieselben Karten, ohne neu zu fragen */
-  if (st.back && st.back.u === location.pathname && st.back.k === 'cards'){ ssUpd({back:null}); return go2(() => resumeCards()); }
+  if (st.back && st.back.u === location.pathname && st.back.k === 'cards'){ ssUpd({back:null}); return go2(() => resumeCards(), 0); }
   checkCart();
 }
 /* bfcache: beim Verlassen die Box zurücksetzen, beim Zurückkommen mit den Vorschlägen wieder öffnen */

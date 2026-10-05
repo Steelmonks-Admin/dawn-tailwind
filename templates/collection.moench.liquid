@@ -7,6 +7,7 @@
   steht auf sichtbaren Bestsellern (Signet Anhänger, Zunftanhänger, Eisernes Kreuz). Nur mit settings.sm_monk_enabled, sonst {"p":[]}.
   Felder: h Handle, t Titel, u URL, p ab-Preis (Cent), q Höchstpreis, k Vergleichspreis (Cent), i Bild (klein), z personalisierbar,
   n Bestellungen (steelmonks.bestellungen), y Produkttyp, rv/rc Bewertung, r Rang in der Sortierung (0 = Platz 1),
+  d erste verfügbare Variante (für den Link, wenn keine Größe gewählt ist),
   v Größen [[Varianten-ID, Preis in Cent, Optionswert], ...]: nur bei einer Größen-Option (Name Größe/Size oder Werte wie „45cm“),
   je Größe die günstigste verfügbare Variante, höchstens 6. Seite 2 holt sm-monk.js nur, wenn n über 60 liegt.
 {%- endcomment -%}
@@ -100,7 +101,7 @@
       endif
     -%}
     {%- unless first -%},{%- endunless -%}{%- assign first = false -%}
-    {"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ url | json }},"p":{{ p.price_min }},"q":{{ p.price_max }},"k":{{ p.compare_at_price_min | default: 0 }},"i":{{ p.featured_image | image_url: width: 300 | json }},"z":{{ pz }},"n":{{ p.metafields.steelmonks.bestellungen.value | default: 0 }},"y":{{ p.type | json }},"rv":{{ rv | json }},"rc":{{ rc | json }},"r":{{ paginate.current_offset | plus: forloop.index0 }}{% if vjs != '' %},"v":[{{ vjs }}]{% endif %}}
+    {"h":{{ p.handle | json }},"t":{{ p.title | json }},"u":{{ url | json }},"p":{{ p.price_min }},"q":{{ p.price_max }},"k":{{ p.compare_at_price_min | default: 0 }},"i":{{ p.featured_image | image_url: width: 300 | json }},"z":{{ pz }},"n":{{ p.metafields.steelmonks.bestellungen.value | default: 0 }},"y":{{ p.type | json }},"rv":{{ rv | json }},"rc":{{ rc | json }},"r":{{ paginate.current_offset | plus: forloop.index0 }},"d":{{ p.selected_or_first_available_variant.id | default: 0 }}{% if vjs != '' %},"v":[{{ vjs }}]{% endif %}}
   {%- endunless -%}
 {%- endfor -%}
 ]}

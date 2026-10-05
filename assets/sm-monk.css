@@ -32,6 +32,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 @keyframes smmk-walk{0%{transform:translateY(0) skewX(-2deg)}50%{transform:translateY(-3px) skewX(2deg)}}
 @keyframes smmk-sway{0%{transform:skewX(2deg)}25%{transform:skewX(0)}50%{transform:skewX(-2deg)}75%{transform:skewX(0)}}
 #smMonk .smmk-actor .emote{z-index:3}
+/* Auf dunklem Grund (Hero, Sheet): ein heller Pixelrand, damit Hirsch und Kutte nicht im Dunkel verschwinden */
+#smMonk .smmk-actor.dk img.sp{filter:drop-shadow(1px 0 0 rgba(238,240,242,.5)) drop-shadow(-1px 0 0 rgba(238,240,242,.5)) drop-shadow(0 -1px 0 rgba(238,240,242,.5))}
 .smmk-emo{position:absolute;width:32px;height:32px;image-rendering:pixelated;transform-origin:50% 100%}
 #smMonk .smmk-shadow{position:absolute;left:0;top:0;image-rendering:pixelated;z-index:10;display:none;transform-origin:50% 50%}
 #smMonk .smmk-beam{position:absolute;left:0;top:0;height:8px;margin-top:-4px;transform-origin:0 50%;z-index:31}
@@ -42,7 +44,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-seg::after{top:2px}
 @keyframes smmk-core{0%{height:3px}50%{height:2px}}
 /* Aufladen und Einschlag */
-#smMonk .smmk-flash{position:absolute;left:0;top:0;width:6px;height:6px;background:#fff;z-index:33;box-shadow:6px 0 #fff,-6px 0 #fff,0 6px #fff,0 -6px #fff,0 0 0 3px rgba(255,210,63,.5)}
+#smMonk .smmk-flash{position:absolute;left:0;top:0;width:6px;height:6px;background:#fff;z-index:33;box-shadow:6px 0 #fff,-6px 0 #fff,0 6px #fff,0 -6px #fff,0 0 0 3px rgba(255,107,31,.5)}
 #smMonk .smmk-ring{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border:3px solid #ff6b1f;z-index:33}
 #smMonk .smmk-prop{position:absolute;z-index:19;image-rendering:pixelated;transform-origin:50% 100%;max-width:none}
 #smMonk .smmk-floaty{position:absolute;left:0;top:0;z-index:28;width:72px;height:56px;border:3px solid var(--frame);background:#fff;overflow:hidden}
@@ -78,7 +80,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-menu button:hover{background:var(--anth2)}
 #smMonk .smmk-menu .st{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--txt2)}
 #smMonk .smmk-menu [aria-checked="true"] .st{color:var(--laser)}
-#smMonk .smmk-body{overflow-y:auto;padding:10px 18px 6px;line-height:1.5;min-height:46px;flex:0 1 auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent;outline:none}
+#smMonk .smmk-body{overflow-y:auto;padding:12px 18px 6px;line-height:1.5;min-height:46px;flex:1 1 auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent;outline:none}
+#smMonk .smmk-body.fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 4px,#000 26px);mask-image:linear-gradient(to bottom,transparent 0,transparent 4px,#000 26px)}
 #smMonk .smmk-line{margin:0 0 8px;white-space:pre-wrap;font-size:inherit;color:var(--txt)}
 #smMonk .smmk-line.old{color:var(--txt2)}
 #smMonk .smmk-src{margin:-2px 0 8px;font:500 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--txt2)}
@@ -90,9 +93,9 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 @keyframes smmk-advb{0%{transform:translateY(0)}50%{transform:translateY(2px)}}
 
 /* Antworten: eine Chip-Sprache */
-#smMonk .smmk-choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:6px 16px 14px;flex:0 1 auto;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent}
+#smMonk .smmk-choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));align-content:start;gap:8px;padding:6px 16px 14px;flex:0 0 auto;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent}
 /* Lange Listen (weitere Gruppen): kompakter, drei Spalten am Desktop, scrollt in der Box */
-#smMonk .smmk-choices.many{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#smMonk .smmk-choices.many{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex-shrink:1}
 #smMonk .smmk-choices.many .smmk-ch{min-height:34px;padding:6px 8px;font-size:13px}
 #smMonk.m .smmk-choices.many{grid-template-columns:repeat(2,minmax(0,1fr))}
 #smMonk.m .smmk-choices.many .smmk-ch{min-height:40px}
@@ -113,7 +116,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 @keyframes smmk-curs{0%{transform:translateX(0)}50%{transform:translateX(2px)}}
 #smMonk .smmk-note{font-size:11.5px;color:var(--txt2);padding:0 14px 10px;margin:-4px 0 0}
 /* Fokus: sichtbarer Ring, der Laser-Zeiger bleibt zusätzlich */
-#smMonk :is(.smmk-ch,.smmk-menu button,.smmk-tools button):focus-visible{outline:2px solid #6f9bff;outline-offset:2px}
+#smMonk :is(.smmk-ch,.smmk-menu button,.smmk-tools button):focus-visible{outline:2px solid #6f9bff;outline-offset:4px}
+#smMonk .smmk-ch.pri:focus-visible{outline-color:#eef0f2}
 #smMonk :is(.smmk-card,.smmk-row) :focus-visible{outline:2px solid #0044cc;outline-offset:2px}
 
 /* Eingabe für die kommende KI: bleibt mit hidden komplett aus dem Layout */
@@ -133,7 +137,13 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-tray{position:absolute;left:264px;display:none;flex-direction:column;align-items:flex-start;gap:8px;z-index:25;pointer-events:auto}
 #smMonk .smmk-tray .tcards{display:flex;gap:12px;align-items:stretch}
 #smMonk .smmk-tray.strip .tcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:var(--sw,600px)}
-#smMonk .smmk-tray .smmk-taxl{margin:0;padding:4px 10px;border-radius:999px;background:rgba(11,12,14,.86);color:var(--txt);font-size:11.5px;line-height:1.4}
+#smMonk .smmk-tray > p.smmk-taxl{display:block;margin:0;padding:4px 10px;border-radius:999px;background:rgba(11,12,14,.86);color:var(--txt);font-size:11.5px;line-height:1.4}
+#smMonk .smmk-tray.col .tcards{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;width:var(--sw,240px)}
+#smMonk .smmk-tray.col .smmk-row{grid-template-columns:40px minmax(0,1fr) 40px;gap:8px;padding:6px 6px 6px 8px;box-shadow:0 0 0 1px rgba(11,12,14,.08),0 18px 40px -22px rgba(0,0,0,.55)}
+#smMonk .smmk-tray.col .smmk-row .im{width:40px;height:40px;align-self:start;margin-top:4px}
+#smMonk .smmk-tray.col .smmk-row .smmk-show{width:40px;height:40px;min-height:40px}
+#smMonk .smmk-tray.col .smmk-row small.smmk-eb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#smMonk .smmk-tray.col .smmk-price{white-space:nowrap}
 #smMonk .smmk-card{position:relative;width:var(--cw,180px);background:var(--paper);color:#0b0c0e;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;font-size:13px;line-height:1.35;
   box-shadow:0 0 0 1px rgba(11,12,14,.08),0 1px 0 rgba(0,0,0,.04),0 18px 40px -22px rgba(0,0,0,.55)}
 #smMonk .smmk-card .im{display:block;width:calc(100% - 12px);height:auto;aspect-ratio:4/3;margin:6px 6px 0;border-radius:10px;object-fit:cover;background:#e9e7e0}
@@ -145,6 +155,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk :is(.smmk-card,.smmk-row).hov{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(11,12,14,.12),0 26px 48px -20px rgba(0,0,0,.65)}
 #smMonk .smmk-card b.ti{font-size:14.5px;line-height:1.25;font-weight:600;margin:0;display:block}
 #smMonk .smmk-meta{display:block;font-size:12.5px;color:#4f5458}
+#smMonk .smmk-rt{white-space:nowrap}
 #smMonk .smmk-price{font-weight:600;color:#0b0c0e}
 #smMonk .smmk-star{color:#db6b22}
 #smMonk .smmk-eb{display:block;font:500 10.9px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#b4540f}
@@ -165,8 +176,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-row b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:14px;line-height:1.3;font-weight:600}
 #smMonk .smmk-row small{display:block;font-size:12.5px;line-height:1.35;color:#4f5458;margin-top:1px}
 #smMonk .smmk-row small.smmk-eb{font-size:10.9px;color:#b4540f}
-#smMonk .smmk-row .smmk-show{width:44px;height:44px;min-height:44px;padding:0;margin:0;border-radius:50%;background:#0b0c0e;align-self:center;box-shadow:none}
-#smMonk .smmk-row .smmk-show:hover{background:var(--blau)}
+#smMonk .smmk-row .smmk-show{width:44px;height:44px;min-height:44px;padding:0;margin:0;border-radius:999px;background:var(--blau);align-self:center;box-shadow:0 10px 22px -14px rgba(0,68,204,.9)}
+#smMonk .smmk-row .smmk-show:hover{background:var(--blauH)}
 #smMonk .smmk-row .smmk-show svg{width:18px;height:18px}
 #smMonk .smmk-tray.strip .smmk-row{box-shadow:0 0 0 1px rgba(11,12,14,.08),0 18px 40px -22px rgba(0,0,0,.55)}
 /* Rückseite für das Umdrehen der Karten (aktiv nur mit .flip) */
@@ -201,7 +212,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 .smmk-pad{height:0}
 
 /* Handy: Bottom-Sheet */
-#smMonk.m .smmk-box{left:0;right:0;bottom:calc(var(--lift) + var(--kb,0px));transform-origin:50% 100%;width:auto;min-height:190px;max-height:62%;font-size:15px;padding-bottom:env(safe-area-inset-bottom,0px);
+#smMonk.m .smmk-box{left:0;right:0;bottom:calc(var(--lift) + var(--kb,0px));transform-origin:50% 100%;width:auto;min-height:190px;max-height:min(62%,calc(100% - var(--lift) - var(--kb,0px) - 16px));font-size:15px;padding-bottom:env(safe-area-inset-bottom,0px);
   background:radial-gradient(360px 300px at -80px -60px,rgba(0,68,204,.42),rgba(0,68,204,0)),#0b0c0e;color:var(--txt);border-radius:20px 20px 0 0;
   box-shadow:0 -1px 0 0 rgba(238,240,242,.14),0 -24px 60px -20px rgba(0,0,0,.55)}
 #smMonk.m .smmk-box:has(.smmk-compose:not([hidden])){min-height:250px}
@@ -217,9 +228,23 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-tools button:hover::before{background:rgba(238,240,242,.12)}
 #smMonk.m .smmk-tools button[aria-pressed="true"],#smMonk.m .smmk-tools button[aria-expanded="true"]{color:var(--laser)}
 #smMonk.m .smmk-menu{top:58px;right:8px}
-#smMonk.m .smmk-body{margin-top:62px;padding:4px 16px 4px}
-#smMonk.m .smmk-choices{grid-template-columns:1fr 1fr;padding:6px 16px 12px}
-#smMonk.m .smmk-ch{min-height:44px}
+#smMonk.m .smmk-body{margin-top:62px;padding:4px 16px 0}
+#smMonk.m .smmk-line{margin-bottom:6px}
+#smMonk.m .smmk-choices{grid-template-columns:1fr 1fr;padding:6px calc(16px + var(--tsw,0px)) 12px 16px}
+/* Ecke des Trusted-Shops-Badges bleibt frei: Knopfbereich mindestens so hoch wie die Ecke, rechts eingerückt */
+#smMonk.m .smmk-box:has(.smmk-compose[hidden]) .smmk-choices:not(:empty){min-height:var(--tsh,0px)}
+#smMonk.m .smmk-compose{padding-right:calc(16px + var(--tsw,0px))}
+#smMonk.m .smmk-compose button{right:calc(20px + var(--tsw,0px))}
+#smMonk.m .smmk-rows{gap:6px;margin:0 0 4px}
+#smMonk.m .smmk-body .smmk-taxl{margin:0 0 2px}
+/* Mit Zeilen darf das Sheet etwas höher werden, damit Zeilen, Preishinweis und Knöpfe ohne Scrollen passen */
+#smMonk.m .smmk-box:has(.smmk-rows){max-height:min(70%,calc(100% - var(--lift) - var(--kb,0px) - 16px))}
+#smMonk.m .smmk-row{grid-template-columns:48px minmax(0,1fr) 44px;gap:10px;padding:6px}
+#smMonk.m .smmk-row .im{width:48px;height:48px}
+#smMonk.m .smmk-row b{font-size:13.5px}
+#smMonk.m .smmk-row small{font-size:12px}
+#smMonk.m .smmk-ch{min-height:44px;padding:6px 10px;font-size:13.5px;line-height:1.15}
+#smMonk.m .smmk-row small.smmk-eb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #smMonk.m .smmk-compose{margin-top:auto}
 
 /* Klassische Ansicht */
@@ -236,8 +261,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.rm .smmk-adv{animation:none}
 .smmk-rm .smmk-spot::after{animation:none}
 @media (prefers-reduced-motion: reduce){#smMonk .smmk-actor .bob,#smMonk .smmk-ch::before,#smMonk .smmk-adv,.smmk-spot::after{animation:none!important}#smMonk .smmk-ch:active{transform:none}}
-html.smmk-out [data-smr-monk],html.smmk-out [data-smr-mmonk],html.smmk-out .smmk-404>img{visibility:hidden}
+html.smmk-out [data-smr-monk],html.smmk-out [data-smr-mmonk],html.smmk-out .smmk-404{visibility:hidden}
 html.smmk-sheet #smNlTz{visibility:hidden!important}
 /* FAQ-Seite: gedrückter Themen-Chip blieb weiß auf weiß; nur solange der Mönch draußen ist, live-CSS bleibt unberührt */
 html.smmk-out #ftFaqC .chip[aria-pressed="true"]{background:#0b0c0e;color:#fff;border-color:#0b0c0e}
-html.smmk-sheet [id^="trustbadge-container"],html.smmk-sheet [id^="trustbadge-container"] *{visibility:hidden!important;pointer-events:none!important}
