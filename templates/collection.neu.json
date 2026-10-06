@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "sm-coll",
+      "settings": {
+        "erste": 16,
+        "ts_note": "4,83",
+        "lead": "",
+        "tipp_zeigen": true,
+        "pixel": "px3_monk_search.webp",
+        "text_zeigen": true
+      }
+    },
+    "trusted": {
+      "type": "apps",
+      "blocks": {
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD": {
+          "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trusted-stars/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trusted_shops_reviews_and_more_trusted_stars_EwH9nD"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trusted"
+  ]
+}

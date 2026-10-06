@@ -4,6 +4,8 @@
   Schlüssel „Bestellungen+100000000 - (1999 - Position)“ als Text sortieren, umdrehen, Position zurückrechnen.
   „Alle“ = Kollektion all (die ersten 250 nach Bestseller-Sortierung). Nicht gezählt: Meilensteine, Gravur-Zusätze, „zusätzlich“, Befestigungssets, Handles aus „Ausschließen“.
 {%- endcomment -%}
+{%- assign smb_nur = section.settings.nur_bei | remove: ' ' | prepend: ',' | append: ',' -%}{%- assign smb_hh = ',' | append: collection.handle | append: ',' -%}
+{%- if section.settings.nur_bei == blank or smb_nur contains smb_hh -%}
 {{ 'sm-home.css' | asset_url | stylesheet_tag }}
 {{ 'sm-beliebt.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'sm-home.js' | asset_url }}" defer></script>
@@ -96,6 +98,44 @@
     </div>
   </div>
 
+  <section class="rank-sec" id="rangliste" aria-labelledby="rankT">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">{{ section.settings.rank_eyebrow | escape }}</p><h2 class="h2" id="rankT" data-rank-h>{{ section.settings.rank_titel | escape }}</h2></div>
+        <div class="fchips rank-chips" role="group" aria-label="Nach Kategorie filtern">
+          <button class="chip" type="button" data-rank="alle" data-h="{{ section.settings.rank_titel | escape }}" aria-pressed="true">Alle</button>
+          {%- for block in section.blocks -%}{%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}{%- assign bt = block.settings.titel | default: block.settings.kollektion.title -%}
+            <button class="chip" type="button" data-rank="{{ block.id }}" data-h="Top {{ block.settings.anzahl }} · {{ bt | escape }}" aria-pressed="false">{{ bt | escape }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="rgrid" data-rank-p="alle">{{ smb_all_cards }}</div>
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign c = block.settings.kollektion -%}{%- assign bn = block.settings.anzahl -%}
+        <div class="rank-cat" data-rank-p="{{ block.id }}" hidden {{ block.shopify_attributes }}>
+          <div class="rgrid">
+          {%- paginate c.products by 250 -%}
+            {%- assign keys = '' -%}
+            {%- for p in c.products -%}
+              {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
+              {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
+              {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
+              {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
+            {%- endfor -%}
+            {%- assign arr = keys | split: ',' | sort | reverse -%}
+            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
+              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
+            {%- endfor -%}
+          {%- endpaginate -%}
+          </div>
+          <div class="rank-all"><a class="btn btn-i" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} {{ smb_arr_svg }}</a></div>
+        </div>
+      {%- endfor -%}
+      <button class="btn btn-g rank-more" type="button" data-rank-more hidden>{{ section.settings.mehr_text | escape }}</button>
+    </div>
+  </section>
+  <section class="por-intro" aria-labelledby="porIntroT"><div class="wrap"><p class="eyebrow">Im Porträt</p><h2 class="h2" id="porIntroT">Die Spitzenreiter im Detail</h2><p class="muted">Wer sie kauft, welche Oberfläche und Größe am liebsten genommen wird und wann Hochsaison ist. Tipp auf „Mehr zu Platz …“ für alle Zahlen.</p></div></section>
   <div id="portraits">
   {%- for x in pkeys -%}
     {%- assign parts = x | split: '-' -%}{%- assign bi = parts[1] | minus: 100 -%}{%- assign rk = parts[0] | minus: 1000 -%}
@@ -108,11 +148,14 @@
           {%- assign imgs = p.media | where: 'media_type', 'image' -%}
           {%- if imgs.size > 1 -%}<div class="por-thumbs">{%- for m in imgs limit: 3 -%}<button type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-por-src="{{ m | image_url: width: 1000 }}" aria-label="Bild {{ forloop.index }}"><img src="{{ m | image_url: width: 140 }}" alt="" loading="lazy" width="64" height="64"></button>{%- endfor -%}</div>{%- endif -%}
         </div>
-        <div>
+        <div class="por-head">
           <p class="eyebrow">Platz {% if rk < 999 %}{{ rk }}{% else %}{{ i | plus: 1 }}{% endif %}{% if b.settings.seit != blank %} · seit {{ b.settings.seit | escape }}{% endif %}</p>
           <h2 class="display" id="porT{{ i }}" style="margin-top:8px">{{ p.title | escape }}</h2>
           {%- if b.settings.untertitel != blank -%}<p class="sub">{{ b.settings.untertitel | escape }}</p>{%- endif -%}
           <div class="por-meta"><span class="price tnum">{% render 'sm-home-price', product: p %}</span><span class="r">{% render 'sm-home-rating', product: p %} Bewertungen</span><span class="badge {% if i == 0 %}blue{% else %}hot{% endif %}">{% render 'sm-home-sold', product: p %}</span></div>
+          {%- if b.settings.lead != blank -%}<p class="por-lead">{{ b.settings.lead | escape }}</p>{%- endif -%}
+        </div>
+        <details class="por-more"><summary>Mehr zu Platz {% if rk < 999 %}{{ rk }}{% else %}{{ i | plus: 1 }}{% endif %}</summary><div class="por-more__b">
 
           {%- if b.settings.lead != blank -%}
             <div class="who"><h3>Wer kauft das?</h3><p class="lead2">{{ b.settings.lead | escape }}</p>
@@ -195,50 +238,14 @@
             <div class="extra"><h3 class="eyebrow">{{ section.settings.gewerke_titel | escape }}</h3><div class="mosaic">{{ smb_mosaic }}</div><a class="link" href="{{ p.url }}">Zum {{ p.title | escape }} →</a></div>
           {%- endif -%}
 
+        </div></details>
           <div class="por-ctas"><a class="btn {% if i == 0 %}btn-p{% else %}btn-i{% endif %}" href="{{ p.url }}">{{ b.settings.knopf | default: 'Ansehen' | escape }} {{ smb_arr_svg }}</a></div>
-        </div>
       </div>
     </section>
   {%- endfor -%}
   </div>
 
-  <section class="rank-sec" id="rangliste" aria-labelledby="rankT">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">{{ section.settings.rank_eyebrow | escape }}</p><h2 class="h2" id="rankT" data-rank-h>{{ section.settings.rank_titel | escape }}</h2></div>
-        <div class="fchips rank-chips" role="group" aria-label="Nach Kategorie filtern">
-          <button class="chip" type="button" data-rank="alle" data-h="{{ section.settings.rank_titel | escape }}" aria-pressed="true">Alle</button>
-          {%- for block in section.blocks -%}{%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}{%- assign bt = block.settings.titel | default: block.settings.kollektion.title -%}
-            <button class="chip" type="button" data-rank="{{ block.id }}" data-h="Top {{ block.settings.anzahl }} · {{ bt | escape }}" aria-pressed="false">{{ bt | escape }}</button>
-          {%- endfor -%}
-        </div>
-      </div>
-      <div class="rgrid" data-rank-p="alle">{{ smb_all_cards }}</div>
-      {%- for block in section.blocks -%}
-        {%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}
-        {%- assign c = block.settings.kollektion -%}{%- assign bn = block.settings.anzahl -%}
-        <div class="rank-cat" data-rank-p="{{ block.id }}" hidden {{ block.shopify_attributes }}>
-          <div class="rgrid">
-          {%- paginate c.products by 250 -%}
-            {%- assign keys = '' -%}
-            {%- for p in c.products -%}
-              {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
-              {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
-              {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
-              {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
-            {%- endfor -%}
-            {%- assign arr = keys | split: ',' | sort | reverse -%}
-            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
-              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
-            {%- endfor -%}
-          {%- endpaginate -%}
-          </div>
-          <div class="rank-all"><a class="btn btn-i" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} {{ smb_arr_svg }}</a></div>
-        </div>
-      {%- endfor -%}
-      <button class="btn btn-g rank-more" type="button" data-rank-more hidden>{{ section.settings.mehr_text | escape }}</button>
-    </div>
-  </section>
+
 
   {%- if collection.description != blank and section.settings.beschreibung -%}
     <section class="smb-desc"><div class="wrap"><details><summary>{{ section.settings.beschreibung_titel | escape }}</summary><div class="smb-desc__t">{{ collection.description }}</div></details></div></section>
@@ -291,6 +298,7 @@
   })();
 </script>
 
+{%- endif -%}
 {% schema %}
 {
   "name": "SM Beliebt",
@@ -298,6 +306,7 @@
   "class": "section smh-section",
   "max_blocks": 24,
   "settings": [
+    { "type": "text", "id": "nur_bei", "label": "Nur bei diesen Kollektionen zeigen (Handles, kommagetrennt)", "info": "Leer = immer. Z. B. beliebt, wenn die Vorlage mit anderen Kollektionen geteilt wird" },
     { "type": "header", "content": "Kopfbereich" },
     { "type": "text", "id": "eyebrow", "label": "Zeile über der Überschrift", "default": "Die Lieblinge unserer Kunden" },
     { "type": "text", "id": "titel", "label": "Überschrift", "default": "Beliebt" },

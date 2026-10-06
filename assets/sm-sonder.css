@@ -326,7 +326,9 @@
 @media (max-width: 860px){.smx .sa-quest{grid-template-columns:minmax(0,1fr);gap:22px;padding-left:76px;margin-top:20px}
 .smx .sa-quest::before{left:27px;right:auto;top:0;bottom:0;width:3px;height:auto;background:repeating-linear-gradient(180deg,rgba(11,12,14,.18) 0 10px,transparent 10px 18px)}
 .smx .sa-quest .fill{left:27px;top:0;width:3px;height:calc(100% * var(--p,0))}
-.smx .sa-quest .walker{display:none}
+/* Handy: Mönch läuft die senkrechte Linie hinunter, Füße an der Spitze der orangen Linie; hinter den Nummern-Kacheln, damit die Zahlen lesbar bleiben; wartet anfangs unter Station 1 */
+.smx .sa-quest .walker{display:block;left:28.5px;top:calc(max(122px, 100% * var(--p,0)) - 60px);height:60px;z-index:0;transition:top .2s linear}
+.smx .sa-quest .walker img{height:60px}
 .smx .sa-quest li .n{position:absolute;left:-76px;top:0}}
 .smx .sa-show{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,31%);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;scrollbar-width:thin}
 .smx .sa-show figure{scroll-snap-align:start;margin:0;position:relative;border-radius:20px;overflow:hidden;background:#15181b;min-width:0}
