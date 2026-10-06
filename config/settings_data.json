@@ -125,6 +125,9 @@
     "show_cart_note": true,
     "cart_drawer_collection": "beliebt",
     "cart_color_scheme": "scheme-8d7d68f1-302f-4d23-badd-0d1e89624e2d",
+    "sm_monk_enabled": true,
+    "sm_monk_ai_url": "https://cs-assistant-jhhe.onrender.com",
+    "sm_monk_ai_mode": "live",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
@@ -194,12 +197,7 @@
       "7008068068935494874": {
         "type": "shopify://apps/trusted-shops-reviews-and-more/blocks/trstd-login/2ae4ab38-7eb9-4d62-abe3-d4a5f27cbef2",
         "disabled": true,
-        "settings": {
-          "target_selector": "",
-          "position_desktop": "left",
-          "target_selector_mobile": "",
-          "position_mobile": "left"
-        }
+        "settings": {}
       },
       "1692329972272007824": {
         "type": "shopify://apps/zepto-product-personalizer/blocks/product_personalizer_main/7411210d-7b32-4c09-9455-e129e3be4729",
