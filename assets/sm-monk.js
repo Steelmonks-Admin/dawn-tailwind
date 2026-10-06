@@ -71,7 +71,7 @@ const AUD_EX = {Feuerwehr:'z. B. mit Name und Wache', Handwerker:'z. B. mit Name
 const AUD = AUD_CFG.map(s => { const p = String(s).split('|'), x = WHO[p[0]] || ['für ' + p[0], 'twinkle']; return {l:p[0], hs:(p[1] || '').split(',').filter(Boolean), who:x[0], hero:p[2] === '1', fx:x[1]}; });
 const audBy = l => AUD.find(a => a.l === l);
 /* Längere Knopfbeschriftung, wo der Kurzname mehrdeutig ist */
-const AUD_LBL = {'Für sie':'Für sie (Frau, Freundin, Mama)', 'Für ihn':'Für ihn (Mann, Freund, Papa)'};
+const AUD_LBL = {}; /* kurze Knopftexte: Für sie, Für ihn */
 const audChip = a => AUD_LBL[a.l] || a.l;
 const audByColl = c => AUD.find(a => a.hs.includes(c));
 /* Quelle für „Nr. 1 bei …“ und die Leitzeile, je Zielgruppe (erste Kollektion) */
