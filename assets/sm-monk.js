@@ -414,7 +414,7 @@ function sting(kind){
 
 /* ---------- Aufbau der Bühne (erst beim ersten Öffnen) ---------- */
 /* Statuszeile unter dem Namen. Im KI-Modus mit Sitzung: STATUS_AI (applyAiUi). */
-const STATUS = 'Hilft Dir mit Knöpfen', STATUS_AI = 'KI-Assistent · kann sich irren';
+const STATUS = 'Kundenberater', STATUS_AI = 'Kundenberater';
 const SVG = b => '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + b + '</svg>';
 const SPK = '<path d="M2 6h3v-1h1v-1h1v-1h1v-1h2v12h-2v-1h-1v-1h-1v-1h-1v-1h-3z"/>';
 const ICO = {
@@ -2328,7 +2328,7 @@ const AI_URL = (() => {
 })();
 const AI = {paused:false, down:false, challenge:false, busy:false, notice:'', entry:'other', ts:'', lastText:0, lastChips:[], evOff:false, lastMode:''};
 let SESS_P = null;
-const NOTICE = 'Grüß Dich! Ich bin Bruder Funke, ein KI-Assistent von Steelmonks, kein Mensch. Was Du hier schreibst, verarbeitet OpenAI für uns, und ich kann mich auch mal irren.';
+const NOTICE = 'Grüß Dich! Ich bin Bruder Funke, Dein digitaler Kundenberater bei Steelmonks. Frag mich, was Du wissen willst, ich kann mich aber auch mal irren.';
 const PRIVACY = '/pages/datenschutzerklarung';
 function testCode(){ try { const c = sessionStorage.getItem('smMonkTc') || ''; return /^[A-Za-z0-9_-]{16,128}$/.test(c) ? c : ''; } catch (e) { return ''; } }
 /* An: Adresse gesetzt und Modus live, oder Modus test mit Testcode in diesem Tab */
@@ -2424,7 +2424,7 @@ function applyAiUi(){
   const lg = $('.smmk-legal', composeEl);
   if (live){
     inputEl.maxLength = 500; inputEl.placeholder = 'Oder schreib mir einfach …';
-    if (!lg.firstChild){ const a = h('a'); a.href = PRIVACY; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Datenschutz'; lg.append('Was Du hier schreibst, verarbeitet OpenAI für uns. ', a); }
+    if (!lg.firstChild){ const a = h('a'); a.href = PRIVACY; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Datenschutz'; lg.append('Digitaler Berater mit KI, kann sich irren. ', a); }
   } else {
     inputEl.maxLength = 200; inputEl.placeholder = 'Oder schreib mir, wen Du beschenken willst …'; lg.textContent = '';
   }
