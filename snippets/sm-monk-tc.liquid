@@ -1,0 +1,9 @@
+{%- comment -%}
+  Bruder Funke, KI-Testcode: steht ganz oben im head (layout/theme.liquid), damit GTM, Pixel und content_for_header die Adresse
+  erst sehen, wenn der Code schon heraus ist. Nur #monk=test-CODE wird angenommen (ein Fragment geht nie an den Server).
+  Der Code liegt nur in diesem Tab (sessionStorage smMonkTc). #monk=aus oder ?monk_test=aus löscht ihn.
+  ?monk_test=... und ?monk=test-... werden nur noch entfernt, nie gespeichert: die landen schon in Shopifys Logs.
+{%- endcomment -%}
+{%- if settings.sm_monk_enabled and settings.sm_monk_ai_url != blank -%}
+<script>(function(l){try{var h=l.hash.match(/^#monk=(.*)$/),u=new URL(l.href),q=u.searchParams,c=0,t;if(h){t=h[1].match(/^test-([A-Za-z0-9_-]{16,128})$/);t?sessionStorage.setItem('smMonkTc',t[1]):/^(aus|off)$/.test(h[1])&&sessionStorage.removeItem('smMonkTc');u.hash='';c=1}if(q.has('monk_test')){/^(aus|off)$/.test(q.get('monk_test'))&&sessionStorage.removeItem('smMonkTc');q.delete('monk_test');c=1}if(/^test-/.test(q.get('monk')||'')){q.delete('monk');c=1}c&&history.replaceState(history.state,'',u.pathname+u.search+u.hash)}catch(e){}})(location)</script>
+{%- endif -%}

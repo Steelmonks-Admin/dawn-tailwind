@@ -1,6 +1,7 @@
 <!doctype html>
 <html class='js' lang='{{ request.locale.iso_code }}'>
   <head>
+    {%- render 'sm-monk-tc' -%}
     {%- comment -%}
       Google Consent Mode: Standard "keine Einwilligung" für die Pandectes-Regionen, bevor GTM oder Apps laden.
       Sonst laufen gecachte GTM-Tags (Pinterest, Google Ads) vor dem Pandectes-Default. Pandectes sendet danach das Update.

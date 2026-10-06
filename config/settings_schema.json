@@ -1504,7 +1504,7 @@
           {"value": "off", "label": "Aus (nur Knöpfe)"}
         ],
         "default": "test",
-        "info": "Testcode: die Seite einmal mit #monk=test-CODE öffnen (oder ?monk_test=CODE). Der Code bleibt nur in diesem Tab, ?monk_test=aus löscht ihn. Ob der Dienst antwortet, steuert zusätzlich das CS-Dashboard."
+        "info": "Testcode: die Seite einmal mit #monk=test-CODE öffnen (nur diese Form, ein ?-Parameter landet in Logs und Analytics). Der Code bleibt nur in diesem Tab, #monk=aus löscht ihn. Nach jeder Testrunde den Code im Dienst wechseln. Ob der Dienst antwortet, steuert zusätzlich das CS-Dashboard."
       },
       {
         "type": "text",

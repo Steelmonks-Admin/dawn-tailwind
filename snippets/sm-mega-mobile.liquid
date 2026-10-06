@@ -31,7 +31,7 @@
       <a class="acc-h acc-link" href="{{ link.url }}">{{ link.title | remove: '--highlighted-red' | remove: '--highlighted' | strip | escape }}</a>
     {%- endif -%}
   {%- endfor -%}
-  {%- if settings.sm_monk_enabled -%}<a class="mob-px" href="{{ routes.root_url }}#moench" data-smmk="open" data-smmk-src="mobile_menu"><img src="{{ 'sm-px4_monk_sketch.webp' | asset_url }}" alt="Bruder Funke in Pixel-Art" loading="lazy" width="68" height="70" style="image-rendering:pixelated"><span><b>Frag den Mönch</b>Bruder Funke hilft Dir beim Geschenk. Testversion, noch ohne KI.</span></a>{%- endif -%}
+  {%- if settings.sm_monk_enabled -%}<a class="mob-px" href="{{ routes.root_url }}#moench" data-smmk="open" data-smmk-src="mobile_menu"><img src="{{ 'sm-px4_monk_sketch.webp' | asset_url }}" alt="Bruder Funke in Pixel-Art" loading="lazy" width="68" height="70" style="image-rendering:pixelated"><span><b>Frag den Mönch</b>Bruder Funke hilft Dir beim Geschenk.{% if settings.sm_monk_ai_url != blank and settings.sm_monk_ai_mode == 'live' %} KI-Assistent, kann sich irren.{% endif %}</span></a>{%- endif -%}
   <a class="mob-px" href="/pages/kontakt"><img src="{{ 'sm-px3_jakob_letter.webp' | asset_url }}" alt="Jakob in Pixel-Art mit einem Brief" loading="lazy" width="58" height="70"><span><b>Fragen zu Deiner Idee?</b>Schreib uns, wir antworten persönlich.</span></a>
   {%- if shop.customer_accounts_enabled -%}<p class="mob-acc"><a class="mob-btn" href="{{ routes.account_url }}">{% if customer %}Mein Konto{% else %}Einloggen{% endif %}</a></p>{%- endif -%}
 </div>

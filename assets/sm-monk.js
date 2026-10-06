@@ -83,8 +83,8 @@ const BELIEBT = {l:'Beliebt', hs:['beliebt'], who:'aus der Beliebt-Liste', hero:
 /* ---------- Texte: je Schlüssel zwei oder drei Varianten, gewählt mit einem Zufallswert pro Seitenaufruf (nichts gespeichert) ---------- */
 const SEED = Math.floor(Math.random() * 9973);
 const LINES = {
-  hello:['Grüß Dich, ich bin Bruder Funke! Noch helfe ich mit Knöpfen, die KI zieht erst später ins Kloster ein.',
-    'Grüß Dich, ich bin Bruder Funke! Noch zeig ich Dir alles mit Knöpfen, die KI zieht erst später ins Kloster ein.'],
+  hello:['Grüß Dich, ich bin Bruder Funke! Ich helfe Dir mit Knöpfen weiter.',
+    'Grüß Dich, ich bin Bruder Funke! Ich zeig Dir alles mit ein paar Knöpfen.'],
   late:['Noch wach? Die Werkstatt schläft, ich nicht.'],
   back:['Schön, dass Du wieder da bist.', 'Da bist Du ja wieder.'],
   who:['Für wen suchst Du?', 'Wen willst Du beschenken?'],
@@ -123,12 +123,13 @@ function shipCost(){ return `Für Bestellungen im Shop ist der Versand ab ${euro
 function xmasLine(){
   const now = new Date(), y = now.getFullYear();
   if (now < new Date(y, 10, 1) || now > new Date(y, 11, 24, 23, 59)) return '';
-  return 'Für Weihnachten bestell lieber früh. Express gibt es bei uns nicht, für einen festen Termin frag bitte vorher unser Team.';
+  return 'Für Weihnachten bestell lieber früh. Express gibt es bei uns nicht. Wenn es eilt, frag vorher unser Team, wie es gerade aussieht.';
 }
-const noExpress = () => 'Express gibt es bei uns nicht. Brauchst Du es zu einem festen Termin, frag bitte vorher unser Team.';
-/* Sonderanfertigung: erster Entwurf, Fertigung nach Freigabe, nächster Versandtag, Versand immer bezahlt */
-function sonderLines(){
-  return [`Den ersten Entwurf bekommst Du meist ${inWd(F.entwurfMin, F.entwurfMax)}, bei aufwendigen Motiven dauert es länger.`,
+const noExpress = () => 'Express gibt es bei uns nicht. Wenn es eilt, frag vorher unser Team, wie es gerade aussieht.';
+/* Sonderanfertigung: erster Entwurf, Fertigung nach Freigabe, nächster Versandtag, Versand immer bezahlt.
+   pre steht vor dem ersten Satz (Wappenseite: „Für ein individuell entworfenes Wappen:“). */
+function sonderLines(pre){
+  return [`${pre ? pre + ' ' : ''}Den ersten Entwurf bekommst Du meist ${inWd(F.entwurfMin, F.entwurfMax)}, bei aufwendigen Motiven dauert es länger.`,
     `Nach Deiner Freigabe fertigen wir ${inWd(F.sonderMin, F.sonderMax)} und verschicken am nächsten ${F.versandtag} mit DHL.`,
     `Bestellt wird über das Angebot unseres Teams, nicht im Warenkorb. Der Versand kostet ${euro(F.versandSonderDeCent)} in Deutschland und ${euro(F.versandSonderEuCent)} in die EU.`];
 }
@@ -413,7 +414,7 @@ function sting(kind){
 
 /* ---------- Aufbau der Bühne (erst beim ersten Öffnen) ---------- */
 /* Statuszeile unter dem Namen. Im KI-Modus mit Sitzung: STATUS_AI (applyAiUi). */
-const STATUS = 'Testversion, noch ohne KI', STATUS_AI = 'KI-Assistent · kann sich irren';
+const STATUS = 'Hilft Dir mit Knöpfen', STATUS_AI = 'KI-Assistent · kann sich irren';
 const SVG = b => '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + b + '</svg>';
 const SPK = '<path d="M2 6h3v-1h1v-1h1v-1h1v-1h2v12h-2v-1h-1v-1h-1v-1h-1v-1h-3z"/>';
 const ICO = {
@@ -1024,7 +1025,7 @@ function newTurn(echo, o){
   if (echo){ const e = h('div', 'smmk-echo'); const s = h('span'); s.textContent = echo; e.append(s); addNode(e); }
 }
 /* Scrollt den Text ans Ende, außer eine Zeile soll oben stehen bleiben (Handy: Empfehlungen) */
-function scrollBody(){ if (!bbody) return; const a = S.anchor; if (a && a.isConnected) bbody.scrollTop = Math.max(0, a.getBoundingClientRect().top - bbody.getBoundingClientRect().top + bbody.scrollTop - 6); else bbody.scrollTop = bbody.scrollHeight; bodyFade(); }
+function scrollBody(){ if (!bbody) return; const a = S.anchor; if (a && a.isConnected) bbody.scrollTop = a.previousElementSibling ? Math.max(0, a.getBoundingClientRect().top - bbody.getBoundingClientRect().top + bbody.scrollTop - 6) : 0; else bbody.scrollTop = bbody.scrollHeight; bodyFade(); }
 /* Angeschnittene ältere Zeilen laufen oben weich aus, statt am Statustext zu kleben */
 function bodyFade(){ bbody.classList.toggle('fade', bbody.scrollTop > 2); }
 function addNode(n){ if (S.typed) n.dataset.x = xid; bbody.append(n); scrollBody(); return n; }
@@ -1080,6 +1081,8 @@ async function speak(lines, o){
       const row = h('div', 'smmk-cmsg'); const av = h('div', 'smmk-av'); av.style.backgroundImage = `url(${asset('lupe')})`; const col = h('div'); row.append(av, col);
       target = h('p', 'smmk-line'); col.append(target); addNode(row);
     } else target = addNode(h('p', 'smmk-line'));
+    /* KI-Hinweis: bleibt oben in der Box stehen, auch wenn danach Formular oder Knöpfe folgen */
+    if (L.anchor){ S.anchor = target; scrollBody(); }
     target.setAttribute('aria-hidden', 'true');
     const t0 = now();
     srlog.setAttribute('aria-busy', 'true');
@@ -1252,7 +1255,7 @@ function whyLine(p, a){
   return '';
 }
 /* Abzeichen nur, wenn es etwas sagt, das der Grund nicht schon sagt */
-function badgeOf(p, why){ if (p.over) return 'Etwas über Budget'; return p.z && !/Wunschtext/.test(why) ? 'Mit Deinem Text' : ''; }
+function badgeOf(p, why){ if (p.over) return 'Etwas über Budget'; return p.z && !/Wunschtext|Deinem Text|Deinen Text|graviert/i.test(why) ? 'Mit Deinem Text' : ''; }
 /* Produkttyp nur, wenn er nicht schon im Titel steht und nicht Standard oder Besonderes Produkt ist */
 function typeOf(p){ const y = String(p.y || '').trim(); if (!y || /^(Standard|Besonderes Produkt)$/i.test(y)) return ''; const t = String(p.t || '').toLowerCase(); return y.split(/[\s-]+/).some(wd => wd.length > 3 && t.includes(wd.toLowerCase())) ? '' : y; }
 /* Wie auf der Seite mit bis zu zwei Stellen, nie aufgerundet; schwache Bewertungen zeigt der Mönch nicht */
@@ -1877,7 +1880,7 @@ function wappenChoice(){ return {l:'Wappen-Preis berechnen', href:'/pages/dein-w
 async function productOpener(pers){
   await ensureOut('sketch', 'leap'); newTurn(); S.done = {};
   if (CTX.gc) return ask([...hello(), {t:GUTSCHEIN + ' Soll ich Dir zeigen, wo Du den Betrag wählst?', emote:'bulb'}], [{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
-  /* Sonderanfertigung (Typ oder dein-wunsch-*): wird nie im Warenkorb gekauft, sondern über ein Angebot */
+  /* Sonderanfertigung (nur Produkttyp Sonderanfertigung): wird nie im Warenkorb gekauft, sondern über ein Angebot */
   if (isCustomPdp()){
     const wp = /wappen/.test(CTX.h || '');
     return ask([...hello(), {t:'Das ist eine Sonderanfertigung. Die kaufst Du nicht im Warenkorb: Du schickst uns Deine Idee, und unser Team macht Dir ein Angebot.', emote:'bulb'}],
@@ -1994,16 +1997,19 @@ function shipSay(){
   say.push(xmasLine() || noExpress());
   return say;
 }
-/* Produktseite einer Sonderanfertigung (Typ Sonderanfertigung oder dein-wunsch-*) */
-const isCustomPdp = () => CTX.t === 'product' && (CTX.ty === 'Sonderanfertigung' || /^dein-wunsch/.test(CTX.h || ''));
+/* Produktseite einer Sonderanfertigung: nur Produkttyp Sonderanfertigung (Hilfsprodukt für Draft Orders nach dem Angebot).
+   dein-wunsch-* sind normale personalisierte Shop-Artikel mit Warenkorb und laufen über den Shop-Ablauf. */
+const isCustomPdp = () => CTX.t === 'product' && CTX.ty === 'Sonderanfertigung';
 async function whenAnswer(pers){
   if (isCustomPdp()) return sonderTiming();
   spotOff(); markerOff(); await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
   S.done.when = true;
-  const acc = $$('details').find(x => /Produktionszeit/i.test(($('summary', x) || {}).textContent || ''));
   const c = CTX.t === 'product' ? productChoices(pers === undefined ? !!CTX.pz : pers) : menuList();
-  /* erst die Seite zeigen (Produktionszeit aufklappen und anlasern), dann die Fakten, damit der Text stehen bleibt */
-  await render({actions:acc ? [{name:'open', target:acc}, {name:'laser', target:acc}] : [], say:shipSay(), chips:[c[0], {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}, {l:'Mit Mensch sprechen', f:() => human('Lieferzeit')}].concat(c.slice(1))});
+  /* Gutschein: kein Paket, der Code kommt nach der Zahlung */
+  if (CTX.gc) return render({say:['Ein Gutschein kommt nicht als Paket: Nach der Zahlung bekommst Du den Code per E-Mail.'], chips:c});
+  /* Das Akkordeon „Produktionszeit“ auf der Produktseite wird nicht mehr aufgeklappt: sein Text verspricht „die besten Versandoptionen“,
+     das passt nicht zu „kein Express, kein fester Liefertermin“. Die Fakten kommen nur aus sm-fakt. */
+  await render({say:shipSay(), chips:[c[0], {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}, {l:'Mit Mensch sprechen', f:() => human('Lieferzeit')}].concat(c.slice(1))});
 }
 async function shipAnswer(){
   const k = pageKind();
@@ -2017,7 +2023,9 @@ async function sonderTiming(){
   spotOff(); markerOff(); await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
   const k = pageKind();
   const go1 = k === 'sonder' ? {l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()} : k === 'wappen' ? null : /wappen/.test(CTX.h || '') ? Object.assign(wappenChoice(), {pri:1}) : {l:'Zur Anfrage', pri:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Ich bring Dich zur Anfrage.'};
-  await ask(sonderLines(), [go1, {l:'Mit Mensch sprechen', f:() => human('Sonderanfertigung')}, {l:'Schließen', f:() => exitFlow()}]);
+  /* Wappenseite: dort gibt es auch fertige Wappen zum festen Preis im Shop */
+  const say = k === 'wappen' ? [`Fertige Wappen aus dem Shop sind meist ${inWd(F.versandfertigMin, F.versandfertigMax)} versandfertig und gehen jeden ${F.versandtag} mit DHL raus.`].concat(sonderLines('Für ein individuell entworfenes Wappen:')) : sonderLines();
+  await ask(say, [go1, {l:'Mit Mensch sprechen', f:() => human('Sonderanfertigung')}, {l:'Schließen', f:() => exitFlow()}]);
 }
 /* Bestellung: ruhiger Modus. Im KI-Modus fragt der Server nach Bestellnummer und E-Mail (Formular), sonst zeigt der Mönch den Weg. */
 async function orderFlow(pre){
@@ -2077,13 +2085,21 @@ async function faqShow(g, label, fromCue){
   if (!grp) return ask('Die Gruppe finde ich gerade nicht. Schau gern in die Liste hier auf der Seite.', [{l:'Andere Frage', f:() => faqTopics()}, {l:'Mit Mensch sprechen', f:() => human()}]);
   return faqQuote(g, 0);
 }
+/* FAQ-Antworten, die eine Vorlaufzeit oder Laufzeit nennen („mindestens 4 Wochen vorher“, „3 bis 5 Werktage“ Versand), spricht der
+   Mönch nicht nach: die Frage nach einem festen Datum beantworten die zentralen Fakten, Laufzeit-Sätze fallen weg. */
+const FAQ_DROP = /mindestens \d+ Wochen vorher|dauert der Versand|Versand dauert|Der dauert/i;
+function faqSafe(q, ans){
+  if (/bestimmten Datum|festen Termin/i.test(q)) return ['Express gibt es bei uns nicht, und einen festen Liefertermin sagen wir nicht zu.', shipLine().replace(' Einen festen Liefertermin sagen wir nicht zu.', ''), 'Wenn es eilt, frag vorher unser Team, wie es gerade aussieht.'].join(' ');
+  const s = String(ans || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„])/);
+  return s.filter(x => !FAQ_DROP.test(x)).join(' ') || shipLine();
+}
 async function faqQuote(g, idx){
   const grp = faqGroup(g), dets = grp ? $$('details', grp) : [], det = dets[idx];
   if (!det) return faqTopics();
   dets.forEach(x => { if (x !== det && x._smmk) x.open = false; }); det._smmk = 1;
   if (!S.classic && !S.typed) $$('.smmk-line, .smmk-src', bbody).forEach(n => n.remove());
   /* der erste Absatz der Antwort, ganz (die FAQ rendert die Fakten über sm-fakten-text) */
-  const para = $$(':scope > :not(summary)', det).find(n => n.textContent.trim()), ans = para ? para.textContent : '';
+  const para = $$(':scope > :not(summary)', det).find(n => n.textContent.trim()), ans = faqSafe(($('summary', det) || {}).textContent || '', para ? para.textContent : '');
   const next = dets.slice(idx + 1, idx + 3).map((x, k) => { const q = ($('summary', x).textContent || '').trim(); return {l:q.length > 58 ? q.slice(0, 56).replace(/\s+\S*$/, '') + ' …' : q, id:'faq_q', v:g, f:() => faqQuote(g, idx + 1 + k)}; });
   await render({actions:[{name:'open', target:det}, {name:'laser', target:det}], say:[{t:capSentences(ans, 600), emote:'bulb'}], source:{l:`${g} (FAQ)`}});
   await ask('Hat das geholfen?', helpfulChips(g).concat(next));
@@ -2343,7 +2359,9 @@ function srvCtx(){
   [['t', CTX.t], ['s', CTX.s], ['h', CTX.h], ['c', CTX.c], ['pg', CTX.pg], ['b', CTX.b]].forEach(([k, v]) => { if (typeof v === 'string' && SLUG_RE.test(v.toLowerCase())) o[k] = v.toLowerCase(); });
   o.pers = !!+CTX.pz; o.zero = !!+CTX.z;
   const n = +CTX.n; if (Number.isInteger(n) && n >= 0) o.n = Math.min(999, n);
-  if (/^\/[A-Za-z0-9/_.%-]{0,199}$/.test(location.pathname)) o.path = location.pathname;
+  /* Pfad nur für öffentliche Seiten: Kundenseiten (/account/reset/<id>/<token>, /account/activate/...) tragen ein Token */
+  const pa = location.pathname;
+  if (!/^customers\//.test(String(CTX.t || '')) && /^\/(|cart|search|(products|collections|pages|blogs|policies)\/[A-Za-z0-9/_.%-]{1,180})$/.test(pa) && !/(^|\/)\.\.?(\/|$)/.test(pa)) o.path = pa;
   return o;
 }
 /* Einstieg in der Sprache des Servers (guard.ENTRIES) */
@@ -2372,6 +2390,8 @@ function ensureSession(){
       ssUpd({ai:{sid:j.sid, exp:Date.now() + ttl * 1000, at:Date.now(), mode:j.mode, test:j.test === true, ho}});
       AI.notice = typeof j.notice === 'string' && j.notice.trim() ? j.notice.trim().slice(0, 400) : NOTICE;
       AI.paused = false; AI.challenge = false;
+      /* Messung: nach einem 401 der alten Sitzung wieder an; nach 429 oder Pause bleibt sie für diese Seite aus */
+      if (AI.evOff === 'auth') AI.evOff = false;
       /* Der Code gilt nur im Testbetrieb; eine Live-Sitzung braucht ihn nicht mehr */
       if (tc && j.test !== true) try { sessionStorage.removeItem('smMonkTc'); } catch (e) {}
       applyAiUi();
@@ -2416,7 +2436,7 @@ function applyAiUi(){
 function aiHello(){
   let v = null;
   const wait = Promise.race([ensureSession(), sleep(2500)]).catch(() => null);
-  return {wait, get t(){
+  return {wait, anchor:true, get t(){
     if (v != null) return v;
     const s = aiSess();
     if (s && aiUsable()){ v = s.nt ? '' : (AI.notice || NOTICE); if (!s.nt) ssUpd({ai:Object.assign({}, s, {nt:1}), g:1}); return v; }
@@ -2443,19 +2463,24 @@ function openExt(u){ if (DHL_RE.test(u)) try { window.open(u, '_blank', 'noopene
 /* Kartenbild: nur über den eigenen /cdn/shop-Pfad (keine Anfrage an Dritte) */
 function cardImg(u){
   u = String(u || '');
-  const m = u.match(/^https:\/\/cdn\.shopify\.com\/s\/files\/\d+\/\d+\/\d+\/\d+\/([A-Za-z0-9/_.%-]+)/);
-  if (m) return '/cdn/shop/' + m[1] + '?width=400';
-  const m2 = u.match(/^\/cdn\/shop\/([A-Za-z0-9/_.%-]+)/);
-  return m2 ? '/cdn/shop/' + m2[1] + '?width=400' : '';
+  const m = u.match(/^https:\/\/cdn\.shopify\.com\/s\/files\/\d+\/\d+\/\d+\/\d+\/([A-Za-z0-9/_.%-]+)/) || u.match(/^\/cdn\/shop\/([A-Za-z0-9/_.%-]+)/);
+  if (!m) return '';
+  /* keine Punkt-Segmente, auch nicht kodiert, keine leeren Segmente: das Bild bleibt unter /cdn/shop/ */
+  const rest = m[1];
+  if (/%(2e|2f|5c)/i.test(rest) || rest.split('/').some(x => !x || /^\.+$/.test(x))) return '';
+  let x; try { x = new URL('/cdn/shop/' + rest, location.origin); } catch (e) { return ''; }
+  return x.origin === location.origin && x.pathname === '/cdn/shop/' + rest ? x.pathname + '?width=400' : '';
 }
 
 /* ---------- Antwort des Servers in die Form des Mönchs ---------- */
 const EMOTES = new Set(['!', '?', '…', 'heart', 'bulb', 'sweat', 'zzz', 'note']);
+/* eigene Schlüssel nur (kein constructor, toString oder __proto__ aus einer Serverantwort) */
+const OWN = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 const MOOD_POSE = {idle:'sketch', talking:'sketch', listening:'sketch', pointing:'sketch', celebrating:'sketch', thinking:'search', presenting:'curator',
   measuring:'measure', scriptorium:'pc', workshop:'pc', not_sure:'shrug', paused:'coffee'};
 const CHIP_RE = /^[a-z_]{2,20}(?::[a-z0-9_-]{1,40}){0,2}$/;
 const str = (v, n) => typeof v === 'string' ? v.slice(0, n) : '';
-function poseOf(m){ const p = MOOD_POSE[m] || 'sketch'; return S.mobile && (p === 'pc' || p === 'curator') ? 'sketch' : p; }
+function poseOf(m){ const p = (typeof m === 'string' && OWN(MOOD_POSE, m) && MOOD_POSE[m]) || 'sketch'; return S.mobile && (p === 'pc' || p === 'curator') ? 'sketch' : p; }
 function srvLines(j){
   return (Array.isArray(j.lines) ? j.lines : []).slice(0, 3).map(l => (l && typeof l === 'object') ? {t:str(l.t, 280).trim(), emote:EMOTES.has(l.emote) ? l.emote : undefined} : null).filter(l => l && l.t);
 }
@@ -2505,7 +2530,7 @@ function srvActions(list){
 }
 const PARCEL = {eingegangen:0, bei_uns:1, unterwegs:2, zugestellt:3};
 function parcelPath(state){
-  if (!(state in PARCEL)) return;
+  if (typeof state !== 'string' || !OWN(PARCEL, state)) return;
   const ol = h('ol', 'smmk-parcel'); ol.setAttribute('aria-label', 'Stand Deiner Bestellung');
   ['Eingegangen', 'In der Werkstatt', 'Unterwegs', 'Zugestellt'].forEach((l, i) => { const li = h('li'); li.textContent = l; if (i <= PARCEL[state]) li.className = 'on'; if (i === PARCEL[state]) li.setAttribute('aria-current', 'step'); ol.append(li); });
   addNode(ol);
@@ -2698,6 +2723,12 @@ function handoffForm(pre){
   if (ts) f.append(ts);
   f.append(okL, err, b);
   let tok = '', wid = null;
+  /* Einwilligung nur durch echte Eingabe: Zeiger oder Taste am Haken (oder seinem Text) und am Knopf (oder Enter im Formular).
+     requestSubmit() und click() aus einem Skript erzeugen kein echtes pointerdown oder keydown. */
+  const hu = {ok:false, send:0};
+  ['pointerdown', 'keydown'].forEach(ev => okL.addEventListener(ev, e => { if (e.isTrusted) hu.ok = true; }));
+  b.addEventListener('pointerdown', e => { if (e.isTrusted) hu.send = now(); });
+  f.addEventListener('keydown', e => { if (e.isTrusted && (e.key === 'Enter' || e.key === ' ') && (e.target === b || e.target.tagName === 'INPUT')) hu.send = now(); });
   ok.addEventListener('change', () => { b.disabled = !ok.checked; });
   if (ts) tsWidget(ts, t => { tok = t; }).then(id => { wid = id; if (id == null){ err.textContent = 'Die Sicherheitsprüfung lädt gerade nicht. Schreib uns gern über die Kontaktseite.'; } });
   const lock = on => { f.setAttribute('aria-busy', on ? 'true' : 'false'); $$('input, textarea, button', f).forEach(x => { x.disabled = on || (x === b && !ok.checked); }); };
@@ -2705,7 +2736,8 @@ function handoffForm(pre){
   f.addEventListener('submit', e => {
     e.preventDefault();
     /* Einwilligung nur durch den Besucher selbst: angehakt und abgeschickt */
-    if (AI.busy || f._sent || !e.isTrusted || !ok.checked) return;
+    if (AI.busy || f._sent || !e.isTrusted || !ok.checked || !hu.ok || now() - hu.send > 3000) return;
+    hu.send = 0;
     const mv = em.value.trim();
     if (!EMAIL_RE.test(mv)){ err.textContent = 'Bitte gib Deine E-Mail-Adresse ein.'; em.focus(); return; }
     if (ts && !tok){ err.textContent = 'Einen Moment, die Sicherheitsprüfung läuft noch.'; return; }
@@ -2756,7 +2788,7 @@ function aiEvent(name, props){
     if (typeof v === 'boolean' || (typeof v === 'number' && isFinite(v) && Math.abs(v) <= 1e6)) p[k] = v;
     else if (typeof v === 'string' && /^[a-z0-9_.:-]{1,40}$/.test(v) && !/\d{4,}/.test(v)) p[k] = v;
   });
-  api('/event', {sid:s.sid, name, props:p}, 5000).then(x => { if (x.status === 429 || x.status === 401 || x.j.mode === 'paused') AI.evOff = true; });
+  api('/event', {sid:s.sid, name, props:p}, 5000).then(x => { if (x.status === 401) AI.evOff = AI.evOff || 'auth'; else if (x.status === 429 || x.j.mode === 'paused') AI.evOff = true; });
 }
 
 /* ---------- Leerlauf: Gewicht verlagern, summen, Kaffee, dann Zzz ---------- */

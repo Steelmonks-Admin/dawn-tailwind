@@ -220,7 +220,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-hav{display:block;position:absolute;left:14px;top:18px;width:36px;height:36px;border-radius:50%;background:#0044cc url(sm-pxm_lupe.webp) no-repeat -20px -14px/66px 120px;image-rendering:pixelated}
 #smMonk.m .smmk-plate{left:58px;top:23px}
 #smMonk.m .smmk-plate b{box-shadow:-2px 0 0 #4f5458,2px 0 0 #4f5458,0 -2px 0 #4f5458,0 2px 0 #4f5458}
-#smMonk.m .smmk-tag{display:block;height:18px;padding:0 6px;border:1px solid rgba(238,240,242,.22);border-radius:4px;font:500 9.5px/16px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--txt2)}
+#smMonk.m .smmk-tag{display:none;height:18px;padding:0 6px;border:1px solid rgba(238,240,242,.22);border-radius:4px;font:500 9.5px/16px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--txt2)}
 #smMonk.m .smmk-sub{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
 #smMonk.m .smmk-tools{top:14px;right:6px;gap:0}
 #smMonk.m .smmk-tools button{width:44px;height:44px;background:transparent;box-shadow:none;position:relative;isolation:isolate;color:var(--txt)}
@@ -247,6 +247,13 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-row small.smmk-eb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #smMonk.m .smmk-compose{margin-top:auto}
 
+/* Testmarke nur in KI-Testsitzungen (Handy und Desktop); der geskriptete Mönch zeigt keine */
+/* KI-Modus am Handy: die Zeile „KI-Assistent · kann sich irren“ bleibt sichtbar unter dem Namen */
+#smMonk.m.ai .smmk-sub{position:absolute;left:58px;top:51px;width:auto;height:auto;clip:auto;overflow:visible;white-space:nowrap;margin:0;font-size:9.5px;line-height:12px;letter-spacing:.06em}
+#smMonk.m.ai .smmk-body{margin-top:70px}
+/* Desktop: mit offenem Formular wird die Box höher, und das Textfeld tritt so lange zurück */
+#smMonk:not(.m) .smmk-box:has(.smmk-form){max-height:min(86%,600px)}
+#smMonk .smmk-box:has(.smmk-body .smmk-form) .smmk-compose{display:none}
 /* KI-Modus: Testmarke nur in Testsitzungen */
 #smMonk.ai .smmk-tag{display:none!important}
 #smMonk.m.ai.aitest .smmk-tag{display:block!important}
