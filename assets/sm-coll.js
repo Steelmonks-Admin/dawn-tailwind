@@ -40,6 +40,9 @@
       if (rest > 0) more.firstChild.nodeValue = 'Weitere ' + rest + ' anzeigen ';
       $$('[data-hits]', root).forEach(h => { h.textContent = list.length + ' Treffer'; });
       badges(list);
+      // Handy: Tipp als Karte nach dem vierten sichtbaren Produkt
+      const tipm = $('[data-tipm]', grid);
+      if (tipm){ const vis = list.slice(0, lim); grid.insertBefore(tipm, vis.length > 4 ? vis[4] : empty); tipm.hidden = !vis.length; }
     }
     $$('.subtabs [data-tab]', root).forEach(b => b.addEventListener('click', () => {
       st.tab = b.dataset.tab; st.all = false;

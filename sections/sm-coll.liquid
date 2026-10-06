@@ -15,6 +15,8 @@
   assign smc_finorder = 'schwarz:Schwarz,anthrazit:Anthrazit,edelstahl:Edelstahl,corten:Cortenstahl,weiss:Weiß,gold:Gold' | split: ','
   assign smc_arr = '<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 -%}
+{%- assign smc_skip = section.settings.ausblenden_bei | remove: ' ' | prepend: ',' | append: ',' -%}{%- assign smc_hh = ',' | append: collection.handle | append: ',' -%}
+{%- unless smc_skip contains smc_hh -%}
 {%- paginate collection.products by 250 -%}
 {%- liquid
   assign smc_keys = ''
@@ -125,7 +127,7 @@
         <div>
           <h1 class="display">{{ collection.title | escape }}</h1>
           {%- if smc_lead != blank -%}<p class="lead">{{ smc_lead }}</p>{%- endif -%}
-          <div class="c-proof"><span><span class="stars">★</span> <b data-ts-rating>{{ section.settings.ts_note }}</b> bei Trusted Shops</span>{% if smc_sum >= 100 %}<span><b>{% render 'sm-num', n: smc_sum_r %}+</b> Bestellungen seit 2020</span>{% endif %}<span>Gratisversand ab 99 €</span><span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span></div>
+          <div class="c-proof"><span><span class="stars">★</span> <b data-ts-rating>{{ section.settings.ts_note }}</b> bei Trusted Shops</span>{% if smc_sum >= 100 %}<span><b>{% render 'sm-num', n: smc_sum_r %}+</b> Bestellungen seit 2020</span>{% endif %}<span class="ship">Gratisversand ab 99 €</span><span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span></div>
         </div>
         {%- liquid
           assign smc_tip = collection.metafields.steelmonks.tipp.value
@@ -137,10 +139,12 @@
             assign smc_top = collection.products[ix]
           endif
         -%}
-        {%- if section.settings.tipp_zeigen and smc_tip != blank or section.settings.tipp_zeigen and smc_top and smc_top.metafields.steelmonks.bestellungen.value > 99 -%}
-        <div class="c-tip"><img src="{{ section.settings.pixel | prepend: 'sm-' | asset_url }}" alt="" width="62" height="90" loading="lazy">
-          <p>{%- if smc_tip != blank -%}{{ smc_tip }}{%- else -%}{%- assign tn = smc_top.metafields.steelmonks.bestellungen.value | divided_by: 100 | times: 100 -%}Hier am häufigsten bestellt: <b>{{ smc_top.title | escape }}</b>, schon über {% render 'sm-num', n: tn %}-mal. <a class="tlink" href="{{ smc_top.url }}">Ansehen</a>{%- endif -%}</p></div>
-        {%- endif -%}
+        {%- capture smc_tip_html -%}
+          {%- if section.settings.tipp_zeigen and smc_tip != blank or section.settings.tipp_zeigen and smc_top and smc_top.metafields.steelmonks.bestellungen.value > 99 -%}
+            <img src="{{ section.settings.pixel | prepend: 'sm-' | asset_url }}" alt="" width="62" height="90" loading="lazy"><p>{%- if smc_tip != blank -%}{{ smc_tip }}{%- else -%}{%- assign tn = smc_top.metafields.steelmonks.bestellungen.value | divided_by: 100 | times: 100 -%}Hier am häufigsten bestellt: <b>{{ smc_top.title | escape }}</b>, schon über {% render 'sm-num', n: tn %}-mal. <a class="tlink" href="{{ smc_top.url }}">Ansehen</a>{%- endif -%}</p>
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- if smc_tip_html != blank -%}<div class="c-tip">{{ smc_tip_html }}</div>{%- endif -%}
       </div>
 
       {%- if smc_show_tabs -%}
@@ -197,13 +201,14 @@
                   endfor
                 endif
               endfor
-              assign tags = ''
+              assign smc_abz = ''
               if forloop.index <= 3 and o > 0
-                assign tags = '<span class="badge hot">Top ' | append: forloop.index | append: '</span>'
+                assign smc_abz = '<span class="badge hot">Top ' | append: forloop.index | append: '</span>'
               endif
             -%}
-            <div class="cc" data-type="{{ p.type | escape }}" data-fins="{{ pf }}" data-p="{{ p.price_min }}" data-r="{{ rr }}" data-n="{{ rn }}" data-o="{{ o }}" data-i="{{ forloop.index0 }}"{% if forloop.index > section.settings.erste %} hidden{% endif %}>{% render 'sm-home-card', product: p, tags: tags %}</div>
+            <div class="cc" data-type="{{ p.type | escape }}" data-fins="{{ pf }}" data-p="{{ p.price_min }}" data-r="{{ rr }}" data-n="{{ rn }}" data-o="{{ o }}" data-i="{{ forloop.index0 }}"{% if forloop.index > section.settings.erste %} hidden{% endif %}>{% render 'sm-home-card', product: p, smk_abzeichen: smc_abz %}</div>
           {%- endfor -%}
+          {%- if smc_tip_html != blank -%}<div class="c-tip c-tip-m" data-tipm>{{ smc_tip_html }}</div>{%- endif -%}
           <div class="empty-res" data-empty hidden><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt="Pixel-Art: der Mönch zuckt mit den Schultern" width="110" height="131" loading="lazy"><p><b>Keine Treffer.</b> Lockere die Filter, zum Beispiel die Oberfläche oder den Preis.</p></div>
         </div>
         <div class="more-row"{% if smc_cnt <= section.settings.erste %} hidden{% endif %} data-morerow><button class="btn btn-i" type="button" data-more>Weitere {{ smc_cnt | minus: section.settings.erste }} anzeigen {{ smc_arr }}</button></div>
@@ -219,6 +224,7 @@
   </section>
 </div>
 {%- endpaginate -%}
+{%- endunless -%}
 
 {% schema %}
 {
@@ -238,7 +244,8 @@
       { "value": "px2_luis_zunft.webp", "label": "Luis mit Zunftschild" },
       { "value": "px4_monk_curator.webp", "label": "Mönch als Kurator" }
     ] },
-    { "type": "checkbox", "id": "text_zeigen", "label": "Kollektionsbeschreibung unten zeigen", "default": true }
+    { "type": "checkbox", "id": "text_zeigen", "label": "Kollektionsbeschreibung unten zeigen", "default": true },
+    { "type": "text", "id": "ausblenden_bei", "label": "Nicht zeigen bei diesen Kollektionen (Handles, kommagetrennt)", "info": "Z. B. beliebt, wenn dieselbe Vorlage dort die Beliebt-Seite zeigt" }
   ],
   "presets": [ { "name": "SM Kollektion" } ]
 }
