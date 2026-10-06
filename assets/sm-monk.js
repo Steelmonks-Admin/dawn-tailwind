@@ -1027,7 +1027,11 @@ function newTurn(echo, o){
 /* Scrollt den Text ans Ende, außer eine Zeile soll oben stehen bleiben (Handy: Empfehlungen) */
 function scrollBody(){ if (!bbody) return; const a = S.anchor; if (a && a.isConnected) bbody.scrollTop = a.previousElementSibling ? Math.max(0, a.getBoundingClientRect().top - bbody.getBoundingClientRect().top + bbody.scrollTop - 6) : 0; else bbody.scrollTop = bbody.scrollHeight; bodyFade(); }
 /* Angeschnittene ältere Zeilen laufen oben weich aus, statt am Statustext zu kleben */
-function bodyFade(){ bbody.classList.toggle('fade', bbody.scrollTop > 2); }
+function bodyFade(){
+  const on = bbody.scrollTop > 2, t = bbody.getBoundingClientRect().top; bbody.classList.toggle('fade', on);
+  /* Von der eigenen Sprechblase bliebe oben sonst nur ein blauer Streifen stehen: ist nur noch ein Rest zu sehen, tritt sie ganz zurück */
+  $$('.smmk-echo', bbody).forEach(e => { const r = e.getBoundingClientRect(); e.classList.toggle('cut', on && r.top < t - 2 && r.bottom > t && r.bottom - t < 30); });
+}
 function addNode(n){ if (S.typed) n.dataset.x = xid; bbody.append(n); scrollBody(); return n; }
 let advResolve = null, lineSeq = 0;
 function advanceNow(){ if (advResolve){ const r = advResolve; advResolve = null; r(); } }
@@ -1123,8 +1127,36 @@ function chipBtn(c, host){
   if (c.pre){ const pf = () => { if (!b._pre){ b._pre = 1; c.pre(); } }; ['pointerenter', 'touchstart', 'focus'].forEach(ev => b.addEventListener(ev, pf, {passive:true})); }
   return b;
 }
-/* Gekürzte Beschriftungen (mehr als zwei Zeilen) tragen den vollen Wortlaut im title */
-function chipTitles(host){ $$('.smmk-ch', host).forEach(b => { const s = $('.l', b); if (s && b._l && s.scrollHeight > s.clientHeight + 1) b.title = b._l; }); }
+/* Passt die Beschriftung? Gekürzt heißt mehr als zwei Zeilen. Zu eng heißt außerdem: das längste Wort ist breiter als das Feld
+   und würde mitten im Wort umbrechen (Messung per Canvas in der Schrift des Knopfs). */
+let chCv = null;
+const chCut = s => s.scrollHeight > s.clientHeight + 1;
+function chWord(s){
+  const cs = getComputedStyle(s); chCv = chCv || d.createElement('canvas').getContext('2d');
+  chCv.font = cs.font || [cs.fontStyle, cs.fontWeight, cs.fontSize, cs.fontFamily].join(' ');
+  return s.textContent.split(/\s+/).reduce((m, w) => Math.max(m, chCv.measureText(w).width), 0) > s.getBoundingClientRect().width + .5;
+}
+const chTight = s => chCut(s) || chWord(s);
+/* Kurze Listen (nicht geblättert, zwei Spalten): ein Knopf, dessen Text im halben Feld nicht passt, bekommt die ganze Zeile,
+   statt gekürzt zu werden. Bleibt dadurch ein Nachbar allein in seiner Zeile, wird auch er breit. Geblätterte Listen behalten
+   ihr Raster. Wer danach noch gekürzt ist, trägt den vollen Wortlaut im title; ein zu langes Wort trennt mit Bindestrich (.hy). */
+function chipFit(host){
+  if (!host || !host.isConnected || !host.offsetWidth) return;
+  const paged = host.classList.contains('pg'), bs = $$(paged ? '.smmk-ch:not(.nav)' : ':scope > .smmk-ch', host);
+  if (!bs.length) return;
+  const L = b => $('.l', b);
+  if (!paged){
+    bs.forEach(b => b.classList.remove('wide', 'hy')); host.classList.add('fit');
+    if (getComputedStyle(host).gridTemplateColumns.split(' ').length === 2){
+      const wide = bs.map(b => chTight(L(b))); let col = 0;
+      wide.forEach((w, i) => { if (w){ if (col) wide[i - 1] = true; col = 0; } else col ^= 1; });
+      if (col) wide[wide.length - 1] = true;
+      bs.forEach((b, i) => b.classList.toggle('wide', wide[i]));
+    }
+  }
+  const st = bs.map(b => [chCut(L(b)), chWord(L(b))]);
+  bs.forEach((b, i) => { if (st[i][0] && b._l) b.title = b._l; else b.removeAttribute('title'); b.classList.toggle('hy', st[i][1]); });
+}
 function navBtn(dir, both, fn){
   const b = h('button', 'smmk-ch nav ' + dir); b.type = 'button';
   /* Sichtbarer Text ist der Name; nur der reine Pfeil (neben „Mehr zeigen“) bekommt ein aria-label */
@@ -1133,28 +1165,35 @@ function navBtn(dir, both, fn){
   b.addEventListener('click', () => { if (b.disabled) return; markUsed(); S.lastInput = now(); sfx('tick'); fn(); });
   return b;
 }
-function chipPage(host, btns, pg, o){
+/* back: der Weg zurück zur vorigen Frage (Antwort mit back:1). Er wird nicht mitgeblättert, sondern steht auf Seite 1 im
+   Blätterfeld, dort wo ab Seite 2 der Pfeil zur vorigen Seite sitzt: links geht es immer genau einen Schritt zurück. */
+function chipPage(host, btns, pg, back, user){
   const per = CH_MAX - 1, pages = Math.ceil(btns.length / per); pg = Math.max(0, Math.min(pages - 1, pg));
   host.innerHTML = '';
   btns.slice(pg * per, pg * per + per).forEach(b => host.append(b));
   const cell = h('div', 'smmk-pg'), both = pg > 0 && pg < pages - 1;
-  if (pg > 0) cell.append(navBtn('prev', both, () => chipPage(host, btns, pg - 1, {user:1})));
-  if (pg < pages - 1) cell.append(navBtn('next', both, () => chipPage(host, btns, pg + 1, {user:1})));
+  if (pg > 0) cell.append(navBtn('prev', both, () => chipPage(host, btns, pg - 1, back, 1)));
+  else if (back) cell.append(back);
+  if (pg < pages - 1) cell.append(navBtn('next', both, () => chipPage(host, btns, pg + 1, back, 1)));
   host.append(cell);
   host.setAttribute('aria-label', 'Antworten, Seite ' + (pg + 1) + ' von ' + pages);
-  if (o && o.user){ announce('Antworten, Seite ' + (pg + 1) + ' von ' + pages); focusFirst(host); }
-  requestAnimationFrame(() => { chipTitles(host); scrollBody(); });
+  if (user){ announce('Antworten, Seite ' + (pg + 1) + ' von ' + pages); focusFirst(host); }
+  chipFit(host);
+  requestAnimationFrame(() => { chipFit(host); scrollBody(); });
 }
 function choices(list, o){
   o = o || {}; const host = o.host || choicesEl;
   choicesEl.innerHTML = ''; host.innerHTML = '';
-  const L = list.filter(Boolean), btns = L.map(c => chipBtn(c, host)), paged = btns.length > CH_MAX;
-  host.classList.toggle('pg', paged); host.classList.remove('c2'); host.setAttribute('aria-label', 'Antworten');
+  const L = list.filter(Boolean), paged = L.length > CH_MAX, bi = paged ? L.findIndex(c => c.back) : -1;
+  const btns = L.filter((c, i) => i !== bi).map(c => chipBtn(c, host));
+  let back = null;
+  if (bi >= 0){ back = chipBtn(L[bi], host); back.classList.add('nav', 'back'); back.insertAdjacentHTML('afterbegin', ICO.arrow); back.setAttribute('aria-label', L[bi].l + ' zur Auswahl'); }
+  host.classList.toggle('pg', paged); host.classList.remove('c2', 'fit'); host.setAttribute('aria-label', 'Antworten');
   if (paged){
-    /* Desktop: drei Spalten. Passt eine Beschriftung dort nicht in zwei Zeilen, bleibt die ganze Liste zweispaltig. */
-    if (!S.mobile && boxOn()){ btns.forEach(b => host.append(b)); if (btns.some(b => { const s = $('.l', b); return s.scrollHeight > s.clientHeight + 1; })) host.classList.add('c2'); }
-    chipPage(host, btns, 0);
-  } else { btns.forEach(b => host.append(b)); requestAnimationFrame(() => chipTitles(host)); }
+    /* Desktop: drei Spalten. Passt eine Beschriftung dort nicht (mehr als zwei Zeilen oder ein Wort bräche mittendrin um), bleibt die ganze Liste zweispaltig. */
+    if (!S.mobile && boxOn()){ btns.forEach(b => host.append(b)); if (btns.some(b => chTight($('.l', b)))) host.classList.add('c2'); }
+    chipPage(host, btns, 0, back);
+  } else { btns.forEach(b => host.append(b)); chipFit(host); requestAnimationFrame(() => chipFit(host)); }
   S.lastInput = now(); chDots = false;
   requestAnimationFrame(scrollBody);
   if (!S.mobile && list.length && boxOn()){ const r = vr(choicesEl); glance(r.x + r.w / 2, 600); }
@@ -1242,8 +1281,16 @@ function placeTray(){
     left = R(br.x + br.w + 26); trayEl.style.bottom = (24 + S.lift) + 'px';
   } else if (trayEl.classList.contains('strip')){
     left = Math.max(16, R(br.x - 240));
-    trayEl.style.setProperty('--sw', Math.max(300, Math.min(960, R(g.lim - left))) + 'px');
-    trayEl.style.bottom = (24 + S.lift + box.offsetHeight + 18) + 'px';
+    const sw = Math.max(300, Math.min(960, R(g.lim - left))), bottom = 24 + S.lift + box.offsetHeight + 18;
+    trayEl.style.setProperty('--sw', sw + 'px'); trayEl.style.bottom = bottom + 'px';
+    /* Schmale Leiste (Tablet hochkant): drei Zeilen nebeneinander lassen dem Text zu wenig Platz. Dann stehen sie untereinander
+       in der Breite der Box (.stk); reicht die Höhe bis zur Kopfzeile nicht, bleiben sie nebeneinander in der engen Form (.cmp). */
+    trayEl.classList.remove('stk', 'cmp');
+    if ((sw - 20) / 3 < 250){
+      trayEl.classList.add('stk'); trayEl.style.setProperty('--sw', R(br.w) + 'px');
+      if (vpH() - bottom - trayEl.offsetHeight >= headerBottom() + 8) left = R(br.x);
+      else { trayEl.classList.remove('stk'); trayEl.classList.add('cmp'); trayEl.style.setProperty('--sw', sw + 'px'); }
+    }
   } else if (g.cw){
     trayEl.style.setProperty('--cw', g.cw + 'px');
     left = R(br.x + br.w + 26); trayEl.style.bottom = (24 + S.lift) + 'px';
@@ -1253,7 +1300,7 @@ function placeTray(){
   }
   trayEl.style.left = left + 'px';
 }
-function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; trayEl.classList.remove('strip', 'col'); $$('.smmk-fly', stage).forEach(e => e.remove()); }
+function clearTray(){ if (!trayEl) return; trayEl.innerHTML = ''; trayEl.style.display = 'none'; trayEl.classList.remove('strip', 'col', 'stk', 'cmp'); $$('.smmk-fly', stage).forEach(e => e.remove()); }
 /* Karte fliegt verdeckt aus der Hand und dreht sich im letzten Drittel um */
 function flyOut(el, hp, kfFn, dur){
   const r = vr(el);
@@ -1726,7 +1773,7 @@ async function someoneElse(pre){
   const r = await think(Promise.all(cand.map(a => poolOf(a).catch(() => null))), {ms:8000});
   let L = cand;
   if (r.res){ const keep = cand.filter((a, i) => r.res[i] && okBudgets(r.res[i]).length); if (keep.length) L = keep; }
-  await ask((pre || []).concat([{t:'Für wen denn? Such Dir eine Gruppe aus.', emote:'?'}]), L.map(a => ({l:audChip(a), id:'gift_aud', v:a.l, f:() => pickAudience(a)})).concat([{l:'Zurück', f:() => giftStep1()}]));
+  await ask((pre || []).concat([{t:'Für wen denn? Such Dir eine Gruppe aus.', emote:'?'}]), L.map(a => ({l:audChip(a), id:'gift_aud', v:a.l, f:() => pickAudience(a)})).concat([{l:'Zurück', back:1, f:() => giftStep1()}]));
 }
 /* Klickt der Besucher während der Frage "Für wen suchst Du?" selbst einen Hero-Chip, gilt das als Antwort.
    Nur echte Klicks (isTrusted) und nur solange die Zielgruppen-Knöpfe in der Box stehen. */
@@ -3084,6 +3131,7 @@ function applyViewport(){
   if (S.out){ applyPoseGeom(S.pose); const hm = home(); placeActor(hm.x, hm.y); }
   sheetCheck(); kbFix();
   if (was !== S.mobile){ clearTray(); S.mx = null; }
+  if (choicesEl && !choicesEl.classList.contains('pg')) chipFit(choicesEl);
 }
 
 /* ---------- Öffentliche Schnittstelle für den Loader ---------- */
