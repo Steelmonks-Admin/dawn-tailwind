@@ -1,12 +1,12 @@
-/* Neue Kollektionsseite: Untergruppen, Oberflächen-Filter, Sortierung, Preis-Regler, „ab 4,8 ★“, Top 3 und „Weitere anzeigen“,
-   alles im Browser auf den serverseitig ausgegebenen Karten (.cc mit data-type, data-fins, data-p, data-r, data-n, data-o, data-i). */
+/* Neue Kollektionsseite: Untergruppen (Reiter in der Filterleiste), Sortierung, Preis-Regler, „ab 4,8 ★“, Top 3 und „Weitere anzeigen“,
+   alles im Browser auf den serverseitig ausgegebenen Karten (.cc mit data-type, data-p, data-r, data-n, data-o, data-i). */
 (function(){
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   $$('[data-smc]').forEach(root => {
     const grid = $('[data-grid]', root), empty = $('[data-empty]', root), more = $('[data-more]', root), moreRow = $('[data-morerow]', root);
     const cards = $$('.cc', grid), step = +root.dataset.step || 16;
-    const shownTabs = $$('.subtabs [data-tab]', root).map(b => b.dataset.tab).filter(t => t !== '*' && t !== '~weitere');
-    const st = { tab:'*', fins:new Set(), max:Infinity, top:false, sort:'pop', all:false };
+    const shownTabs = $$('[data-tab]', root).map(b => b.dataset.tab).filter(t => t !== '*' && t !== '~weitere');
+    const st = { tab:'*', max:Infinity, top:false, sort:'pop', all:false };
     const num = (el, k) => +el.dataset[k] || 0;
     const SORT = {
       pop:(a, b) => num(b, 'o') - num(a, 'o') || num(b, 'n') - num(a, 'n') || num(a, 'i') - num(b, 'i'),
@@ -18,7 +18,6 @@
     const match = el => {
       const t = el.dataset.type;
       if (st.tab === '~weitere' ? shownTabs.includes(t) : st.tab !== '*' && t !== st.tab) return false;
-      for (const f of st.fins) if (!el.dataset.fins.includes(',' + f + ',')) return false;
       if (num(el, 'p') > st.max) return false;
       if (st.top && num(el, 'r') < 480) return false;
       return true;
@@ -44,13 +43,9 @@
       const tipm = $('[data-tipm]', grid);
       if (tipm){ const vis = list.slice(0, lim); grid.insertBefore(tipm, vis.length > 4 ? vis[4] : empty); tipm.hidden = !vis.length; }
     }
-    $$('.subtabs [data-tab]', root).forEach(b => b.addEventListener('click', () => {
+    $$('[data-tab]', root).forEach(b => b.addEventListener('click', () => {
       st.tab = b.dataset.tab; st.all = false;
-      $$('.subtabs [data-tab]', root).forEach(x => x.setAttribute('aria-pressed', x === b)); draw();
-    }));
-    $$('[data-fin]', root).forEach(b => b.addEventListener('click', () => {
-      const f = b.dataset.fin; st.fins.has(f) ? st.fins.delete(f) : st.fins.add(f);
-      b.setAttribute('aria-pressed', st.fins.has(f)); st.all = false; draw();
+      $$('[data-tab]', root).forEach(x => x.setAttribute('aria-pressed', x === b)); draw();
     }));
     const sort = $('[data-sort]', root); if (sort) sort.addEventListener('change', () => { st.sort = sort.value; draw(); });
     const fm = $('[data-fmore]', root), panel = fm && document.getElementById(fm.getAttribute('aria-controls'));
