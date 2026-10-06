@@ -2388,7 +2388,7 @@ function ensureSession(){
       const ttl = Math.max(60, Math.min(3600, +j.expires_in || 3600));
       const ho = j.handoff && typeof j.handoff === 'object' && typeof j.handoff.consent_version === 'string' ? {v:j.handoff.consent_version.slice(0, 40), ts:j.handoff.turnstile === true} : null;
       ssUpd({ai:{sid:j.sid, exp:Date.now() + ttl * 1000, at:Date.now(), mode:j.mode, test:j.test === true, ho}});
-      AI.notice = typeof j.notice === 'string' && j.notice.trim() ? j.notice.trim().slice(0, 400) : NOTICE;
+      AI.notice = NOTICE; /* Wortlaut des Shops: Kundenberater. Der KI-Hinweis steht unter dem Eingabefeld und in der Datenschutzerklärung. */
       AI.paused = false; AI.challenge = false;
       /* Messung: nach einem 401 der alten Sitzung wieder an; nach 429 oder Pause bleibt sie für diese Seite aus */
       if (AI.evOff === 'auth') AI.evOff = false;
