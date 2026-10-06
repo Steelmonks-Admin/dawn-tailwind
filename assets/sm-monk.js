@@ -2498,10 +2498,19 @@ function srvChip(c){
   return {l, id:'ki_chip', v:id.split(':')[0], f:() => aiTurn({chip:id})};
 }
 async function aiAfterExt(){ await ask('Die Sendungsverfolgung von DHL ist in einem neuen Tab offen.', AI.lastChips.filter(c => c.v !== 'dhl').concat([{l:'Schließen', f:() => exitFlow()}]).slice(0, 4)); }
+/* Handle einer Karte: Kleinbuchstaben, Ziffern, Bindestrich, dazu Nicht-ASCII-Buchstaben und -Zeichen wie „®“ (Zippo®-Produkte).
+   Sicher kodiert: jedes kodierte Zeichen muss ein Byte über 0x7F sein, also nie Leerzeichen, Schrägstrich, Punkt, Prozent, ? oder #.
+   Gleiche Regel wie assistant_catalog.CARD_HANDLE im Dienst. */
+const CARD_H_RE = /^[\p{Ll}\p{Lo}\p{Nd}\p{So}][\p{Ll}\p{Lo}\p{Nd}\p{So}-]{0,119}$/u;
+function cardHandle(v){
+  if (typeof v !== 'string' || v.length > 120 || !CARD_H_RE.test(v)) return '';
+  let enc; try { enc = encodeURIComponent(v); } catch (e) { return ''; }
+  return /^(?:[a-z0-9-]|%[89A-F][0-9A-F])+$/.test(enc) ? v : '';
+}
 function srvCard(c){
   if (!c || typeof c !== 'object') return null;
-  const hd = str(c.h, 120), t = str(c.t, 160).trim(), sh = safeHref(c.u), p = Math.round(+c.p || 0);
-  if (!/^[a-z0-9][a-z0-9-]{0,119}$/.test(hd) || !t || !sh || !sh.path || !/^\/(products|collections)\//.test(sh.path) || !(p > 0)) return null;
+  const hd = cardHandle(c.h), t = str(c.t, 160).trim(), sh = safeHref(c.u), p = Math.round(+c.p || 0);
+  if (!hd || !t || !sh || !sh.path || !/^\/(products|collections)\//.test(sh.path) || !(p > 0)) return null;
   const q = Math.round(+c.q || 0);
   return {h:hd, t, y:str(c.y, 60), u:sh.path, i:cardImg(c.i), p, q:q > p ? q : p, z:c.z ? 1 : 0, n:Math.max(0, Math.round(+c.n || 0)), rv:+c.rv || 0, rc:Math.max(0, Math.round(+c.rc || 0)),
     why:str(c.why, 120).trim(), over:c.over ? 1 : 0};

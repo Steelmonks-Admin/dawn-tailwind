@@ -1492,7 +1492,7 @@
         "type": "text",
         "id": "sm_monk_ai_url",
         "label": "KI-Dienst: Adresse",
-        "info": "Adresse des Dienstes cs-assistant, zum Beispiel https://cs-assistant.onrender.com (ohne /assistant/v1). Leer: Bruder Funke bleibt rein geskriptet wie bisher."
+        "info": "Adresse des Dienstes cs-assistant, zum Beispiel https://<dienst>.onrender.com (ohne /assistant/v1). Leer: Bruder Funke bleibt rein geskriptet wie bisher."
       },
       {
         "type": "select",
