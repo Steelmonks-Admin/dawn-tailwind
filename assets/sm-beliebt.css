@@ -207,3 +207,34 @@
   .smb .por-ctas .btn{padding-block:.75em}
 }
 @media (max-width: 420px){.smb .b-stats div{padding:9px 12px}.smb .b-stats b{font-size:19px}}
+
+/* Spitzenreiter als Karussell statt einzelner Abschnitte (Luis 6.10.): seitlich wischen, am Desktop mit Pfeilen */
+.smb .por-intro{padding-block:clamp(28px,4vw,48px) 4px}
+.smb .por-intro__w{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.smb .por-nav{display:flex;gap:8px;flex:none}
+.smb .por-nav button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-l);background:var(--paper);display:grid;place-items:center;color:var(--ink);cursor:pointer;padding:0}
+.smb .por-nav button:hover{border-color:var(--ink)}
+.smb .por-nav button:disabled{opacity:.35;cursor:default}
+.smb .por-nav svg{width:18px;height:18px}
+.smb #portraits{--por-pad:max(var(--gutter),calc((100vw - var(--max)) / 2 + var(--gutter)));display:flex;align-items:flex-start;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--por-pad);padding:14px var(--por-pad) 34px;background:var(--beton);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.smb #portraits::-webkit-scrollbar{display:none}
+.smb #portraits .por{flex:0 0 min(340px,80vw);scroll-snap-align:start;padding:0;border:0;border-radius:22px;overflow:hidden;background:var(--paper);box-shadow:var(--shadow)}
+.smb #portraits .por:nth-of-type(even){background:var(--paper)}
+.smb #portraits .por.dark{background:var(--night);color:var(--blank)}
+.smb #portraits .por .wrap{max-width:none;padding:0}
+.smb #portraits .por-grid,.smb #portraits .por.flip .por-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"m" "h" "x" "c";grid-template-rows:auto;gap:0;align-items:start}
+.smb #portraits .por-main{border-radius:0;aspect-ratio:4/3}
+.smb #portraits .por-thumbs{display:none}
+.smb #portraits .por-rank{left:12px;top:8px;font-size:46px;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.45)}
+.smb #portraits .por-head{padding:14px 16px 0}
+.smb #portraits .por h2{font-size:21px;line-height:1.12;margin-top:4px !important}
+.smb #portraits .por .eyebrow{font-size:10.5px}
+.smb #portraits .por .sub{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.6px;margin-top:6px}
+.smb #portraits .por-meta{gap:4px 12px;margin-top:8px;font-size:13px}
+.smb #portraits .por-meta .price{font-size:15.2px}
+.smb #portraits .por-lead{font-size:13.6px;margin-top:6px}
+.smb #portraits .por-more{padding:6px 16px 0}
+.smb #portraits .por-more .fav{grid-template-columns:minmax(0,1fr)}
+.smb #portraits .por-ctas{padding:10px 16px 16px;margin-top:0}
+.smb #portraits .por-ctas .btn{width:100%;justify-content:center;padding-block:.75em}
+@media (max-width: 900px){.smb .por-nav{display:none}.smb #portraits{gap:12px;padding-bottom:26px}}

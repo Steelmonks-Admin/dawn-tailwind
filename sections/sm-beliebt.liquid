@@ -98,45 +98,9 @@
     </div>
   </div>
 
-  <section class="rank-sec" id="rangliste" aria-labelledby="rankT">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><p class="eyebrow">{{ section.settings.rank_eyebrow | escape }}</p><h2 class="h2" id="rankT" data-rank-h>{{ section.settings.rank_titel | escape }}</h2></div>
-        <div class="fchips rank-chips" role="group" aria-label="Nach Kategorie filtern">
-          <button class="chip" type="button" data-rank="alle" data-h="{{ section.settings.rank_titel | escape }}" aria-pressed="true">Alle</button>
-          {%- for block in section.blocks -%}{%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}{%- assign bt = block.settings.titel | default: block.settings.kollektion.title -%}
-            <button class="chip" type="button" data-rank="{{ block.id }}" data-h="Top {{ block.settings.anzahl }} · {{ bt | escape }}" aria-pressed="false">{{ bt | escape }}</button>
-          {%- endfor -%}
-        </div>
-      </div>
-      <div class="rgrid" data-rank-p="alle">{{ smb_all_cards }}</div>
-      {%- for block in section.blocks -%}
-        {%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}
-        {%- assign c = block.settings.kollektion -%}{%- assign bn = block.settings.anzahl -%}
-        <div class="rank-cat" data-rank-p="{{ block.id }}" hidden {{ block.shopify_attributes }}>
-          <div class="rgrid">
-          {%- paginate c.products by 250 -%}
-            {%- assign keys = '' -%}
-            {%- for p in c.products -%}
-              {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
-              {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
-              {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
-              {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
-            {%- endfor -%}
-            {%- assign arr = keys | split: ',' | sort | reverse -%}
-            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
-              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
-            {%- endfor -%}
-          {%- endpaginate -%}
-          </div>
-          <div class="rank-all"><a class="btn btn-i" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} {{ smb_arr_svg }}</a></div>
-        </div>
-      {%- endfor -%}
-      <button class="btn btn-g rank-more" type="button" data-rank-more hidden>{{ section.settings.mehr_text | escape }}</button>
-    </div>
-  </section>
-  <section class="por-intro" aria-labelledby="porIntroT"><div class="wrap"><p class="eyebrow">Im Porträt</p><h2 class="h2" id="porIntroT">Die Spitzenreiter im Detail</h2><p class="muted">Wer sie kauft, welche Oberfläche und Größe am liebsten genommen wird und wann Hochsaison ist. Tipp auf „Mehr zu Platz …“ für alle Zahlen.</p></div></section>
-  <div id="portraits">
+  <section class="por-intro" aria-labelledby="porIntroT"><div class="wrap por-intro__w"><div><p class="eyebrow">Die Spitzenreiter</p><h2 class="h2" id="porIntroT">Unsere Top {{ pkeys.size }} im Detail</h2><p class="muted">Wer sie kauft, welche Oberfläche und Größe am liebsten genommen wird und wann Hochsaison ist.</p></div>
+    <div class="por-nav"><button type="button" data-por-prev aria-label="Zurück"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" data-por-next aria-label="Weiter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div></div></section>
+  <div id="portraits" role="group" aria-label="Die Spitzenreiter, seitlich wischen">
   {%- for x in pkeys -%}
     {%- assign parts = x | split: '-' -%}{%- assign bi = parts[1] | minus: 100 -%}{%- assign rk = parts[0] | minus: 1000 -%}
     {%- assign b = section.blocks[bi] -%}{%- assign p = b.settings.produkt -%}{%- assign i = forloop.index0 -%}{%- assign odd = i | modulo: 2 -%}
@@ -244,6 +208,43 @@
     </section>
   {%- endfor -%}
   </div>
+  <section class="rank-sec" id="rangliste" aria-labelledby="rankT">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">{{ section.settings.rank_eyebrow | escape }}</p><h2 class="h2" id="rankT" data-rank-h>{{ section.settings.rank_titel | escape }}</h2></div>
+        <div class="fchips rank-chips" role="group" aria-label="Nach Kategorie filtern">
+          <button class="chip" type="button" data-rank="alle" data-h="{{ section.settings.rank_titel | escape }}" aria-pressed="true">Alle</button>
+          {%- for block in section.blocks -%}{%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}{%- assign bt = block.settings.titel | default: block.settings.kollektion.title -%}
+            <button class="chip" type="button" data-rank="{{ block.id }}" data-h="Top {{ block.settings.anzahl }} · {{ bt | escape }}" aria-pressed="false">{{ bt | escape }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="rgrid" data-rank-p="alle">{{ smb_all_cards }}</div>
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'kategorie' or block.settings.kollektion == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign c = block.settings.kollektion -%}{%- assign bn = block.settings.anzahl -%}
+        <div class="rank-cat" data-rank-p="{{ block.id }}" hidden {{ block.shopify_attributes }}>
+          <div class="rgrid">
+          {%- paginate c.products by 250 -%}
+            {%- assign keys = '' -%}
+            {%- for p in c.products -%}
+              {%- assign t = ',' | append: p.type | append: ',' -%}{%- assign hx = ',' | append: p.handle | append: ',' -%}
+              {%- if smb_types contains t or smb_ex contains hx or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0 or p.available == false -%}{%- continue -%}{%- endif -%}
+              {%- assign n = p.metafields.steelmonks.bestellungen.value | default: 0 | plus: 100000000 -%}{%- assign k = 1999 | minus: forloop.index0 -%}
+              {%- capture keys -%}{{ keys }}{{ n }}-{{ k }},{%- endcapture -%}
+            {%- endfor -%}
+            {%- assign arr = keys | split: ',' | sort | reverse -%}
+            {%- for x in arr limit: bn -%}{%- assign parts = x | split: '-' -%}{%- assign idx = 1999 | minus: parts[1] -%}
+              <div class="rk"><span class="no">{{ forloop.index }}</span>{% render 'sm-home-card', product: c.products[idx], show_type: true %}</div>
+            {%- endfor -%}
+          {%- endpaginate -%}
+          </div>
+          <div class="rank-all"><a class="btn btn-i" href="{{ c.url }}">{{ block.settings.link_text | default: 'Alle ansehen' | escape }} {{ smb_arr_svg }}</a></div>
+        </div>
+      {%- endfor -%}
+      <button class="btn btn-g rank-more" type="button" data-rank-more hidden>{{ section.settings.mehr_text | escape }}</button>
+    </div>
+  </section>
 
 
 
@@ -254,6 +255,15 @@
 <script>
   (function(){
     var root = document.querySelector('.smb'); if (!root) return;
+    /* Spitzenreiter-Karussell: Pfeile blättern zwei Karten weiter */
+    var porTrack = root.querySelector('#portraits'), porPrev = root.querySelector('[data-por-prev]'), porNext = root.querySelector('[data-por-next]');
+    if (porTrack && porPrev && porNext){
+      var porStep = function(){ var c = porTrack.querySelector('.por'); return c ? (c.getBoundingClientRect().width + 16) * 2 : 640; };
+      var porUpd = function(){ porPrev.disabled = porTrack.scrollLeft < 8; porNext.disabled = porTrack.scrollLeft + porTrack.clientWidth > porTrack.scrollWidth - 8; };
+      porPrev.addEventListener('click', function(){ porTrack.scrollBy({ left: -porStep(), behavior: 'smooth' }); });
+      porNext.addEventListener('click', function(){ porTrack.scrollBy({ left: porStep(), behavior: 'smooth' }); });
+      porTrack.addEventListener('scroll', porUpd, { passive: true }); porUpd();
+    }
     /* Porträt-Bilder wechseln */
     root.addEventListener('click', function(e){
       var b = e.target.closest('[data-por-src]'); if (!b) return;
