@@ -16,6 +16,8 @@
       if (cur === id) return;
       $$('.mg-p', mg).forEach(p => p.classList.toggle('on', p.id === id));
       btns.forEach(b => b.setAttribute('aria-expanded', String(b.dataset.p === id)));
+      // Direkt unter der Menüzeile ansetzen: der Belohnungs-Zeitstrahl liegt im Header darunter und würde sonst zwischen Menü und Panel durchscheinen
+      const nv = $('.smm-nav'); if (nv && hdr) mg.style.top = Math.round(nv.getBoundingClientRect().bottom - hdr.getBoundingClientRect().top + 3) + 'px';
       cur = id; openY = scrollY; mg.classList.add('on'); mg.setAttribute('aria-hidden', 'false');
       moveInk(btns.find(b => b.dataset.p === id)); fit();
     };

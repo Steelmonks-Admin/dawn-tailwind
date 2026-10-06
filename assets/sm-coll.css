@@ -1,7 +1,8 @@
 /* Neue Kollektionsseite (Prototyp #hausschilder), baut auf sm-home.css auf (Farben, Karten, Knöpfe, Oberflächen-Muster).
    Größen aus dem Prototyp von rem (16 px) in px umgerechnet; Überschrift in Poppins wie auf der Startseite verkleinert. */
 .smh.smc{background:var(--beton)}
-.smh .c-hero{padding-block:18px 64px}
+/* oben etwas Luft: die Kreise des Belohnungs-Zeitstrahls ragen unter den Header */
+.smh .c-hero{padding-block:32px 64px}
 .smh .crumbs{font-size:12.8px;color:var(--ink-2)}
 .smh .crumbs a{color:inherit;text-decoration:none}
 .smh .crumbs a:hover{text-decoration:underline}
@@ -71,7 +72,7 @@
   .smh .c-tip-m p::after{bottom:auto;top:50%;margin-top:-7px}
   .smh .c-proof .ship{display:none}}
 @media (max-width: 760px){
-  .smh .c-hero{padding-block:12px 48px}
+  .smh .c-hero{padding-block:24px 48px}
   .smh .c-top h1{font-size:clamp(28px,8.5vw,40px)}
   .smh .c-top .lead{font-size:14.4px;line-height:1.5;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .smh .c-proof{font-size:12.8px;gap:4px 12px;margin-top:8px}
