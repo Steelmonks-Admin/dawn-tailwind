@@ -20,6 +20,8 @@
 .card-wrapper .rating-star {
   --letter-spacing: 0.1;
   --font-size: 1.2;
+  /* Trusted-Shops-Gold wie im Widget und auf der Startseite */
+  --color-rating-star: #db6b22;
 }
 
 .rating-star {
