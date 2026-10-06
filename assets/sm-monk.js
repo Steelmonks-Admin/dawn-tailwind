@@ -1104,26 +1104,58 @@ async function speak(lines, o){
 /* Antworten: {l, f} oder {l, href} (Navigation); pri = der eine Hauptweg, link = leiser Ausgang; id = Schritt für die Messung */
 const EXITS = /^(Was anderes suchen|Mit Mensch sprechen|Danke|Nein danke|Schließen|Nein)$/;
 let chFocusT = 0, chDots = false;
+/* Höchstens sechs Antworten auf einmal. Bei mehr: fünf Antworten und ein Blätterfeld („Mehr zeigen“, ab Seite 2 auch zurück).
+   Im Dokument stehen immer nur die sichtbaren Knöpfe, damit Tastatur und Screenreader genau das bekommen, was zu sehen ist. */
+const CH_MAX = 6;
+function chipBtn(c, host){
+  const lk = c.link || (c.link !== 0 && !c.pri && EXITS.test(c.l));
+  const b = h('button', 'smmk-ch' + (lk ? ' lk' : '') + (c.pri ? ' pri' : '')); b.type = 'button';
+  const s = h('span', 'l'); s.textContent = c.l; b.append(s); b._l = String(c.l);
+  b.addEventListener('click', () => {
+    if (b.disabled) return; $$('.smmk-ch', host).forEach(x => { x.disabled = true; }); markUsed();
+    S.lastInput = now(); TURN++; sfx('confirm');
+    if (S.typing) S.skip = true;
+    if (c.id) push('sm_monk_step', {sm_step:c.id, sm_value:c.v != null ? c.v : c.l});
+    if (c.echo !== false) newTurn('Du: ' + c.l); else newTurn();
+    go(c.f || (() => navTo(c.href, c.cue, c.say)));
+  });
+  /* Vorladen, sobald ein Knopf angepeilt wird (Zeiger, Finger, Tastatur): das Regal liegt beim Klick schon bereit */
+  if (c.pre){ const pf = () => { if (!b._pre){ b._pre = 1; c.pre(); } }; ['pointerenter', 'touchstart', 'focus'].forEach(ev => b.addEventListener(ev, pf, {passive:true})); }
+  return b;
+}
+/* Gekürzte Beschriftungen (mehr als zwei Zeilen) tragen den vollen Wortlaut im title */
+function chipTitles(host){ $$('.smmk-ch', host).forEach(b => { const s = $('.l', b); if (s && b._l && s.scrollHeight > s.clientHeight + 1) b.title = b._l; }); }
+function navBtn(dir, both, fn){
+  const b = h('button', 'smmk-ch nav ' + dir); b.type = 'button';
+  /* Sichtbarer Text ist der Name; nur der reine Pfeil (neben „Mehr zeigen“) bekommt ein aria-label */
+  if (dir === 'prev'){ b.innerHTML = ICO.arrow + (both ? '' : '<span class="l">Vorherige</span>'); if (both) b.setAttribute('aria-label', 'Vorherige'); }
+  else b.innerHTML = '<span class="l">Mehr zeigen</span>';
+  b.addEventListener('click', () => { if (b.disabled) return; markUsed(); S.lastInput = now(); sfx('tick'); fn(); });
+  return b;
+}
+function chipPage(host, btns, pg, o){
+  const per = CH_MAX - 1, pages = Math.ceil(btns.length / per); pg = Math.max(0, Math.min(pages - 1, pg));
+  host.innerHTML = '';
+  btns.slice(pg * per, pg * per + per).forEach(b => host.append(b));
+  const cell = h('div', 'smmk-pg'), both = pg > 0 && pg < pages - 1;
+  if (pg > 0) cell.append(navBtn('prev', both, () => chipPage(host, btns, pg - 1, {user:1})));
+  if (pg < pages - 1) cell.append(navBtn('next', both, () => chipPage(host, btns, pg + 1, {user:1})));
+  host.append(cell);
+  host.setAttribute('aria-label', 'Antworten, Seite ' + (pg + 1) + ' von ' + pages);
+  if (o && o.user){ announce('Antworten, Seite ' + (pg + 1) + ' von ' + pages); focusFirst(host); }
+  requestAnimationFrame(() => { chipTitles(host); scrollBody(); });
+}
 function choices(list, o){
   o = o || {}; const host = o.host || choicesEl;
   choicesEl.innerHTML = ''; host.innerHTML = '';
-  list.filter(Boolean).forEach(c => {
-    const lk = c.link || (c.link !== 0 && !c.pri && EXITS.test(c.l));
-    const b = h('button', 'smmk-ch' + (lk ? ' lk' : '') + (c.pri ? ' pri' : '')); b.type = 'button'; b.textContent = c.l;
-    b.addEventListener('click', () => {
-      if (b.disabled) return; $$('.smmk-ch', host).forEach(x => { x.disabled = true; }); markUsed();
-      S.lastInput = now(); TURN++; sfx('confirm');
-      if (S.typing) S.skip = true;
-      if (c.id) push('sm_monk_step', {sm_step:c.id, sm_value:c.v != null ? c.v : c.l});
-      if (c.echo !== false) newTurn('Du: ' + c.l); else newTurn();
-      go(c.f || (() => navTo(c.href, c.cue, c.say)));
-    });
-    /* Vorladen, sobald ein Knopf angepeilt wird (Zeiger, Finger, Tastatur): das Regal liegt beim Klick schon bereit */
-    if (c.pre){ const pf = () => { if (!b._pre){ b._pre = 1; c.pre(); } }; ['pointerenter', 'touchstart', 'focus'].forEach(ev => b.addEventListener(ev, pf, {passive:true})); }
-    host.append(b);
-  });
+  const L = list.filter(Boolean), btns = L.map(c => chipBtn(c, host)), paged = btns.length > CH_MAX;
+  host.classList.toggle('pg', paged); host.classList.remove('c2'); host.setAttribute('aria-label', 'Antworten');
+  if (paged){
+    /* Desktop: drei Spalten. Passt eine Beschriftung dort nicht in zwei Zeilen, bleibt die ganze Liste zweispaltig. */
+    if (!S.mobile && boxOn()){ btns.forEach(b => host.append(b)); if (btns.some(b => { const s = $('.l', b); return s.scrollHeight > s.clientHeight + 1; })) host.classList.add('c2'); }
+    chipPage(host, btns, 0);
+  } else { btns.forEach(b => host.append(b)); requestAnimationFrame(() => chipTitles(host)); }
   S.lastInput = now(); chDots = false;
-  host.classList.toggle('many', list.filter(Boolean).length > 8);
   requestAnimationFrame(scrollBody);
   if (!S.mobile && list.length && boxOn()){ const r = vr(choicesEl); glance(r.x + r.w / 2, 600); }
   if (o.focus !== false && list.length) focusFirst(host);
@@ -1279,17 +1311,23 @@ function showBtn(p, label){
   b.setAttribute('aria-label', 'Zeig es mir: ' + p.t); b.addEventListener('click', () => showIt(p, b)); return b;
 }
 /* Zeile: Handy und schmale Desktop-Leiste */
+/* Produktbilder immer quadratisch anfragen (gleiche Breite und Höhe). Ohne crop passt das CDN das Bild ein und schneidet nichts ab. */
+function sqImg(u, n){
+  u = String(u || ''); if (!u) return '';
+  const i = u.indexOf('?'), q = (i < 0 ? '' : u.slice(i + 1)).split('&').filter(x => x && !/^(width|height|crop|pad_color)=/.test(x));
+  return (i < 0 ? u : u.slice(0, i)) + '?' + q.concat('width=' + n, 'height=' + n).join('&');
+}
 function rowEl(p, a){
   const r = h('div', 'smmk-row'), why = whyLine(p, a);
   r.dataset.h = p.h;
-  r.innerHTML = `${p.i ? `<img class="im" src="${esc(p.i)}" alt="" width="56" height="56">` : '<span class="im" aria-hidden="true"></span>'}<div><b>${esc(p.t)}</b><small>${metaHtml(p)}</small>${moreHtml(p)}${why ? `<small class="smmk-eb">${esc(why)}</small>` : ''}</div>`;
+  r.innerHTML = `${p.i ? `<img class="im" src="${esc(sqImg(p.i, 400))}" alt="" width="56" height="56">` : '<span class="im" aria-hidden="true"></span>'}<div><b title="${esc(p.t)}">${esc(p.t)}</b><small>${metaHtml(p)}</small>${moreHtml(p)}${why ? `<small class="smmk-eb" title="${esc(why)}">${esc(why)}</small>` : ''}</div>`;
   r.append(showBtn(p)); return r;
 }
 /* Karte: Bild, Typ, Titel, Preiszeile, Grund, höchstens ein Abzeichen, Knopf */
 function cardEl(p, a){
   const c = h('div', 'smmk-card'), why = whyLine(p, a), bdg = badgeOf(p, why), ty = typeOf(p);
   c.dataset.h = p.h;
-  c.innerHTML = `${p.i ? `<img class="im" src="${esc(p.i)}" alt="" width="168" height="126">` : '<span class="im" aria-hidden="true"></span>'}<div class="in">${ty ? `<span class="smmk-ty">${esc(ty)}</span>` : ''}<b class="ti">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span>${moreHtml(p)}${why ? `<span class="smmk-eb">${esc(why)}</span>` : ''}${bdg ? `<span class="smmk-bdg">${esc(bdg)}</span>` : ''}</div>`;
+  c.innerHTML = `${p.i ? `<img class="im" src="${esc(sqImg(p.i, 400))}" alt="" width="168" height="168">` : '<span class="im" aria-hidden="true"></span>'}<div class="in">${ty ? `<span class="smmk-ty" title="${esc(ty)}">${esc(ty)}</span>` : ''}<b class="ti" title="${esc(p.t)}">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span>${moreHtml(p)}${why ? `<span class="smmk-eb" title="${esc(why)}">${esc(why)}</span>` : ''}${bdg ? `<span class="smmk-bdg">${esc(bdg)}</span>` : ''}</div>`;
   $('.in', c).append(showBtn(p, 'Zeig es mir')); return c;
 }
 /* Zeigt der Besucher auf eine Karte, schaut der Mönch hin; eine Glühbirne höchstens einmal je Karte */
@@ -2191,7 +2229,7 @@ async function emptyCart(){
 /* ---------- Item get: nach einem Klick auf den Mönch landet etwas im Warenkorb ---------- */
 let floatTile = null, propEl = null, pendingGet = null;
 /* Bilder aus /cart.js zeigen auf cdn.shopify.com: auf den eigenen /cdn/shop-Pfad umschreiben, damit nichts an Dritte geht */
-function sameOrigin(u){ u = String(u || '').replace(/^(https?:)?\/\/cdn\.shopify\.com\/s\/files\/\d+\/\d+\/\d+\/\d+\//, '/cdn/shop/'); return /^\//.test(u) && !/^\/\//.test(u) ? u + (u.includes('?') ? '&' : '?') + 'width=160' : ''; }
+function sameOrigin(u){ u = String(u || '').replace(/^(https?:)?\/\/cdn\.shopify\.com\/s\/files\/\d+\/\d+\/\d+\/\d+\//, '/cdn/shop/'); return /^\//.test(u) && !/^\/\//.test(u) ? sqImg(u, 160) : ''; }
 function realCount(cart){ return (cart.items || []).filter(i => !HELPER_TYPE.test(i.product_type || '') && !HELPER_HANDLE.test(i.handle || '')).reduce((s, i) => s + (i.quantity || 0), 0); }
 let cartT = 0, cartBusy = false;
 function cartSoon(){ if (!S.used) return; clearTimeout(cartT); cartT = setTimeout(checkCart, 700); }
@@ -2469,7 +2507,7 @@ function cardImg(u){
   const rest = m[1];
   if (/%(2e|2f|5c)/i.test(rest) || rest.split('/').some(x => !x || /^\.+$/.test(x))) return '';
   let x; try { x = new URL('/cdn/shop/' + rest, location.origin); } catch (e) { return ''; }
-  return x.origin === location.origin && x.pathname === '/cdn/shop/' + rest ? x.pathname + '?width=400' : '';
+  return x.origin === location.origin && x.pathname === '/cdn/shop/' + rest ? x.pathname + '?width=400&height=400' : '';
 }
 
 /* ---------- Antwort des Servers in die Form des Mönchs ---------- */

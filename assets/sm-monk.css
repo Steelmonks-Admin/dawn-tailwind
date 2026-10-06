@@ -47,8 +47,9 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-flash{position:absolute;left:0;top:0;width:6px;height:6px;background:#fff;z-index:33;box-shadow:6px 0 #fff,-6px 0 #fff,0 6px #fff,0 -6px #fff,0 0 0 3px rgba(255,107,31,.5)}
 #smMonk .smmk-ring{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border:3px solid #ff6b1f;z-index:33}
 #smMonk .smmk-prop{position:absolute;z-index:19;image-rendering:pixelated;transform-origin:50% 100%;max-width:none}
-#smMonk .smmk-floaty{position:absolute;left:0;top:0;z-index:28;width:72px;height:56px;border:3px solid var(--frame);background:#fff;overflow:hidden}
-#smMonk .smmk-floaty img{width:100%;height:100%;object-fit:cover;display:block}
+/* Kachel quadratisch wie die Shop-Bilder; left und top halten die Mitte der früheren 72 x 56 Kachel */
+#smMonk .smmk-floaty{position:absolute;left:4px;top:-4px;z-index:28;width:64px;height:64px;border:3px solid var(--frame);background:#e9e7e0;overflow:hidden}
+#smMonk .smmk-floaty img{width:100%;height:100%;object-fit:contain;display:block}
 
 /* Dialogbox: Nachtfläche mit gestuften Pixelecken */
 /* Box ist ein nicht modaler <dialog>: Browser-Vorgaben zurücksetzen, Lage und Farben kommen von unten */
@@ -80,29 +81,33 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-menu button:hover{background:var(--anth2)}
 #smMonk .smmk-menu .st{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--txt2)}
 #smMonk .smmk-menu [aria-checked="true"] .st{color:var(--laser)}
-#smMonk .smmk-body{overflow-y:auto;padding:12px 18px 6px;line-height:1.5;min-height:46px;flex:1 1 auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent;outline:none}
+#smMonk .smmk-body{overflow-y:auto;padding:12px 18px 6px;line-height:1.5;min-height:46px;flex:1 999 auto;overflow-wrap:break-word;scrollbar-width:thin;scrollbar-color:#4f5458 transparent;outline:none}
 #smMonk .smmk-body.fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 4px,#000 26px);mask-image:linear-gradient(to bottom,transparent 0,transparent 4px,#000 26px)}
-#smMonk .smmk-line{margin:0 0 8px;white-space:pre-wrap;font-size:inherit;color:var(--txt)}
+#smMonk .smmk-line{margin:0 0 8px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:inherit;color:var(--txt)}
 #smMonk .smmk-line.old{color:var(--txt2)}
 #smMonk .smmk-src{margin:-2px 0 8px;font:500 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--txt2)}
 #smMonk .smmk-src a{color:var(--blueL);text-decoration:underline;text-underline-offset:2px;pointer-events:auto}
-#smMonk .smmk-echo{display:flex;justify-content:flex-end;margin:2px 4px 10px}
-#smMonk .smmk-echo span{background:#0044cc;color:#fff;font-size:13.5px;line-height:1.35;padding:6px 12px;box-shadow:-4px 0 0 -2px #0044cc,4px 0 0 -2px #0044cc}
+#smMonk .smmk-echo{display:flex;justify-content:flex-end;margin:2px 4px 10px;min-width:0}
+#smMonk .smmk-echo span{min-width:0;max-width:100%;overflow-wrap:anywhere;background:#0044cc;color:#fff;font-size:13.5px;line-height:1.35;padding:6px 12px;box-shadow:-4px 0 0 -2px #0044cc,4px 0 0 -2px #0044cc}
 #smMonk .smmk-adv{position:absolute;right:16px;bottom:8px;font:700 12px/1 var(--mono);color:var(--laser);opacity:0;animation:smmk-advb .8s steps(1,end) infinite}
 #smMonk .smmk-box.wait .smmk-adv{opacity:1}
 @keyframes smmk-advb{0%{transform:translateY(0)}50%{transform:translateY(2px)}}
 
-/* Antworten: eine Chip-Sprache */
-#smMonk .smmk-choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));align-content:start;gap:8px;padding:6px 16px 14px;flex:0 0 auto;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent}
-/* Lange Listen (weitere Gruppen): kompakter, drei Spalten am Desktop, scrollt in der Box */
-#smMonk .smmk-choices.many{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex-shrink:1}
-#smMonk .smmk-choices.many .smmk-ch{min-height:34px;padding:6px 8px;font-size:13px}
-#smMonk.m .smmk-choices.many{grid-template-columns:repeat(2,minmax(0,1fr))}
-#smMonk.m .smmk-choices.many .smmk-ch{min-height:40px}
+/* Antworten: eine Chip-Sprache. Höchstens sechs Felder auf einmal (sm-monk.js blättert), zwei Spalten.
+   Der Text darüber gibt zuerst Platz ab (flex-shrink der .smmk-body), die Knöpfe rutschen nie hinter das Eingabefeld. */
+#smMonk .smmk-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:8px;padding:6px 16px 14px;flex:0 1 auto;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#4f5458 transparent}
+/* Geblätterte Listen am Desktop: drei Spalten, zwei Reihen. Mit .c2 (eine Beschriftung passt dort nicht) zwei Spalten wie sonst. */
+#smMonk:not(.m) .smmk-choices.pg:not(.c2){grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#smMonk:not(.m) .smmk-choices.pg:not(.c2) > *{grid-column:auto}
+#smMonk:not(.m) .smmk-choices.pg:not(.c2) .smmk-ch{padding:6px 8px;font-size:13px}
+#smMonk:not(.m) .smmk-choices.pg:not(.c2) .smmk-pg{gap:6px}
+#smMonk:not(.m) .smmk-choices.pg:not(.c2) .smmk-ch.prev:not(:only-child){flex-basis:30px}
 #smMonk .smmk-choices:empty{display:none;min-height:0}
-#smMonk .smmk-ch{position:relative;display:inline-flex;align-items:center;justify-content:center;text-align:center;margin:0;padding:9px 16px;min-height:40px;border:0;border-radius:0;background:var(--anth);color:var(--txt);font-weight:600;font-size:14px;line-height:1.25;cursor:pointer;text-decoration:none;
+#smMonk .smmk-ch{position:relative;display:inline-flex;align-items:center;justify-content:center;text-align:center;margin:0;padding:9px 16px;min-width:0;max-width:100%;min-height:40px;height:auto;max-height:none;border:0;border-radius:0;background:var(--anth);color:var(--txt);font-weight:600;font-size:14px;line-height:1.25;white-space:normal;cursor:pointer;text-decoration:none;
   box-shadow:-2px 0 0 #4f5458,2px 0 0 #4f5458,0 -2px 0 #4f5458,0 2px 0 #4f5458;transition:background .15s}
-#smMonk .smmk-ch:last-child:nth-child(odd){grid-column:1/-1}
+/* Beschriftung: höchstens zwei Zeilen, danach Auslassungspunkte (voller Wortlaut im title); lange Wörter brechen um. Der Knopf wächst mit. */
+#smMonk .smmk-ch .l{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;overflow-wrap:anywhere;min-width:0;max-width:100%}
+#smMonk .smmk-ch:last-child:nth-child(odd),#smMonk .smmk-pg:last-child:nth-child(odd){grid-column:1/-1}
 #smMonk .smmk-ch::before{content:"\25B6";position:absolute;left:5px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;opacity:0;color:var(--laser)}
 #smMonk .smmk-ch:hover{background:var(--anth2)}
 #smMonk .smmk-ch:hover::before,#smMonk .smmk-ch:focus::before{opacity:1;animation:smmk-curs .6s steps(1,end) infinite}
@@ -113,6 +118,14 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-ch.pri::before{color:#fff}
 #smMonk .smmk-ch.lk{background:transparent;color:var(--txt);box-shadow:inset 0 0 0 1px rgba(238,240,242,.18);text-decoration:none;font-weight:500;font-size:13.5px}
 #smMonk .smmk-ch.lk:hover{box-shadow:inset 0 0 0 1px #eef0f2;background:transparent}
+/* Blätterfeld: letztes Feld der Seite, „Mehr zeigen“ und ab Seite 2 der Weg zurück; leiser als die Antworten */
+#smMonk .smmk-pg{display:flex;gap:8px;min-width:0}
+#smMonk .smmk-ch.nav{flex:1 1 0;gap:6px;padding-left:8px;padding-right:8px;background:transparent;color:var(--blueL);font-weight:600;box-shadow:inset 0 0 0 2px #4f5458}
+#smMonk .smmk-ch.nav:hover{background:var(--anth)}
+#smMonk .smmk-ch.nav::before{display:none}
+#smMonk .smmk-ch.nav svg{width:14px;height:14px;image-rendering:pixelated;shape-rendering:crispEdges}
+#smMonk .smmk-ch.prev svg{transform:rotate(180deg)}
+#smMonk .smmk-ch.prev:not(:only-child){flex:0 0 44px;padding:0}
 @keyframes smmk-curs{0%{transform:translateX(0)}50%{transform:translateX(2px)}}
 #smMonk .smmk-note{font-size:11.5px;color:var(--txt2);padding:0 14px 10px;margin:-4px 0 0}
 /* Fokus: sichtbarer Ring, der Laser-Zeiger bleibt zusätzlich */
@@ -124,7 +137,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-compose{position:relative;padding:0 16px 14px;margin:0}
 #smMonk .smmk-compose[hidden]{display:none}
 #smMonk .smmk-compose input{display:block;width:100%;height:44px;margin:0;border-radius:999px;border:1px solid rgba(238,240,242,.18);background:rgba(238,240,242,.06);color:var(--txt);padding:0 52px 0 18px;font-size:16px;box-shadow:none;outline:none}
-#smMonk .smmk-compose input::placeholder{color:var(--txt2);opacity:1}
+#smMonk .smmk-compose input::placeholder{color:var(--txt2);opacity:1;text-overflow:ellipsis}
+#smMonk .smmk-compose input:placeholder-shown{text-overflow:ellipsis}
 #smMonk .smmk-compose input:focus-visible{outline:2px solid #6f9bff;outline-offset:2px}
 #smMonk .smmk-compose button{position:absolute;right:20px;top:4px;display:grid;place-items:center;width:36px;height:36px;padding:0;margin:0;border:0;border-radius:50%;background:var(--blau);color:#fff;cursor:pointer;box-shadow:none}
 #smMonk .smmk-compose button:hover{background:var(--blauH)}
@@ -142,24 +156,26 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-tray.col .smmk-row{grid-template-columns:40px minmax(0,1fr) 40px;gap:8px;padding:6px 6px 6px 8px;box-shadow:0 0 0 1px rgba(11,12,14,.08),0 18px 40px -22px rgba(0,0,0,.55)}
 #smMonk .smmk-tray.col .smmk-row .im{width:40px;height:40px;align-self:start;margin-top:4px}
 #smMonk .smmk-tray.col .smmk-row .smmk-show{width:40px;height:40px;min-height:40px}
-#smMonk .smmk-tray.col .smmk-row small.smmk-eb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #smMonk .smmk-tray.col .smmk-price{white-space:nowrap}
 #smMonk .smmk-card{position:relative;width:var(--cw,180px);background:var(--paper);color:#0b0c0e;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;font-size:13px;line-height:1.35;
   box-shadow:0 0 0 1px rgba(11,12,14,.08),0 1px 0 rgba(0,0,0,.04),0 18px 40px -22px rgba(0,0,0,.55)}
-#smMonk .smmk-card .im{display:block;width:calc(100% - 12px);height:auto;aspect-ratio:4/3;margin:6px 6px 0;border-radius:10px;object-fit:cover;background:#e9e7e0}
-#smMonk .smmk-card .in{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
-#smMonk .smmk-ty{display:block;font:500 10.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6b7176}
+/* Bilder quadratisch wie im Shop, immer ganz zu sehen (contain): nichts wird abgeschnitten, auch nicht bei einem nicht quadratischen Bild */
+#smMonk .smmk-card .im{display:block;width:calc(100% - 12px);height:auto;aspect-ratio:1/1;margin:6px 6px 0;border-radius:10px;object-fit:contain;background:#e9e7e0}
+#smMonk .smmk-card .in{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;overflow-wrap:anywhere}
+#smMonk .smmk-ty{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:500 10.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6b7176}
 #smMonk .smmk-up{display:block;font-size:11.5px;line-height:1.3;color:#6b7176}
 #smMonk .smmk-row small.smmk-up{font-size:11.5px;color:#6b7176}
 #smMonk :is(.smmk-card,.smmk-row){transition:transform .12s steps(2,end),box-shadow .12s steps(2,end)}
 #smMonk :is(.smmk-card,.smmk-row).hov{transform:translateY(-4px);box-shadow:0 0 0 1px rgba(11,12,14,.12),0 26px 48px -20px rgba(0,0,0,.65)}
-#smMonk .smmk-card b.ti{font-size:14.5px;line-height:1.25;font-weight:600;margin:0;display:block}
+#smMonk .smmk-card b.ti{font-size:14.5px;line-height:1.25;font-weight:600;margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;flex:none}
+/* Grund auf der Karte: höchstens zwei Zeilen (in den Zeilen weiter unten eine) */
+#smMonk .smmk-card .smmk-eb{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;flex:none}
 #smMonk .smmk-meta{display:block;font-size:12.5px;color:#4f5458}
 #smMonk .smmk-rt{white-space:nowrap}
 #smMonk .smmk-price{font-weight:600;color:#0b0c0e}
 #smMonk .smmk-star{color:#db6b22}
 #smMonk .smmk-eb{display:block;font:500 10.9px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#b4540f}
-#smMonk .smmk-bdg{display:inline-flex;align-self:flex-start;align-items:center;font:500 10.9px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:.28em .6em;border-radius:7px;background:#e7eeff;color:#0036a3;margin:2px 0 0}
+#smMonk .smmk-bdg{display:block;align-self:flex-start;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none;font:500 10.9px/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:.28em .6em;border-radius:7px;background:#e7eeff;color:#0036a3;margin:2px 0 0}
 #smMonk .smmk-bdg.fav{background:#fff1e8;color:#9a3d06}
 #smMonk .smmk-taxl{display:block;font-size:11.5px;color:var(--txt2);margin:0 0 8px}
 #smMonk .smmk-taxl a{color:inherit;text-decoration:underline;text-underline-offset:2px;pointer-events:auto}
@@ -171,11 +187,11 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 /* Zeilen (Handy und schmale Desktop-Leiste) */
 #smMonk .smmk-rows{display:grid;gap:8px;margin:2px 0 8px}
 #smMonk .smmk-row{position:relative;display:grid;grid-template-columns:56px minmax(0,1fr) 44px;gap:12px;align-items:center;padding:8px;border:0;border-radius:14px;background:var(--paper);color:#0b0c0e}
-#smMonk .smmk-row .im{width:56px;height:56px;border-radius:10px;object-fit:cover;display:block;background:#e9e7e0}
-#smMonk .smmk-row > div{min-width:0}
+#smMonk .smmk-row .im{width:56px;height:56px;border-radius:10px;object-fit:contain;display:block;background:#e9e7e0}
+#smMonk .smmk-row > div{min-width:0;overflow-wrap:anywhere}
 #smMonk .smmk-row b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:14px;line-height:1.3;font-weight:600}
 #smMonk .smmk-row small{display:block;font-size:12.5px;line-height:1.35;color:#4f5458;margin-top:1px}
-#smMonk .smmk-row small.smmk-eb{font-size:10.9px;color:#b4540f}
+#smMonk .smmk-row small.smmk-eb{font-size:10.9px;color:#b4540f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #smMonk .smmk-row .smmk-show{width:44px;height:44px;min-height:44px;padding:0;margin:0;border-radius:999px;background:var(--blau);align-self:center;box-shadow:0 10px 22px -14px rgba(0,68,204,.9)}
 #smMonk .smmk-row .smmk-show:hover{background:var(--blauH)}
 #smMonk .smmk-row .smmk-show svg{width:18px;height:18px}
@@ -216,6 +232,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
   background:radial-gradient(360px 300px at -80px -60px,rgba(0,68,204,.42),rgba(0,68,204,0)),#0b0c0e;color:var(--txt);border-radius:20px 20px 0 0;
   box-shadow:0 -1px 0 0 rgba(238,240,242,.14),0 -24px 60px -20px rgba(0,0,0,.55)}
 #smMonk.m .smmk-box:has(.smmk-compose:not([hidden])){min-height:250px}
+/* Niedrige Handys (bis 600 px Höhe): 62 % reichen nicht für sechs Antworten und das Eingabefeld, das Sheet darf bis 372 px hoch werden */
+@media (min-height:480px) and (max-height:600px){#smMonk.m .smmk-box{max-height:min(372px,calc(100% - var(--lift) - var(--kb,0px) - 16px))}}
 #smMonk.m .smmk-box::after{content:"";position:absolute;left:50%;top:8px;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:rgba(238,240,242,.22)}
 #smMonk.m .smmk-hav{display:block;position:absolute;left:14px;top:18px;width:36px;height:36px;border-radius:50%;background:#0044cc url(sm-pxm_lupe.webp) no-repeat -20px -14px/66px 120px;image-rendering:pixelated}
 #smMonk.m .smmk-plate{left:58px;top:23px}
@@ -230,8 +248,9 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-menu{top:58px;right:8px}
 #smMonk.m .smmk-body{margin-top:62px;padding:4px 16px 0}
 #smMonk.m .smmk-line{margin-bottom:6px}
-#smMonk.m .smmk-choices{grid-template-columns:1fr 1fr;padding:6px calc(16px + var(--tsw,0px)) 12px 16px}
-/* Ecke des Trusted-Shops-Badges bleibt frei: Knopfbereich mindestens so hoch wie die Ecke, rechts eingerückt */
+#smMonk.m .smmk-choices{padding:6px calc(16px + var(--tsw,0px)) 12px 16px}
+/* Das Trusted-Shops-Badge tritt am Handy zurück, solange das Sheet offen ist (ganz unten). Nur falls ein Badge ohne die
+   bekannte Hülle trotzdem stehen bleibt, hält --tsw/--tsh seine Ecke frei: Knopfbereich mindestens so hoch, rechts eingerückt */
 #smMonk.m .smmk-box:has(.smmk-compose[hidden]) .smmk-choices:not(:empty){min-height:var(--tsh,0px)}
 #smMonk.m .smmk-compose{padding-right:calc(16px + var(--tsw,0px))}
 #smMonk.m .smmk-compose button{right:calc(20px + var(--tsw,0px))}
@@ -243,8 +262,9 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-row .im{width:48px;height:48px}
 #smMonk.m .smmk-row b{font-size:13.5px}
 #smMonk.m .smmk-row small{font-size:12px}
-#smMonk.m .smmk-ch{min-height:44px;padding:6px 10px;font-size:13.5px;line-height:1.15}
-#smMonk.m .smmk-row small.smmk-eb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 14 px seitlich: der Laser-Zeiger (links) liegt auch bei voller Zeile nicht auf dem Text */
+#smMonk.m .smmk-ch{min-height:44px;padding:6px 14px;font-size:13.5px;line-height:1.2}
+#smMonk.m .smmk-ch.nav{padding-left:8px;padding-right:8px}
 #smMonk.m .smmk-compose{margin-top:auto}
 
 /* Testmarke nur in KI-Testsitzungen (Handy und Desktop); der geskriptete Mönch zeigt keine */
@@ -287,7 +307,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-sign figcaption{margin:8px 0 0;font:500 10.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--txt2)}
 /* Paketweg: vier Stationen, die erreichten mit Laserstrich */
 #smMonk .smmk-parcel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;list-style:none;margin:2px 0 10px;padding:0}
-#smMonk .smmk-parcel li{margin:0;padding:7px 4px;text-align:center;font:500 10.5px/1.25 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--txt2);background:var(--anth);box-shadow:inset 0 -3px 0 #4f5458}
+#smMonk .smmk-parcel li{margin:0;padding:7px 4px;min-width:0;overflow-wrap:anywhere;text-align:center;font:500 10.5px/1.25 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--txt2);background:var(--anth);box-shadow:inset 0 -3px 0 #4f5458}
 #smMonk .smmk-parcel li.on{color:var(--txt);box-shadow:inset 0 -3px 0 var(--laser)}
 #smMonk .smmk-parcel li[aria-current]{background:var(--anth2)}
 /* Karten ohne Bild (Server-Karte ohne eigenes Bild): ruhige Fläche statt leerem Bild */
@@ -309,5 +329,8 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 @media (prefers-reduced-motion: reduce){#smMonk .smmk-actor .bob,#smMonk .smmk-ch::before,#smMonk .smmk-adv,.smmk-spot::after{animation:none!important}#smMonk .smmk-ch:active{transform:none}}
 html.smmk-out [data-smr-monk],html.smmk-out [data-smr-mmonk],html.smmk-out .smmk-404{visibility:hidden}
 html.smmk-sheet #smNlTz{visibility:hidden!important}
+/* Handy: solange das Sheet offen ist (Klasse smmk-sheet setzt sm-monk.js), liegt das Trusted-Shops-Badge nicht über dem Dialog.
+   Beim Schließen fällt die Klasse weg und das Badge steht wieder da. Das Badge-Skript bleibt unberührt. */
+html.smmk-sheet [id^="trustbadge-container"]{display:none!important}
 /* FAQ-Seite: gedrückter Themen-Chip blieb weiß auf weiß; nur solange der Mönch draußen ist, live-CSS bleibt unberührt */
 html.smmk-out #ftFaqC .chip[aria-pressed="true"]{background:#0b0c0e;color:#fff;border-color:#0b0c0e}
