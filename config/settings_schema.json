@@ -1484,9 +1484,33 @@
       {
         "type": "checkbox",
         "id": "sm_monk_enabled",
-        "label": "Bruder Funke anzeigen (Testversion)",
-        "info": "Schaltet den Mönch und alle Einstiege ein. Testversion ohne KI und ohne Backend. Im Live-Theme aus lassen.",
+        "label": "Bruder Funke anzeigen",
+        "info": "Schaltet den Mönch und alle Einstiege ein. Ohne Adresse für den KI-Dienst hilft er nur mit Knöpfen, ohne KI und ohne Backend.",
         "default": false
+      },
+      {
+        "type": "text",
+        "id": "sm_monk_ai_url",
+        "label": "KI-Dienst: Adresse",
+        "info": "Adresse des Dienstes cs-assistant, zum Beispiel https://cs-assistant.onrender.com (ohne /assistant/v1). Leer: Bruder Funke bleibt rein geskriptet wie bisher."
+      },
+      {
+        "type": "select",
+        "id": "sm_monk_ai_mode",
+        "label": "KI-Dienst: für wen",
+        "options": [
+          {"value": "test", "label": "Nur mit Testcode"},
+          {"value": "live", "label": "Für alle Besucher"},
+          {"value": "off", "label": "Aus (nur Knöpfe)"}
+        ],
+        "default": "test",
+        "info": "Testcode: die Seite einmal mit #monk=test-CODE öffnen (oder ?monk_test=CODE). Der Code bleibt nur in diesem Tab, ?monk_test=aus löscht ihn. Ob der Dienst antwortet, steuert zusätzlich das CS-Dashboard."
+      },
+      {
+        "type": "text",
+        "id": "sm_monk_turnstile_key",
+        "label": "Cloudflare Turnstile: Site Key",
+        "info": "Öffentlicher Site Key. Nur nötig, wenn der KI-Dienst Turnstile verlangt (Weitergabe an das Team). Ohne Key bietet der Mönch dann die Kontaktseite an."
       }
     ]
   }

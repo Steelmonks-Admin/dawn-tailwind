@@ -1,4 +1,4 @@
-/* Bruder Funke (Testversion, ohne KI): Bühne, Dialogbox, Kartenstapel, Laser, Spotlight. Lädt erst nach dem ersten Klick.
+/* Bruder Funke: Bühne, Dialogbox, Kartenstapel, Laser, Spotlight, im KI-Modus auch Formulare und Schild-Vorschau. Lädt erst nach dem ersten Klick.
    Nachtfarben und zwei Akzente: Blau (#0044cc) für Wege und Fokus, Laser (#ff6b1f) für Name, Zeiger und Strahl. */
 @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(sm-plexmono-500.woff2) format('woff2')}
 #smMonk{--night:#0b0c0e;--anth:#1d2225;--anth2:#2a3135;--txt:#eef0f2;--txt2:#aeb5bb;--frame:#4f5458;--paper:#f6f5f1;--blau:#0044cc;--blauH:#0a51e6;--blueL:#6f9bff;--laser:#ff6b1f;
@@ -120,7 +120,7 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk .smmk-ch.pri:focus-visible{outline-color:#eef0f2}
 #smMonk :is(.smmk-card,.smmk-row) :focus-visible{outline:2px solid #0044cc;outline-offset:2px}
 
-/* Eingabe für die kommende KI: bleibt mit hidden komplett aus dem Layout */
+/* Eingabe: KI-Modus (Freitext an den Server) oder Stichwortfeld mit ?moench_input=1; bleibt mit hidden komplett aus dem Layout */
 #smMonk .smmk-compose{position:relative;padding:0 16px 14px;margin:0}
 #smMonk .smmk-compose[hidden]{display:none}
 #smMonk .smmk-compose input{display:block;width:100%;height:44px;margin:0;border-radius:999px;border:1px solid rgba(238,240,242,.18);background:rgba(238,240,242,.06);color:var(--txt);padding:0 52px 0 18px;font-size:16px;box-shadow:none;outline:none}
@@ -246,6 +246,45 @@ html div.smmk-vh,html div.smmk-pad,#smMonk div.smmk-seg,#smMonk div.smmk-av{disp
 #smMonk.m .smmk-ch{min-height:44px;padding:6px 10px;font-size:13.5px;line-height:1.15}
 #smMonk.m .smmk-row small.smmk-eb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #smMonk.m .smmk-compose{margin-top:auto}
+
+/* KI-Modus: Testmarke nur in Testsitzungen */
+#smMonk.ai .smmk-tag{display:none!important}
+#smMonk.m.ai.aitest .smmk-tag{display:block!important}
+#smMonk.ai.aitest:not(.m) .smmk-plate .smmk-tag{display:block!important;height:18px;padding:0 6px;background:#0b0c0e;box-shadow:-2px 0 0 #4f5458,2px 0 0 #4f5458,0 -2px 0 #4f5458;font:500 9.5px/18px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--txt2)}
+#smMonk .smmk-compose.busy button{opacity:.55;cursor:progress}
+#smMonk .smmk-legal a{color:var(--blueL);text-decoration:underline;text-underline-offset:2px;pointer-events:auto}
+/* Formulare im Mönch: Bestellstatus und Weitergabe an das Team */
+#smMonk .smmk-form{display:grid;gap:10px;margin:2px 0 10px;padding:12px;background:rgba(238,240,242,.05);box-shadow:inset 0 0 0 1px rgba(238,240,242,.14)}
+#smMonk .smmk-f{display:grid;gap:4px;margin:0;color:var(--txt2)}
+#smMonk .smmk-f > span{font:500 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+#smMonk .smmk-form input:not([type=checkbox]),#smMonk .smmk-form textarea{display:block;width:100%;min-height:44px;margin:0;padding:9px 12px;border:1px solid rgba(238,240,242,.24);border-radius:0;background:#0b0c0e;color:var(--txt);font-family:inherit;font-size:16px;line-height:1.35;box-shadow:none;outline:none;resize:vertical}
+#smMonk .smmk-form textarea{min-height:64px}
+#smMonk .smmk-form :is(input,textarea):focus-visible{outline:2px solid #6f9bff;outline-offset:1px}
+#smMonk .smmk-form ::placeholder{color:#7d858b;opacity:1}
+#smMonk .smmk-form :is(input,textarea,button):disabled{opacity:.6}
+#smMonk .smmk-fnote{margin:0;font-size:12.5px;line-height:1.45;color:var(--txt2)}
+#smMonk .smmk-ferr{margin:0;font-size:13px;line-height:1.4;color:#ffb38a}
+#smMonk .smmk-ferr:empty{display:none}
+#smMonk .smmk-fok{display:flex;align-items:center;gap:10px;min-height:44px;margin:0;font-size:14px;line-height:1.35;color:var(--txt);cursor:pointer}
+#smMonk .smmk-fok input{flex:none;width:22px;height:22px;margin:0;accent-color:#0044cc;cursor:pointer}
+#smMonk .smmk-fok input:focus-visible{outline:2px solid #6f9bff;outline-offset:2px}
+#smMonk .smmk-form .smmk-ch{width:100%}
+#smMonk .smmk-ts:empty{display:none}
+#smMonk .smmk-oi{margin:-2px 0 8px;font-size:12.5px;line-height:1.4;color:var(--txt2)}
+/* Schild-Vorschau: der Text des Besuchers auf gebürstetem Stahl, Pixelrahmen und vier Schrauben */
+#smMonk .smmk-sign{margin:4px 0 10px;padding:0}
+#smMonk .smmk-sign .pl{position:relative;padding:16px 28px;text-align:center;color:#1d2225;font:600 16px/1.35 var(--mono);letter-spacing:.04em;
+  background:radial-gradient(circle at 10px 10px,#4f5458 2px,transparent 3px),radial-gradient(circle at calc(100% - 10px) 10px,#4f5458 2px,transparent 3px),radial-gradient(circle at 10px calc(100% - 10px),#4f5458 2px,transparent 3px),radial-gradient(circle at calc(100% - 10px) calc(100% - 10px),#4f5458 2px,transparent 3px),repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 2px,rgba(0,0,0,.05) 2px 4px),linear-gradient(160deg,#cfd4d8,#9aa1a7 55%,#bcc2c7);
+  box-shadow:-3px 0 0 #4f5458,3px 0 0 #4f5458,0 -3px 0 #4f5458,0 3px 0 #4f5458;text-shadow:0 1px 0 rgba(255,255,255,.6),0 -1px 0 rgba(0,0,0,.35)}
+#smMonk .smmk-sign span{display:block;overflow-wrap:anywhere}
+#smMonk .smmk-sign figcaption{margin:8px 0 0;font:500 10.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--txt2)}
+/* Paketweg: vier Stationen, die erreichten mit Laserstrich */
+#smMonk .smmk-parcel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;list-style:none;margin:2px 0 10px;padding:0}
+#smMonk .smmk-parcel li{margin:0;padding:7px 4px;text-align:center;font:500 10.5px/1.25 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--txt2);background:var(--anth);box-shadow:inset 0 -3px 0 #4f5458}
+#smMonk .smmk-parcel li.on{color:var(--txt);box-shadow:inset 0 -3px 0 var(--laser)}
+#smMonk .smmk-parcel li[aria-current]{background:var(--anth2)}
+/* Karten ohne Bild (Server-Karte ohne eigenes Bild): ruhige Fläche statt leerem Bild */
+#smMonk span.im{display:block}
 
 /* Klassische Ansicht */
 #smMonk.classic .smmk-actor,#smMonk.classic .smmk-shadow{display:none!important}

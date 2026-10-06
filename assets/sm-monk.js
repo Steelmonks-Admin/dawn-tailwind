@@ -1,7 +1,11 @@
-/* Bruder Funke, Testversion ohne KI und ohne Backend.
-   Lädt erst nach einem Klick auf einen Mönch-Einstieg (Loader in snippets/sm-monk.liquid).
-   Alles ist geskriptet: Knöpfe, echte Shopdaten aus /collections/<handle>?view=moench, keine Anfragen an Dritte.
-   Speicher: nur sessionStorage "smMonk", und erst nach einem Klick (Deep Links: erst nach der ersten Eingabe im Mönch). */
+/* Bruder Funke. Lädt erst nach einem Klick auf einen Mönch-Einstieg (Loader in snippets/sm-monk.liquid).
+   Ohne KI-Adresse (Theme-Einstellung sm_monk_ai_url) ist alles geskriptet: Knöpfe, echte Shopdaten aus
+   /collections/<handle>?view=moench, keine Anfragen an Dritte.
+   KI-Modus (Abschnitt "KI-Modus" unten): die geskripteten Abläufe bleiben, dazu Freitext, Bestellstatus und die Weitergabe
+   an das Team über den cs-assistant (/assistant/v1). Server- und Modelltext erscheint nur als Text (textContent), Links nur
+   nach Prüfung (safeHref), Navigation nur nach einem Klick.
+   Speicher: nur sessionStorage "smMonk", und erst nach einem Klick (Deep Links: erst nach der ersten Eingabe im Mönch).
+   Der Testcode liegt getrennt in sessionStorage "smMonkTc" (vom Loader). Eingaben in Formularen werden nie gespeichert. */
 (function () {
 'use strict';
 if (window.SMMK) return;
@@ -99,28 +103,35 @@ const LINES = {
 function line(k, fb){ const L = LINES[k]; if (!L) return fb || ''; return L[(SEED + k.length) % L.length]; }
 const audLine = a => LINES[a.l] ? line(a.l) : `Geschenke ${a.who}, gute Wahl.`;
 
-/* ---------- Versand: Zahlen wie auf /pages/fragen (Herstellung, DHL, Gratisversand, Vorlauf, kein Express) ---------- */
-const SHIP = {prod:[2, 5], dhl:[3, 5], free:9900, fee:495, weeks:4, express:false};
-const WD = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-const MO = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-function addWorkdays(d0, n){ const t = new Date(d0); t.setHours(12, 0, 0, 0); while (n > 0){ t.setDate(t.getDate() + 1); if (t.getDay() !== 0 && t.getDay() !== 6) n--; } return t; }
-function subWorkdays(d0, n){ const t = new Date(d0); t.setHours(12, 0, 0, 0); while (n > 0){ t.setDate(t.getDate() - 1); if (t.getDay() !== 0 && t.getDay() !== 6) n--; } return t; }
-const fmtDay = t => `${WD[t.getDay()]}, ${t.getDate()}. ${MO[t.getMonth()]}`;
+/* ---------- Zentrale Fakten: aus snippets/sm-fakt.liquid (key 'json', Shop-Metafelder steelmonks.fakt_*).
+   Die Grundwerte hier sind dieselben wie dort. Der Mönch nennt nie ein Lieferdatum, nur Werktage und den Versandtag. ---------- */
+const F = Object.assign({versandfertigMin:2, versandfertigMax:5, versandtag:'Freitag', entwurfMin:1, entwurfMax:2, sonderMin:7, sonderMax:10,
+  gratisversandAbCent:9900, versandSonderDeCent:495, versandSonderEuCent:1490, montageFreiAbCent:15000, befestigungssetPreisCent:945}, CTX.f && typeof CTX.f === 'object' ? CTX.f : {});
+const span = (a, b) => a === b ? String(a) : a + ' bis ' + b;
+/* wie sm-fakt *_werktagen: „in 2 bis 5 Werktagen“, „in 1 Werktag“ */
+const inWd = (a, b) => 'in ' + span(a, b) + (a === b && a === 1 ? ' Werktag' : ' Werktagen');
 const euro = c => (c / 100).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
-/* Lieferfenster ab heute in Werktagen (Montag bis Freitag) */
-function shipLine(){
-  const now = new Date(), a = addWorkdays(now, SHIP.prod[0] + SHIP.dhl[0]), b = addWorkdays(now, SHIP.prod[1] + SHIP.dhl[1]);
-  return `Wir fertigen meist in ${SHIP.prod[0]} bis ${SHIP.prod[1]} Werktagen, dann ist DHL in Deutschland ${SHIP.dhl[0]} bis ${SHIP.dhl[1]} Werktage unterwegs. Heute bestellt kommt es also meist zwischen ${fmtDay(a)} und ${fmtDay(b)} an.`;
-}
-function shipCost(){ return `Ab ${euro(SHIP.free).replace(',00', '')} ist der Versand gratis, darunter kostet er in Deutschland ${euro(SHIP.fee)}.`; }
-/* 1. November bis 24. Dezember: spätester Bestelltag für Weihnachten (oberes Ende von Fertigung plus Versand) */
+/* volle Euro ohne Nachkommastellen, wie sm-fakt: „99 €“ */
+const euroR = c => euro(c).replace(',00 €', ' €');
+/* Gutscheinbeträge wie auf der Gutscheinseite (snippets/sm-fp-gutschein.liquid, „Betrag wählen“); kein Fakt-Metafeld */
+const GUTSCHEIN = 'Gutscheine gibt es über 25, 50, 75, 100, 150 oder 200 €, einlösbar im ganzen Sortiment und gültig bis zum Ende des dritten Jahres nach dem Kauf.';
+const GUTSCHEIN_MIN_CENT = 2500;
+/* Shop-Artikel: versandfertig in Werktagen, verschickt am Versandtag, kein Datum */
+function shipLine(){ return `Shop-Artikel sind meist ${inWd(F.versandfertigMin, F.versandfertigMax)} versandfertig. Wir verschicken jeden ${F.versandtag} mit DHL. Einen festen Liefertermin sagen wir nicht zu.`; }
+function shipCost(){ return `Für Bestellungen im Shop ist der Versand ab ${euroR(F.gratisversandAbCent)} gratis, darunter siehst Du die Kosten im Warenkorb. Sonderanfertigungen kosten immer ${euro(F.versandSonderDeCent)} Versand in Deutschland und ${euro(F.versandSonderEuCent)} in die EU.`; }
+/* 1. November bis 24. Dezember: früh bestellen, ohne Datum */
 function xmasLine(){
-  const now = new Date(), y = now.getFullYear(), x = new Date(y, 11, 24, 12);
-  if (now < new Date(y, 10, 1) || now > x) return '';
-  const by = subWorkdays(x, SHIP.prod[1] + SHIP.dhl[1]);
-  return by < now ? 'Für Weihnachten wird es jetzt knapp, Express gibt es bei uns leider nicht.' : `Für Weihnachten bestell am besten bis ${fmtDay(by)}.`;
+  const now = new Date(), y = now.getFullYear();
+  if (now < new Date(y, 10, 1) || now > new Date(y, 11, 24, 23, 59)) return '';
+  return 'Für Weihnachten bestell lieber früh. Express gibt es bei uns nicht, für einen festen Termin frag bitte vorher unser Team.';
 }
-const noExpress = () => SHIP.express ? '' : `Express gibt es bei uns nicht. Für einen festen Termin bestell am besten ${SHIP.weeks} Wochen vorher.`;
+const noExpress = () => 'Express gibt es bei uns nicht. Brauchst Du es zu einem festen Termin, frag bitte vorher unser Team.';
+/* Sonderanfertigung: erster Entwurf, Fertigung nach Freigabe, nächster Versandtag, Versand immer bezahlt */
+function sonderLines(){
+  return [`Den ersten Entwurf bekommst Du meist ${inWd(F.entwurfMin, F.entwurfMax)}, bei aufwendigen Motiven dauert es länger.`,
+    `Nach Deiner Freigabe fertigen wir ${inWd(F.sonderMin, F.sonderMax)} und verschicken am nächsten ${F.versandtag} mit DHL.`,
+    `Bestellt wird über das Angebot unseres Teams, nicht im Warenkorb. Der Versand kostet ${euro(F.versandSonderDeCent)} in Deutschland und ${euro(F.versandSonderEuCent)} in die EU.`];
+}
 
 /* ---------- Zustand ---------- */
 const mqRM = matchMedia('(prefers-reduced-motion: reduce)');
@@ -145,6 +156,8 @@ function push(event, extra){
   const ev = Object.assign({event}, extra || {}, {sm_page_type:pageKind(), sm_turn:TURN});
   if (!S.used){ if (event === 'sm_monk_open') QUEUE.unshift(ev); else QUEUE.push(ev); if (QUEUE.length > 40) QUEUE.length = 40; return; }
   dl(ev);
+  if (event === 'sm_monk_step' && ev.sm_step) aiEvent('step', {step:String(ev.sm_step)});
+  else if (event === 'sm_monk_close') aiEvent('close', {outcome:String(ev.sm_outcome || 'none'), turns:+ev.sm_turns || 0});
 }
 function ecomm(event, list, items){
   push(event, {ecommerce:{item_list_id:'sm_monk', item_list_name:list, items:items.map((p, i) => ({item_id:p.h, item_name:p.t, item_variant:p.cv && p.cv.l ? fmtSize(p.cv.l) : '', index:p.idx != null ? p.idx : i, price:+(((p.cv ? p.cv.c : p.p) || 0) / 100).toFixed(2)}))}});
@@ -169,7 +182,6 @@ const vpW = () => d.documentElement.clientWidth || innerWidth;
 const vpH = () => innerHeight;
 const vis = e => !!(e && e.getClientRects().length && e.getBoundingClientRect().height > 0 && getComputedStyle(e).visibility !== 'hidden');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const eur = c => '€ ' + (c / 100).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
 /* '22.5cm' wird '22,5 cm' */
 const fmtSize = v => String(v || '').trim().replace(/(\d)\.(\d)/g, '$1,$2').replace(/(\d)\s*(cm|mm|m)\b/gi, '$1 $2');
 
@@ -400,8 +412,8 @@ function sting(kind){
 }
 
 /* ---------- Aufbau der Bühne (erst beim ersten Öffnen) ---------- */
-/* Statuszeile unter dem Namen. Mit der KI-Runde wird daraus 'KI-Assistent · kann sich irren'. */
-const STATUS = 'Testversion, noch ohne KI';
+/* Statuszeile unter dem Namen. Im KI-Modus mit Sitzung: STATUS_AI (applyAiUi). */
+const STATUS = 'Testversion, noch ohne KI', STATUS_AI = 'KI-Assistent · kann sich irren';
 const SVG = b => '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' + b + '</svg>';
 const SPK = '<path d="M2 6h3v-1h1v-1h1v-1h1v-1h2v12h-2v-1h-1v-1h-1v-1h-1v-1h-3z"/>';
 const ICO = {
@@ -411,7 +423,7 @@ const ICO = {
   close:SVG('<rect x="2" y="2" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="4" y="4" width="2" height="2"/><rect x="4" y="10" width="2" height="2"/><rect x="6" y="6" width="2" height="2"/><rect x="6" y="8" width="2" height="2"/><rect x="8" y="6" width="2" height="2"/><rect x="8" y="8" width="2" height="2"/><rect x="10" y="4" width="2" height="2"/><rect x="10" y="10" width="2" height="2"/><rect x="12" y="2" width="2" height="2"/><rect x="12" y="12" width="2" height="2"/>'),
   arrow:SVG('<path d="M1 7h9v-1h-1v-1h-1v-1h-1v-2h2v1h1v1h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-2h1v-1h1v-1h1v-1h-9z"/>')
 };
-const TAXL = 'Alle Preise inkl. MwSt., zzgl. <a href="/policies/shipping-policy">Versand</a>';
+const TAXL = 'Alle Preise inkl. MwSt., zzgl. <a href="/pages/versandbedingungen">Versand</a>';
 function build(){
   if (built) return; built = true;
   stage = h('div'); stage.id = 'smMonk';
@@ -1057,6 +1069,9 @@ async function speak(lines, o){
   lines = [].concat(lines).filter(Boolean);
   for (let i = 0; i < lines.length; i++){
     const L = typeof lines[i] === 'string' ? {t:lines[i]} : lines[i];
+    /* KI-Gruß: wartet höchstens kurz auf die Sitzung, der Text steht erst danach fest; leer heißt überspringen */
+    if (L.wait) await aw(L.wait);
+    const tx = String(L.t || ''); if (!tx) continue;
     if (L.pose && S.out) await aw(setPose(L.pose));
     if (L.emote && S.out) emote(L.emote, L.emoteMs || 1600);
     $$('.smmk-line', bbody).forEach(n => n.classList.add('old'));
@@ -1069,13 +1084,13 @@ async function speak(lines, o){
     const t0 = now();
     srlog.setAttribute('aria-busy', 'true');
     if (o.onStart){ const f = o.onStart; o.onStart = null; f(); }
-    try { await typeInto(target, L.t); } catch (e){ srlog.removeAttribute('aria-busy'); throw e; }
-    announce(L.t);
+    try { await typeInto(target, tx); } catch (e){ srlog.removeAttribute('aria-busy'); throw e; }
+    announce(tx);
     target.removeAttribute('aria-hidden'); target.id = 'smmkLn' + (++lineSeq); box.setAttribute('aria-describedby', target.id);
     if (L.minMs){ const rest = L.minMs - (now() - t0); if (rest > 0) await w(rest); }
     if (i < lines.length - 1 && !S.classic && !S.reduced){
       box.classList.add('wait'); S.waitAdv = true;
-      const pause = Math.min(900, 450 + L.t.length * 8);
+      const pause = Math.min(900, 450 + tx.length * 8);
       await aw(Promise.race([sleep(pause), new Promise(r => { advResolve = r; })]));
       advResolve = null; S.waitAdv = false; box.classList.remove('wait');
     }
@@ -1230,13 +1245,14 @@ function fmtCount(n){
 }
 /* Ein Grund für die Zeile unter dem Preis: Rang in der Kollektion, sonst Bestellzahl, sonst der Wunschtext */
 function whyLine(p, a){
+  if (typeof p.why === 'string' && p.why) return p.why;
   if (p.r === 0 || p.r === 1){ const src = p.src || (a && SRC[a.l] && p.ch === a.hs[0] ? SRC[a.l] : p.ct ? '„' + p.ct + '“' : ''); if (src) return `Nr. ${p.r + 1} bei ${src}`; }
   const c = fmtCount(p.n); if (c) return c;
   if (p.z) return 'Mit Deinem Wunschtext graviert' + (a && AUD_EX[a.l] ? ', ' + AUD_EX[a.l] : '');
   return '';
 }
 /* Abzeichen nur, wenn es etwas sagt, das der Grund nicht schon sagt */
-function badgeOf(p, why){ return p.z && !/Wunschtext/.test(why) ? 'Mit Deinem Text' : ''; }
+function badgeOf(p, why){ if (p.over) return 'Etwas über Budget'; return p.z && !/Wunschtext/.test(why) ? 'Mit Deinem Text' : ''; }
 /* Produkttyp nur, wenn er nicht schon im Titel steht und nicht Standard oder Besonderes Produkt ist */
 function typeOf(p){ const y = String(p.y || '').trim(); if (!y || /^(Standard|Besonderes Produkt)$/i.test(y)) return ''; const t = String(p.t || '').toLowerCase(); return y.split(/[\s-]+/).some(wd => wd.length > 3 && t.includes(wd.toLowerCase())) ? '' : y; }
 /* Wie auf der Seite mit bis zu zwei Stellen, nie aufgerundet; schwache Bewertungen zeigt der Mönch nicht */
@@ -1247,11 +1263,11 @@ function rating(p){
 }
 /* Gewählte Größe und Preis: '22,5 cm · € 59,00', sonst ab-Preis */
 function priceHtml(p){
-  if (p.cv && p.cv.l) return `<span class="smmk-price">${esc(fmtSize(p.cv.l))} · ${esc(eur(p.cv.c))}</span>`;
-  return `<span class="smmk-price">${esc((p.q > p.p ? 'ab ' : '') + eur(p.p))}</span>`;
+  if (p.cv && p.cv.l) return `<span class="smmk-price">${esc(fmtSize(p.cv.l))} · ${esc(euro(p.cv.c))}</span>`;
+  return `<span class="smmk-price">${esc((p.q > p.p ? 'ab ' : '') + euro(p.p))}</span>`;
 }
 /* „größer bis“ nur bei Stücken mit Größen: teuerste Größe (je Größe die günstigste Variante) */
-function moreHtml(p){ if (!p.cv || !Array.isArray(p.v)) return ''; const top = Math.max(...p.v.map(v => +v[1])); return top > p.cv.c ? `<small class="smmk-up">größer bis ${esc(eur(top))}</small>` : ''; }
+function moreHtml(p){ if (!p.cv || !Array.isArray(p.v)) return ''; const top = Math.max(...p.v.map(v => +v[1])); return top > p.cv.c ? `<small class="smmk-up">größer bis ${esc(euro(top))}</small>` : ''; }
 function metaHtml(p){ const r = rating(p); return priceHtml(p) + (r ? ` · <span class="smmk-rt"><span class="smmk-star">★</span> ${esc(r)}</span>` : ''); }
 /* Immer mit Variante: die gewählte Größe, sonst die erste verfügbare (Feld d aus collection.moench) */
 const linkOf = p => { const v = p.cv && p.cv.id ? p.cv.id : +p.d || 0; return p.u + (v ? '?variant=' + v : ''); };
@@ -1262,13 +1278,15 @@ function showBtn(p, label){
 /* Zeile: Handy und schmale Desktop-Leiste */
 function rowEl(p, a){
   const r = h('div', 'smmk-row'), why = whyLine(p, a);
-  r.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="56" height="56"><div><b>${esc(p.t)}</b><small>${metaHtml(p)}</small>${moreHtml(p)}${why ? `<small class="smmk-eb">${esc(why)}</small>` : ''}</div>`;
+  r.dataset.h = p.h;
+  r.innerHTML = `${p.i ? `<img class="im" src="${esc(p.i)}" alt="" width="56" height="56">` : '<span class="im" aria-hidden="true"></span>'}<div><b>${esc(p.t)}</b><small>${metaHtml(p)}</small>${moreHtml(p)}${why ? `<small class="smmk-eb">${esc(why)}</small>` : ''}</div>`;
   r.append(showBtn(p)); return r;
 }
 /* Karte: Bild, Typ, Titel, Preiszeile, Grund, höchstens ein Abzeichen, Knopf */
 function cardEl(p, a){
   const c = h('div', 'smmk-card'), why = whyLine(p, a), bdg = badgeOf(p, why), ty = typeOf(p);
-  c.innerHTML = `<img class="im" src="${esc(p.i)}" alt="" width="168" height="126"><div class="in">${ty ? `<span class="smmk-ty">${esc(ty)}</span>` : ''}<b class="ti">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span>${moreHtml(p)}${why ? `<span class="smmk-eb">${esc(why)}</span>` : ''}${bdg ? `<span class="smmk-bdg">${esc(bdg)}</span>` : ''}</div>`;
+  c.dataset.h = p.h;
+  c.innerHTML = `${p.i ? `<img class="im" src="${esc(p.i)}" alt="" width="168" height="126">` : '<span class="im" aria-hidden="true"></span>'}<div class="in">${ty ? `<span class="smmk-ty">${esc(ty)}</span>` : ''}<b class="ti">${esc(p.t)}</b><span class="smmk-meta">${metaHtml(p)}</span>${moreHtml(p)}${why ? `<span class="smmk-eb">${esc(why)}</span>` : ''}${bdg ? `<span class="smmk-bdg">${esc(bdg)}</span>` : ''}</div>`;
   $('.in', c).append(showBtn(p, 'Zeig es mir')); return c;
 }
 /* Zeigt der Besucher auf eine Karte, schaut der Mönch hin; eine Glühbirne höchstens einmal je Karte */
@@ -1522,6 +1540,8 @@ async function ensureOut(pose, how, o){
   focusLog();
 }
 function hello(){
+  /* KI-Modus: der Hinweis des Servers (KI, kein Mensch, OpenAI) ist der Gruß, einmal je KI-Sitzung */
+  if (aiUsable() && !(SS.ai && SS.ai.sid && SS.ai.nt)){ S.greeted = true; return [aiHello()]; }
   if (S.greeted || SS.g){ S.greeted = true; return []; }
   S.greeted = true; ssUpd({g:1});
   const hr = new Date().getHours();
@@ -1552,9 +1572,11 @@ async function changeStep(){
 }
 function closeEv(outcome){ if (!S.t0) return; push('sm_monk_close', {sm_outcome:outcome || 'none', sm_turns:TURN, sm_ms:R(now() - S.t0)}); S.t0 = 0; }
 async function navTo(href, cue, say){
-  if (!href) return;
+  const sh = href ? safeHref(href) : null;
+  if (!sh) return;
+  if (sh.ext){ openExt(sh.ext); return; }
   if (say !== false && S.out) await speak(say || 'Ich bring Dich hin.');
-  const u = new URL(href, location.href);
+  const u = new URL(sh.path, location.origin);
   /* Fortsetzen auf der nächsten Seite: der Loader erkennt #moench-r, ohne vorher in den Speicher zu schauen */
   if (cue){ ssUpd({cue:Object.assign({u:u.pathname}, cue)}); u.hash = 'moench-r'; }
   /* Zurück-Taste: diese Seite merkt sich die Vorschläge über denselben Hash */
@@ -1563,7 +1585,7 @@ async function navTo(href, cue, say){
   clearTray(); markerOff(); spotOff(); clearProp(true);
   if (S.out) await aw(poofOut());
   closeBox();
-  location.assign(u.origin === location.origin ? u.pathname + u.search + u.hash : u.href);
+  location.assign(u.pathname + u.search + u.hash);
 }
 async function opener(){
   const k = pageKind(), ses = sessionChips();
@@ -1587,7 +1609,7 @@ async function opener(){
     if (isWappen()){
       /* Wappen entstehen nach Vorlage: keine Favoriten versprechen, direkt zum Rechner */
       await ensureOut('measure', 'leap'); newTurn();
-      return ask([...hello(), {t:'Ein Wappen entsteht nach Deiner Vorlage, darum gibt es hier keine fertigen Favoriten. Soll ich Dich zum Wappen-Rechner bringen?', emote:'bulb'}],
+      return ask([...hello(), {t:'Familienwappen und Modernes Wappen kannst Du direkt bestellen. Für Dein eigenes Wappen rechnet Dir der Wappen-Rechner den Preis aus. Soll ich Dich hinbringen?', emote:'bulb'}],
         [Object.assign(wappenChoice(), {pri:1}), {l:'Geschenk für jemanden', f:() => giftStep1()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Nein danke', f:() => exitFlow()}]);
     }
     const here = {l:(($('main h1') || {}).textContent || 'diese Kategorie').trim(), hs:[CTX.c], who:'hier', hero:false, fx:'twinkle', src:'dieser Kategorie'};
@@ -1601,7 +1623,7 @@ async function opener(){
   if (k === 'pdp' || k === 'pdpq' || k === 'pdpgc') return productOpener(k === 'pdp');
   if (k === 'wappen'){
     await ensureOut('measure', 'leap'); newTurn();
-    return ask([...hello(), 'Für Dein Wappen rechnet Dir der Rechner hier auf der Seite den Preis aus. Bei Fragen zu Deiner Vorlage hilft Dir unser Team gern weiter.'], [{l:'Mit Mensch sprechen', f:() => human()}, {l:'Schließen', f:() => exitFlow()}]);
+    return ask([...hello(), 'Für Dein Wappen rechnet Dir der Rechner hier auf der Seite den Preis aus. Bei Fragen zu Deiner Vorlage hilft Dir unser Team gern weiter.'], [{l:'Wie lange dauert es?', id:'sonder_when', f:() => sonderTiming()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Schließen', f:() => exitFlow()}]);
   }
   if (k === 'cart') return cartOpener();
   if (k === 'cartEmpty') return emptyCart();
@@ -1613,7 +1635,7 @@ async function opener(){
   }
   if (k === 'sonder'){
     await ensureOut('sketch', 'leap'); newTurn();
-    return ask([...hello(), {t:'Eine eigene Idee? Beschreib sie hier im Formular. Unser Team meldet sich mit einem Angebot bei Dir.', emote:'bulb'}], [{l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]);
+    return ask([...hello(), {t:'Eine eigene Idee? Beschreib sie hier im Formular. Unser Team meldet sich mit einem Angebot bei Dir, bestellt wird darüber und nicht im Warenkorb.', emote:'bulb'}], [{l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()}, {l:'Wie lange dauert es?', id:'sonder_when', f:() => sonderTiming()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}, {l:'Schließen', f:() => exitFlow()}]);
   }
   if (k === 'article'){
     const a = audBy(artAud());
@@ -1636,7 +1658,7 @@ async function searchOpener(){
   const res = $$('main .product-grid > li, main #product-grid > li, main .grid__item, main .card-wrapper').filter(vis).slice(0, 2);
   await ensureOut('sketch', 'leap', {target:res[0]}); newTurn();
   if (res.length && !S.mobile){ const a = vr(res[0]), b = vr(res[res.length - 1]); if (overlapsGroup({x:Math.min(a.x, b.x), w:Math.max(a.x + a.w, b.x + b.w) - Math.min(a.x, b.x)})) await dodge(res[res.length - 1]); }
-  await ask([...hello(), {t:`Du suchst nach „${q}“? Ich helf Dir beim Aussuchen.`, emote:'bulb'}], [{l:'Für wen ist es?', pri:1, id:'gift_start', f:() => giftStep1()}, {l:'Wann kommt es an?', f:() => shipAnswer()}, {l:'Nein danke', f:() => exitFlow()}]);
+  await ask([...hello(), {t:`Du suchst nach „${q}“? Ich helf Dir beim Aussuchen.`, emote:'bulb'}], [{l:'Für wen ist es?', pri:1, id:'gift_start', f:() => giftStep1()}, {l:'Wie lange dauert es?', f:() => shipAnswer()}, {l:'Nein danke', f:() => exitFlow()}]);
 }
 async function notFound(){
   const inl = $('.smmk-404'), im = inl && !S.out ? $(':scope > img', inl) : null;
@@ -1652,7 +1674,7 @@ async function giftStep1(pre){
   if (S.ox) await moveSide(0);
   if (fcv && S.out && !S.mobile){ const fr = vr(fcv); S.tilt = fr.x + fr.w / 2 > S.ax ? 3 : -3; applyTilt(); }
   hookHeroChips(fcv);
-  await render({say:(pre || []).map(t => ({t})).concat([{t:line('who'), emote:'?'}]), chips:audienceList()});
+  await render({say:(pre || []).map(t => typeof t === 'string' ? {t} : t).concat([{t:line('who'), emote:'?'}]), chips:audienceList()});
   /* Startseite: die Chips im Hero bleiben über Mönch und Box sichtbar */
   if (fcv && !S.mobile) requestAnimationFrame(() => reveal(fcv));
 }
@@ -1748,7 +1770,7 @@ function budgetChoices(a, ok){
 async function emptyShelf(a){
   await ensureOut('sketch', 'poof');
   await aw(setPose('shrug')); emote('sweat', 2000);
-  await ask('Fertiges hab ich dafür gerade nichts im Regal. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.',
+  await ask('Fertiges hab ich dafür gerade nichts im Regal. Zwei Ideen: ein Gutschein über 25, 50, 75, 100, 150 oder 200 €, einlösbar im ganzen Sortiment, oder eine Sonderanfertigung nach Deiner Idee, dafür macht Dir unser Team ein Angebot.',
     [{l:'Gutschein verschenken', id:'gutschein', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}}, {l:'Andere Gruppe', f:() => giftStep1()}]);
 }
 const srcOf = a => a.src || SRC[a.l] || `Geschenken ${a.who}`;
@@ -1772,8 +1794,11 @@ async function cardsFlow(a, budget){
   if (res.tier === 'none'){
     await aw(setPose('shrug')); emote('sweat', 2000);
     const alt = typeof budget === 'string' ? okBudgets(r.res, budget) : [];
-    return ask('Dafür finde ich nichts Fertiges. Zwei Ideen: ein Gutschein, bei dem Du den Betrag selbst wählst, oder eine Sonderanfertigung nach Deiner Idee.',
-      [{l:'Gutschein verschenken', id:'gutschein', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}}, alt.length ? {l:'Anderes Budget', id:'gift_budget', f:() => budgetStep(a, true)} : {l:'Andere Gruppe', f:() => giftStep1()}]);
+    const other = alt.length ? {l:'Anderes Budget', id:'gift_budget', f:() => budgetStep(a, true)} : {l:'Andere Gruppe', f:() => giftStep1()};
+    /* Kleines Budget: der kleinste Gutschein (25 €) und eine Sonderanfertigung lägen darüber */
+    if (B.hi < GUTSCHEIN_MIN_CENT) return ask(`${B.s.charAt(0).toUpperCase() + B.s.slice(1)} finde ich dafür gerade nichts Fertiges.`, [Object.assign(other, {pri:1}), alt.length ? {l:'Andere Gruppe', f:() => giftStep1()} : null, {l:'Schließen', f:() => exitFlow()}]);
+    return ask('Dafür finde ich nichts Fertiges. Zwei Ideen: ein Gutschein über 25, 50, 75, 100, 150 oder 200 €, einlösbar im ganzen Sortiment, oder eine Sonderanfertigung nach Deiner Idee, dafür macht Dir unser Team ein Angebot.',
+      [{l:'Gutschein verschenken', id:'gutschein', href:'/products/steelmonks-geschenkgutschein'}, {l:'Sonderanfertigung', id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}}, other]);
   }
   await aw(setPose('sketch'));
   const hd = headPoint(); burst('twinkle', hd.x, hd.y + 8, 6); sfx('sparkle');
@@ -1799,8 +1824,8 @@ function cardChips(a){
   if (!S.mobile) c.push(SONDER_CH, GUTSCHEIN_CH);
   return c;
 }
-const SONDER_CH = {l:'Sonderanfertigung', link:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung. Ich bring Dich hin.'};
-const GUTSCHEIN_CH = {l:'Gutschein', link:1, id:'gutschein', href:'/products/steelmonks-geschenkgutschein', say:'Ein Gutschein geht immer. Den Betrag wählst Du selbst.'};
+const SONDER_CH = {l:'Sonderanfertigung', link:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Für eigene Ideen gibt es unsere Sonderanfertigung: Unser Team macht Dir ein Angebot, bestellt wird darüber und nicht im Warenkorb. Ich bring Dich hin.'};
+const GUTSCHEIN_CH = {l:'Gutschein', link:1, id:'gutschein', href:'/products/steelmonks-geschenkgutschein', say:GUTSCHEIN + ' Ich bring Dich hin.'};
 async function moreCards(a){
   const res = pick(S.pool ? S.pool.list : [], S.budget), B = bandOf(S.budget) || BANDS.b60p;
   if (res.tier === 'none') return ask('Mehr hab ich in dem Budget gerade nicht. In der ganzen Kollektion findest Du alles.', [{l:'Zur Kollektion', id:'all', href:'/collections/' + a.hs[0]}, {l:'Was anderes suchen', f:() => changeStep()}]);
@@ -1851,12 +1876,18 @@ function wappenChoice(){ return {l:'Wappen-Preis berechnen', href:'/pages/dein-w
 /* ---------- Produktseite: Leitfaden und Checkliste ---------- */
 async function productOpener(pers){
   await ensureOut('sketch', 'leap'); newTurn(); S.done = {};
-  if (CTX.gc) return ask([...hello(), {t:'Beim Gutschein wählst Du den Betrag selbst. Soll ich Dir zeigen, wo?', emote:'bulb'}], [{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
+  if (CTX.gc) return ask([...hello(), {t:GUTSCHEIN + ' Soll ich Dir zeigen, wo Du den Betrag wählst?', emote:'bulb'}], [{l:'Zeig mir, wo', pri:1, f:() => pdpGuide(false)}, {l:'Lieber ein Geschenk finden', f:() => giftStep1()}, {l:'Danke', f:() => exitFlow()}]);
+  /* Sonderanfertigung (Typ oder dein-wunsch-*): wird nie im Warenkorb gekauft, sondern über ein Angebot */
+  if (isCustomPdp()){
+    const wp = /wappen/.test(CTX.h || '');
+    return ask([...hello(), {t:'Das ist eine Sonderanfertigung. Die kaufst Du nicht im Warenkorb: Du schickst uns Deine Idee, und unser Team macht Dir ein Angebot.', emote:'bulb'}],
+      [wp ? Object.assign(wappenChoice(), {pri:1}) : {l:'Zur Anfrage', pri:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Ich bring Dich zur Anfrage.'}, {l:'Wie lange dauert es?', id:'sonder_when', f:() => sonderTiming()}, {l:'Mit Mensch sprechen', f:() => human()}, {l:'Was anderes suchen', f:() => changeStep()}]);
+  }
   const ses = sessionChips();
   const intro = pers ? 'Dieses Stück wird mit Deinem Wunschtext graviert. Soll ich Dir zeigen, wie es geht?' : 'Dieses Stück gibt es ohne Gravur, direkt zum Bestellen. Soll ich Dir zeigen, wo?';
   const c = ses.concat([{l:pers ? 'Ja, zeig es mir' : 'Zeig mir, wo', pri:ses.length ? 0 : 1, f:() => pdpGuide(pers)}]);
   if (sizeFieldset()) c.push({l:'Welche Größe passt?', id:'pdp_size', f:() => sizeAnswer(pers)});
-  c.push({l:'Wann kommt es an?', id:'pdp_when', f:() => whenAnswer(pers)});
+  c.push({l:'Wie lange dauert es?', id:'pdp_when', f:() => whenAnswer(pers)});
   if (isWappen()) c.push(wappenChoice());
   c.push({l:'Was anderes suchen', f:() => changeStep()});
   return ask([...hello(), {t:intro, emote:'bulb'}], c);
@@ -1874,7 +1905,7 @@ function productChoices(pers, o){
   nx.pri = ses.length ? 0 : 1;
   const c = ses.concat([nx]);
   if (!S.done.size && !CTX.gc && sizeFieldset()) c.push({l:'Welche Größe passt?', id:'pdp_size', f:() => sizeAnswer(pers)});
-  if (!S.done.when && !CTX.gc) c.push({l:'Wann kommt es an?', id:'pdp_when', f:() => whenAnswer(pers)});
+  if (!S.done.when && !CTX.gc) c.push({l:'Wie lange dauert es?', id:'pdp_when', f:() => whenAnswer(pers)});
   c.push({l:'Zeig mir alles noch mal', link:1, f:() => pdpGuide(pers)});
   if (!o.session){ const s2 = sessionChips()[0]; if (s2) c.push(Object.assign({}, s2, {pri:0, link:1})); }
   c.push({l:'Was anderes suchen', f:() => { markerOff(); spotOff(); return changeStep(); }});
@@ -1914,7 +1945,7 @@ async function pdpGuide(pers, fromCue, cue){
       if (fit){
         const bs = bestsellerSize(fs), bsr = bs && tb.rows.find(r => r.v === bs), lab = sizeLabels(fs).find(s => s.v === fit.v);
         await laserAt(fs, {spot:true, dim:false, aim:lab && lab.label || fs});
-        await speak(`Für Dein Budget passt ${fmtSize(fit.v)} für ${eur(fit.c)}.` + (bsr && bsr.v !== fit.v ? ` Am häufigsten genommen wird hier ${fmtSize(bsr.v)} für ${eur(bsr.c)}.` : ''));
+        await speak(`Für Dein Budget passt ${fmtSize(fit.v)} für ${euro(fit.c)}.` + (bsr && bsr.v !== fit.v ? ` Am häufigsten genommen wird hier ${fmtSize(bsr.v)} für ${euro(bsr.c)}.` : ''));
         await hold(2200);
       }
     }
@@ -1926,7 +1957,7 @@ async function pdpGuide(pers, fromCue, cue){
   await laserAt(tg.el, {spot:true, dim:false, keep:2200, avoid:tg.kind === 'qty' || tg.kind === 'amount' ? [atcButton()] : []});
   markerOn(tg.el);
   if (tg.kind === 'pers') watchZepto();
-  const say = tg.kind === 'amount' ? 'Hier wählst Du den Betrag. Darunter kaufst Du den Gutschein, den Code bekommst Du per E-Mail.'
+  const say = tg.kind === 'amount' ? 'Hier wählst Du den Betrag. Nach der Zahlung bekommst Du den Code per E-Mail.'
     : tg.kind === 'pers' ? 'Hier klickst Du auf Jetzt personalisieren und gibst Deinen Text ein. Die Vorschau siehst Du sofort.'
     : tg.kind === 'qty' ? 'Hier wählst Du die Menge und legst es in den Warenkorb.' : 'Hier legst Du es in den Warenkorb.';
   await ask(say, productChoices(pers, {session:fromCue}));
@@ -1942,46 +1973,69 @@ async function sizeAnswer(pers){
   const bs = bestsellerSize(fs), bsr = bs && rows.find(x => x.v === bs), lo = rows[0], hi = rows[rows.length - 1];
   if (rows.length > 1){
     if (bsr){
-      let t = `Am häufigsten genommen: ${fmtSize(bsr.v)} für ${eur(bsr.c)}.`;
-      if (bsr !== lo) t += ` Kleiner geht ab ${eur(lo.c)} (${fmtSize(lo.v)})` + (bsr !== hi ? `, groß bis ${eur(hi.c)} (${fmtSize(hi.v)}).` : '.');
-      else if (bsr !== hi) t += ` Groß geht bis ${eur(hi.c)} (${fmtSize(hi.v)}).`;
+      let t = `Am häufigsten genommen: ${fmtSize(bsr.v)} für ${euro(bsr.c)}.`;
+      if (bsr !== lo) t += ` Kleiner geht ab ${euro(lo.c)} (${fmtSize(lo.v)})` + (bsr !== hi ? `, groß bis ${euro(hi.c)} (${fmtSize(hi.v)}).` : '.');
+      else if (bsr !== hi) t += ` Groß geht bis ${euro(hi.c)} (${fmtSize(hi.v)}).`;
       say.push(t);
-    } else say.push(`Es gibt ${rows.length} Größen, von ${fmtSize(lo.v)} für ${eur(lo.c)} bis ${fmtSize(hi.v)} für ${eur(hi.c)}.`);
-    const cap = ssRead().cap; if (cap){ const fit = rows.filter(x => x.c <= cap).pop(); if (fit) say.push(`Für Dein Budget passt ${fmtSize(fit.v)} für ${eur(fit.c)}.`); }
+    } else say.push(`Es gibt ${rows.length} Größen, von ${fmtSize(lo.v)} für ${euro(lo.c)} bis ${fmtSize(hi.v)} für ${euro(hi.c)}.`);
+    const cap = ssRead().cap; if (cap){ const fit = rows.filter(x => x.c <= cap).pop(); if (fit) say.push(`Für Dein Budget passt ${fmtSize(fit.v)} für ${euro(fit.c)}.`); }
   } else say.push(`Die Größe wählst Du hier bei ${legendOf(fs) || 'Größe'}.`);
   /* steht so in den FAQ („Wie werden eure Größen angegeben?“) */
   say.push('Gemessen wird bei eckigen Stücken die längste Seite, bei runden der Durchmesser.');
   const lab = sizeLabels(fs).find(s => s.v === (bsr ? bsr.v : '')) || sizeLabels(fs).find(s => s.input.checked);
   await render({actions:[{name:'pose', target:'measure'}, {name:'laser', target:fs, aim:lab && lab.label}], say:say.slice(0, 3), chips:productChoices(pers)});
 }
-/* Lieferzeit: Zahlen aus den FAQ, Fenster ab heute in Werktagen */
+/* Lieferzeit: zentrale Fakten (versandfertig in Werktagen, Versandtag), nie ein Datum */
 function oberflaeche(){ const f = optionSets().find(x => /Oberfl/i.test(legendOf(x))); const i = f && $('input:checked', f); return i ? i.value : ''; }
 function shipSay(){
   const say = [shipLine()];
+  /* steht so in den FAQ („Wie lange dauert die Herstellung?“), ohne Zahl */
   if (/corten/i.test(oberflaeche())) say.push('Cortenstahl dauert ein paar Tage länger, weil wir ihn vorrosten.');
   say.push(xmasLine() || noExpress());
   return say;
 }
+/* Produktseite einer Sonderanfertigung (Typ Sonderanfertigung oder dein-wunsch-*) */
+const isCustomPdp = () => CTX.t === 'product' && (CTX.ty === 'Sonderanfertigung' || /^dein-wunsch/.test(CTX.h || ''));
 async function whenAnswer(pers){
+  if (isCustomPdp()) return sonderTiming();
   spotOff(); markerOff(); await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
   S.done.when = true;
   const acc = $$('details').find(x => /Produktionszeit/i.test(($('summary', x) || {}).textContent || ''));
   const c = CTX.t === 'product' ? productChoices(pers === undefined ? !!CTX.pz : pers) : menuList();
-  /* erst die Seite zeigen (Produktionszeit aufklappen und anlasern), dann die Rechnung, damit der Text stehen bleibt */
-  await render({actions:acc ? [{name:'open', target:acc}, {name:'laser', target:acc}] : [], say:shipSay(), chips:[c[0], {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}].concat(c.slice(1))});
+  /* erst die Seite zeigen (Produktionszeit aufklappen und anlasern), dann die Fakten, damit der Text stehen bleibt */
+  await render({actions:acc ? [{name:'open', target:acc}, {name:'laser', target:acc}] : [], say:shipSay(), chips:[c[0], {l:'Versandbedingungen', link:1, href:'/pages/versandbedingungen'}, {l:'Mit Mensch sprechen', f:() => human('Lieferzeit')}].concat(c.slice(1))});
 }
 async function shipAnswer(){
+  const k = pageKind();
+  if (k === 'sonder' || k === 'wappen' || isCustomPdp()) return sonderTiming();
   await ensureOut('sketch', 'poof');
   await render({say:shipSay().concat([shipCost()]).slice(0, 3), source:{l:'Versandbedingungen', href:'/pages/versandbedingungen'}});
   await ask('Hat das geholfen?', helpfulChips('Versand'));
 }
-/* Bestellung: ruhiger Modus, die Testversion kann noch nicht nachschauen */
+/* Sonderanfertigung: Entwurf, Fertigung nach Freigabe, Versandtag, Versandkosten */
+async function sonderTiming(){
+  spotOff(); markerOff(); await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
+  const k = pageKind();
+  const go1 = k === 'sonder' ? {l:'Zeig mir das Formular', pri:1, f:() => sonderGuide()} : k === 'wappen' ? null : /wappen/.test(CTX.h || '') ? Object.assign(wappenChoice(), {pri:1}) : {l:'Zur Anfrage', pri:1, id:'sonder', href:'/pages/anfragen', cue:{k:'sonder'}, say:'Ich bring Dich zur Anfrage.'};
+  await ask(sonderLines(), [go1, {l:'Mit Mensch sprechen', f:() => human('Sonderanfertigung')}, {l:'Schließen', f:() => exitFlow()}]);
+}
+/* Bestellung: ruhiger Modus. Im KI-Modus fragt der Server nach Bestellnummer und E-Mail (Formular), sonst zeigt der Mönch den Weg. */
 async function orderFlow(pre){
   S.calm = true; markerOff(); spotOff();
   /* Handy: ohne Schreibtisch, der würde auf dem Sheet die Fragen darüber verdecken */
   const pz = S.mobile ? 'sketch' : 'pc';
   await ensureOut(pz, 'leap'); await aw(setPose(pz, {dust:false}));
-  await speak((pre || []).concat(['Ich helfe Dir gern. In meiner Testversion kann ich Bestellungen aber noch nicht selbst nachschauen.']));
+  if (aiUsable()){
+    if (pre && pre.length) await speak(pre);
+    return aiTurn({chip:'order'}, {fallback:() => orderLocal()});
+  }
+  return orderLocal(pre);
+}
+async function orderLocal(pre){
+  S.calm = true;
+  const pz = S.mobile ? 'sketch' : 'pc';
+  await ensureOut(pz, 'leap'); await aw(setPose(pz, {dust:false}));
+  await speak((pre || []).concat(['Ich helfe Dir gern. Selbst nachschauen kann ich Bestellungen hier noch nicht.']));
   const back = {l:'Andere Frage', f:async () => { S.calm = false; await aw(setPose('sketch')); await menuStep(['Klar.']); }};
   if (pageKind() === 'track'){
     const acc = visibleOne('main details') || visibleOne('main .accordion__item');
@@ -2010,7 +2064,8 @@ async function faqTopics(pre){
   const onFaq = pageKind() === 'faq', topics = FAQ.map(([l, g]) => ({l, id:'faq_topic', v:g, f:() => faqShow(g, l)})), hu = {l:'Mit Mensch sprechen', f:() => human()};
   await ask((pre || []).concat([onFaq ? 'Such Dir ein Thema aus, dann zeig ich Dir die Antworten hier auf der Seite. Oder schreib direkt unserem Team.' : 'Worum geht es? Ich bring Dich zu den passenden Antworten.']), topics.concat([hu]));
 }
-function firstSentences(t, n){ const s = String(t || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„])/); return s.slice(0, n).join(' '); }
+/* Ganze Sätze bis höchstens max Zeichen (mindestens einer), damit Einschränkungen wie „für Shop-Bestellungen“ nicht abreißen */
+function capSentences(t, max){ const s = String(t || '').replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„])/); let out = ''; for (const x of s){ if (out && (out + ' ' + x).length > max) break; out = out ? out + ' ' + x : x; } return out; }
 async function faqShow(g, label, fromCue){
   if (pageKind() !== 'faq') return navTo('/pages/fragen', {k:'faq', g, l:label}, 'Ich bring Dich zu den Antworten.');
   if (fromCue){ await ensureOut('search', 'poof'); newTurn(); push('sm_monk_step', {sm_step:'faq_topic', sm_value:g}); }
@@ -2027,15 +2082,22 @@ async function faqQuote(g, idx){
   if (!det) return faqTopics();
   dets.forEach(x => { if (x !== det && x._smmk) x.open = false; }); det._smmk = 1;
   if (!S.classic && !S.typed) $$('.smmk-line, .smmk-src', bbody).forEach(n => n.remove());
-  const ans = $$(':scope > :not(summary)', det).map(n => n.textContent).join(' ');
+  /* der erste Absatz der Antwort, ganz (die FAQ rendert die Fakten über sm-fakten-text) */
+  const para = $$(':scope > :not(summary)', det).find(n => n.textContent.trim()), ans = para ? para.textContent : '';
   const next = dets.slice(idx + 1, idx + 3).map((x, k) => { const q = ($('summary', x).textContent || '').trim(); return {l:q.length > 58 ? q.slice(0, 56).replace(/\s+\S*$/, '') + ' …' : q, id:'faq_q', v:g, f:() => faqQuote(g, idx + 1 + k)}; });
-  await render({actions:[{name:'open', target:det}, {name:'laser', target:det}], say:[{t:'Kurz gesagt: ' + firstSentences(ans, 2), emote:'bulb'}], source:{l:`${g} (FAQ)`}});
+  await render({actions:[{name:'open', target:det}, {name:'laser', target:det}], say:[{t:capSentences(ans, 600), emote:'bulb'}], source:{l:`${g} (FAQ)`}});
   await ask('Hat das geholfen?', helpfulChips(g).concat(next));
 }
 async function human(topic){
   S.calm = true; markerOff(); spotOff();
   push('sm_monk_step', {sm_step:'human'});
   if (pageKind() === 'kontakt') return kontaktGuide(false, topic);
+  /* KI-Modus: Weitergabe mit Einwilligung (Formular vom Server); ist die Weitergabe aus, zeigt der Server die Kontaktseite */
+  if (aiUsable()) return aiTurn({chip:'human'}, {fallback:() => humanLocal(topic)});
+  return humanLocal(topic);
+}
+async function humanLocal(topic){
+  S.calm = true;
   await ensureOut('sketch', 'poof'); await aw(setPose('sketch'));
   await speak('Unser Team hilft Dir gern persönlich und antwortet innerhalb von zwei Werktagen. Ich bring Dich zur Kontaktseite.');
   await w(300);
@@ -2062,7 +2124,7 @@ async function sonderGuide(fromCue){
   await ensureOut('sketch', fromCue ? 'poof' : 'leap'); if (fromCue) newTurn();
   const f = visibleOne('#saForm') || visibleOne('main form');
   if (f) await laserAt(f, {spot:true, dim:false, keep:1600});
-  await ask(f ? 'Hier beschreibst Du Deine Idee. Ein Foto oder eine Skizze hilft unserem Team sehr.' : 'Auf dieser Seite beschreibst Du Deine Idee, unser Team meldet sich mit einem Angebot.', [{l:'Danke', f:() => exitFlow()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}]);
+  await ask(f ? 'Hier beschreibst Du Deine Idee. Ein Foto oder eine Skizze hilft unserem Team sehr. Danach meldet sich unser Team mit einem Angebot.' : 'Auf dieser Seite beschreibst Du Deine Idee, unser Team meldet sich mit einem Angebot.', [{l:'Danke', f:() => exitFlow()}, {l:'Wie lange dauert es?', id:'sonder_when', f:() => sonderTiming()}, {l:'Lieber ein fertiges Geschenk', f:() => giftStep1()}]);
 }
 
 /* ---------- Warenkorb: was die Seite schon weiß ---------- */
@@ -2075,7 +2137,9 @@ async function cartOpener(){
   let c = null; try { c = await aw(cartJs()); } catch (e){ if (e === ABORT) throw e; }
   const say = [...hello()], chips = [];
   if (c){
-    const gap = SHIP.free - (c.total_price || 0);
+    /* wie snippets/sm-cart-basis.liquid: Zwischensumme minus Rabattcodes (automatische Rabatte zählen nicht) */
+    const basis = (c.items_subtotal_price || 0) - (c.cart_level_discount_applications || []).filter(x => x && x.type === 'discount_code').reduce((sm, x) => sm + (x.total_allocated_amount || 0), 0);
+    const gap = F.gratisversandAbCent - basis;
     if (gap > 0){
       const L = await aw(Promise.race([shelf, sleep(2500).then(() => null)]));
       if (L && pick(L, gapBand(gap)).tier !== 'none'){ say.push(`Noch ${euro(gap)} bis zum Gratisversand. Soll ich Dir was Passendes dafür suchen?`); chips.push({l:'Ja, such mir was', pri:1, id:'cart_gap', v:R(gap / 100), f:() => gapFlow(gap)}); }
@@ -2234,6 +2298,467 @@ async function routeText(text){
   await render({say:[line('learn')], chips:menuList(), form:'compose'});
 }
 
+/* ---------- KI-Modus (cs-assistant, /assistant/v1). Nur mit Theme-Einstellung sm_monk_ai_url; ohne sie bleibt alles geskriptet.
+   Grenzen (Audit B): Server- und Modelltext nur als textContent oder value, Links nur über safeHref, Navigation nur nach Klick,
+   keine Cookies und keine Zusatz-Header, kein automatisches Wiederholen von /turn, /order oder /handoff, E-Mail, Bestellnummer,
+   Name, Notiz und getippter Text nie in Speicher, URL, dataLayer oder /event. ---------- */
+const AI_URL = (() => {
+  try {
+    const raw = String(CTX.ai || '').trim(); if (!raw) return '';
+    const u = new URL(raw);
+    if (u.protocol !== 'https:' && !/^(localhost|127\.0\.0\.1)$/.test(u.hostname)) return '';
+    return (u.origin + u.pathname).replace(/\/+$/, '').replace(/\/assistant\/v1$/, '');
+  } catch (e) { return ''; }
+})();
+const AI = {paused:false, down:false, challenge:false, busy:false, notice:'', entry:'other', ts:'', lastText:0, lastChips:[], evOff:false, lastMode:''};
+let SESS_P = null;
+const NOTICE = 'Grüß Dich! Ich bin Bruder Funke, ein KI-Assistent von Steelmonks, kein Mensch. Was Du hier schreibst, verarbeitet OpenAI für uns, und ich kann mich auch mal irren.';
+const PRIVACY = '/pages/datenschutzerklarung';
+function testCode(){ try { const c = sessionStorage.getItem('smMonkTc') || ''; return /^[A-Za-z0-9_-]{16,128}$/.test(c) ? c : ''; } catch (e) { return ''; } }
+/* An: Adresse gesetzt und Modus live, oder Modus test mit Testcode in diesem Tab */
+function aiOn(){ if (!AI_URL) return false; const m = CTX.am || 'test'; return m === 'live' || (m === 'test' && !!testCode()); }
+/* Nutzbar: an, nicht pausiert, Dienst erreichbar (eine Sitzung entsteht bei Bedarf) */
+const aiUsable = () => aiOn() && !AI.paused && !AI.down;
+const aiSess = () => (SS.ai && SS.ai.sid) ? SS.ai : null;
+/* Freitext an: Sitzung im Modus live; nach einer abgelaufenen Sitzung bleibt das Feld bis zur neuen offen */
+const aiMode = () => aiSess() ? SS.ai.mode : AI.lastMode;
+const aiLive = () => aiUsable() && aiMode() === 'live';
+
+/* Eine Anfrage: JSON, nur Content-Type, ohne Cookies und ohne Referrer; nie eine Ausnahme nach außen */
+async function api(path, body, ms){
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms || 10000);
+  try {
+    const r = await fetch(AI_URL + '/assistant/v1' + path, {method:'POST', mode:'cors', credentials:'omit', cache:'no-store', referrerPolicy:'no-referrer',
+      headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), signal:ctl.signal});
+    let j = null; try { j = await r.json(); } catch (e) {}
+    return {status:r.status, j:j && typeof j === 'object' && !Array.isArray(j) ? j : {}};
+  } catch (e) { return {status:0, j:{}, err:ctl.signal.aborted ? 'timeout' : 'net'}; }
+  finally { clearTimeout(t); }
+}
+
+/* Seitenkontext für den Server: nur Slugs, Wahrheitswerte, Warenkorbzahl und Pfad; nie Titel, Preise, Suche oder Hash */
+const SLUG_RE = /^[a-z0-9][a-z0-9._-]{0,119}$/;
+function srvCtx(){
+  const o = {};
+  [['t', CTX.t], ['s', CTX.s], ['h', CTX.h], ['c', CTX.c], ['pg', CTX.pg], ['b', CTX.b]].forEach(([k, v]) => { if (typeof v === 'string' && SLUG_RE.test(v.toLowerCase())) o[k] = v.toLowerCase(); });
+  o.pers = !!+CTX.pz; o.zero = !!+CTX.z;
+  const n = +CTX.n; if (Number.isInteger(n) && n >= 0) o.n = Math.min(999, n);
+  if (/^\/[A-Za-z0-9/_.%-]{0,199}$/.test(location.pathname)) o.path = location.pathname;
+  return o;
+}
+/* Einstieg in der Sprache des Servers (guard.ENTRIES) */
+const ENTRY = {header:'header', mega:'mega_gift', mobile_menu:'mobile_card', hero:'hero_chip', pdp_cta:'pdp_cta', track:'track_cta', faq_card:'faq_card', '404':'notfound', deeplink:'deeplink', resume:'resume', dock:'dock'};
+function entryOf(src){
+  if (ENTRY[src]) return ENTRY[src];
+  const k = pageKind();
+  return k === 'kontakt' ? 'kontakt' : k === 'cartEmpty' ? 'cart_empty' : k === 'searchZero' ? 'search_zero' : 'other';
+}
+
+/* Sitzung: wiederverwenden, solange sie gilt (60 min, 20 min ohne Kontakt); sonst eine neue, nur nach Klick oder Deep Link */
+function ensureSession(){
+  if (!aiOn() || AI.down) return Promise.resolve(null);
+  const a = SS.ai || {};
+  if (a.sid && a.exp > Date.now() + 30000 && Date.now() - (a.at || 0) < 19 * 60000) return Promise.resolve(a);
+  if (a.p && Date.now() - a.p < 5 * 60000){ AI.paused = true; applyAiUi(); return Promise.resolve(null); }
+  if (SESS_P) return SESS_P;
+  SESS_P = (async () => {
+    const body = {entry:AI.entry, ctx:srvCtx()}, tc = testCode();
+    if (tc) body.test_code = tc;
+    if (AI.ts){ body.turnstile = AI.ts; AI.ts = ''; }
+    const r = await api('/session', body, 8000), j = r.j;
+    if (r.status === 200 && typeof j.sid === 'string' && j.sid && j.sid.length < 400 && (j.mode === 'live' || j.mode === 'chips')){
+      const ttl = Math.max(60, Math.min(3600, +j.expires_in || 3600));
+      const ho = j.handoff && typeof j.handoff === 'object' && typeof j.handoff.consent_version === 'string' ? {v:j.handoff.consent_version.slice(0, 40), ts:j.handoff.turnstile === true} : null;
+      ssUpd({ai:{sid:j.sid, exp:Date.now() + ttl * 1000, at:Date.now(), mode:j.mode, test:j.test === true, ho}});
+      AI.notice = typeof j.notice === 'string' && j.notice.trim() ? j.notice.trim().slice(0, 400) : NOTICE;
+      AI.paused = false; AI.challenge = false;
+      /* Der Code gilt nur im Testbetrieb; eine Live-Sitzung braucht ihn nicht mehr */
+      if (tc && j.test !== true) try { sessionStorage.removeItem('smMonkTc'); } catch (e) {}
+      applyAiUi();
+      aiEvent('open', {entry:AI.entry});
+      return SS.ai;
+    }
+    if (r.status === 200 && j.challenge === 'turnstile') AI.challenge = true;
+    else if (r.status === 200 && j.mode === 'paused'){ AI.paused = true; ssUpd({ai:{p:Date.now()}}); }
+    else AI.down = true;
+    applyAiUi();
+    return null;
+  })().finally(() => { SESS_P = null; });
+  return SESS_P;
+}
+/* Sitzung für eine Aktion: verlangt der Server Turnstile, löst der Besucher es einmal, dann ein zweiter Versuch */
+async function needSession(){
+  let s = await aw(ensureSession());
+  if (!s && AI.challenge && CTX.tk){ const tok = await challengeSession(); if (tok){ AI.ts = tok; s = await aw(ensureSession()); } }
+  return s;
+}
+function dropSid(){ if (SS.ai && SS.ai.mode) AI.lastMode = SS.ai.mode; ssUpd({ai:null}); applyAiUi(); }
+function touchSid(mode){ const s = aiSess(); if (!s) return; const m = mode === 'live' || mode === 'chips' ? mode : s.mode; ssUpd({ai:Object.assign({}, s, {at:Date.now(), mode:m})}); applyAiUi(); }
+
+/* Plakette, Testmarke, Eingabefeld und Hinweis je nach Sitzung */
+function applyAiUi(){
+  if (!built) return;
+  const s = aiSess(), on = aiUsable() && (!!s || !!AI.lastMode), live = on && aiMode() === 'live';
+  stage.classList.toggle('ai', on); stage.classList.toggle('aitest', on && !!s && s.test === true);
+  const sub = $('.smmk-sub', stage); if (sub) sub.textContent = on ? STATUS_AI : STATUS;
+  const lg = $('.smmk-legal', composeEl);
+  if (live){
+    inputEl.maxLength = 500; inputEl.placeholder = 'Oder schreib mir einfach …';
+    if (!lg.firstChild){ const a = h('a'); a.href = PRIVACY; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Datenschutz'; lg.append('Was Du hier schreibst, verarbeitet OpenAI für uns. ', a); }
+  } else {
+    inputEl.maxLength = 200; inputEl.placeholder = 'Oder schreib mir, wen Du beschenken willst …'; lg.textContent = '';
+  }
+  /* ohne KI nur das alte Stichwortfeld (?moench_input=1) */
+  composeEl.hidden = !(live || (S.compose && !on && !aiUsable()));
+  sheetCheck();
+}
+/* Gruß im KI-Modus: wartet höchstens 2,5 s auf die Sitzung, dann der Hinweis des Servers (oder der geskriptete Gruß) */
+function aiHello(){
+  let v = null;
+  const wait = Promise.race([ensureSession(), sleep(2500)]).catch(() => null);
+  return {wait, get t(){
+    if (v != null) return v;
+    const s = aiSess();
+    if (s && aiUsable()){ v = s.nt ? '' : (AI.notice || NOTICE); if (!s.nt) ssUpd({ai:Object.assign({}, s, {nt:1}), g:1}); return v; }
+    if (SS.g){ v = ''; return v; }
+    ssUpd({g:1}); const hr = new Date().getHours(); v = hr >= 22 || hr < 6 ? line('late') : line('hello'); return v;
+  }};
+}
+
+/* Erlaubte Ziele: Shop-Pfade (auch von steelmonks.com als absolute Adresse) und die DHL-Sendungsverfolgung */
+const SHOP_HOSTS = [location.host, 'steelmonks.com', 'www.steelmonks.com'];
+const PATH_OK = /^\/(pages|policies|products|collections|blogs)\/[A-Za-z0-9/_.%-]{1,150}$/;
+const DHL_RE = /^https:\/\/www\.dhl\.de\/de\/privatkunden\/pakete-empfangen\/verfolgen\.html\?piececode=[A-Za-z0-9]{6,40}$/;
+function safeHref(href){
+  if (typeof href !== 'string' || !href || href.length > 400) return null;
+  if (DHL_RE.test(href)) return {ext:href};
+  let u; try { u = new URL(href, location.origin); } catch (e) { return null; }
+  if (!SHOP_HOSTS.includes(u.host)) return null;
+  if (u.origin !== location.origin && u.protocol !== 'https:') return null;
+  if (/\.\./.test(u.pathname) || !(u.pathname === '/' || u.pathname === '/cart' || PATH_OK.test(u.pathname))) return null;
+  const q = /^\?variant=\d{1,20}$/.test(u.search) ? u.search : '';
+  return {path:u.pathname + q};
+}
+function openExt(u){ if (DHL_RE.test(u)) try { window.open(u, '_blank', 'noopener,noreferrer'); } catch (e) {} }
+/* Kartenbild: nur über den eigenen /cdn/shop-Pfad (keine Anfrage an Dritte) */
+function cardImg(u){
+  u = String(u || '');
+  const m = u.match(/^https:\/\/cdn\.shopify\.com\/s\/files\/\d+\/\d+\/\d+\/\d+\/([A-Za-z0-9/_.%-]+)/);
+  if (m) return '/cdn/shop/' + m[1] + '?width=400';
+  const m2 = u.match(/^\/cdn\/shop\/([A-Za-z0-9/_.%-]+)/);
+  return m2 ? '/cdn/shop/' + m2[1] + '?width=400' : '';
+}
+
+/* ---------- Antwort des Servers in die Form des Mönchs ---------- */
+const EMOTES = new Set(['!', '?', '…', 'heart', 'bulb', 'sweat', 'zzz', 'note']);
+const MOOD_POSE = {idle:'sketch', talking:'sketch', listening:'sketch', pointing:'sketch', celebrating:'sketch', thinking:'search', presenting:'curator',
+  measuring:'measure', scriptorium:'pc', workshop:'pc', not_sure:'shrug', paused:'coffee'};
+const CHIP_RE = /^[a-z_]{2,20}(?::[a-z0-9_-]{1,40}){0,2}$/;
+const str = (v, n) => typeof v === 'string' ? v.slice(0, n) : '';
+function poseOf(m){ const p = MOOD_POSE[m] || 'sketch'; return S.mobile && (p === 'pc' || p === 'curator') ? 'sketch' : p; }
+function srvLines(j){
+  return (Array.isArray(j.lines) ? j.lines : []).slice(0, 3).map(l => (l && typeof l === 'object') ? {t:str(l.t, 280).trim(), emote:EMOTES.has(l.emote) ? l.emote : undefined} : null).filter(l => l && l.t);
+}
+function srvChip(c){
+  if (!c || typeof c !== 'object') return null;
+  const id = typeof c.id === 'string' && CHIP_RE.test(c.id) ? c.id : '', l = str(c.l, 60).trim();
+  if (!id || !l) return null;
+  if (c.href != null){
+    const sh = safeHref(c.href); if (!sh) return null;
+    if (sh.ext) return {l, id:'ki_link', v:'dhl', f:() => { openExt(sh.ext); return aiAfterExt(); }};
+    return {l, id:'ki_link', v:id.split(':')[0], href:sh.path, say:'Ich bring Dich hin.'};
+  }
+  /* „Schreib uns“ / „Zur Kontaktseite“ ohne Adresse: direkt zur Kontaktseite */
+  if (id === 'kontakt') return {l, id:'ki_link', v:'kontakt', href:'/pages/kontakt', say:'Ich bring Dich zur Kontaktseite.'};
+  return {l, id:'ki_chip', v:id.split(':')[0], f:() => aiTurn({chip:id})};
+}
+async function aiAfterExt(){ await ask('Die Sendungsverfolgung von DHL ist in einem neuen Tab offen.', AI.lastChips.filter(c => c.v !== 'dhl').concat([{l:'Schließen', f:() => exitFlow()}]).slice(0, 4)); }
+function srvCard(c){
+  if (!c || typeof c !== 'object') return null;
+  const hd = str(c.h, 120), t = str(c.t, 160).trim(), sh = safeHref(c.u), p = Math.round(+c.p || 0);
+  if (!/^[a-z0-9][a-z0-9-]{0,119}$/.test(hd) || !t || !sh || !sh.path || !/^\/(products|collections)\//.test(sh.path) || !(p > 0)) return null;
+  const q = Math.round(+c.q || 0);
+  return {h:hd, t, y:str(c.y, 60), u:sh.path, i:cardImg(c.i), p, q:q > p ? q : p, z:c.z ? 1 : 0, n:Math.max(0, Math.round(+c.n || 0)), rv:+c.rv || 0, rc:Math.max(0, Math.round(+c.rc || 0)),
+    why:str(c.why, 120).trim(), over:c.over ? 1 : 0};
+}
+/* Zeigen auf der Seite: Ziele je Seitenart wie assistant_output.HIGHLIGHTS, plus eigene Prüfung hier */
+const HERO_AUD = ['handwerker', 'feuerwehr', 'paare', 'familie', 'zuhause'];
+const FAQ_G = {versand:'Versand', bestellung:'Bestellung', produkte:'Produkte', montage:'Montage', rueckgabe:'Rückgabe'};
+const HL = {home:['home.finder', 'home.deck'].concat(HERO_AUD.map(a => 'home.chip.' + a)), pdp:['pdp.personalize', 'pdp.options', 'pdp.price', 'pdp.qty'],
+  cart:['cart.shipping'], faq:Object.keys(FAQ_G).map(g => 'faq.group.' + g), sonder:['sonder.form'], track:['track.top']};
+const GUIDE = {'pdp.personalize':'.pplr-c-button, main .product-form__submit', 'pdp.options':'main variant-radios fieldset, main variant-selects fieldset', 'pdp.price':'main .price',
+  'pdp.qty':'.pin-tiers, .smk-quantity', 'home.finder':'#finder', 'home.deck':'#deck', 'cart.shipping':'.cart-freeship-confirm', 'sonder.form':'#saForm', 'track.top':'#smmkTrack'};
+function guideEl(tg){
+  if (tg.startsWith('faq.group.')) return faqGroup(FAQ_G[tg.slice(10)] || '');
+  if (tg.startsWith('home.chip.')){ const a = AUD.find(x => x.hero && x.l.toLowerCase() === tg.slice(10)); return a ? heroChip(a) : null; }
+  return GUIDE[tg] ? visibleOne(GUIDE[tg]) : null;
+}
+function srvActions(list){
+  const pk = pageKind(), page = /^pdp/.test(pk) ? 'pdp' : pk === 'cartEmpty' ? 'cart' : pk, out = [];
+  (Array.isArray(list) ? list : []).slice(0, 2).forEach(a => {
+    if (!a || typeof a !== 'object') return;
+    if (a.do === 'highlight' && typeof a.target === 'string' && (HL[page] || []).includes(a.target)){ const el = guideEl(a.target); if (el && vis(el)) out.push({name:'laser', target:el}); }
+    else if (a.do === 'pick_audience' && page === 'home' && HERO_AUD.includes(a.aud)){ const au = AUD.find(x => x.hero && x.l.toLowerCase() === a.aud), ch = au && heroChip(au); if (ch && vis(ch)) out.push({name:'laser', target:ch}, {name:'tap', target:ch}); }
+    else if (a.do === 'show_products' && Array.isArray(a.handles)){ const hd = a.handles.find(x => typeof x === 'string' && S.shown.has(x)); const el = hd && $$('.smmk-card, .smmk-row', stage).find(e => e.dataset.h === hd); if (el) out.push({name:'laser', target:el}); }
+  });
+  return out;
+}
+const PARCEL = {eingegangen:0, bei_uns:1, unterwegs:2, zugestellt:3};
+function parcelPath(state){
+  if (!(state in PARCEL)) return;
+  const ol = h('ol', 'smmk-parcel'); ol.setAttribute('aria-label', 'Stand Deiner Bestellung');
+  ['Eingegangen', 'In der Werkstatt', 'Unterwegs', 'Zugestellt'].forEach((l, i) => { const li = h('li'); li.textContent = l; if (i <= PARCEL[state]) li.className = 'on'; if (i === PARCEL[state]) li.setAttribute('aria-current', 'step'); ol.append(li); });
+  addNode(ol);
+}
+/* Schild-Vorschau: nur der Wortlaut des Besuchers (sign_text), als Stahlschild, nie als Stimme des Mönchs */
+function signPreview(list){
+  const L = (Array.isArray(list) ? list : []).slice(0, 4).map(x => str(x, 80).trim()).filter(Boolean); if (!L.length) return;
+  const f = h('figure', 'smmk-sign'), pl = h('div', 'pl'), cap = h('figcaption');
+  f.setAttribute('aria-label', 'Vorschau Deines Textes');
+  L.forEach(t => { const sp2 = h('span'); sp2.textContent = t; pl.append(sp2); });
+  cap.textContent = 'Vorschau Deines Textes'; f.append(pl, cap); addNode(f);
+  announce('Vorschau: ' + L.join(', '));
+  if (!still()){ const r = vr(pl); burst('sparks', r.x + r.w / 2, r.y + 6, 10); sfx('sparkle'); }
+}
+function orderInfo(v){
+  if (!v || typeof v !== 'object') return;
+  const items = (Array.isArray(v.items) ? v.items : []).map(x => str(x, 80).trim()).filter(Boolean).slice(0, 5);
+  const dm = str(v.placed_on, 10).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const t = (dm ? `Bestellt am ${dm[3]}.${dm[2]}.${dm[1]}` : '') + (items.length ? (dm ? ': ' : '') + items.join(', ') : '');
+  if (t){ const p = h('p', 'smmk-oi'); p.textContent = t; addNode(p); }
+}
+/* Eine Antwort darstellen: Pose aus mood, Zeigen, Zeilen, Karten, Schild, Paketweg, Formular, Knöpfe */
+async function aiRender(j, o){
+  o = o || {};
+  const mood = typeof j.mood === 'string' ? j.mood : 'talking', form = j.form === 'order' || j.form === 'handoff' ? j.form : '';
+  S.calm = mood === 'scriptorium' || mood === 'paused' || !!form;
+  spotOff(); markerOff();
+  if (S.out) await aw(setPose(poseOf(mood)));
+  for (const a of srvActions(j.actions)){ if (a.name === 'tap'){ try { a.target.click(); } catch (e) {} } else await act(a); }
+  const say = srvLines(j), cards = (Array.isArray(j.cards) ? j.cards : []).slice(0, 3).map(srvCard).filter(Boolean);
+  let chips = (Array.isArray(j.chips) ? j.chips : []).slice(0, 8).map(srvChip).filter(Boolean);
+  if (chips.length && !form && !EXITS.test(chips[0].l)) chips[0] = Object.assign({}, chips[0], {pri:1});
+  let dealP = null;
+  const deal = () => { dealP = dealCards(cards, null, 'sm_monk_ki'); dealP.catch(() => {}); };
+  if (say.length) await speak(say, {onStart:() => { if (cards.length) deal(); }});
+  else if (cards.length) deal();
+  if (dealP) await dealP;
+  if (o.view){ orderInfo(o.view); parcelPath(o.view.state); }
+  else { const pp = (Array.isArray(j.actions) ? j.actions : []).find(a => a && a.do === 'parcel_path'); if (pp) parcelPath(pp.state); }
+  signPreview(j.sign_text);
+  let fEl = null;
+  if (form === 'order') fEl = orderForm(j.prefill);
+  else if (form === 'handoff'){
+    fEl = handoffForm(j.prefill);
+    if (!fEl){ await speak({t:'Gerade kann ich das leider nicht weitergeben. Schreib uns bitte über die Kontaktseite, wir antworten innerhalb von zwei Werktagen.', emote:'sweat'}); chips = [{l:'Zur Kontaktseite', pri:1, id:'ki_link', v:'kontakt', href:'/pages/kontakt', say:'Ich bring Dich zur Kontaktseite.'}]; }
+  }
+  if (!chips.length && composeEl.hidden && !fEl) chips = [{l:'Schließen', f:() => exitFlow()}];
+  AI.lastChips = chips;
+  choices(chips, {focus:false});
+  if (j.mode === 'chips' || j.mode === 'live') touchSid(j.mode);
+  if (fEl){ const i = $('input:not([type=checkbox]), textarea', fEl); if (i) try { i.focus({preventScroll:true}); } catch (e) {} }
+  else if (cards.length){ const b = $$('.smmk-show', stage).find(x => !x.disabled && x.offsetParent !== null); if (b) try { b.focus({preventScroll:true}); } catch (e) {} }
+  else if (o.typed && !composeEl.hidden) try { inputEl.focus({preventScroll:true}); } catch (e) {}
+  else if (chips.length) focusFirst();
+  keepClear();
+}
+/* Ruhige Rückfallzeile mit den letzten Knöpfen (oder dem Menü) */
+async function aiCalm(text, chips){
+  if (S.out){ await aw(setPose('shrug')); emote('sweat', 1800); }
+  await ask(text, (chips && chips.length ? chips : AI.lastChips.length ? AI.lastChips : menuList()));
+}
+async function aiPausedTurn(){
+  AI.paused = true; ssUpd({ai:{p:Date.now()}}); applyAiUi();
+  S.calm = true; spotOff(); markerOff(); clearTray();
+  if (S.out){ await aw(setPose('coffee')); emote('zzz', 2400); }
+  await ask(['Der Mönch macht gerade Pause.', 'Mit Knöpfen helfe ich Dir trotzdem weiter.'], menuList());
+}
+const LOST = 'Ich hab kurz den Faden verloren, frag mich gern noch mal.';
+/* Ein Zug: Knopf {chip} oder Freitext {text}. Nie automatisch wiederholt, außer einmal ein Knopf nach abgelaufener Sitzung. */
+async function aiTurn(input, o){
+  o = o || {};
+  if (AI.busy) return;
+  AI.busy = true; let retry = false;
+  try {
+    await ensureOut(S.out ? S.pose : 'sketch', 'poof');
+    const s = await needSession();
+    if (!s){ AI.busy = false; return await (o.fallback ? o.fallback() : AI.paused ? aiPausedTurn() : aiCalm(line('err'), menuList())); }
+    if (input.text){ AI.lastText = now(); composeEl.classList.add('busy'); }
+    const r = await think(api('/turn', {sid:s.sid, input, ctx:srvCtx()}, 20000), {ms:21000, back:false});
+    const x = r.res || {status:0, j:{}, err:'timeout'}, j = x.j;
+    if (x.status === 401){
+      dropSid();
+      if (input.chip && !o.retried){ retry = true; return; }
+      if (input.text && !inputEl.value) inputEl.value = input.text;
+      return await aiCalm(LOST);
+    }
+    if (x.status === 0){ if (input.text && !inputEl.value) inputEl.value = input.text; return await aiCalm(x.err === 'timeout' ? line('slow') : line('err')); }
+    if (x.status === 400 && j.error === 'too_long') return await aiCalm('Das ist mir zu lang. Schreib es bitte kürzer, höchstens 500 Zeichen.');
+    if (x.status !== 200) return await aiCalm(line('err'));
+    if (j.mode === 'paused' || j.ok === false) return await aiPausedTurn();
+    return await aiRender(j, {typed:!!input.text});
+  } finally {
+    AI.busy = false; composeEl.classList.remove('busy');
+    if (retry) go(() => aiTurn(input, Object.assign({}, o, {retried:true})));
+  }
+}
+
+/* ---------- Formulare: Bestellstatus und Weitergabe an das Team (nichts davon wird gespeichert) ---------- */
+function fld(label, el){ const w = h('label', 'smmk-f'), s = h('span'); s.textContent = label; w.append(s, el); return w; }
+function inp(tag, attrs){ const i = d.createElement(tag === 'textarea' ? 'textarea' : 'input'); if (tag !== 'textarea') i.type = tag; Object.keys(attrs || {}).forEach(k => i.setAttribute(k, attrs[k])); return i; }
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
+function orderForm(pre){
+  const f = h('form', 'smmk-form smmk-order'); f.noValidate = true; f.setAttribute('aria-label', 'Bestellung nachschauen');
+  /* der Hinweis „Zum Schutz Deiner Daten …“ steht schon in der Zeile des Servers */
+  const on = inp('text', {maxlength:'40', autocomplete:'off', autocapitalize:'characters', spellcheck:'false', placeholder:'SM-12345', required:''});
+  const em = inp('email', {maxlength:'254', autocomplete:'email', spellcheck:'false', inputmode:'email', required:''});
+  const pn = pre && typeof pre === 'object' ? str(pre.order_no, 20) : '';
+  if (/^#?SM-\d{4,6}(-DE)?$/i.test(pn)) on.value = pn;
+  const err = h('p', 'smmk-ferr'); err.setAttribute('role', 'alert');
+  const b = h('button', 'smmk-ch pri'); b.type = 'submit'; b.textContent = 'Nachschauen';
+  f.append(fld('Bestellnummer', on), fld('E-Mail aus der Bestellung', em), err, b);
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    if (AI.busy || f._sent) return;
+    const ov = on.value.trim(), mv = em.value.trim();
+    if (!ov){ err.textContent = 'Bitte gib Deine Bestellnummer ein.'; on.focus(); return; }
+    if (!EMAIL_RE.test(mv)){ err.textContent = 'Bitte gib die E-Mail-Adresse aus der Bestellung ein.'; em.focus(); return; }
+    f._sent = true; on.value = ''; em.value = ''; f.remove();
+    markUsed(); TURN++; S.lastInput = now(); push('sm_monk_step', {sm_step:'order_lookup'});
+    newTurn('Du: Bestellnummer und E-Mail gesendet');
+    go(() => aiOrder(ov, mv));
+  });
+  addNode(f); return f;
+}
+async function aiOrder(orderNo, email){
+  if (AI.busy) return;
+  AI.busy = true;
+  try {
+    const s = await needSession();
+    if (!s){ AI.busy = false; return await (AI.paused ? aiPausedTurn() : orderLocal()); }
+    const r = await think(api('/order', {sid:s.sid, order_no:orderNo, email}, 12000), {ms:13000, back:false});
+    orderNo = ''; email = '';
+    const x = r.res || {status:0, j:{}, err:'timeout'}, j = x.j, again = {l:'Nochmal versuchen', pri:1, id:'ki_chip', v:'order', f:() => aiTurn({chip:'order'})};
+    if (x.status === 401){ dropSid(); return await aiCalm(LOST, [again, {l:'Mit Mensch sprechen', f:() => human('Meine Bestellung')}]); }
+    if (x.status === 0) return await aiCalm(x.err === 'timeout' ? line('slow') : line('err'), [again, {l:'Mit Mensch sprechen', f:() => human('Meine Bestellung')}]);
+    if (x.status !== 200) return await aiCalm(line('err'), [again]);
+    if (j.mode === 'paused' && !Array.isArray(j.lines)) return await aiPausedTurn();
+    const v = j.ok === true && j.view && typeof j.view === 'object' ? j.view : null;
+    if (v && S.out){ S.calm = false; burst('twinkle', headPoint().x, headPoint().y, 6); }
+    return await aiRender(j, {view:v});
+  } finally { AI.busy = false; }
+}
+/* Cloudflare Turnstile: lädt erst, wenn der Server es verlangt (Weitergabe oder Sitzungsprüfung) */
+let TS_P = null;
+function loadTs(){
+  if (window.turnstile) return Promise.resolve(window.turnstile);
+  if (!TS_P) TS_P = new Promise((res, rej) => {
+    const sc = d.createElement('script'); sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true;
+    sc.onload = () => window.turnstile ? res(window.turnstile) : rej(new Error('turnstile'));
+    sc.onerror = () => { TS_P = null; rej(new Error('turnstile')); };
+    d.head.appendChild(sc);
+  });
+  return TS_P;
+}
+async function tsWidget(slot, onTok){
+  try { const T = await loadTs(); return T.render(slot, {sitekey:CTX.tk, appearance:'interaction-only', language:'de', callback:t => onTok(typeof t === 'string' ? t : ''), 'expired-callback':() => onTok(''), 'error-callback':() => onTok('')}); }
+  catch (e) { return null; }
+}
+async function challengeSession(){
+  if (!CTX.tk) return '';
+  const slot = h('div', 'smmk-ts');
+  await speak('Kurz noch eine Sicherheitsprüfung, dann geht es weiter.');
+  addNode(slot);
+  let done = null; const p = new Promise(r => { done = r; });
+  const id = await aw(tsWidget(slot, t => { if (t) done(t); }));
+  if (id == null){ slot.remove(); return ''; }
+  let tok = '';
+  try { tok = await aw(Promise.race([p, sleep(90000).then(() => '')])); }
+  finally { slot.remove(); try { window.turnstile.remove(id); } catch (e) {} }
+  return tok;
+}
+const TOPICS = ['bestellung', 'reklamation', 'sonderanfertigung', 'frage', 'sonstiges'];
+function handoffForm(pre){
+  const s = aiSess(), ho = s && s.ho;
+  if (!ho || !ho.v || (ho.ts && !CTX.tk)) return null;
+  pre = pre && typeof pre === 'object' ? pre : {};
+  const f = h('form', 'smmk-form smmk-ho'); f.noValidate = true; f.setAttribute('aria-label', 'An unser Team weitergeben');
+  const em = inp('email', {maxlength:'254', autocomplete:'email', spellcheck:'false', inputmode:'email', required:''});
+  const nm = inp('text', {maxlength:'80', autocomplete:'name'});
+  const sm = inp('textarea', {maxlength:'600', rows:'3'}); sm.value = str(pre.summary, 600);
+  const nt = inp('textarea', {maxlength:'1000', rows:'2'});
+  const topic = TOPICS.includes(pre.topic) ? pre.topic : 'frage';
+  const ok = inp('checkbox', {}), okL = h('label', 'smmk-fok'), okS = h('span');
+  okS.textContent = 'Ja, einverstanden: Gespräch und E-Mail gehen an unseren Kundenservice.'; okL.append(ok, okS);
+  const ts = ho.ts ? h('div', 'smmk-ts') : null;
+  const err = h('p', 'smmk-ferr'); err.setAttribute('role', 'alert');
+  const b = h('button', 'smmk-ch pri'); b.type = 'submit'; b.textContent = 'Weitergeben'; b.disabled = true;
+  const note = h('p', 'smmk-fnote'); note.textContent = 'Nur die E-Mail ist Pflicht. Den Text oben kannst Du ändern.';
+  f.append(fld('Deine E-Mail', em), fld('Name (freiwillig)', nm), fld('Worum geht es?', sm), fld('Möchtest Du noch etwas ergänzen? (freiwillig)', nt), note);
+  if (ts) f.append(ts);
+  f.append(okL, err, b);
+  let tok = '', wid = null;
+  ok.addEventListener('change', () => { b.disabled = !ok.checked; });
+  if (ts) tsWidget(ts, t => { tok = t; }).then(id => { wid = id; if (id == null){ err.textContent = 'Die Sicherheitsprüfung lädt gerade nicht. Schreib uns gern über die Kontaktseite.'; } });
+  const lock = on => { f.setAttribute('aria-busy', on ? 'true' : 'false'); $$('input, textarea, button', f).forEach(x => { x.disabled = on || (x === b && !ok.checked); }); };
+  const resetTs = () => { tok = ''; if (wid != null) try { window.turnstile.reset(wid); } catch (e) {} };
+  f.addEventListener('submit', e => {
+    e.preventDefault();
+    /* Einwilligung nur durch den Besucher selbst: angehakt und abgeschickt */
+    if (AI.busy || f._sent || !e.isTrusted || !ok.checked) return;
+    const mv = em.value.trim();
+    if (!EMAIL_RE.test(mv)){ err.textContent = 'Bitte gib Deine E-Mail-Adresse ein.'; em.focus(); return; }
+    if (ts && !tok){ err.textContent = 'Einen Moment, die Sicherheitsprüfung läuft noch.'; return; }
+    err.textContent = ''; f._sent = true; lock(true);
+    markUsed(); TURN++; S.lastInput = now(); push('sm_monk_step', {sm_step:'handoff_send'});
+    const body = {consent:true, consent_version:ho.v, email:mv, name:nm.value.trim().slice(0, 80), note:nt.value.trim().slice(0, 1000), summary:sm.value.trim().slice(0, 600), topic};
+    if (ts) body.turnstile = tok;
+    go(() => aiHandoff(body, {f, em, err, ok, lock, resetTs, drop:() => { if (wid != null) try { window.turnstile.remove(wid); } catch (x) {} wid = null; }}));
+  });
+  addNode(f); return f;
+}
+async function aiHandoff(body, ui){
+  const clear = () => { $$('input:not([type=checkbox]), textarea', ui.f).forEach(x => { x.value = ''; }); ui.ok.checked = false; ui.drop(); ui.f.remove(); };
+  const reopen = msg => { ui.f._sent = false; ui.lock(false); ui.resetTs(); if (msg) ui.err.textContent = msg; };
+  if (AI.busy) return reopen();
+  AI.busy = true;
+  try {
+    const s = aiSess();
+    if (!s){ reopen(LOST); return; }
+    const r = await think(api('/handoff', Object.assign({sid:s.sid}, body), 10000), {ms:11000, back:false});
+    const x = r.res || {status:0, j:{}, err:'timeout'}, j = x.j;
+    if (x.status === 401){ dropSid(); reopen('Ich hab kurz den Faden verloren. Schick es bitte noch einmal ab.'); ensureSession(); return; }
+    if (x.status === 400 && j.error === 'consent'){ dropSid(); clear(); return await aiCalm('Da hat sich gerade etwas geändert. Frag mich bitte noch einmal nach dem Team.', [{l:'Mit Mensch sprechen', pri:1, f:() => human()}]); }
+    if (x.status === 0){ reopen(x.err === 'timeout' ? 'Das dauert gerade zu lange. Versuch es gleich noch einmal.' : 'Da hakt was. Versuch es gleich noch einmal.'); return; }
+    if (x.status !== 200){ reopen('Da hakt was. Versuch es gleich noch einmal.'); return; }
+    if (j.challenge === 'turnstile'){ reopen('Bitte bestätige noch kurz die Sicherheitsprüfung.'); return; }
+    if (j.error === 'email'){ reopen(str(j.lines && j.lines[0] && j.lines[0].t, 280) || 'Die E-Mail-Adresse sieht nicht ganz richtig aus.'); try { ui.em.focus(); } catch (e) {} return; }
+    if (j.mode === 'paused' && !Array.isArray(j.lines)){ clear(); return await aiPausedTurn(); }
+    clear(); newTurn();
+    if (j.ok === true){ S.calm = false; if (S.out && !still()){ const hp = headPoint(); burst('confetti', hp.x, hp.y, 30); } }
+    return await aiRender(j);
+  } finally { AI.busy = false; }
+}
+/* Freitext abschicken: höchstens 500 Zeichen, nicht schneller als alle 1,5 s, nie gespeichert */
+function aiCompose(){
+  const t = inputEl.value.replace(/\s+/g, ' ').trim().slice(0, 500); if (!t) return;
+  if (AI.busy || now() - AI.lastText < 1500) return;
+  inputEl.value = ''; markUsed(); TURN++; S.lastInput = now();
+  push('sm_monk_step', {sm_step:'free_text'});
+  newTurn('Du: ' + t, {typed:true}); go(() => aiTurn({text:t}));
+}
+/* Messung an den Server: nur Namen und kurze Tokens, nie Text, E-Mail oder Bestellnummer */
+function aiEvent(name, props){
+  const s = aiSess(); if (!aiUsable() || AI.evOff || !s || s.exp < Date.now()) return;
+  const p = {};
+  Object.keys(props || {}).slice(0, 8).forEach(k => {
+    const v = props[k]; if (!/^[a-z][a-z0-9_]{0,23}$/.test(k)) return;
+    if (typeof v === 'boolean' || (typeof v === 'number' && isFinite(v) && Math.abs(v) <= 1e6)) p[k] = v;
+    else if (typeof v === 'string' && /^[a-z0-9_.:-]{1,40}$/.test(v) && !/\d{4,}/.test(v)) p[k] = v;
+  });
+  api('/event', {sid:s.sid, name, props:p}, 5000).then(x => { if (x.status === 429 || x.status === 401 || x.j.mode === 'paused') AI.evOff = true; });
+}
+
 /* ---------- Leerlauf: Gewicht verlagern, summen, Kaffee, dann Zzz ---------- */
 let steamE = null;
 function steamOn(){ steamOff(); steamE = emitter('steam', () => { if (S.pose !== 'coffee' || !S.out) return null; const s = poseScale('coffee'); return {x:S.ax + (148 - 110) * s * S.facing, y:S.ay + (175 - 418) * s}; }, .18); }
@@ -2335,7 +2860,8 @@ function untuck(){ if (!S.tuck) return; S.tuck = false; dockSay.classList.remove
 function kbFix(){
   if (!stage) return;
   let kb = 0; const vv = window.visualViewport;
-  if (S.mobile && vv && d.activeElement === inputEl) kb = Math.max(0, R(innerHeight - vv.height - vv.offsetTop));
+  const ae = d.activeElement;
+  if (S.mobile && vv && ae && stage.contains(ae) && /^(INPUT|TEXTAREA)$/.test(ae.tagName)) kb = Math.max(0, R(innerHeight - vv.height - vv.offsetTop));
   stage.style.setProperty('--kb', kb + 'px'); sheetCheck();
 }
 
@@ -2364,9 +2890,11 @@ function bind(){
     const n = {ArrowDown:i + 1, ArrowUp:i - 1, Home:0, End:bs.length - 1}[e.key]; if (n == null) return;
     e.preventDefault(); e.stopPropagation(); bs[(n + bs.length) % bs.length].focus();
   });
-  /* Freitext: Enter sendet, höchstens 200 Zeichen, nie ein Seiten-Reload; getippter Text geht nie in die Messung */
+  /* Freitext: Enter sendet, nie ein Seiten-Reload; getippter Text geht nie in die Messung. KI-Modus: an den Server (500 Zeichen),
+     sonst der lokale Stichwort-Router (200 Zeichen) */
   composeEl.addEventListener('submit', e => {
     e.preventDefault();
+    if (aiLive()) return aiCompose();
     const t = inputEl.value.replace(/\s+/g, ' ').trim().slice(0, 200); if (!t) return;
     inputEl.value = ''; markUsed(); TURN++; S.lastInput = now();
     newTurn('Du: ' + t, {typed:true}); go(() => routeText(t));
@@ -2379,6 +2907,9 @@ function bind(){
     if (!S.mobile && !S.reduced){ S.tilt = r.x > S.ax ? 2 : -2; applyTilt(); }
   });
   inputEl.addEventListener('blur', () => { kbFix(); S.tilt = 0; applyTilt(); });
+  /* Formularfelder im Mönch (Bestellung, Weitergabe): Tastatur am Handy wie beim Eingabefeld */
+  box.addEventListener('focusin', e => { if (e.target !== inputEl && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) kbFix(); });
+  box.addEventListener('focusout', e => { if (e.target !== inputEl && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) setTimeout(kbFix, 50); });
   if (window.visualViewport){ visualViewport.addEventListener('resize', kbFix); visualViewport.addEventListener('scroll', kbFix); }
   dockEl.addEventListener('click', () => { if (S.tuck) return untuck(); dockSay.classList.add('on'); if (!cookieBanner()) dockSay.textContent = 'Ich warte, bis das Fenster zu ist.'; });
   d.addEventListener('focusin', e => {
@@ -2401,6 +2932,9 @@ function bind(){
     S.lastInput = now(); if (S.idleState || S.patrolling) wake();
     if (e.key === 'Escape'){
       if (S.yield) return;
+      /* in einem Formularfeld schließt Escape nicht den Mönch, das Getippte bleibt stehen */
+      const fe = d.activeElement;
+      if (fe && fe !== inputEl && stage.contains(fe) && /^(INPUT|TEXTAREA)$/.test(fe.tagName)){ fe.blur(); focusLog(); return; }
       if (spotState || qmTarget){ spotOff(); markerOff(); return; }
       if (!menuEl.hidden){ closeMenu(true); return; }
       if (S.out || boxOn()) go(() => exitFlow());
@@ -2484,6 +3018,9 @@ function start(intent, el){
   /* Eingabefeld nur mit ?moench_input=1, nach dem ersten Klick für die Sitzung gemerkt */
   S.compose = S.compose || /[?&]moench_input=1\b/.test(location.search) || !!ssRead().ci;
   composeEl.hidden = !S.compose; if (S.compose && S.used && !SS.ci) ssUpd({ci:1});
+  /* KI-Modus: Sitzung erst jetzt (Klick oder Deep Link), nie beim Vorladen; eine gültige wird wiederverwendet */
+  if (aiOn()){ AI.entry = entryOf(entry); if (aiUsable()) ensureSession(); }
+  applyAiUi();
   /* Deep Link: ?moench= verschwindet aus der Adresse, sobald der Ablauf startet */
   if (deep && k !== 'resume' && (/[?&]moench=/.test(location.search) || /^#moench/.test(location.hash))){ try { const u = new URL(location.href); u.searchParams.delete('moench'); if (/^#moench/.test(u.hash)) u.hash = ''; history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (e) {} }
   const mob = $('#smmMob'), menuWas = !!(mob && !mob.hidden); if (menuWas){ const x = $('.mob-x', mob); if (x) x.click(); }
@@ -2536,7 +3073,7 @@ addEventListener('pageshow', e => {
   const s = (() => { try { return JSON.parse(sessionStorage.getItem(SKEY)) || {}; } catch (x) { return {}; } })();
   if (s.u && s.back && s.back.u === location.pathname) start('resume', 'url');
 });
-window.SMMK = {open:start, version:'test-2', shipLine, render, state:() => ({out:S.out, pose:S.pose, ax:S.ax, ay:S.ay, home:built ? home() : null, lift:S.lift, yield:S.yield, mobile:S.mobile, busy:S.busy, typing:S.typing, facing:S.facing, turn:TURN, why:built ? blockedNow() : '', active:d.activeElement ? (d.activeElement.className || d.activeElement.tagName) : '', anims:built ? actor.getAnimations().map(a => a.playState) : []})};
+window.SMMK = {open:start, version:'ki-1', shipLine, render, ai:() => ({on:aiOn(), usable:aiUsable(), live:aiLive(), mode:aiSess() ? aiSess().mode : null, test:aiSess() ? aiSess().test === true : null, paused:AI.paused, down:AI.down}), state:() => ({out:S.out, pose:S.pose, ax:S.ax, ay:S.ay, home:built ? home() : null, lift:S.lift, yield:S.yield, mobile:S.mobile, busy:S.busy, typing:S.typing, facing:S.facing, turn:TURN, why:built ? blockedNow() : '', active:d.activeElement ? (d.activeElement.className || d.activeElement.tagName) : '', anims:built ? actor.getAnimations().map(a => a.playState) : []})};
 const q = window.smMonkQ; window.smMonkQ = {push:a => start(a[0], a[1])};
 if (Array.isArray(q)) q.forEach(a => start(a[0], a[1]));
 d.addEventListener('sm:cart-changed', cartSoon);
