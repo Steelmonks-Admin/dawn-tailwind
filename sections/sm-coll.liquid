@@ -1,0 +1,245 @@
+{%- comment -%}
+  Neue Kollektionsseite wie im Prototyp (#hausschilder): Kopf mit Kennzahlen und Tipp, Untergruppen nach Produkttyp,
+  Oberflächen-Filter, Sortierung nach echten Bestellungen, Preis-Regler, „ab 4,8 ★“, Top 3, „Weitere anzeigen“. Ohne Suchfeld.
+  Alle Produkte einer Seite (bis 250) kommen serverseitig als Karten, sortiert nach dem Metafeld steelmonks.bestellungen
+  (dann Anzahl Bewertungen, dann Reihenfolge der Kollektion): Schlüssel aus Bestellungen+10^8, Bewertungen+10^6 und 9999-Position
+  als Text sortieren, umdrehen, Position zurückrechnen. sm-coll.js filtert und sortiert danach im Browser ohne Neuladen.
+  Nicht gezeigt: Meilensteine, versteckte Personalisierungs-Produkte, Befestigungssets, Versand, „zusätzlich“, Gravur-Zusätze, Preis 0.
+{%- endcomment -%}
+{{ 'sm-home.css' | asset_url | stylesheet_tag }}
+{{ 'sm-coll.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sm-home.js' | asset_url }}" defer></script>
+<script src="{{ 'sm-coll.js' | asset_url }}" defer></script>
+{%- liquid
+  assign smc_ex = ',Meilenstein,PPLR_HIDDEN_PRODUCT,Befestigungsset,Versand,'
+  assign smc_finorder = 'schwarz:Schwarz,anthrazit:Anthrazit,edelstahl:Edelstahl,corten:Cortenstahl,weiss:Weiß,gold:Gold' | split: ','
+  assign smc_arr = '<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+-%}
+{%- paginate collection.products by 250 -%}
+{%- liquid
+  assign smc_keys = ''
+  assign smc_types = 'x'
+  assign smc_fins = ','
+  assign smc_sum = 0
+  assign smc_cnt = 0
+  assign smc_maxp = 0
+  for p in collection.products
+    assign t = ',' | append: p.type | append: ','
+    if smc_ex contains t or p.handle contains 'zusaetzlich' or p.handle contains 'zusatzlich' or p.handle contains 'gravur' or p.price == 0
+      continue
+    endif
+    assign o = p.metafields.steelmonks.bestellungen.value | default: 0
+    assign rn = p.metafields.reviews.rating_count.value | default: 0
+    assign k = o | plus: 100000000 | append: ''
+    assign k2 = rn | plus: 1000000 | append: ''
+    assign k3 = 9999 | minus: forloop.index0 | append: ''
+    assign smc_keys = smc_keys | append: k | append: k2 | append: k3 | append: '|'
+    assign smc_sum = smc_sum | plus: o
+    assign smc_cnt = smc_cnt | plus: 1
+    if p.price_min > smc_maxp
+      assign smc_maxp = p.price_min
+    endif
+    assign smc_types = smc_types | append: '|' | append: p.type | append: '|'
+    for opt in p.options_with_values
+      if opt.name == 'Oberfläche'
+        for v in opt.values
+          assign vd = v | downcase
+          if vd contains 'schwarz'
+            assign smc_fins = smc_fins | append: 'schwarz,'
+          elsif vd contains 'anthrazit'
+            assign smc_fins = smc_fins | append: 'anthrazit,'
+          elsif vd contains 'weiß' or vd contains 'weiss'
+            assign smc_fins = smc_fins | append: 'weiss,'
+          elsif vd contains 'gold'
+            assign smc_fins = smc_fins | append: 'gold,'
+          elsif vd contains 'corten'
+            assign smc_fins = smc_fins | append: 'corten,'
+          elsif vd contains 'edelstahl'
+            assign smc_fins = smc_fins | append: 'edelstahl,'
+          endif
+        endfor
+      endif
+    endfor
+  endfor
+  assign smc_sorted = smc_keys | split: '|' | sort | reverse
+  assign smc_types = smc_types | append: 'x'
+
+  comment
+    Untergruppen: Produkttypen mit mindestens 2 Produkten, die größten fünf, Rest unter „Weitere“; nur wenn es mindestens zwei Gruppen gibt
+  endcomment
+  assign smc_tlist = ''
+  assign smc_uniq = smc_types | remove_first: 'x|' | remove_last: '|x' | split: '||' | uniq
+  for ty in smc_uniq
+    if ty == blank
+      continue
+    endif
+    assign probe = '|' | append: ty | append: '|'
+    assign c = smc_types | split: probe | size | minus: 1
+    if c >= 2
+      assign pad = c | plus: 10000 | append: ''
+      assign smc_tlist = smc_tlist | append: pad | append: '~' | append: ty | append: '^'
+    endif
+  endfor
+  assign smc_tsorted = smc_tlist | split: '^' | sort | reverse
+  assign smc_show_tabs = false
+  if smc_tsorted.size >= 2
+    assign smc_show_tabs = true
+  endif
+
+  comment
+    Gemeinsames Präfix wie „Feuerwehr-“ oder „Zunft-“ in den Reitern weglassen, wenn alle gezeigten Typen es tragen
+  endcomment
+  assign smc_pre = ''
+  if smc_show_tabs
+    assign first = smc_tsorted.first | split: '~' | last
+    if first contains '-'
+      assign smc_pre = first | split: '-' | first | append: '-'
+      for row in smc_tsorted limit: 5
+        assign ty = row | split: '~' | last
+        assign head = ty | slice: 0, smc_pre.size
+        if head != smc_pre or ty.size <= smc_pre.size
+          assign smc_pre = ''
+          break
+        endif
+      endfor
+    endif
+  endif
+
+  assign smc_sum_r = smc_sum
+  if smc_sum >= 1000
+    assign smc_sum_r = smc_sum | divided_by: 100 | times: 100
+  elsif smc_sum >= 100
+    assign smc_sum_r = smc_sum | divided_by: 10 | times: 10
+  endif
+  assign smc_maxe = smc_maxp | divided_by: 1000 | plus: 1 | times: 10
+  assign smc_lead = collection.metafields.steelmonks.kurztext.value | default: section.settings.lead
+  if smc_lead == blank
+    assign smc_lead = collection.description | strip_html | truncatewords: 24, '…'
+  endif
+-%}
+<div class="smh smc" data-smc data-step="{{ section.settings.erste }}">
+  <section class="c-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a> / <span>{{ collection.title | escape }}</span></nav>
+      <div class="c-top">
+        <div>
+          <h1 class="display">{{ collection.title | escape }}</h1>
+          {%- if smc_lead != blank -%}<p class="lead">{{ smc_lead }}</p>{%- endif -%}
+          <div class="c-proof"><span><span class="stars">★</span> <b data-ts-rating>{{ section.settings.ts_note }}</b> bei Trusted Shops</span>{% if smc_sum >= 100 %}<span><b>{% render 'sm-num', n: smc_sum_r %}+</b> Bestellungen seit 2020</span>{% endif %}<span>Gratisversand ab 99 €</span><span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span></div>
+        </div>
+        {%- liquid
+          assign smc_tip = collection.metafields.steelmonks.tipp.value
+          assign smc_top = nil
+          if smc_sorted.size > 0
+            assign k = smc_sorted.first
+            assign ix = k | slice: 16, 4 | plus: 0
+            assign ix = 9999 | minus: ix
+            assign smc_top = collection.products[ix]
+          endif
+        -%}
+        {%- if section.settings.tipp_zeigen and smc_tip != blank or section.settings.tipp_zeigen and smc_top and smc_top.metafields.steelmonks.bestellungen.value > 99 -%}
+        <div class="c-tip"><img src="{{ section.settings.pixel | prepend: 'sm-' | asset_url }}" alt="" width="62" height="90" loading="lazy">
+          <p>{%- if smc_tip != blank -%}{{ smc_tip }}{%- else -%}{%- assign tn = smc_top.metafields.steelmonks.bestellungen.value | divided_by: 100 | times: 100 -%}Hier am häufigsten bestellt: <b>{{ smc_top.title | escape }}</b>, schon über {% render 'sm-num', n: tn %}-mal. <a class="tlink" href="{{ smc_top.url }}">Ansehen</a>{%- endif -%}</p></div>
+        {%- endif -%}
+      </div>
+
+      {%- if smc_show_tabs -%}
+      <div class="subtabs" role="group" aria-label="Art">
+        <button type="button" data-tab="*" aria-pressed="true">Alle<small>{{ smc_cnt }}</small></button>
+        {%- for row in smc_tsorted limit: 5 -%}{%- assign parts = row | split: '~' -%}{%- assign c = parts[0] | minus: 10000 -%}
+        <button type="button" data-tab="{{ parts[1] | escape }}" aria-pressed="false">{% if smc_pre != '' %}{{ parts[1] | remove_first: smc_pre | escape }}{% else %}{{ parts[1] | escape }}{% endif %}<small>{{ c }}</small></button>
+        {%- endfor -%}
+        {%- if smc_tsorted.size > 5 -%}<button type="button" data-tab="~weitere" aria-pressed="false">Weitere</button>{%- endif -%}
+      </div>
+      {%- endif -%}
+
+      <div class="c-list">
+        <div class="fbar">
+          <div class="grp scroll" role="group" aria-label="Nach Oberfläche filtern">
+            {%- for f in smc_finorder -%}{%- assign fp = f | split: ':' -%}{%- assign probe = ',' | append: fp[0] | append: ',' -%}
+              {%- if smc_fins contains probe -%}<button class="sw" type="button" data-fin="{{ fp[0] }}" aria-pressed="false"><i class="tx tx-{{ fp[0] }}" aria-hidden="true"></i>{{ fp[1] }}</button>{%- endif -%}
+            {%- endfor -%}
+          </div>
+          <div class="grp"><label class="sr" for="smcSort-{{ section.id }}">Sortieren</label>
+            <select id="smcSort-{{ section.id }}" data-sort><option value="pop">Beliebteste zuerst</option><option value="rating">Beste Bewertung</option><option value="reviews">Meiste Bewertungen</option><option value="asc">Preis aufsteigend</option><option value="desc">Preis absteigend</option></select>
+            <button class="btn btn-g btn-s more" type="button" data-fmore aria-expanded="false" aria-controls="smcPanel-{{ section.id }}">Filter</button></div>
+        </div>
+        <div class="fpanel" id="smcPanel-{{ section.id }}" hidden>
+          <label for="smcMax-{{ section.id }}">Preis bis <b class="tnum" data-maxv>{{ smc_maxe }} €</b></label><input type="range" id="smcMax-{{ section.id }}" data-max min="10" max="{{ smc_maxe }}" step="5" value="{{ smc_maxe }}">
+          <label class="chip"><input type="checkbox" data-top> ab 4,8 ★</label>
+          <span class="count" data-hits></span>
+        </div>
+
+        <div class="cgrid" data-grid>
+          {%- for k in smc_sorted -%}{%- assign ix = k | slice: 16, 4 | plus: 0 -%}{%- assign ix = 9999 | minus: ix -%}{%- assign p = collection.products[ix] -%}
+            {%- liquid
+              assign o = p.metafields.steelmonks.bestellungen.value | default: 0
+              assign rn = p.metafields.reviews.rating_count.value | default: 0
+              assign rr = p.metafields.reviews.rating.value.rating | default: 0 | times: 100 | round
+              assign pf = ','
+              for opt in p.options_with_values
+                if opt.name == 'Oberfläche'
+                  for v in opt.values
+                    assign vd = v | downcase
+                    if vd contains 'schwarz'
+                      assign pf = pf | append: 'schwarz,'
+                    elsif vd contains 'anthrazit'
+                      assign pf = pf | append: 'anthrazit,'
+                    elsif vd contains 'weiß' or vd contains 'weiss'
+                      assign pf = pf | append: 'weiss,'
+                    elsif vd contains 'gold'
+                      assign pf = pf | append: 'gold,'
+                    elsif vd contains 'corten'
+                      assign pf = pf | append: 'corten,'
+                    elsif vd contains 'edelstahl'
+                      assign pf = pf | append: 'edelstahl,'
+                    endif
+                  endfor
+                endif
+              endfor
+              assign tags = ''
+              if forloop.index <= 3 and o > 0
+                assign tags = '<span class="badge hot">Top ' | append: forloop.index | append: '</span>'
+              endif
+            -%}
+            <div class="cc" data-type="{{ p.type | escape }}" data-fins="{{ pf }}" data-p="{{ p.price_min }}" data-r="{{ rr }}" data-n="{{ rn }}" data-o="{{ o }}" data-i="{{ forloop.index0 }}"{% if forloop.index > section.settings.erste %} hidden{% endif %}>{% render 'sm-home-card', product: p, tags: tags %}</div>
+          {%- endfor -%}
+          <div class="empty-res" data-empty hidden><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt="Pixel-Art: der Mönch zuckt mit den Schultern" width="110" height="131" loading="lazy"><p><b>Keine Treffer.</b> Lockere die Filter, zum Beispiel die Oberfläche oder den Preis.</p></div>
+        </div>
+        <div class="more-row"{% if smc_cnt <= section.settings.erste %} hidden{% endif %} data-morerow><button class="btn btn-i" type="button" data-more>Weitere {{ smc_cnt | minus: section.settings.erste }} anzeigen {{ smc_arr }}</button></div>
+        {%- if paginate.next -%}<div class="more-row"><a class="btn btn-g" href="{{ paginate.next.url }}">Nächste Seite {{ smc_arr }}</a></div>{%- endif -%}
+      </div>
+
+      {%- if section.settings.text_zeigen and collection.description != blank -%}
+      <div class="c-seo">
+        <div class="rte">{{ collection.description }}</div>
+      </div>
+      {%- endif -%}
+    </div>
+  </section>
+</div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "SM Kollektion",
+  "tag": "section",
+  "class": "section smh-section",
+  "settings": [
+    { "type": "range", "id": "erste", "label": "Zuerst sichtbare Produkte", "min": 8, "max": 32, "step": 4, "default": 16 },
+    { "type": "text", "id": "ts_note", "label": "Trusted-Shops-Note (Platzhalter, wird live aktualisiert)", "default": "4,83" },
+    { "type": "text", "id": "lead", "label": "Einleitung, falls die Kollektion kein Metafeld steelmonks.kurztext hat", "info": "Ohne beides: der Anfang der Kollektionsbeschreibung" },
+    { "type": "checkbox", "id": "tipp_zeigen", "label": "Tipp mit Pixel-Figur zeigen", "info": "Text aus dem Kollektions-Metafeld steelmonks.tipp, sonst das meistbestellte Produkt", "default": true },
+    { "type": "select", "id": "pixel", "label": "Pixel-Figur", "default": "px3_monk_search.webp", "options": [
+      { "value": "px3_monk_search.webp", "label": "Mönch mit Lupe" },
+      { "value": "px_jakob_zeigt.webp", "label": "Jakob zeigt" },
+      { "value": "px3_luis_ladder.webp", "label": "Luis auf der Leiter" },
+      { "value": "px3_jakob_trophy.webp", "label": "Jakob mit Pokal" },
+      { "value": "px2_luis_zunft.webp", "label": "Luis mit Zunftschild" },
+      { "value": "px4_monk_curator.webp", "label": "Mönch als Kurator" }
+    ] },
+    { "type": "checkbox", "id": "text_zeigen", "label": "Kollektionsbeschreibung unten zeigen", "default": true }
+  ],
+  "presets": [ { "name": "SM Kollektion" } ]
+}
+{% endschema %}
