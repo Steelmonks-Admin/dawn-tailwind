@@ -2413,7 +2413,7 @@ const AI_URL = (() => {
 })();
 const AI = {paused:false, down:false, challenge:false, busy:false, notice:'', entry:'other', ts:'', lastText:0, lastChips:[], evOff:false, lastMode:''};
 let SESS_P = null;
-const NOTICE = 'Grüß Dich! Ich bin Bruder Funke, Dein digitaler Kundenberater bei Steelmonks. Frag mich, was Du wissen willst, ich kann mich aber auch mal irren.';
+const NOTICE = 'Grüß Dich! Ich bin Bruder Funke, Dein digitaler Kundenberater bei Steelmonks. Frag mich, was Du wissen willst.';
 const PRIVACY = '/pages/datenschutzerklarung';
 function testCode(){ try { const c = sessionStorage.getItem('smMonkTc') || ''; return /^[A-Za-z0-9_-]{16,128}$/.test(c) ? c : ''; } catch (e) { return ''; } }
 /* An: Adresse gesetzt und Modus live, oder Modus test mit Testcode in diesem Tab */
