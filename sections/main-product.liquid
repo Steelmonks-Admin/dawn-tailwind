@@ -390,7 +390,10 @@
               block: block,
               show_quantity: smk_show_qty
             %}
+            {%- unless product.id == 10660693049610 -%}
             {% render 'steelmonks-zunft-konfigurator', product: product %}
+            {%- endunless -%}
+            {% render 'sm-three-products-personalizer-layout', product: product %}
             {%- if settings.sm_monk_enabled -%}{%- capture smmk_pz -%}{%- render 'sm-monk-pz', p: product -%}{%- endcapture -%}<p class="smmk-pcta" style="margin:6px 0 0"><button type="button" class="smmk-ask smmk-ask--pdp" data-smmk="product" data-smmk-src="pdp_cta"><span class="smmk-ask-av"><img src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"></span><span>{% if product.gift_card? %}Fragen zum Gutschein?{% elsif smmk_pz == '1' %}Unsicher bei Größe oder Gravur?{% else %}Fragen zu Menge oder Versand?{% endif %} <em>Frag den Mönch</em></span></button></p>{%- endif -%}
           {%- when 'zunft_quantity_tiers' -%}
             {%- comment -%}
