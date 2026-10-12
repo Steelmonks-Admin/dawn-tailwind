@@ -179,7 +179,7 @@
                             </div>
                             <cart-remove-button
                               id='CartDrawer-Remove-{{ item.index | plus: 1 }}'
-                              data-index='{{ item.index | plus: 1 }}'
+                              data-index='{{ item.index | plus: 1 }}' {% if item.product.id == 10660692984074 or item.product.id == 10660693016842 or item.product.id == 10660693049610 %}data-sm-line-key='{{ item.key | escape }}'{% endif %}
                             >
                               <button
                                 type='button'

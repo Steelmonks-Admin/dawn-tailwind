@@ -36,7 +36,7 @@ class CartRemoveButton extends HTMLElement {
       }
 
       if (cartItems) {
-        cartItems.updateQuantity(this.dataset.index, 0);
+        cartItems.updateQuantity(this.dataset.index, 0, undefined, undefined, this.dataset.smLineKey);
       }
     });
 
@@ -47,6 +47,8 @@ class CartRemoveButton extends HTMLElement {
       button.style.cursor = 'pointer';
 
       button.addEventListener('click', (event) => {
+        // Only the three new products: dispatch once, using the exact cart key.
+        if (this.dataset.smLineKey) { event.preventDefault(); event.stopPropagation(); }
         this.dispatchEvent(new Event('click'));
       });
     }
@@ -205,11 +207,11 @@ class CartItems extends HTMLElement {
     ];
   }
 
-  updateQuantity(line, quantity, name, variantId) {
+  updateQuantity(line, quantity, name, variantId, lineKey) {
     this.enableLoading(line);
 
     const body = JSON.stringify({
-      line,
+      ...(lineKey ? { id: lineKey } : { line }),
       quantity,
       sections: this.getSectionsToRender().map((section) => section.section),
       sections_url: window.location.pathname,
