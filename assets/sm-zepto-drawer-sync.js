@@ -117,3 +117,28 @@
     return origSend.apply(this, arguments);
   };
 })();
+
+// Preserve the new products' own server-rendered order image. Zepto's
+// positional cart-image update can drift when reward rows are omitted.
+(function () {
+  'use strict';
+  function restoreImage(image) {
+    var expected = image.getAttribute('data-sm-order-preview');
+    if (expected && image.getAttribute('src') !== expected) image.setAttribute('src', expected);
+  }
+  function scan(root) {
+    if (root.nodeType !== 1) return;
+    if (root.matches('img[data-sm-order-preview]')) restoreImage(root);
+    root.querySelectorAll('img[data-sm-order-preview]').forEach(restoreImage);
+  }
+  scan(document.documentElement);
+  new MutationObserver(function (records) {
+    records.forEach(function (record) {
+      if (record.type === 'attributes' && record.target.matches('img[data-sm-order-preview]')) {
+        restoreImage(record.target);
+      } else if (record.type === 'childList') {
+        record.addedNodes.forEach(scan);
+      }
+    });
+  }).observe(document.documentElement, {childList:true, subtree:true, attributes:true, attributeFilter:['src']});
+})();

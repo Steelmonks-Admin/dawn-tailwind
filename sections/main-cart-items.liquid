@@ -115,7 +115,17 @@
                         <td class='cart-item__media'>
                           {%- if item.image -%}
                             <a href='{{ item.url }}' class='cart-item__link' aria-hidden='true' tabindex='-1'> </a>
-                            <img class='cart-item__image' src='{{ item.image | image_url: width: 300 }}' alt='{{ item.image.alt | escape }}' loading='lazy' width='150' height='{{ 150 | divided_by: item.image.aspect_ratio | ceil }}'>
+                            {%- liquid
+                              assign sm_order_preview = blank
+                              if item.product.id == 10660692984074 or item.product.id == 10660693016842 or item.product.id == 10660693049610
+                                assign sm_preview_label = item.properties['_pplr_preview']
+                                assign sm_candidate = item.properties[sm_preview_label]
+                                if sm_candidate contains 'https://cdn.shopify.com/' and sm_candidate contains '/uploads/'
+                                  assign sm_order_preview = sm_candidate
+                                endif
+                              endif
+                            -%}
+                            <img class='cart-item__image' src='{% if sm_order_preview != blank %}{{ sm_order_preview | escape }}{% else %}{{ item.image | image_url: width: 300 }}{% endif %}'{% if sm_order_preview != blank %} data-sm-order-preview='{{ sm_order_preview | escape }}'{% endif %} alt='{{ item.image.alt | escape }}' loading='lazy' width='150' height='{{ 150 | divided_by: item.image.aspect_ratio | ceil }}'>
                           {%- endif -%}
                         </td>
                         <td class='cart-item__details'>
