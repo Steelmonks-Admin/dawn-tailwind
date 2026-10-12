@@ -30,7 +30,11 @@
     endif
     assign o = p.metafields.steelmonks.bestellungen.value | default: 0
     assign rn = p.metafields.reviews.rating_count.value | default: 0
-    assign k = o | plus: 100000000 | append: ''
+    assign smc_rank = o
+    if collection.handle == 'neuheiten'
+      assign smc_rank = p.created_at | date: '%s' | divided_by: 86400
+    endif
+    assign k = smc_rank | plus: 100000000 | append: ''
     assign k2 = rn | plus: 1000000 | append: ''
     assign k3 = 9999 | minus: forloop.index0 | append: ''
     assign smc_keys = smc_keys | append: k | append: k2 | append: k3 | append: '|'
@@ -97,7 +101,7 @@
     assign smc_lead = collection.description | strip_html | truncatewords: 24, '…'
   endif
 -%}
-<div class="smh smc" data-smc data-step="{{ section.settings.erste }}">
+<div class="smh smc" data-smc{% if collection.handle == 'neuheiten' %} data-default-sort='new'{% endif %} data-step="{{ section.settings.erste }}">
   <section class="c-hero">
     <div class="wrap">
       <nav class="crumbs" aria-label="Brotkrumen"><a href="/">Startseite</a> / <span>{{ collection.title | escape }}</span></nav>
@@ -136,7 +140,7 @@
         {%- if smc_tsorted.size > 5 -%}<button type="button" data-tab="~weitere" aria-pressed="false">Weitere</button>{%- endif -%}{%- else -%}<span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span>{%- endif -%}
           </div>
           <div class="grp"><label class="sr" for="smcSort-{{ section.id }}">Sortieren</label>
-            <select id="smcSort-{{ section.id }}" data-sort><option value="pop">Beliebteste zuerst</option><option value="rating">Beste Bewertung</option><option value="reviews">Meiste Bewertungen</option><option value="asc">Preis aufsteigend</option><option value="desc">Preis absteigend</option></select>
+            <select id="smcSort-{{ section.id }}" data-sort>{% if collection.handle == "neuheiten" %}<option value="new" selected>Neueste zuerst</option>{% endif %}<option value="pop">Beliebteste zuerst</option><option value="rating">Beste Bewertung</option><option value="reviews">Meiste Bewertungen</option><option value="asc">Preis aufsteigend</option><option value="desc">Preis absteigend</option></select>
             <button class="btn btn-g btn-s more" type="button" data-fmore aria-expanded="false" aria-controls="smcPanel-{{ section.id }}">Filter</button></div>
         </div>
         <div class="fpanel" id="smcPanel-{{ section.id }}" hidden>

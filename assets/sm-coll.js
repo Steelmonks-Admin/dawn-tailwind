@@ -6,9 +6,10 @@
     const grid = $('[data-grid]', root), empty = $('[data-empty]', root), more = $('[data-more]', root), moreRow = $('[data-morerow]', root);
     const cards = $$('.cc', grid), step = +root.dataset.step || 16;
     const shownTabs = $$('[data-tab]', root).map(b => b.dataset.tab).filter(t => t !== '*' && t !== '~weitere');
-    const st = { tab:'*', max:Infinity, top:false, sort:'pop', all:false };
+    const st = { tab:'*', max:Infinity, top:false, sort:root.dataset.defaultSort || 'pop', all:false };
     const num = (el, k) => +el.dataset[k] || 0;
     const SORT = {
+      new:(a, b) => num(a, 'i') - num(b, 'i'),
       pop:(a, b) => num(b, 'o') - num(a, 'o') || num(b, 'n') - num(a, 'n') || num(a, 'i') - num(b, 'i'),
       rating:(a, b) => num(b, 'r') - num(a, 'r') || num(b, 'n') - num(a, 'n') || num(a, 'i') - num(b, 'i'),
       reviews:(a, b) => num(b, 'n') - num(a, 'n') || num(a, 'i') - num(b, 'i'),
