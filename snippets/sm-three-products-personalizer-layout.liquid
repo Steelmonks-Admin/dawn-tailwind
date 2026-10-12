@@ -1,6 +1,27 @@
 {% comment %}Scoped to Jakob's three new products only.{% endcomment %}
 {% if product.id == 10660692984074 or product.id == 10660693016842 or product.id == 10660693049610 %}
 <style data-sm-three-product-layout="2026-10-12">
+  :is(.pplr_crop-modal,.pplr-popup) .pplr-p-left {
+    flex:0 0 auto!important;height:min(36vh,360px)!important;
+    max-height:min(36vh,360px)!important;
+  }
+  :is(.pplr_crop-modal,.pplr-popup) .pplr_preview_wrapper {
+    height:100%!important;display:flex!important;
+    align-items:center!important;justify-content:center!important;
+  }
+  :is(.pplr_crop-modal,.pplr-popup) .pplr_preview_wrapper canvas {
+    width:auto!important;height:auto!important;max-width:100%!important;
+    max-height:100%!important;object-fit:contain!important;
+  }
+  :is(.pplr_crop-modal,.pplr-popup) .pplr-p-right {
+    min-height:0!important;height:auto!important;flex:1 1 auto!important;
+  }
+  :is(.pplr_crop-modal,.pplr-popup) .pplr-modal-body {
+    height:auto!important;min-height:0!important;
+  }
+  :is(.pplr_crop-modal,.pplr-popup) .pplr-modal-body > div {
+    row-gap:16px!important;
+  }
   :is(.pplr_crop-modal,.pplr-popup) .pplr-selecter-selected.dropdowncolor {
     display:flex!important;align-items:center!important;gap:10px!important;
     box-sizing:border-box!important;width:100%!important;
