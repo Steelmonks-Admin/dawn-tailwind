@@ -118,6 +118,9 @@
                                 if sm_candidate contains 'https://cdn.shopify.com/' and sm_candidate contains '/uploads/'
                                   assign sm_order_preview = sm_candidate
                                 endif
+                                if sm_order_preview == blank
+                                  assign sm_order_preview = item.image | image_url: width: 300
+                                endif
                               endif
                             -%}
                             <img

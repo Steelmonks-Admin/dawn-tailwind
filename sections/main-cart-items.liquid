@@ -123,6 +123,9 @@
                                 if sm_candidate contains 'https://cdn.shopify.com/' and sm_candidate contains '/uploads/'
                                   assign sm_order_preview = sm_candidate
                                 endif
+                                if sm_order_preview == blank
+                                  assign sm_order_preview = item.image | image_url: width: 300
+                                endif
                               endif
                             -%}
                             <img class='cart-item__image' src='{% if sm_order_preview != blank %}{{ sm_order_preview | escape }}{% else %}{{ item.image | image_url: width: 300 }}{% endif %}'{% if sm_order_preview != blank %} data-sm-order-preview='{{ sm_order_preview | escape }}'{% endif %} alt='{{ item.image.alt | escape }}' loading='lazy' width='150' height='{{ 150 | divided_by: item.image.aspect_ratio | ceil }}'>
