@@ -123,20 +123,8 @@
     {% comment %} Pandectes Rules: kommt über das App-Embed (gdpr-cookie-consent). Die alte manuelle Kopie aus den Dateien lief doppelt und verspätet. {% endcomment %}
 
     {% comment %} * Google Tag Manager {% endcomment %}
-    <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-MBNXHGF');
-    </script>
-    <!-- End Google Tag Manager -->
+    {% comment %} GTM-MBNXHGF is loaded by Pandectes Google Consent Mode. Keep the early queue for custom hooks; do not load the container twice. {% endcomment %}
+    <script>window.dataLayer = window.dataLayer || [];</script>
     {% comment %} * End Google Tag Manager {% endcomment %}
 
     {% comment %} ! START: Snippet for adding a custom script to the theme (Pixels like Meta/Facebook, Google Analytics, TikTok, Taboola, Pinterest, etc.  ) {% endcomment %}
