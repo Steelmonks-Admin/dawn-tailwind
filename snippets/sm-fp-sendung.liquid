@@ -1,0 +1,204 @@
+{%- comment -%}
+  Steelmonks – Footer-Seite „sendung“ (/pages/sendungsverfolgung): Wo ist meine Bestellung?
+  Abfrage mit Bestellnummer und E-Mail über den cs-assistant (settings.sm_monk_ai_url): POST /assistant/v1/session (Eingang track_cta),
+  dann POST /assistant/v1/order {sid, order_no, email}. Das Backend prüft beides, fragt DHL live ab und antwortet nur mit einer festen Stufe
+  (eingegangen, bei_uns, unterwegs, zugestellt, klaeren), Bestellnummer, Datum, Artikeltiteln und dem DHL-Link. Ein gedrucktes Label heißt
+  dort nie „versendet“ (die Etiketten entstehen schon zum Fertigungsstart). Vor dem Absenden geht keine Anfrage an den Dienst,
+  Eingaben werden nirgends gespeichert, Antworten nur als Text eingesetzt. Turnstile nur, wenn der Dienst es verlangt.
+  Deep Link: ?bestellung=SM-12345 füllt die Bestellnummer vor (nie die E-Mail).
+{%- endcomment -%}
+{%- liquid
+  capture st_vf
+    render 'sm-fakten-text', text: 'in [versandfertig] Werktagen'
+  endcapture
+  capture st_tag
+    render 'sm-fakt', key: 'versandtag'
+  endcapture
+  assign st_vf = st_vf | strip
+  assign st_tag = st_tag | strip
+  assign st_tags = st_tag | downcase | append: 's'
+  assign st_api = settings.sm_monk_ai_url | strip
+-%}
+<div class="smx" data-fp="sendung" data-api="{{ st_api | escape }}" data-ts="{{ settings.sm_monk_turnstile_key | escape }}" data-tag="{{ st_tags | escape }}" data-vf="{{ st_vf | escape }}">
+  <div class="sa-hero ft-hero dark st-hero"><div class="wrap">
+    <nav class="crumbs" aria-label="Brotkrumen" style="color:var(--steel)"><a href="/" style="color:inherit">Startseite</a> / <span>Wo ist meine Bestellung?</span></nav>
+    <div class="ft-top st-top">
+      <div>
+        <p class="eyebrow" style="margin-top:14px">Sendungsverfolgung</p>
+        <h1 class="sa-h1" data-split>Wo ist meine <span class="hl">Bestellung?</span></h1>
+        <p class="sa-lead">Gib Deine Bestellnummer und Deine E-Mail ein. Wir zeigen Dir, ob Dein Stück noch in der Werkstatt ist oder schon mit DHL zu Dir unterwegs.</p>
+        {%- if st_api != blank -%}
+        <form class="st-form" id="stForm" novalidate>
+          <div class="st-fields">
+            <label class="st-f"><span>Bestellnummer</span><input id="stNo" name="order_no" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="z. B. SM-98686-DE" maxlength="20" required></label>
+            <label class="st-f"><span>E-Mail aus der Bestellung</span><input id="stMail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="name@beispiel.de" maxlength="120" required></label>
+          </div>
+          <div class="st-ts" id="stTs" hidden></div>
+          <button class="btn btn-p btn-shine st-go" type="submit"><span>Status anzeigen</span></button>
+          <p class="st-msg" id="stMsg" role="status" aria-live="polite"></p>
+          <p class="st-note">Beides steht in Deiner Bestellbestätigung. Die Angaben dienen nur dieser Abfrage, mehr dazu im <a href="/pages/datenschutzerklarung">Datenschutz</a>.</p>
+        </form>
+        {%- else -%}
+        <p class="st-msg is-err">Die Abfrage ist gerade nicht verfügbar. Den Link zur Sendungsverfolgung findest Du in Deiner Versandbestätigung, oder <a href="/pages/kontakt" style="color:inherit">schreib uns</a>.</p>
+        {%- endif -%}
+      </div>
+      <span class="pxfx pxa-bob st-hero-px" data-fx="twinkle:.36:.18:1.4"><img src="{{ 'sm-px3_monk_search.webp' | asset_url }}" alt="Pixel-Art: Bruder Funke sucht mit der Lupe" width="232" height="420"></span>
+    </div>
+  </div></div>
+
+  <section class="sa-sec paper st-res" id="stRes" hidden aria-labelledby="stResT"><div class="wrap">
+    <div class="st-card">
+      <div class="st-head">
+        <div><p class="eyebrow" id="stResDate"></p><h2 class="sa-h2" id="stResT"></h2></div>
+        <span class="st-badge" id="stBadge"></span>
+      </div>
+      <ol class="st-track" id="stTrack" aria-label="Stand Deiner Bestellung">
+        <li data-i="0"><span class="st-px"><img src="{{ 'sm-px2_monk_pc.webp' | asset_url }}" alt="" width="353" height="420" loading="lazy"></span><i></i><b>Eingegangen</b></li>
+        <li data-i="1"><span class="st-px"><img src="{{ 'sm-px2_monk_laser.webp' | asset_url }}" alt="" width="389" height="420" loading="lazy"></span><i></i><b>In der Werkstatt</b></li>
+        <li data-i="2"><span class="st-px"><img src="{{ 'sm-px2_jakob_parcels.webp' | asset_url }}" alt="" width="242" height="420" loading="lazy"></span><i></i><b>Unterwegs</b></li>
+        <li data-i="3"><span class="st-px"><img src="{{ 'sm-px3_duo_highfive.webp' | asset_url }}" alt="" width="369" height="420" loading="lazy"></span><i></i><b>Zugestellt</b></li>
+      </ol>
+      <div class="st-say"><span class="st-say-px"><img id="stSayPx" src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"></span><div><h3 id="stSayT"></h3><p id="stSayP"></p><div class="st-ctas" id="stCtas"></div></div></div>
+      <div class="st-items" id="stItemsW" hidden><h3>In Deiner Bestellung</h3><ul id="stItems"></ul></div>
+      <button class="sa-quiet st-again" type="button" id="stAgain">Andere Bestellung abfragen</button>
+    </div>
+  </div></section>
+
+  {%- render 'sm-fp-nav', aktiv: 'sendung' -%}
+
+  <section class="sa-sec" style="background:var(--beton)"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">So läuft Deine Bestellung</p><h2 class="sa-h2">Von der Werkstatt zu Dir</h2><span class="sa-line"></span></div></div>
+    <div class="ft-steps st-steps">
+      <div data-rv><b>Bestellt</b><p>Du bekommst sofort eine Bestellbestätigung mit Deiner Bestellnummer.</p></div>
+      <div data-rv style="--d:.08s"><b>In der Werkstatt</b><p>Wir fertigen Dein Stück, es ist {{ st_vf }} versandfertig. Das Versandetikett drucken wir schon zum Start, darum gibt es die Sendungsnummer früh.</p></div>
+      <div data-rv style="--d:.16s"><b>Versand mit DHL</b><p>Wir versenden {{ st_tags }}. Erst wenn DHL das Paket scannt, zeigt die Sendungsverfolgung Bewegung.</p></div>
+      <div data-rv style="--d:.24s"><b>Bei Dir</b><p>Innerhalb Deutschlands meist 3 bis 5 Werktage, international 5 bis 12 Werktage.</p></div>
+    </div>
+  </div></section>
+
+  {%- capture st_q1 -%}Ja, das ist normal. Ein persönlich angefertigter Artikel ist {{ st_vf }} versandfertig, wir versenden {{ st_tags }} mit DHL, dazu kommen 3 bis 5 Werktage Versand. Die Versandpapiere erstellen wir schon, wenn Dein Stück in die Fertigung geht, sie laufen mit der Bestellung durch die ganze Werkstatt. Deshalb ändert sich der Status in den ersten Tagen nicht. Sobald DHL das Paket scannt, aktualisiert sich die Sendungsverfolgung von selbst.{%- endcapture -%}
+  {%- capture st_q2 -%}Das kann vorkommen. Neue Einträge erscheinen oft erst, wenn das Paket im nächsten Verteilerzentrum gescannt wird. Warenpost und Kompaktbriefe haben nur eine reduzierte Sendungsverfolgung und liegen manchmal plötzlich im Briefkasten, obwohl der letzte Eintrag einen Tag alt ist. Ändert sich nach 3 bis 4 Tagen nichts, schreib uns, dann legen wir bei DHL eine Laufzeitbeschwerde ein.{%- endcapture -%}
+  {%- capture st_q3 -%}Meistens geht es nach ein paar Tagen weiter, manchmal hängt ein Paket in einem Verteilerzentrum oder beim Zusteller fest. Selten fällt ein Paket vom Band, verliert sein Etikett oder wird beschädigt. Hat sich der Status länger als 3 bis 4 Tage nicht verändert, schreib uns, damit wir eine Laufzeitbeschwerde einlegen. Danach bleibt nur eine Nachforschung bei DHL, die leider 3 bis 4 Wochen dauern kann.{%- endcapture -%}
+  {%- capture st_q4 -%}Schau bitte bei Nachbarn, Mitbewohnern und in der Postfiliale nach. Manchmal meldet DHL eine Sendung als zugestellt, und sie kommt erst am nächsten Tag. Findest Du sie nicht, wende Dich mit der Sendungsnummer an DHL, und schreib uns, wir helfen Dir gern weiter.{%- endcapture -%}
+  {%- capture st_q5 -%}Bis die Sendungsverfolgung aktualisiert ist, dauert es manchmal ein paar Stunden, bei reduzierter Sendungsverfolgung wird die Nummer oft erst beim nächsten Scan aktiv. Funktioniert es nach 24 Stunden noch nicht, schreib uns, dann finden wir mehr heraus.{%- endcapture -%}
+  {%- capture st_q6 -%}Innerhalb Deutschlands meist 3 bis 5 Werktage, international 5 bis 12 Werktage, jeweils nach dem Versand. Sobald das Paket bei DHL ist, können wir den Versand leider nicht mehr beeinflussen.{%- endcapture -%}
+  {%- assign st_qs = 'Ich habe eine Sendungsnummer, aber sie ändert sich seit Tagen nicht. Ist das normal?|Mein Paket ist verschickt, aber im Tracking tut sich nichts. Stimmt das so?|Mein Paket steckt seit Tagen am gleichen Ort fest. Was kann ich tun?|Laut Tracking ist mein Paket zugestellt, aber ich habe nichts bekommen.|Warum kann ich meine Sendung nicht verfolgen?|Wie lange dauert die Lieferung?' | split: '|' -%}
+  {%- assign st_as = st_q1 | append: '§§' | append: st_q2 | append: '§§' | append: st_q3 | append: '§§' | append: st_q4 | append: '§§' | append: st_q5 | append: '§§' | append: st_q6 | split: '§§' -%}
+  <section class="sa-sec paper"><div class="wrap">
+    <div class="sa-head" data-rv><div><p class="eyebrow">Häufige Fragen</p><h2 class="sa-h2">Rund um den Versand</h2><span class="sa-line"></span></div><a class="btn btn-i" href="/pages/fragen">Alle Fragen</a></div>
+    <div class="in-faq st-faq">
+      {%- for q in st_qs -%}<details data-rv><summary>{{ q }}</summary><p>{{ st_as[forloop.index0] }}</p></details>{%- endfor -%}
+    </div>
+  </div></section>
+
+  <section class="sa-sec sa-night dark st-end"><div class="wrap st-end-in">
+    <span class="pxfx pxa-bob"><img src="{{ 'sm-px3_monk_coffee.webp' | asset_url }}" alt="" width="238" height="420" loading="lazy"></span>
+    <div><h2 class="sa-h2">Noch eine Frage zu Deiner Bestellung?</h2><p class="sa-lead">Bruder Funke hilft Dir sofort, und unser Team antwortet Dir an Werktagen persönlich.</p>
+      <div class="sa-ctas"><button class="btn btn-p smmk-ask-btn" type="button" data-smmk="order" data-smmk-src="track">Bruder Funke fragen</button><a class="btn btn-g" href="/pages/kontakt">Schreib uns</a></div></div>
+  </div></section>
+</div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{%- for q in st_qs -%}{"@type":"Question","name":{{ q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ st_as[forloop.index0] | json }}}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}</script>
+<script>
+(function(){
+  'use strict';
+  var R = document.querySelector('[data-fp="sendung"]'); if (!R) return;
+  var API = (R.getAttribute('data-api') || '').replace(/\/+$/, ''), TS = R.getAttribute('data-ts') || '', TAG = R.getAttribute('data-tag') || 'freitags', VF = R.getAttribute('data-vf') || 'in 2 bis 5 Werktagen';
+  var F = document.getElementById('stForm'); if (!F || !/^https:\/\//.test(API)) return;
+  var NO = document.getElementById('stNo'), MAIL = document.getElementById('stMail'), MSG = document.getElementById('stMsg'), GO = F.querySelector('.st-go');
+  var RES = document.getElementById('stRes'), TR = document.getElementById('stTrack');
+  var IMG = {
+    pc: '{{ 'sm-pxm_lupe.webp' | asset_url }}', laser: '{{ 'sm-pxm_laser.webp' | asset_url }}', box: '{{ 'sm-pxm_karton.webp' | asset_url }}',
+    shrug: '{{ 'sm-px3_monk_shrug.webp' | asset_url }}', coffee: '{{ 'sm-pxm_kaffee.webp' | asset_url }}'
+  };
+  var DHL = 'https://www.dhl.de/';
+  var STATES = {
+    eingegangen: {i:0, b:'Eingegangen', t:'Deine Bestellung ist bei uns', p:'Sie ist eingegangen und kommt jetzt in unsere Werkstatt. Jedes Stück fertigen wir für Dich, es ist ' + VF + ' versandfertig. Wir versenden ' + TAG + ' mit DHL.', px:IMG.pc},
+    bei_uns: {i:1, b:'In der Werkstatt', t:'Dein Stück ist in der Werkstatt', p:'Es wird gerade gefertigt oder ist schon verpackt. Die Sendungsnummer gibt es bereits, weil wir das Versandetikett zum Fertigungsstart drucken. DHL zeigt aber erst etwas an, wenn das Paket eingeliefert ist. Wir versenden ' + TAG + '.', px:IMG.laser},
+    unterwegs: {i:2, b:'Unterwegs', t:'Dein Paket ist unterwegs', p:'DHL hat es übernommen. Innerhalb Deutschlands dauert der Versand meist 3 bis 5 Werktage. Den genauen Stand siehst Du bei DHL.', px:IMG.box},
+    zugestellt: {i:3, b:'Zugestellt', t:'Dein Paket wurde zugestellt', p:'So meldet es DHL. Schau bitte auch bei Nachbarn oder in der Postfiliale. Ist es nicht angekommen, schreib uns, wir kümmern uns.', px:IMG.box},
+    klaeren: {i:-1, b:'Wir sehen nach', t:'Das schauen wir uns persönlich an', p:'Hier können wir Dir gerade keinen eindeutigen Stand zeigen, etwa bei Briefen ohne Sendungsverfolgung, bei Teillieferungen oder Versand ins Ausland. Schreib uns kurz, wir sehen für Dich nach.', px:IMG.shrug}
+  };
+  var REFUSE = 'Dazu finden wir leider nichts. Prüf bitte Bestellnummer und E-Mail, beides steht in Deiner Bestellbestätigung.';
+  var DOWN = 'Die Abfrage ist gerade nicht erreichbar. Den Link zur Sendungsverfolgung findest Du auch in Deiner Versandbestätigung.';
+  var sid = '', sidExp = 0, tsTok = '', busy = false;
+
+  /* Vorbelegung über ?bestellung= (nur die Nummer) */
+  try { var q = new URLSearchParams(location.search).get('bestellung') || ''; if (/^#?\s*(SM[\s-]?)?\d{4,6}([\s-]?DE)?$/i.test(q.trim())) NO.value = q.trim(); } catch (e) {}
+
+  function say(t, err){ MSG.textContent = t || ''; MSG.classList.toggle('is-err', !!err); }
+  function api(path, body, ms){
+    var ctl = window.AbortController ? new AbortController() : null, tm = setTimeout(function(){ if (ctl) ctl.abort(); }, ms || 12000);
+    return fetch(API + '/assistant/v1' + path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), credentials:'omit', cache:'no-store', signal: ctl ? ctl.signal : undefined})
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ clearTimeout(tm); return {s:r.status, j:j || {}}; }); }, function(e){ clearTimeout(tm); throw e; });
+  }
+  function session(){
+    if (sid && Date.now() < sidExp) return Promise.resolve(sid);
+    var b = {entry:'track_cta', ctx:{t:'page', pg:'sendungsverfolgung', path:location.pathname}};
+    if (tsTok){ b.turnstile = tsTok; tsTok = ''; }
+    return api('/session', b, 9000).then(function(r){
+      var j = r.j;
+      if (r.s === 200 && typeof j.sid === 'string' && j.sid && j.sid.length < 400){ sid = j.sid; sidExp = Date.now() + Math.max(60, Math.min(3600, +j.expires_in || 1800)) * 1000 - 30000; return sid; }
+      var e = new Error(j && j.challenge === 'turnstile' ? 'turnstile' : 'paused'); throw e;
+    });
+  }
+  function turnstile(){
+    var slot = document.getElementById('stTs'); if (!TS || !slot) return Promise.reject(new Error('paused'));
+    slot.hidden = false; say('Kurze Sicherheitsprüfung, dann geht es weiter.');
+    return new Promise(function(res, rej){
+      var go = function(){ try { slot.innerHTML = ''; window.turnstile.render(slot, {sitekey:TS, language:'de', callback:function(t){ tsTok = t; slot.hidden = true; res(); }, 'error-callback':function(){ rej(new Error('paused')); }}); } catch (e) { rej(e); } };
+      if (window.turnstile) return go();
+      var sc = document.createElement('script'); sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true; sc.onload = go; sc.onerror = function(){ rej(new Error('paused')); }; document.head.appendChild(sc);
+    });
+  }
+  function fmtDate(s){ var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? m[3] + '.' + m[2] + '.' + m[1] : ''; }
+  function btn(label, href, cls, attrs){
+    var a = document.createElement(href ? 'a' : 'button'); a.className = 'btn ' + cls; a.textContent = label;
+    if (href){ a.href = href; if (/^https:/.test(href)){ a.target = '_blank'; a.rel = 'noopener'; } } else a.type = 'button';
+    Object.keys(attrs || {}).forEach(function(k){ a.setAttribute(k, attrs[k]); }); return a;
+  }
+  function show(v){
+    var st = STATES[v.state] || STATES.klaeren, items = Array.isArray(v.items) ? v.items : [];
+    document.getElementById('stResT').textContent = 'Bestellung ' + String(v.order_name || '').slice(0, 30);
+    var dt = fmtDate(v.placed_on); document.getElementById('stResDate').textContent = dt ? 'Bestellt am ' + dt : 'Deine Bestellung';
+    var bd = document.getElementById('stBadge'); bd.textContent = st.b; bd.className = 'st-badge st-badge--' + (v.state || 'klaeren');
+    TR.classList.toggle('is-open', st.i < 0);
+    Array.prototype.forEach.call(TR.children, function(li){ var i = +li.getAttribute('data-i'); li.classList.toggle('done', st.i >= 0 && i < st.i); li.classList.toggle('now', i === st.i); li.toggleAttribute('aria-current', i === st.i); });
+    TR.style.setProperty('--p', st.i < 0 ? 0 : st.i / 3);
+    document.getElementById('stSayPx').src = st.px;
+    document.getElementById('stSayT').textContent = st.t; document.getElementById('stSayP').textContent = st.p;
+    var C = document.getElementById('stCtas'); C.textContent = '';
+    var url = typeof v.tracking_url === 'string' && v.tracking_url.indexOf(DHL) === 0 ? v.tracking_url : '';
+    if (url && (v.state === 'unterwegs' || v.state === 'zugestellt')) C.appendChild(btn('Bei DHL verfolgen', url, 'btn-p'));
+    if (v.state === 'zugestellt' || v.state === 'klaeren') C.appendChild(btn('Schreib uns', '/pages/kontakt', v.state === 'klaeren' ? 'btn-p' : 'btn-g'));
+    if (v.state === 'klaeren') C.appendChild(btn('Bruder Funke fragen', '', 'btn-g', {'data-smmk':'order', 'data-smmk-src':'track'}));
+    var UL = document.getElementById('stItems'); UL.textContent = '';
+    items.slice(0, 8).forEach(function(t){ var li = document.createElement('li'); li.textContent = String(t).slice(0, 80); UL.appendChild(li); });
+    document.getElementById('stItemsW').hidden = !items.length;
+    RES.hidden = false; say('');
+    try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:'sm_track_lookup', sm_state: v.state || 'klaeren'}); } catch (e) {}
+    RES.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  }
+  function lookup(retry){
+    var no = NO.value.trim(), mail = MAIL.value.trim();
+    return session().then(function(s){ return api('/order', {sid:s, order_no:no, email:mail}, 15000); }).then(function(r){
+      if (r.s === 401 && !retry){ sid = ''; return lookup(true); }
+      var j = r.j;
+      if (j.ok === true && j.view && typeof j.view === 'object') return show(j.view);
+      if (j.mode === 'paused') return say(DOWN, true);
+      say(REFUSE, true);
+    });
+  }
+  F.addEventListener('submit', function(e){
+    e.preventDefault(); if (busy) return;
+    var no = NO.value.trim(), mail = MAIL.value.trim();
+    if (!/^#?\s*(SM[\s-]?)?\d{4,6}([\s-]?DE)?$/i.test(no)){ say('Bitte gib Deine Bestellnummer ein, zum Beispiel SM-98686-DE.', true); NO.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)){ say('Bitte gib die E-Mail-Adresse aus Deiner Bestellung ein.', true); MAIL.focus(); return; }
+    busy = true; GO.disabled = true; GO.classList.add('is-busy'); say('Wir sehen nach …');
+    lookup(false).catch(function(err){
+      if (err && err.message === 'turnstile') return turnstile().then(function(){ return lookup(false); });
+      throw err;
+    }).catch(function(){ say(DOWN, true); }).then(function(){ busy = false; GO.disabled = false; GO.classList.remove('is-busy'); });
+  });
+  document.getElementById('stAgain').addEventListener('click', function(){ RES.hidden = true; MAIL.value = ''; NO.value = ''; say(''); F.scrollIntoView({block:'center'}); NO.focus(); });
+})();
+</script>

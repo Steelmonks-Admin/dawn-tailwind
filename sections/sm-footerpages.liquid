@@ -17,6 +17,7 @@
   {%- when 'widerruf' -%}{%- render 'sm-fp-widerruf', page: page -%}
   {%- when 'versand' -%}{%- render 'sm-fp-versand', page: page -%}
   {%- when 'vertrag-widerrufen' -%}{%- render 'sm-fp-vertrag-widerrufen' -%}
+  {%- when 'sendung' -%}{%- render 'sm-fp-sendung' -%}
 {%- endcase -%}
 <script src="{{ 'sm-fp.js' | asset_url }}" defer></script>
 
@@ -30,7 +31,7 @@
       { "value": "ueber-uns", "label": "Über uns" }, { "value": "garantie", "label": "Glücksgarantie" }, { "value": "newsletter", "label": "Newsletter" },
       { "value": "gutschein", "label": "Geschenkgutschein (Produkt)" }, { "value": "fragen", "label": "Häufige Fragen" }, { "value": "kontakt", "label": "Kontakt" },
       { "value": "impressum", "label": "Impressum" }, { "value": "agb", "label": "AGB" }, { "value": "datenschutz", "label": "Datenschutz" },
-      { "value": "widerruf", "label": "Widerrufsbelehrung" }, { "value": "versand", "label": "Versandbedingungen" }, { "value": "vertrag-widerrufen", "label": "Vertrag widerrufen" } ] }
+      { "value": "widerruf", "label": "Widerrufsbelehrung" }, { "value": "versand", "label": "Versandbedingungen" }, { "value": "vertrag-widerrufen", "label": "Vertrag widerrufen" }, { "value": "sendung", "label": "Wo ist meine Bestellung?" } ] }
   ],
   "presets": [ { "name": "SM Footer-Seite" } ]
 }
