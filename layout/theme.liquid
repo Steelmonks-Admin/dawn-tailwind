@@ -617,5 +617,6 @@
       {%- render 'sm-nl-popup' -%}
       {%- if settings.sm_monk_enabled -%}{%- render 'sm-monk' -%}{%- endif -%}
       <script src="{{ 'sm-zepto-drawer-sync.js' | asset_url }}" defer="defer"></script>
+      {%- if request.page_type == 'product' -%}<script src="{{ 'sm-schild-pdp.js' | asset_url }}" defer="defer" data-asset="{{ 'sm-schild.js' | asset_url | split: 'sm-schild.js' | first }}" data-js="{{ 'sm-schild.js' | asset_url }}" data-handle="{{ product.handle }}" data-ver="3-{{ 'sm-ss-designs.json' | asset_url | split: '?v=' | last | slice: 0, 16 | url_encode }}"></script>{%- endif %}
   </body>
 </html>

@@ -1,0 +1,91 @@
+{%- comment -%}
+  Schilder-Werkstatt auf der Kollektionsseite, zugleich das eine Bedienelement der Seite (Idee und Zeichnung vom WesterWerk-Konfigurator übernommen,
+  Auftritt im Steelmonks-Stil): oben Text und Hausnummer, darunter eine Zeile kompakter Auswahl: Farbe und Größe links, Kategorie, Sortierung und Filter rechts,
+  dazwischen klein der Mönch mit einem kurzen Satz ohne Blase (am Handy steht er oben über den Feldern).
+  Jede Produktkarte zeigt ihr Schild mit dem eigenen Text maßstäblich neben einer Haustür, dazu eine Lupe, das Maß und den Preis der passenden Variante.
+  Das Kreuz (Löschen) steht im Quelltext hinter dem zweiten Feld, damit Tab vom ersten Feld ins zweite geht; das Raster legt es sichtbar ins Textfeld (CSS).
+  Am Handy sitzt dort auch der Würfel (Idee würfeln), solange das Textfeld leer ist, damit das Feld die ganze Breite behält.
+  Ohne Eingabe bleiben die Karten wie bisher. Zeichnen, Schriften, Hausfotos und Produktdaten lädt sm-coll-schild.js erst bei der ersten Eingabe;
+  Farbe und Größe stehen trotzdem sofort da (Listen und Vorauswahl aus sm-coll-beliebt.js, gebaut aus den Bestellungen der letzten zwölf Monate),
+  und sobald der Browser Luft hat, zeigen die Karten den Preis dieser Variante (Produkte und Designs nur als Daten).
+  Die beliebteste Wahl trägt die Marke „Beliebt“ hinter dem Wert, ohne Zahlen: bei Farbe Punkt und Wort, bei Größe nur der Punkt (sms-bel-p, das Wort bleibt
+  für Screenreader); die Listen erklären die Marke. Der Filter zeigt ohne Wahl „Preis, ★“ (was sich filtern lässt), nicht „Alle“ neben „Kategorie Alle“.
+  Der Spalten-Schalter (data-sms-sp, nur Handy) hält seinen Platz schon ohne Eingabe frei (unsichtbar), damit die Reihe beim ersten Tippen nicht springt.
+  Eingebunden von sections/sm-coll.liquid mit:
+    sms_modus  strasse (Einstellung „schild_bei“): erstes Feld „Straße oder Wunschtext“, zweites „Nr.“
+               nummer  (Einstellung „nummer_bei“): erstes Feld „Hausnummer“, zweites „Name oder Straße“ (freiwillig)
+    sms_kat    Einträge der Liste „Kategorie“ (li mit data-tab, wie die Reiter der Filterleiste; leer, wenn es keine Untergruppen gibt)
+    sms_sort   option-Einträge der Sortierung (das versteckte select data-sort bleibt die Quelle, sm-coll.js sortiert danach)
+    sms_anz    „24 Produkte“, sms_maxe: höchster Wert des Preis-Reglers in Euro ohne Eingabe, sms_id: section.id für eindeutige ids
+  Der Preis-Regler filtert nach dem Preis, den die Karten zeigen: mit Eingabe setzt sm-coll-schild.js seine Spanne auf die gezeigten Preise.
+  Die Listen öffnen als Popover (am Handy als Blatt von unten). Die Schaltflächen data-wahl gibt es zweimal für Farbe und Größe: im Element und in der
+  schlanken Leiste data-sms-leiste, die oben am Fenster steht, sobald das Element ganz aus dem Bild gescrollt ist; beide öffnen dieselbe Liste.
+  data-geld: Geldformat des Shops, damit die Preise der gezeichneten Karten aussehen wie die der übrigen.
+  data-ver: Stand der Zeichendaten. Die Zahl vorn bei jedem neuen Stand von sm-schild.js oder den Schriften erhöhen;
+  der Teil dahinter folgt von selbst der hochgeladenen sm-ss-designs.json, damit Browser neue Designs sofort holen.
+{%- endcomment -%}
+{{ 'sm-coll-schild.css' | asset_url | stylesheet_tag }}
+<div class="sms" data-sms data-modus="{{ sms_modus | default: 'strasse' }}" data-coll="{{ collection.handle }}" data-asset="{{ 'sm-schild.js' | asset_url | split: 'sm-schild.js' | first }}" data-js="{{ 'sm-schild.js' | asset_url }}" data-geld="{{ shop.money_format | strip_html | escape }}" data-ver="3-{{ 'sm-ss-designs.json' | asset_url | split: '?v=' | last | slice: 0, 16 | url_encode }}">
+  <p class="sms-eyebrow">Schilder-Werkstatt</p>
+  <div class="sms-ein">
+    {%- if sms_modus == 'nummer' -%}
+    <div class="sms-f sms-f-n"><input id="smsN" type="text" data-sms-n maxlength="6" autocomplete="off" spellcheck="false" enterkeyhint="next" placeholder="12"><label for="smsN">Hausnummer</label></div>
+    <div class="sms-f sms-f-s"><input id="smsS" type="text" data-sms-s maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" placeholder="freiwillig"><label for="smsS">Name oder Straße</label></div>
+    <button class="sms-x" type="button" data-sms-x hidden aria-label="Eingabe löschen" title="Eingabe löschen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    {%- else -%}
+    <div class="sms-f sms-f-s"><input id="smsS" type="text" data-sms-s maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="next" placeholder="z. B. Lindenallee"><label for="smsS">Straße oder <span class="sms-lang">Wunsch</span>text</label></div>
+    <div class="sms-f sms-f-n"><input id="smsN" type="text" data-sms-n maxlength="6" autocomplete="off" spellcheck="false" enterkeyhint="done" placeholder="12"><label for="smsN">Nr.</label></div>
+    <button class="sms-x" type="button" data-sms-x hidden aria-label="Eingabe löschen" title="Eingabe löschen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    {%- endif -%}
+    <button class="sms-ib" type="button" data-sms-idee aria-label="Idee würfeln" title="Idee würfeln"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></button>
+  </div>
+  <div class="sms-wahl">
+    <div class="sms-wg" role="group" aria-label="Dein Schild">
+      <button class="sms-k sms-k-o" type="button" data-wahl="o" aria-haspopup="listbox" aria-expanded="false" aria-controls="smsPop-o"><span class="sms-k-l">Farbe</span><span class="sms-k-v"><i class="tx" data-dot></i><span data-wert></span><b class="sms-bel" hidden>Beliebt</b></span></button>
+      <button class="sms-k sms-k-g" type="button" data-wahl="g" aria-haspopup="listbox" aria-expanded="false" aria-controls="smsPop-g"><span class="sms-k-l" data-gname>Größe</span><span class="sms-k-v"><span data-wert></span><b class="sms-bel sms-bel-p" hidden title="Beliebt">Beliebt</b></span></button>
+    </div>
+    <div class="sms-kopf">
+      <span class="sms-pixbox" aria-hidden="true"><img class="sms-pix" data-sms-pix data-pose="lupe" src="{{ 'sm-pxm_lupe.webp' | asset_url }}" alt="" width="66" height="120"></span>
+      <p class="sms-say" data-sms-say>{%- if sms_modus == 'nummer' -%}Tipp Deine Hausnummer ein, ich hänge sie an jedes Schild.{%- else -%}Tipp Deine Straße ein, ich hänge sie an jedes Schild.{%- endif -%}</p>
+      <p class="sr" data-sms-live aria-live="polite"></p>
+    </div>
+    <div class="sms-wg sms-wg-l" role="group" aria-label="Liste">
+      {%- if sms_kat != blank -%}
+      <button class="sms-k sms-k-k" type="button" data-wahl="k" aria-haspopup="listbox" aria-expanded="false" aria-controls="smsPop-k"><span class="sms-k-l">Kategorie</span><span class="sms-k-v"><span data-wert>Alle</span></span></button>
+      {%- else -%}
+      <span class="sms-anz count">{{ sms_anz }}</span>
+      {%- endif -%}
+      <button class="sms-k sms-k-s" type="button" data-wahl="s" aria-haspopup="listbox" aria-expanded="false" aria-controls="smsPop-s"><span class="sms-k-l">Sortieren</span><span class="sms-k-v"><span data-wert>Beliebteste</span></span></button>
+      <button class="sms-k sms-k-f" type="button" data-wahl="f" aria-haspopup="dialog" aria-expanded="false" aria-controls="smsPop-f"><span class="sms-k-l">Filter</span><span class="sms-k-v"><span data-wert>Preis, ★</span></span></button>
+      <button class="sms-sp" type="button" data-sms-sp aria-pressed="false" hidden title="Zwei Spalten"><span class="sr">Zwei Spalten</span><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.2"/></svg></button>
+    </div>
+  </div>
+  {%- comment -%} Listen. sms-pop-in nimmt den Fokus (tabindex -1), wenn man auf Text darin tippt: sonst ginge er an main und die Liste schlösse sich {%- endcomment -%}
+  <div class="sms-pop" id="smsPop-o" data-pop="o" hidden><div class="sms-pop-in" tabindex="-1"><p class="sms-pop-t" id="smsPopT-o">Farbe</p><ul role="listbox" aria-labelledby="smsPopT-o" data-liste></ul></div></div>
+  <div class="sms-pop" id="smsPop-g" data-pop="g" hidden><div class="sms-pop-in" tabindex="-1"><p class="sms-pop-t" id="smsPopT-g">Größe in cm</p><ul role="listbox" aria-labelledby="smsPopT-g" data-liste></ul></div></div>
+  {%- if sms_kat != blank -%}
+  <div class="sms-pop" id="smsPop-k" data-pop="k" hidden><div class="sms-pop-in" tabindex="-1"><p class="sms-pop-t" id="smsPopT-k">Kategorie</p><ul role="listbox" aria-labelledby="smsPopT-k" data-liste>{{ sms_kat }}</ul></div></div>
+  {%- endif -%}
+  <div class="sms-pop" id="smsPop-s" data-pop="s" hidden><div class="sms-pop-in" tabindex="-1"><p class="sms-pop-t" id="smsPopT-s">Sortieren</p><ul role="listbox" aria-labelledby="smsPopT-s" data-liste></ul></div></div>
+  <div class="sms-pop" id="smsPop-f" data-pop="f" role="dialog" aria-labelledby="smsPopT-f" hidden><div class="sms-pop-in" tabindex="-1">
+    <p class="sms-pop-t" id="smsPopT-f">Filter</p>
+    <div class="sms-fl">
+      <label class="sms-fl-l" for="smcMax-{{ sms_id }}" data-maxt>Alle Preise</label>
+      <input type="range" id="smcMax-{{ sms_id }}" data-max min="10" max="{{ sms_maxe }}" step="5" value="{{ sms_maxe }}" data-min0="10" data-max0="{{ sms_maxe }}">
+      <div class="sms-fl-ende" aria-hidden="true"><span data-minv>10 €</span><span data-maxe>{{ sms_maxe }} €</span></div>
+      <label class="sms-cb"><input type="checkbox" data-top><span>ab 4,8 ★</span></label>
+      <div class="sms-fl-fuss"><span class="count" data-hits></span><button class="sms-fertig" type="button" data-pop-zu>Fertig</button></div>
+    </div>
+  </div></div>
+  <select class="sms-sel" id="smcSort-{{ sms_id }}" data-sort hidden aria-label="Sortieren">{{ sms_sort }}</select>
+  <div class="sms-leiste" data-sms-leiste hidden>
+    <div class="sms-leiste-in">
+      <button class="sms-pill" type="button" data-sms-pill><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg><span class="sr">Text ändern: </span><span data-sms-pill-t></span></button>
+      <button class="sms-k sms-k-o sms-k-kl" type="button" data-wahl="o" aria-haspopup="listbox" aria-expanded="false" aria-controls="smsPop-o"><span class="sr">Farbe: </span><span class="sms-k-v"><i class="tx" data-dot></i><span data-wert></span></span></button>
+      <button class="sms-k sms-k-g sms-k-kl" type="button" data-wahl="g" aria-haspopup="listbox" aria-expanded="false" aria-controls="smsPop-g"><span class="sr" data-gname-sr>Größe: </span><span class="sms-k-v"><span data-wert></span></span></button>
+      <span class="sms-leiste-anz count" data-hits></span>
+    </div>
+  </div>
+</div>
+<script src="{{ 'sm-coll-beliebt.js' | asset_url }}" defer></script>
+<script src="{{ 'sm-coll-schild.js' | asset_url }}" defer></script>

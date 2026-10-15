@@ -1,0 +1,436 @@
+/* Schilder-Werkstatt auf der Kollektionsseite (snippets/sm-coll-schild.liquid, assets/sm-coll-schild.js).
+   Baut auf sm-home.css (Farben, Knöpfe, Oberflächen-Muster .tx) und sm-coll.css auf.
+   Aufbau: ein dunkles Element mit orangefarbener Kante. Oben die Eingabe (Felder mit Beschriftung im Feld, Würfel daneben), darunter eine Zeile kompakter
+   Auswahl: links Farbe und Größe, rechts Kategorie, Sortieren, Filter, dazwischen klein der Mönch mit einem kurzen Satz als schlichter Text (keine Blase).
+   Bis 1180 px steht der Mönch in einer eigenen Zeile darunter, am Handy oben über den Feldern. Jeder Auswahl-Knopf: Mono-Beschriftung über dem Wert,
+   die beliebteste Wahl mit der Marke „Beliebt“ hinter dem Wert. Listen als Popover (am Handy als Blatt von unten), schlanke Leiste oben beim Scrollen;
+   Karten mit der Tür-Szene (Wand, Schild maßstäblich, Lupe, Maß); Laser beim ersten Entwurf; Probehängen als Dialog. */
+.smh .sms{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"eye" "ein" "wahl";row-gap:10px;margin-top:18px;padding:16px 20px 8px;border-radius:var(--r);background:var(--night);color:var(--blank);box-shadow:var(--shadow);overflow:hidden}
+.smh .sms::before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(238,240,242,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(238,240,242,.045) 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:linear-gradient(100deg,transparent 45%,#000 100%);mask-image:linear-gradient(100deg,transparent 45%,#000 100%)}
+.smh .sms::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--laser) 18%,var(--laser) 82%,transparent)}
+.smh .sms :focus-visible,.smh .sms-pop :focus-visible,.smh .sms-leiste :focus-visible{outline-color:var(--blau-hell)}   /* Fokusring auf Dunkel: das helle Blau (7,3 zu 1) */
+.smh .sms-eyebrow{font-family:var(--f-mono);font-size:11.52px;letter-spacing:.14em;text-transform:uppercase;color:var(--laser);line-height:1.3}
+.smh .sms .sms-eyebrow{grid-area:eye;margin:0}   /* nur im Element: im Probehängen steht dieselbe Zeile in einem anderen Raster */
+/* Eingabe: Raster aus Textfeld, Nummernfeld und Würfel. Das Kreuz (Löschen) steht im Quelltext hinter dem zweiten Feld (Tab geht vom ersten Feld ins zweite)
+   und liegt in derselben Zelle wie das Textfeld, rechts darin */
+.smh .sms-ein{grid-area:ein;display:grid;grid-template-columns:minmax(0,1fr) 112px 54px;column-gap:8px;min-width:0}
+.smh .sms[data-modus="nummer"] .sms-ein{grid-template-columns:132px minmax(0,1fr) 54px}
+.smh .sms-f{position:relative;min-width:0;margin:0;grid-row:1}
+.smh .sms-f-s,.smh .sms-x{grid-column:1}
+.smh .sms-f-n{grid-column:2}
+.smh .sms[data-modus="nummer"] .sms-f-n{grid-column:1}
+.smh .sms[data-modus="nummer"] .sms-f-s,.smh .sms[data-modus="nummer"] .sms-x{grid-column:2}
+.smh .sms-f label{position:absolute;left:15px;right:12px;top:8px;font-family:var(--f-mono);font-size:9.92px;letter-spacing:.1em;text-transform:uppercase;line-height:1.2;color:var(--steel);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.smh .sms-f input{display:block;width:100%;height:54px;margin:0;padding:20px 14px 4px;border-radius:12px;border:1px solid rgba(238,240,242,.22);background:#16191c;box-shadow:none;font-weight:600;font-size:17px;color:#fff;caret-color:var(--laser)}
+.smh .sms-f-s input{padding-right:46px}
+.smh .sms-f-s label{right:50px}
+.smh .sms-f input::placeholder{color:#8f959a;font-weight:400}   /* 5,8 zu 1 auf dem Feld */
+.smh .sms-f input:hover{border-color:rgba(238,240,242,.38)}
+.smh .sms-f input:focus,.smh .sms-f input:focus-visible{outline:0;border-color:var(--laser);box-shadow:0 0 0 3px rgba(255,107,31,.25);border-radius:12px}
+.smh .sms-x{grid-row:1;position:relative;z-index:1;justify-self:end;align-self:center;width:36px;height:36px;margin-right:6px;padding:0;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--steel)}
+.smh .sms-x:hover{background:rgba(238,240,242,.1);color:#fff}
+.smh .sms-x[hidden]{display:none}
+.smh .sms-ib{grid-column:3;grid-row:1;display:grid;place-items:center;width:54px;height:54px;padding:0;border-radius:12px;border:1px solid rgba(238,240,242,.22);background:transparent;color:var(--blank)}
+.smh .sms-ib:hover{border-color:var(--blank);background:rgba(238,240,242,.06)}
+.smh .sms-ib.rollt svg{animation:sms-wurf .5s cubic-bezier(.3,1.4,.5,1)}
+@keyframes sms-wurf{50%{transform:rotate(200deg) scale(1.25)}to{transform:rotate(360deg)}}
+.smh .sms.is-load .sms-f input{background-image:linear-gradient(90deg,transparent,rgba(255,107,31,.16),transparent);background-size:200% 100%;animation:sms-lauf 1.1s linear infinite}
+@keyframes sms-lauf{from{background-position:200% 0}to{background-position:-200% 0}}
+/* Auswahl: eine Zeile unter einer feinen Linie. Links was das Schild betrifft, rechts die Liste, dazwischen der Mönch. Jeder Knopf: Mono-Beschriftung über dem Wert, Pfeil rechts */
+.smh .sms-wahl{grid-area:wahl;display:flex;flex-wrap:wrap;align-items:center;gap:2px 16px;margin:2px -10px 0;padding-top:6px;border-top:1px solid var(--line-d)}
+.smh .sms-wg{display:flex;align-items:center;gap:2px;min-width:0;flex:none}
+/* Der Mönch: klein, mit einem kurzen Satz als Text (keine Blase, nichts sieht aus wie ein Feld). Höchstens zwei Zeilen, die Zeile ist höher, beim Tippen springt nichts */
+.smh .sms-kopf{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:10px;padding:0 4px 0 20px}
+.smh .sms-pixbox{flex:none;display:block;width:40px;height:44px}
+.smh .sms-pix{display:block;width:100%;height:100%;object-fit:contain;object-position:50% 100%;image-rendering:pixelated}
+.smh .sms-say{min-width:0;margin:0;font-size:13px;line-height:1.4;color:var(--steel);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:balance}
+.smh .sms-say b{color:#fff;font-weight:600}
+.smh .sms-k{position:relative;display:grid;grid-template-columns:auto 9px;grid-template-rows:auto auto;column-gap:10px;align-items:center;justify-items:start;min-height:50px;padding:5px 12px;border:0;border-radius:12px;background:transparent;color:var(--blank);text-align:left;cursor:pointer;font:inherit}
+.smh .sms-k[hidden]{display:none}
+.smh .sms-k::after{content:"";grid-column:2;grid-row:1 / span 2;width:7px;height:7px;margin-top:-4px;border-right:1.6px solid var(--steel);border-bottom:1.6px solid var(--steel);transform:rotate(45deg);transition:transform .15s}
+.smh .sms-k[aria-expanded="true"]::after{transform:rotate(225deg);margin-top:4px}
+.smh .sms-k:hover,.smh .sms-k[aria-expanded="true"]{background:rgba(238,240,242,.08)}
+.smh .sms-k-l{grid-column:1;display:flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:9.92px;letter-spacing:.1em;text-transform:uppercase;line-height:1.3;color:var(--steel);white-space:nowrap}
+.smh .sms-k-v{grid-column:1;display:flex;align-items:center;gap:7px;min-width:0;font-size:14.4px;font-weight:600;line-height:1.35;white-space:nowrap}
+.smh .sms-k-v>span{overflow:hidden;text-overflow:ellipsis}
+.smh .sms-k-v small{margin-left:6px;font-family:var(--f-mono);font-size:11.52px;font-weight:400;color:var(--steel)}
+.smh .sms-k .tx{width:15px;height:15px}
+.smh .sms-k-f.is-an .sms-k-v{color:#ff8a4c}   /* aktiver Filter in Orange (8,4 zu 1) */
+.smh .sms-k-f:not(.is-an) .sms-k-v{color:var(--steel);font-weight:500}   /* ohne Wahl: „Preis, ★“ als ruhiger Hinweis, was sich filtern lässt (9,4 zu 1) */
+.smh .sms-anz{padding:0 12px}
+.smh .sms .count{color:var(--steel)}
+/* Farbpunkte auf dunklem Grund (Element, Listen, Leiste): ein heller Ring, sonst verschwinden Schwarz und Anthrazit. In den Listen größer,
+   der gewählte Eintrag mit orangefarbenem Ring */
+.smh .sms .tx,.smh .sms-pop .tx,.smh .sms-leiste .tx{box-shadow:0 0 0 1.5px rgba(255,255,255,.38),inset 0 1px 0 rgba(255,255,255,.18)}
+/* Marke „Beliebt“: in Listen und im Probehängen ein kleiner Rahmen; im Knopf hinter dem Wert ohne Rahmen, bei Farbe als Punkt mit Wort (am Rechner 10,5 px),
+   bei Größe nur der Punkt (sms-bel-p: das Wort bleibt für Screenreader im Text, Schriftgröße 0). Die Listen erklären den Punkt. Keine Zahlen */
+.smh .sms-bel{display:inline-flex;align-items:center;padding:1px 6px 0;border-radius:999px;border:1px solid rgba(255,107,31,.55);font-family:var(--f-mono);font-size:9.28px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;line-height:1.45;color:var(--laser);white-space:nowrap}
+.smh .sms-bel[hidden]{display:none}
+.smh .sms-k-v .sms-bel{flex:none;gap:5px;margin-left:3px;padding:0;border:0;border-radius:0;font-size:10.5px;letter-spacing:.06em;line-height:1}
+.smh .sms-k-v .sms-bel.sms-bel-p{gap:0;margin-left:1px;font-size:0;letter-spacing:0}
+.smh .sms-k-v .sms-bel::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--laser)}
+/* Spalten-Schalter (nur Handy, sobald etwas eingegeben ist) */
+.smh .sms-sp{display:none}
+.smh .sms-sel{display:none}
+/* Bis 1180 px reicht die Mitte der Auswahlzeile nicht für den Mönch: er steht dann in einer eigenen Zeile darunter */
+@media (min-width: 761px) and (max-width: 1180px){
+  .smh .sms-wahl{justify-content:space-between}
+  .smh .sms-kopf{order:3;flex:1 1 100%;padding:4px 12px 4px;border-top:1px solid var(--line-d)}
+}
+
+/* Listen: Popover in der obersten Ebene. Ohne Popover-API fest mit hohem z-index. Sichtbar nur mit is-auf (das Skript setzt die Klasse beim Öffnen),
+   damit kein Stil hier die Regel des Browsers für geschlossene Popover aushebelt */
+.smh .sms-pop{position:fixed;inset:auto;left:0;top:0;z-index:2147483000;display:none;width:auto;height:auto;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;color:var(--blank);overflow:visible}
+.smh .sms-pop.is-auf{display:block}
+.smh .sms-pop-in{min-width:220px;max-width:min(340px,calc(100vw - 16px));max-height:min(440px,calc(100vh - 24px));overflow:auto;overscroll-behavior:contain;padding:6px;border-radius:14px;background:#15181b;box-shadow:0 0 0 1px rgba(238,240,242,.14),0 24px 48px -16px rgba(0,0,0,.65)}
+.smh .sms-pop-in:focus{outline:0}   /* nimmt den Fokus nur, damit ein Tipp auf Text die Liste nicht schließt */
+.smh .sms-pop.is-auf .sms-pop-in{animation:sms-pop .14s ease-out}
+@keyframes sms-pop{from{opacity:0;transform:translateY(-4px)}}
+.smh .sms-pop-t{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:8px 10px 6px;font-family:var(--f-mono);font-size:9.92px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel)}
+.smh .sms-pop ul{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.smh .sms-pop [role="option"]{position:relative;display:flex;align-items:center;gap:10px;min-height:44px;padding:0 38px 0 12px;border-radius:10px;font-size:14.4px;line-height:1.3;color:var(--blank);cursor:pointer;-webkit-user-select:none;user-select:none}
+.smh .sms-pop [role="option"]:hover{background:rgba(238,240,242,.08)}
+.smh .sms-pop [role="option"]:focus-visible{outline:2px solid var(--blau-hell);outline-offset:-2px;border-radius:10px}
+.smh .sms-pop [role="option"][aria-selected="true"]{font-weight:600;background:rgba(238,240,242,.06)}
+.smh .sms-pop [role="option"]::after{content:"";position:absolute;right:16px;top:50%;width:11px;height:6px;margin-top:-5px;border-left:2px solid var(--laser);border-bottom:2px solid var(--laser);transform:rotate(-45deg);opacity:0}
+.smh .sms-pop [role="option"][aria-selected="true"]::after{opacity:1}
+.smh .sms-pop [role="option"] small{margin-left:auto;font-family:var(--f-mono);font-size:11.52px;font-weight:400;color:var(--steel)}
+.smh .sms-pop [role="option"] .tx{width:18px;height:18px}
+.smh .sms-pop [role="option"][aria-selected="true"] .tx{box-shadow:0 0 0 2px var(--night),0 0 0 4px var(--laser)}
+/* Größe: Zahl, dann ein Balken im festen Maßstab (110 cm = ganze Spur, 3 px hoch), bei Breiten bei 1 m ein kleines Tür-Zeichen (8 × 12 px, steht auf der Spur:
+   eine Haustür ist etwa 1 m breit). Die erste Zeile sagt einmal „Türbreite“ (sms-tb) */
+.smh .sms-gw{flex:none;min-width:4.3em;font-variant-numeric:tabular-nums}
+.smh .sms-gb{position:relative;flex:none;width:var(--spur,72px);height:13px;background:linear-gradient(rgba(238,240,242,.18),rgba(238,240,242,.18)) 0 calc(100% - 1px)/100% 1px no-repeat}
+.smh .sms-gb i{position:absolute;left:0;bottom:0;height:3px;border-radius:1.5px;background:var(--laser)}
+.smh .sms-gb s{position:absolute;bottom:0;width:8px;height:12px;margin-left:-4px;box-sizing:border-box;border:1.5px solid var(--steel);border-bottom:0;border-radius:2px 2px 0 0}
+.smh .sms-gb s::after{content:"";position:absolute;right:1px;top:5px;width:1.5px;height:1.5px;border-radius:50%;background:var(--steel)}
+.smh .sms-tb{flex:none;font-family:var(--f-mono);font-size:9.92px;letter-spacing:.04em;line-height:1.2;color:var(--steel)}
+/* Filter: Preis-Regler und „ab 4,8 ★“ (sm-coll.js), Treffer und „Fertig“ */
+.smh .sms-fl{display:grid;gap:10px;min-width:270px;padding:2px 10px 8px;font-size:14.4px}
+.smh .sms-fl b{color:#fff}
+.smh .sms-fl input[type=range]{width:100%;margin:0;accent-color:var(--laser)}
+.smh .sms-fl-l{color:var(--blank)}
+.smh .sms-fl-ende{display:flex;justify-content:space-between;margin-top:-6px;font-family:var(--f-mono);font-size:10.88px;color:var(--steel)}
+.smh .sms-cb{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
+/* Kästchen im eigenen Stil: Rahmen auf Dunkel, angehakt in Orange (das Kästchen des Browsers bliebe ein weißes Quadrat) */
+.smh .sms-cb input{-webkit-appearance:none;appearance:none;flex:none;display:grid;place-items:center;width:18px;height:18px;margin:0;border-radius:4px;border:1.5px solid rgba(255,255,255,.4);background:transparent;cursor:pointer}
+.smh .sms-cb input:checked{border-color:var(--laser);background:var(--laser)}
+.smh .sms-cb input:checked::after{content:"";width:9px;height:5px;margin-top:-3px;border-left:2px solid var(--night);border-bottom:2px solid var(--night);transform:rotate(-45deg)}
+.smh .sms-cb input:focus-visible{outline:2px solid var(--blau-hell);outline-offset:2px}
+.smh .sms-fl-fuss{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.smh .sms-pop .count{color:var(--steel)}
+.smh .sms-fertig{min-height:44px;padding:0 22px;border-radius:999px;border:0;background:var(--blank);color:var(--ink);font-weight:600;font-size:14.4px}
+.smh .sms-fertig:focus-visible{outline-color:var(--blau-hell)}
+/* Blatt von unten (Handy): abgedunkelte Fläche über allem, die Liste unten über die ganze Breite */
+.smh .sms-pop.sms-blatt{inset:0;width:100%;height:100%;background:rgba(11,12,14,.5)}
+.smh .sms-pop.sms-blatt.is-auf{display:flex;align-items:flex-end}
+.smh .sms-blatt .sms-pop-in{width:100%;max-width:none;max-height:min(78vh,560px);padding:4px 10px calc(14px + env(safe-area-inset-bottom,0px));border-radius:20px 20px 0 0;box-shadow:0 -12px 40px -12px rgba(0,0,0,.55)}
+.smh .sms-blatt .sms-pop-in::before{content:"";display:block;width:36px;height:4px;margin:6px auto 2px;border-radius:2px;background:rgba(238,240,242,.25)}
+.smh .sms-pop.sms-blatt.is-auf .sms-pop-in{animation:sms-blatt .2s ease-out}
+@keyframes sms-blatt{from{transform:translateY(40%);opacity:.4}}
+.smh .sms-blatt [role="option"]{min-height:50px;font-size:15.2px}
+.smh .sms-blatt [role="option"] .tx{width:22px;height:22px}
+.smh .sms-blatt{--spur:96px}
+.smh .sms-blatt .sms-fl{min-width:0}
+/* Größen am Handy: immer Kacheln (bis vier zwei je Reihe, ab fünf drei: 5 = 3 + 2, 8 = 3 + 3 + 2). In jeder Kachel oben die Zahl, rechts der Haken der gewählten,
+   darunter der Balken über die ganze Kachel, darunter bei Bedarf „Beliebt“ und in der ersten „Türbreite“ (rechts, unter dem Tür-Zeichen) */
+.smh .sms-blatt[data-pop="g"] ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.smh .sms-blatt[data-pop="g"].sms-g3 ul{grid-template-columns:repeat(3,minmax(0,1fr))}
+.smh .sms-blatt[data-pop="g"] [role="option"]{flex-wrap:wrap;align-content:flex-start;gap:8px 6px;min-height:76px;padding:12px 11px 10px;border:1px solid rgba(238,240,242,.12)}
+.smh .sms-blatt[data-pop="g"] [role="option"]::after{top:17px;right:11px}
+.smh .sms-blatt[data-pop="g"] [role="option"][aria-selected="true"]{border-color:var(--laser);background:rgba(255,107,31,.1)}
+.smh .sms-blatt[data-pop="g"] .sms-gw{flex:1 1 100%;min-width:0;padding-right:18px}
+.smh .sms-blatt[data-pop="g"] .sms-gb{flex:1 1 100%;width:auto}
+.smh .sms-blatt[data-pop="g"] .sms-bel{order:3}
+.smh .sms-blatt[data-pop="g"] .sms-tb{order:4;margin-left:auto}
+
+/* Schlanke Leiste oben: eigener Text als Pille (zurück zur Eingabe), Farbe und Größe. Deckend, damit nichts durchscheint. Fest am Fenster unter dem Kopf des Shops,
+   falls der klebt (--sms-oben setzt das Skript). Am Rechner schwebt sie als runde Leiste so breit wie die Seite, rechts die Trefferzahl; am Handy über die ganze Breite */
+.smh .sms-leiste{position:fixed;left:0;right:0;top:var(--sms-oben,0px);z-index:45;background:var(--night);color:var(--blank);box-shadow:0 12px 28px -14px rgba(0,0,0,.55);transform:translateY(-110%);visibility:hidden;transition:transform .2s ease,visibility 0s .2s}
+.smh .sms-leiste::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--laser) 18%,var(--laser) 82%,transparent);opacity:.7}
+.smh .sms-leiste.is-an{transform:none;visibility:visible;transition:transform .2s ease}
+.smh .sms-leiste[hidden]{display:none}
+.smh .sms-leiste-in{display:flex;align-items:center;gap:6px;max-width:var(--max);height:58px;margin:0 auto;padding:0 var(--gutter)}
+.smh .sms-pill{flex:0 1 auto;min-width:0;max-width:440px;display:inline-flex;align-items:center;gap:8px;height:44px;margin-right:6px;padding:0 16px;border-radius:999px;border:1px solid rgba(238,240,242,.22);background:rgba(238,240,242,.06);color:#fff;font-size:14.4px;font-weight:600}
+.smh .sms-pill:hover{border-color:var(--blank)}
+.smh .sms-pill svg{flex:none;color:var(--laser)}
+.smh .sms-pill>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.smh .sms-k-kl{flex:none;display:flex;gap:8px;min-height:44px;padding:0 12px}
+.smh .sms-k-kl::after{margin:-4px 0 0 2px}
+.smh .sms-k-kl[aria-expanded="true"]::after{margin-top:4px}
+.smh .sms-leiste-anz{margin-left:auto;padding-right:6px;font-family:var(--f-mono);font-size:11.52px;letter-spacing:.06em;white-space:nowrap;color:var(--steel)}   /* 9,4 zu 1 */
+.smh .sms-leiste-anz b{color:#fff;font-weight:600}
+@media (min-width: 761px){
+  .smh .sms-leiste{top:calc(var(--sms-oben,0px) + 8px);width:calc(min(100%, var(--max)) - 2 * var(--gutter));margin:0 auto;border-radius:14px;box-shadow:var(--shadow),0 18px 36px -18px rgba(0,0,0,.6)}
+  .smh .sms-leiste::after{top:0;bottom:auto;height:2px;border-radius:14px 14px 0 0;opacity:1}
+  .smh .sms-leiste-in{max-width:none;height:58px;padding:0 10px}
+}
+.smh .cgrid{scroll-margin-top:calc(var(--sms-oben,0px) + 70px)}   /* Eingabetaste führt zu den Karten: unter die Leiste, die dann oben steht */
+
+/* Karte mit eigenem Schild: statt des Fotos die Tür-Szene. Die Wand ist je Hausfoto für alle Karten gleich (Klassen sms-w0 helle, sms-w1 dunkle Wand;
+   Ausschnitt aus SMSchild.szene als --sms-g0 bis --sms-p1 am Rahmen, die Zahlen hier gelten, bis das Skript sie gesetzt hat).
+   Die Farbe dahinter trägt, falls ein Hausfoto fehlt. --sms-cm: 1 cm der Szene in px (setzt das Skript aus der Kartenbreite) */
+.smh .cgrid .cc{position:relative}
+.smh .cc.sms-an .ph img{opacity:0!important;visibility:hidden;transform:none!important}
+.smh .sms-st{position:absolute;inset:0;overflow:hidden;background-repeat:no-repeat}
+.smh .sms-w0,.smh .sms-w0 .sms-lp{background-color:#cfcdc8;background-image:url(sm-ss-haus-1.jpg)}
+.smh .sms-w1,.smh .sms-w1 .sms-lp{background-color:#33363a;background-image:url(sm-ss-haus-2.jpg)}
+.smh .sms-st.sms-w0{background-size:var(--sms-g0,172.32% auto);background-position:var(--sms-p0,60% 43.41%)}
+.smh .sms-st.sms-w1{background-size:var(--sms-g1,183.07% auto);background-position:var(--sms-p1,65.07% 44.29%)}
+.smh .sms-w1{--s1:.6;--s2:.36}
+.smh .sms-w1.sms-o2{--vf:brightness(1.12) contrast(1.04)}   /* Edelstahl hebt sich so von der dunklen Wand ab */
+/* Schild an der Wand und in der Lupe. Schatten in cm, als läge das Schild 1,5 cm vor der Wand: enger Kern und weicher Hof (--c = 1 cm in px) */
+.smh .sms-auf{position:absolute;--c:var(--sms-cm,1.14px)}
+.smh .sms-auf svg,.smh .sms-lp-auf svg{display:block;width:100%;height:100%;overflow:visible;filter:var(--vf,brightness(1)) drop-shadow(calc(var(--c)*.14) calc(var(--c)*.55) calc(var(--c)*.2) rgba(0,0,0,var(--s1,.46))) drop-shadow(calc(var(--c)*.3) calc(var(--c)*1.4) calc(var(--c)*1) rgba(0,0,0,var(--s2,.24)))}
+/* Fächer: Lichtkegel mit zwei Haarlinien vom Schild zur Lupe (nur bei der Lupe neben der Tür) */
+.smh .sms-kg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.smh .sms-kg polygon{fill:rgba(255,255,255,.2)}
+.smh .sms-kg path{fill:none;stroke:rgba(11,12,14,.42);stroke-width:1;vector-effect:non-scaling-stroke}
+.smh .sms-w1 .sms-kg polygon{fill:rgba(255,255,255,.07)}
+.smh .sms-w1 .sms-kg path{stroke:rgba(246,245,241,.55)}
+/* Lupe: fester Kasten unten links, Inhalt = dieselbe Wand näher (--gn, --pn), das Schild mittig */
+.smh .sms-lp{position:absolute;left:3%;bottom:3%;width:55%;height:34%;border-radius:12px;overflow:hidden;background-repeat:no-repeat;background-size:var(--gn);background-position:var(--pn);box-shadow:0 0 0 2px var(--paper),0 0 0 3px rgba(11,12,14,.28),0 12px 22px -8px rgba(0,0,0,.6)}
+.smh .sms-lp::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(70% 80% at 50% 42%,rgba(255,255,255,.13),rgba(255,255,255,0) 70%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.1));box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);pointer-events:none}
+.smh .sms-w1 .sms-lp::after{background:radial-gradient(70% 80% at 50% 42%,rgba(255,255,255,.07),rgba(255,255,255,0) 70%)}
+/* Das Schild in der Lupe: der Kasten ist 86 × 72 % der Lupe (breit 92 × 78 %), das Schild darin so breit, wie das Skript es rechnet (--wn, --ws in Prozent
+   der Lupe), mittig. Meist füllt es den Kasten; kleine Schilder, die die Lupe sonst mehr als sechsfach (breit: zehnfach) vergrößern müsste, bleiben kleiner (fm im Skript)
+   und stehen so im selben Maßstab wie die Wand dahinter. Der Kasten bleibt gleich, damit der Laser weiter über die ganze Lupe läuft */
+.smh .sms-lp-auf{position:absolute;left:7%;right:7%;top:14%;bottom:14%;--c:calc(var(--sms-cm,1.14px)*var(--fn,2.5))}
+.smh .sms-lp-auf svg{width:calc(var(--wn,86%)/.86);margin:0 auto}
+/* Körnung über der Wand in der Lupe (.sms-kn liegt unter dem Schild): das Hausfoto hat nur 2,7 px je cm, vergrößert wird der Putz weich.
+   Eine feine Kachel aus dunklen und hellen Punkten (64 px, im Mittel neutral, gebaut von korn.py im Prüfstand) gibt ihm wieder Korn.
+   Je stärker die Lupe vergrößert, desto deutlicher (--fn, --fs); bis zweifach bleibt sie unsichtbar, dort ist das Foto selbst scharf.
+   Auf der dunklen Wand schwächer (--kd), auf dichten Displays feiner und schon ab einfach */
+.smh .sms-kn{position:absolute;inset:0;background:url(data:image/png;base64,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) 0 0/64px;opacity:calc((var(--fn,3) - 2)*var(--kd,.2));pointer-events:none}
+.smh .sms-breit .sms-kn{opacity:calc((var(--fs,3) - 2)*var(--kd,.2))}
+.smh .sms-w1{--kd:.08}
+@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:1.5dppx){
+  .smh .sms-kn{background-size:40px;opacity:calc((var(--fn,3) - 1)*var(--kd,.2))}
+  .smh .sms-breit .sms-kn{opacity:calc((var(--fs,3) - 1)*var(--kd,.2))}
+}
+/* Maßband am unteren Rand der Lupe, so breit wie das Schild: ein Strich je 10 cm (--z), bei kleinen Schildern dazu halbe Striche je 5 cm.
+   So zeigt auch die Lupe die Größe: 3 Felder bei 30 cm, 11 bei 110 cm */
+.smh .sms-ma,.smh .sms-ml{position:absolute;--lw:1px;--t:linear-gradient(90deg,var(--laser) var(--lw),transparent var(--lw));--e:linear-gradient(var(--laser),var(--laser));border-bottom:var(--lw) solid var(--laser);background:var(--e) 100% 0/var(--lw) 100% no-repeat,var(--t) 0 0/var(--z) 100% repeat-x}
+.smh .sms-ma{z-index:1;left:calc(50% - var(--wn)/2);width:var(--wn);bottom:4.5%;height:5px}
+.smh .sms-ma.sms-halb{background:var(--e) 100% 0/var(--lw) 100% no-repeat,var(--t) 0 0/var(--z) 100% repeat-x,var(--t) 0 100%/calc(var(--z)/2) 50% repeat-x}
+/* Maß als Reiter auf der Lupe */
+.smh .sms-dim,.smh .sms-warn,.smh .cc.sms-foto .ph::after{position:absolute;z-index:2;font-family:var(--f-mono);font-size:10.88px;letter-spacing:.04em;line-height:1.3}
+.smh .sms-dim{left:3%;bottom:calc(37% + 2px);display:flex;align-items:center;gap:.45em;padding:.3em .65em .22em;border-radius:7px 7px 0 0;background:var(--paper);color:var(--ink);white-space:nowrap;box-shadow:0 0 0 1px rgba(11,12,14,.18)}
+.smh .sms-dim svg{width:1em;height:1em;flex:none}
+/* breite Lupe (Klasse sms-breit an der Karte, setzt das Skript je Karte): schmale Karten und kleine Schrift. Sie reicht über die ganze Breite und verdeckt das untere Drittel der Tür */
+.smh .sms-breit .sms-lp{width:var(--bw,94%);background-size:var(--gs);background-position:var(--ps)}   /* --bw: auf breiten Karten endet sie vor dem Haus-Symbol (lpS im Skript) */
+.smh .sms-breit .sms-lp-auf{left:4%;right:4%;top:11%;bottom:11%;--c:calc(var(--sms-cm,.68px)*var(--fs,3))}
+.smh .sms-breit .sms-lp-auf svg{width:calc(var(--ws,92%)/.92)}
+.smh .sms-breit .sms-ma{left:calc(50% - var(--ws)/2);width:var(--ws);bottom:3.5%;height:4px}
+.smh .sms-breit .sms-kg{display:none}
+/* Lupe lohnt nicht (Schild an der Wand schon groß): keine Lupe, das Maß sitzt als Schildchen unten links */
+.smh .sms-ohne-n .sms-lp,.smh .sms-ohne-n .sms-kg,.smh .sms-breit .sms-ohne-s .sms-lp{display:none}
+.smh .sms-breit .sms-ohne-n:not(.sms-ohne-s) .sms-lp{display:block}
+.smh .sms-ohne-n .sms-dim,.smh .sms-breit .sms-ohne-s .sms-dim{left:10px;bottom:10px;border-radius:7px}
+.smh .sms-ohne-n .sms-dim svg,.smh .sms-breit .sms-ohne-s .sms-dim svg{display:none}
+.smh .sms-breit .sms-ohne-n:not(.sms-ohne-s) .sms-dim{left:3%;bottom:calc(37% + 2px);border-radius:7px 7px 0 0}
+.smh .sms-breit .sms-ohne-n:not(.sms-ohne-s) .sms-dim svg{display:block}
+/* Hohe und runde Schilder mit Textzeile (Klasse sms-hoch an der Szene, setzt das Skript): die Lupe neben der Tür ist 50 % statt 34 % hoch,
+   Maß und Hinweis rücken mit. Gilt nicht für die breite Lupe (schmale Karten), die das Skript mit 34 % rechnet, und nicht im Probehängen (Maßlinie) */
+.smh .cc:not(.sms-breit) .sms-hoch:not(.sms-ohne-n) .sms-lp{height:50%}
+.smh .cc:not(.sms-breit) .sms-hoch:not(.sms-ohne-n) .sms-lp-auf{top:8%;bottom:8%}
+.smh .cc:not(.sms-breit) .sms-hoch:not(.sms-ohne-n) .sms-dim{bottom:calc(53% + 2px)}
+.smh .cc:not(.sms-breit) .sms-hoch:not(.sms-ohne-n) .sms-warn{bottom:calc(53% + 26px)}
+/* Hinweis der Werkstatt (z. B. „Hier höchstens 70 cm“): über dem Maß. Oben links säße er auf Karten mit Abzeichen genau auf dem Schild */
+.smh .sms-warn{left:3%;bottom:calc(37% + 26px);width:fit-content;max-width:94%;padding:.28em .6em;border-radius:7px;background:#fff1e8;color:#9a3d06;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+/* grau: kein Problem, nur eine Auskunft (eigene beliebteste Größe, „In einer Spalte lesbar“) */
+.smh .sms-warn.sms-neutral{background:rgba(246,245,241,.95);color:var(--ink-2)}
+.smh .sms-1sp{display:none}
+.smh .sms-schmal .cc.sms-k2.sms-breit .sms-1sp{display:block}
+.smh .sms-schmal .cc.sms-k2.sms-breit:has(.tags) .sms-1sp{display:none}   /* graue Auskunft: das Abzeichen „Top 1“ behält seine Ecke */
+.smh .sms-breit .sms-warn{max-width:calc(94% - 36px)}
+.smh .sms-ohne-n .sms-warn,.smh .sms-breit .sms-ohne-s .sms-warn{left:10px;bottom:36px;max-width:calc(100% - 20px)}
+.smh .sms-breit .sms-ohne-n:not(.sms-ohne-s) .sms-warn{left:3%;bottom:calc(37% + 26px);max-width:calc(94% - 36px)}
+/* Schmale Karten (Klasse sms-schmal am Raster, zwei Spalten auf dem Handy): über dem Maß läge der Hinweis auf dem Schild an der Wand. Dort steht er
+   in einer Zeile am oberen Bildrand (bis 22 px, ein 50 cm hohes Schild beginnt bei 24 px), mit der kurzen Fassung aus data-k.
+   Das Abzeichen „Top 1“ weicht, solange die Ecke gebraucht wird (Klasse sms-ecke: Hinweis, oder das Schild reicht selbst bis dorthin) */
+.smh .cgrid.sms-schmal .cc.sms-breit .sms-warn{left:6px;top:5px;bottom:auto;max-width:calc(100% - 12px);padding:.2em .5em;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.smh .sms-schmal .sms-warn[data-k]>span{display:none}
+.smh .sms-schmal .sms-warn[data-k]::before{content:attr(data-k)}
+.smh .sms-schmal .cc.sms-ecke .tags{display:none}
+.smh .sms-schmal .sms-dim .sms-dim-bel{gap:0;margin-left:.1em;font-size:0}   /* schmale Karten: nur der Punkt, das Haus-Symbol steht rechts in derselben Zeile */
+.smh .cc.sms-foto .ph::after{content:attr(data-sms-l);left:10px;bottom:10px;padding:.28em .6em;border-radius:7px;background:rgba(246,245,241,.94);color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.smh .price .sms-je{font-weight:400;font-size:.86em;color:var(--ink-2);white-space:nowrap}
+/* Preis der gewählten Farbe und Größe, darunter die Größe als Mono-Zeile (sms-gr, setzt das Skript mit und ohne Eingabe). Die Zeile läuft unter Preis und
+   Sternen über die ganze Breite (absolut in .meta), schiebt also die Sterne nie weg; jede Karte der Werkstatt-Seiten hält ihren Platz frei (auch ohne Größe,
+   etwa Emaille, und bevor die Preise geladen sind), damit nichts springt */
+.smh.sms-werk .pcard .meta{position:relative;padding-bottom:16px}
+.smh .price .sms-gr{position:absolute;left:0;right:0;bottom:0;overflow:hidden;font-family:var(--f-mono);font-size:10.88px;font-weight:400;line-height:1.3;letter-spacing:.02em;color:var(--ink-2);white-space:nowrap;text-overflow:ellipsis}
+.smh .sms-dim .sms-dim-bel{display:inline-flex;align-items:center;gap:4px;margin-left:.2em;font-weight:500;color:#9a3d06}   /* „beliebt“ auf dem Maß: 6,3 zu 1 auf Papier */
+.smh .sms-dim .sms-dim-bel::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--laser)}
+/* Haus-Symbol (Probehängen): unten rechts auf dem Türblatt, weg von Türecke und Vordach. Bei der breiten Lupe sitzt es kleiner am rechten Ende der Reiter-Zeile.
+   .sms-hbw liegt als Quadrat über der Bildfläche, weil der Knopf neben dem Link der Karte stehen muss, nicht darin */
+.smh .sms-hbw{position:absolute;left:0;top:0;z-index:3;width:100%;aspect-ratio:1/1;pointer-events:none}
+.smh .sms-hb{position:absolute;right:3%;bottom:3%;width:36px;height:36px;padding:0;border-radius:50%;border:0;background:rgba(246,245,241,.94);color:var(--ink);display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25);pointer-events:auto;transition:transform .2s,background .2s,color .2s}
+.smh .sms-hb:hover{background:var(--ink);color:#fff;transform:scale(1.08)}
+.smh .sms-schmal .cc.sms-breit:not(.sms-os) .sms-hb{bottom:calc(37% + 5px);width:30px;height:30px}   /* nur in zwei Spalten, wo jede Karte die breite Lupe hat */
+.smh .sms-breit .sms-hb svg{width:16px;height:16px}
+/* Zeiger auf der Karte (oder Tastatur-Fokus): das echte Produktfoto klappt als kleines Bild oben rechts über der Tür auf, Schild und Lupe bleiben sichtbar */
+@media (hover:hover){
+  .smh .cc.sms-an .ph img.a{inset:3% 3% auto auto;width:40%;height:40%;z-index:2;border-radius:10px;box-shadow:0 0 0 2px var(--paper),0 0 0 3px rgba(11,12,14,.28),0 12px 22px -8px rgba(0,0,0,.6);transform:scale(.9)!important;transform-origin:100% 0;transition:opacity .15s,transform .15s,visibility 0s .15s}
+  .smh .cc.sms-an .pcard:hover .ph img.a,.smh .cc.sms-an .pcard:focus-visible .ph img.a{opacity:1!important;visibility:visible;transform:none!important;transition:opacity .2s .3s,transform .2s .3s,visibility 0s .3s}
+  .smh .cc.sms-an .ph::after{content:"Beispielfoto";position:absolute;z-index:3;right:calc(3% + 6px);top:calc(43% - 24px);padding:.2em .5em;border-radius:6px;background:rgba(246,245,241,.94);color:var(--ink-2);font-family:var(--f-mono);font-size:9.6px;letter-spacing:.06em;text-transform:uppercase;line-height:1.3;opacity:0;transition:opacity .15s;pointer-events:none}
+  .smh .cc.sms-an .pcard:hover .ph::after,.smh .cc.sms-an .pcard:focus-visible .ph::after{opacity:1;transition:opacity .2s .3s}
+}
+
+/* Laser: der erste fertige Entwurf wird Karte für Karte in der Lupe freigeschnitten (--i = Platz der Karte); ohne Lupe an der Wand */
+.smh .sms-cut .sms-lp-auf,.smh .sms-cut.sms-ohne-n .sms-auf{animation:sms-schnitt .85s cubic-bezier(.35,.1,.25,1) both;animation-delay:calc(var(--i,0)*70ms)}
+.smh .sms-cut .sms-lp::before{content:"";position:absolute;top:8%;bottom:8%;left:4%;z-index:2;width:2px;border-radius:2px;background:#ffe1cf;box-shadow:0 0 0 1px rgba(255,107,31,.9),0 0 14px 5px rgba(255,107,31,.75),0 0 34px 12px rgba(255,107,31,.35);opacity:0;pointer-events:none;animation:sms-kopf .85s cubic-bezier(.35,.1,.25,1) both;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes sms-schnitt{from{clip-path:inset(-30% 100% -30% -8%)}to{clip-path:inset(-30% -8% -30% -8%)}}
+@keyframes sms-kopf{0%{left:4%;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:96%;opacity:0}}
+
+/* Probehängen */
+/* Knopfreihen im Probehängen (Oberfläche, Größe, Ansicht) */
+.smh .sms-dlg .sms-grp{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.smh .sms-dlg .sms-grp[hidden]{display:none}
+.smh .sms-dlg .sms-grp button{flex:none;display:inline-flex;align-items:center;gap:.45em;padding:.42em .85em;border-radius:999px;border:1px solid var(--line-l);background:transparent;font-size:13.44px;white-space:nowrap;color:var(--ink)}
+.smh .sms-dlg .sms-bel{color:#9a3d06;border-color:rgba(154,61,6,.45);margin-left:2px}   /* 6,3 zu 1 auf Papier */
+.smh .sms-dlg .sms-grp button[aria-pressed="true"] .sms-bel{color:#ffb38a;border-color:rgba(255,179,138,.55)}
+.smh .sms-dlg{width:min(1080px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);margin:auto;padding:0;border:0;border-radius:var(--r);background:var(--paper);color:var(--ink);overflow:auto;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.smh .sms-dlg::backdrop{background:rgba(11,12,14,.66)}
+.smh .sms-dlg-in{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr)}
+/* Bühne: das Hausfoto liegt auf der Bühne (Klasse sms-w0 oder sms-w1, Ausschnitt setzt das Skript), die Szene ist ein Quadrat so hoch wie die Bühne.
+   Am Rechner ist die Bühne selbst quadratisch, auf dem Handy flacher (siehe unten): dann zeigt sie links mehr Wand und rechts mehr von der Tür,
+   die Szene sitzt --sms-r vom rechten Rand, Lupe und Maß rücken um --sms-x an den linken Rand der Bühne */
+.smh .sms-dlg-stage{position:relative;aspect-ratio:1/1;align-self:start;background-repeat:no-repeat;overflow:hidden}
+.smh .sms-dlg-stage.ganz{background:var(--beton)}
+.smh .sms-dlg-stage>.sms-st{inset:0 var(--sms-r,0px) auto auto;height:100%;aspect-ratio:1/1;background:none;overflow:visible}
+.smh .sms-gross .sms-lp{border-radius:16px;left:calc(3% - var(--sms-x,0px))}
+.smh .sms-gross .sms-dim{font-size:12.8px;left:calc(3% - var(--sms-x,0px))}
+.smh .sms-gross .sms-warn{display:none}   /* steht im Probehängen im Text daneben */
+.smh .sms-gross .sms-ma{height:8px;--lw:1.5px}
+/* Maßlinie unter dem Schild an der Wand: Striche alle 10 cm, darunter die Breite */
+.smh .sms-ml{height:7px;--lw:1.5px}
+.smh .sms-ml b{position:absolute;left:50%;top:calc(100% + 5px);transform:translateX(-50%);padding:.2em .55em;border-radius:6px;background:var(--laser);color:var(--ink);font:500 11.52px/1.3 var(--f-mono);letter-spacing:.04em;white-space:nowrap}
+.smh .sms-dlg-haus{position:absolute;left:0;right:0;top:0;aspect-ratio:1168/880;background-repeat:no-repeat;background-size:100% 100%}
+.smh .sms-dlg-monk{position:absolute;width:auto;max-width:none;image-rendering:pixelated;filter:drop-shadow(2px 3px 2px rgba(0,0,0,.35))}
+.smh .sms-dlg-cap{position:absolute;left:0;right:0;top:calc(100%/1168*880);bottom:0;display:flex;align-items:center;margin:0;padding:10px 18px;font-size:13.44px;line-height:1.45;color:var(--ink-2)}
+.smh .sms-dlg-cap b{color:var(--ink);font-weight:600;margin-right:.35em}
+.smh .sms-dlg-side{position:relative;display:grid;gap:12px;align-content:start;padding:24px 22px}
+.smh .sms-dlg .sms-eyebrow{color:var(--warn)}
+.smh .sms-dlg-side h2{font-size:22px;font-weight:600;letter-spacing:-.01em;padding-right:40px}
+.smh .sms-dlg-dim{font-size:14.4px;line-height:1.45;color:var(--ink-2)}
+.smh .sms-dlg-dim b{color:var(--ink)}
+.smh .sms-dlg .sms-grp button{border-color:var(--line-l);color:var(--ink)}
+.smh .sms-dlg .sms-grp button:hover{border-color:var(--ink)}
+.smh .sms-dlg .sms-grp button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.smh .sms-dlg-kauf{display:grid;gap:12px}   /* Preis und Knopf: am Rechner untereinander, auf dem Handy als Fuß am unteren Rand des Fensters (siehe unten) */
+.smh .sms-dlg-preis{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.smh .sms-dlg-preis s{font-weight:400;font-size:15px;color:var(--ink-3)}
+.smh .sms-dlg-preis .sms-je{font-weight:400;font-size:13.44px;color:var(--ink-2)}
+.smh .sms-dlg-nav{display:flex;gap:8px}
+.smh .sms-dlg-nav .btn{flex:1}
+.smh .sms-dlg-link{justify-self:start;padding:0;border:0;background:none;color:var(--ink-2);font-size:13.44px;text-decoration:underline;text-underline-offset:3px}
+.smh .sms-dlg-x{position:absolute;right:12px;top:12px;width:36px;height:36px;padding:0;border-radius:50%;border:1px solid var(--line-l);background:var(--white);font-size:20px;line-height:1;color:var(--ink)}
+
+@media (prefers-reduced-motion: reduce){
+  .smh .sms-ib.rollt svg,.smh .sms.is-load .sms-f input,.smh .sms-cut .sms-lp-auf,.smh .sms-cut.sms-ohne-n .sms-auf,.smh .sms-cut .sms-lp::before,.smh .sms-pop.is-auf .sms-pop-in{animation:none}
+  .smh .sms-hb,.smh .cc.sms-an .ph img.a,.smh .cc.sms-an .ph::after,.smh .sms-leiste,.smh .sms-k::after{transition:none!important}
+}
+/* Probehängen in einer Spalte (Handy): flache Bühne, Auswahl bricht um (nichts läuft quer über), Preis und Knopf bleiben als Fuß im Fenster stehen */
+@media (max-width: 760px){
+  .smh .sms-dlg-in{grid-template-columns:minmax(0,1fr)}
+  .smh .sms-dlg{width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}
+  .smh .sms-dlg-stage{aspect-ratio:4/3}
+  .smh .sms-dlg-stage.ganz{aspect-ratio:auto}
+  .smh .sms-dlg-stage.ganz .sms-dlg-haus{position:relative}
+  .smh .sms-dlg-cap{position:static;padding:8px 14px;font-size:12.48px}
+  .smh .sms-dlg-side{padding:14px 14px 0;gap:10px}
+  .smh .sms-dlg-side h2{font-size:20px;padding-right:48px}
+  .smh .sms-dlg-x{right:8px;top:8px;width:44px;height:44px}
+  .smh .sms-dlg .sms-grp{flex-wrap:wrap;gap:6px}
+  .smh .sms-dlg .sms-grp button{min-height:44px;padding:.42em .8em}
+  .smh .sms-dlg-kauf{position:sticky;bottom:0;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0 -14px;padding:10px 14px;background:var(--paper);box-shadow:0 -1px 0 var(--line-l),0 -12px 18px -14px rgba(0,0,0,.4)}
+  .smh .sms-dlg-kauf .sms-dlg-preis{font-size:18px}
+  .smh .sms-dlg-kauf .btn{flex:1 1 180px;min-height:46px}
+  .smh .sms-dlg-nav .btn{min-height:44px}
+  .smh .sms-dlg-link{min-height:44px;margin-bottom:6px}
+}
+/* Handy: das Element wird kompakt. Mönch links neben Mono-Zeile und Satz (fest zwei Zeilen hoch), darunter die Felder, dann Farbe und Größe als zwei
+   große Knöpfe, darunter in einer Reihe Kategorie, Sortieren, Filter (ohne Beschriftung, nur der Wert) und der Spalten-Schalter. Auswahlzeile und Mönch
+   lösen sich ins Raster des Elements auf (display: contents). Alle Tippziele mindestens 44 px hoch */
+@media (max-width: 760px){
+  .smh .sms{grid-template-columns:40px minmax(0,1fr);grid-template-areas:"pix eye" "pix say" "ein ein" "wg wg" "wgl wgl";column-gap:10px;row-gap:2px;margin-top:12px;padding:12px 12px 4px}
+  .smh .sms-wahl,.smh .sms-kopf{display:contents}
+  .smh .sms .sms-eyebrow{align-self:end}
+  .smh .sms-pixbox{grid-area:pix;width:40px;height:52px;align-self:end}
+  .smh .sms-say{grid-area:say;height:2.7em;font-size:12.8px;line-height:1.35}
+  .smh .sms-ein{margin-top:8px;grid-template-columns:minmax(0,1fr) 76px;column-gap:6px}
+  .smh .sms[data-modus="nummer"] .sms-ein{grid-template-columns:100px minmax(0,1fr)}
+  .smh .sms-f label{left:12px;letter-spacing:.06em}
+  .smh .sms-f input{height:52px;padding:20px 12px 4px;font-size:17px}   /* ab 16 px zoomt iOS beim Tippen nicht */
+  .smh .sms-f-s input{padding-right:44px}
+  .smh .sms-f-s label{right:46px}
+  .smh .sms-x{width:40px;height:44px;margin-right:4px;border-radius:10px}
+  /* Der Würfel sitzt im Textfeld, rechts, solange es leer ist; mit Text steht dort das Kreuz. So hat das Feld die ganze Breite */
+  .smh .sms-ib{grid-column:1;position:relative;z-index:1;justify-self:end;align-self:center;width:44px;height:44px;margin-right:4px;border:0;border-radius:10px;color:var(--steel)}
+  .smh .sms[data-modus="nummer"] .sms-ib{grid-column:2}
+  .smh .sms.hat-text .sms-ib{display:none}
+  /* Farbe und Größe teilen die Breite nach ihrem Inhalt (Farbpunkt, Name, „Beliebt“ gegen „50 cm“), damit kein Wert gekürzt wird */
+  .smh .sms-wg{grid-area:wg;display:flex;gap:4px;margin:8px -6px 0;padding-top:4px;border-top:1px solid var(--line-d)}
+  .smh .sms-wg>.sms-k{flex:1 1 auto;min-width:0}
+  .smh .sms-k{min-height:48px;padding:4px 10px;grid-template-columns:minmax(0,1fr) 9px;column-gap:8px}
+  .smh .sms-k-v{max-width:100%;gap:6px}
+  .smh .sms-k-v .sms-bel{gap:4px;margin-left:0;font-size:9.6px;letter-spacing:.06em}
+  .smh .sms-k-v .sms-bel.sms-bel-p{margin-left:1px;font-size:0;letter-spacing:0}
+  .smh .sms-wg-l{grid-area:wgl;display:flex;gap:2px;margin:2px -6px 0;padding-top:2px;border-top:1px solid var(--line-d)}
+  .smh .sms-wg-l .sms-k{display:flex;flex:0 1 auto;min-height:44px;gap:8px;padding:0 10px}
+  .smh .sms-wg-l .sms-k::after{flex:none;margin:-4px 0 0}
+  .smh .sms-wg-l .sms-k[aria-expanded="true"]::after{margin-top:4px}
+  .smh .sms-wg-l .sms-k-l{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .smh .sms-wg-l .sms-k-v{font-size:13.44px}
+  .smh .sms-wg-l .sms-k-k{flex:0 1 auto}
+  .smh .sms-wg-l .sms-k-s{flex:0 1 auto}
+  /* Filter: das Wort „Filter“ statt des Werts, ein Punkt zeigt, dass einer gesetzt ist */
+  .smh .sms-wg-l .sms-k-f{margin-left:auto}
+  .smh .sms-wg-l .sms-k-f .sms-k-l{position:static;width:auto;height:auto;overflow:visible;clip:auto;font-family:var(--f-body);font-size:13.44px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--blank)}
+  .smh .sms-wg-l .sms-k-f .sms-k-v{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .smh .sms-wg-l .sms-k-f.is-an .sms-k-l::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--laser)}
+  .smh .sms-anz{padding:0 10px}
+  /* Leiste: die Pille nur so breit wie ihr Text (gekürzt mit …), Farbe mit Wort, Größe; die Trefferzahl entfällt */
+  .smh .sms-leiste-in{height:56px;gap:2px;padding:0 8px}
+  .smh .sms-pill{flex:0 1 auto;min-width:92px;margin-right:2px;padding:0 12px;gap:6px;font-size:13.44px}
+  .smh .sms-k-kl{padding:0 8px;gap:6px}
+  .smh .sms-k-kl .sms-k-v{gap:6px;font-size:13.44px}
+  .smh .sms-leiste-anz{display:none}
+  /* Karten auf dem Handy */
+  .smh .sms-dim,.smh .sms-warn{font-size:9.92px}
+  .smh.sms-werk .pcard .meta{padding-bottom:14px}
+  .smh .price .sms-gr{font-size:9.92px}
+  .smh .sms-warn,.smh .sms-breit .sms-ohne-n:not(.sms-ohne-s) .sms-warn{bottom:calc(37% + 23px)}
+  .smh .cc:not(.sms-breit) .sms-hoch:not(.sms-ohne-n) .sms-warn{bottom:calc(53% + 23px)}
+  .smh .sms-ohne-n .sms-warn,.smh .sms-breit .sms-ohne-s .sms-warn{left:6px;bottom:28px;max-width:calc(100% - 12px)}
+  .smh .sms-breit .sms-lp{border-radius:10px}
+  .smh .sms-ohne-n .sms-dim,.smh .sms-breit .sms-ohne-s .sms-dim{left:6px;bottom:6px}
+  .smh .cc.sms-foto .ph::after{left:6px;bottom:6px;font-size:9.92px}
+  /* Haus-Symbol: sichtbar klein, die Trefferfläche reicht darüber hinaus (44 px). Es liegt auf dem Link der Karte, ein Tipp daneben öffnete sonst die Produktseite */
+  .smh .sms-hb::after{content:"";position:absolute;inset:-4px}
+  .smh .sms-schmal .cc.sms-breit:not(.sms-os) .sms-hb{width:28px;height:28px}
+  .smh .sms-schmal .cc.sms-breit:not(.sms-os) .sms-hb::after{inset:-8px}
+}
+/* Schmales Handy: eine Spalte (Vorgabe, sobald etwas eingegeben ist) oder zwei; der Schalter steht dann am Ende der Listen-Reihe */
+@media (max-width: 560px){
+  /* Der Schalter hält seinen Platz schon ohne Eingabe frei (unsichtbar), damit Filter beim ersten Tippen nicht nach links springt */
+  .smh .sms-sp:not([hidden]){display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:12px;background:transparent;color:var(--steel);visibility:hidden}
+  .smh.sms-aktiv .sms-sp:not([hidden]){visibility:visible}
+  .smh.sms-aktiv .sms-sp[aria-pressed="true"]{color:#fff;background:rgba(238,240,242,.1)}
+  .smh.sms-aktiv .cgrid.sms-eins{grid-template-columns:minmax(0,1fr)}   /* nur solange die Werkstatt etwas zeigt: ohne Eingabe gibt es auch den Schalter nicht */
+}
+/* Schmale Handys (360 px): Farbe und Größe rücken enger zusammen, damit beide Werte samt „Beliebt“ ganz stehen */
+@media (max-width: 374px){
+  .smh .sms-wg>.sms-k{padding:4px 7px;column-gap:6px}
+  .smh .sms-wg>.sms-k .sms-k-v{gap:5px}
+  .smh .sms-k-v .sms-bel{gap:3px;font-size:9px;letter-spacing:.04em}
+}
+@media (max-width: 340px){
+  .smh .sms-lang{display:none}   /* „Straße oder Text“: sehr schmal passt die ganze Beschriftung nicht ins Feld */
+}
+@media (max-width: 340px){
+  .smh .sms-k-o.sms-k-kl [data-wert]{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}   /* Leiste sehr schmal: Farbe nur als Punkt (mit hellem Ring) */
+  .smh .sms-k-o.sms-k-kl .tx{width:20px;height:20px}
+}
