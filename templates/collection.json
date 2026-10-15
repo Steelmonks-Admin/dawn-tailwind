@@ -17,7 +17,9 @@
         "lead": "",
         "tipp_zeigen": true,
         "pixel": "px3_monk_search.webp",
-        "text_zeigen": true
+        "text_zeigen": true,
+        "schild_bei": "strassenschilder,hausschilder",
+        "nummer_bei": "hausnummern"
       }
     },
     "trusted": {

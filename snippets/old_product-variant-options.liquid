@@ -112,6 +112,26 @@
       (function () {
         var target = 'variant={{ highlighted_option }}';
         if (window.location.search.indexOf(target) !== -1) return;
+        // Link mit eigener Variante (?variant=..., z. B. Karte der Schilder-Werkstatt mit schild=1, Anzeige, Neuladen):
+        // diese Variante bleibt gewaehlt, kein change, die Adresse bleibt wie sie ist. Weil auch der hervorgehobene Wert
+        // das Attribut checked traegt (der letzte gewinnt), stellt halten() die Knoepfe nach dem Laden auf die Werte
+        // dieser Variante, passend zu Preis und Formular. Ohne gueltige Variante im Link alles wie bisher.
+        var linkVariante = {{ product.selected_variant.options | json }};
+        if (linkVariante && /[?&]variant=\d/.test(window.location.search)) {
+          var halten = function () {
+            var namen = {{ product.options | json }};
+            [].forEach.call(document.querySelectorAll('#variant-radios-{{ section.id }} input[type="radio"]'), function (r) {
+              var i = namen.indexOf(r.name);
+              if (i >= 0 && r.value === linkVariante[i]) r.checked = true;
+            });
+          };
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', halten);
+          } else {
+            halten();
+          }
+          return;
+        }
         var apply = function () {
           var input = document.getElementById('{{ highlighted_input_id }}');
           if (input) {

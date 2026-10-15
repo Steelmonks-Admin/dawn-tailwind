@@ -37,8 +37,25 @@ const push = (event) => { try { (window.dataLayer = window.dataLayer || []).push
 let isOpen = false, lastFocus = null, hiddenLayers = [], done = false;
 
 const loadImages = () => R.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
-// Ein anderes Fenster ist offen (Warenkorb, Menü, Personalisierer, Klaviyo-Formular)?
+// Tippt der Besucher gerade (Werkstatt, Suche, Personalisierer)? Letzte Eingabe außerhalb des Popups, und ob ein Eingabefeld den Fokus hat
+const TYPE_PAUSE = 15000;
+let lastTyped = 0;
+const typed = (e) => { if (!R.contains(e.target)) lastTyped = Date.now(); };
+document.addEventListener('keydown', typed, true); document.addEventListener('input', typed, true);
+const typing = () => {
+  const a = document.activeElement;
+  if (a && !R.contains(a) && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return true;
+  return Date.now() - lastTyped < TYPE_PAUSE;
+};
+// Eine Auswahlliste ist offen (Werkstatt: Farbe, Größe, Kategorie, Sortieren, Filter)?
+const listOpen = () => {
+  let p = [];
+  try { p = Array.from(document.querySelectorAll(':popover-open')); } catch (e) {}
+  return p.some(el => !R.contains(el)) || Array.from(document.querySelectorAll('[aria-haspopup][aria-expanded="true"]')).some(el => !R.contains(el));
+};
+// Ein anderes Fenster ist offen (Warenkorb, Menü, Personalisierer, Klaviyo-Formular) oder der Besucher tippt?
 const busy = () => {
+  if (typing() || listOpen()) return true;
   if (document.body.classList.contains('overflow-hidden') || document.documentElement.classList.contains('overflow-hidden')) return true;
   return Array.from(document.querySelectorAll('[aria-modal="true"], dialog[open], .klaviyo-form')).some(el => {
     if (R.contains(el) || el.closest('details:not([open])')) return false;
