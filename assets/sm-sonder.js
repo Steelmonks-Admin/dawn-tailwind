@@ -369,20 +369,21 @@ PAGES.sonderanfertigung = function(){
 /* Wappen */
 PAGES.wappen = function(){
   const root = $('#p-wappen');
-  // Wappen-Preis nach der Preisliste des Kundenservice (wappen-v3). DIESELBEN Regeln rechnet das
+  // Wappen-Preis nach der Preisliste des Kundenservice (wappen-v5, Preisliste 10/2026). DIESELBEN Regeln rechnet das
   // CS-System in orchestrator/app/wappen.py nach (Repo Orvus-Ltd/customer-service); jede Anfrage
-  // trägt die Zeile „Kalkulation: wappen-v3 …“, damit das Angebot exakt diesen Preis übernimmt.
+  // trägt die Zeile „Kalkulation: wappen-v5 …“, damit das Angebot exakt diesen Preis übernimmt.
   // Wer hier eine Zahl ändert, ändert sie dort mit und hebt die Version an.
-  // Regeln: Schild nach BREITE auf die nächste Tabellenzeile aufgerundet (Pulver oder Premium);
-  // zwei Lagen: teurere voll, günstigere zu 50 %; Design: Datei 25, Foto oder Neuentwurf 50,
-  // mehrlagig 50; Verpackung 12 ab 75 cm. Ab 100 cm und ab drei Lagen im Angebot. Gerechnet wird in Cent.
-  // Ab wappen-v3 kommen Befestigungsset (9,45), Gratis-Grenze des Sets (150 € Warenwert) und
+  // Regeln: Schild = Wappen-Tabelle der Preisliste 10/2026 (CS orchestrator/app/assets/preisliste-2026-10.json)
+  // bei Größe x Größe, Größe auf 5 cm aufgerundet (22,5 = 25), Pulver oder Edelstahl/Corten; ROWS ist die Diagonale.
+  // Zwei Lagen: teurere voll, günstigere zu 50 %; Design: Datei 25, Foto 50, ohne Vorlage 100,
+  // mehrlagig mindestens 50, ohne Vorlage 100; Verpackung 12 ab 75 cm. Ab 100 cm und ab drei Lagen im Angebot. Gerechnet wird in Cent.
+  // Seit wappen-v3 kommen Befestigungsset (9,45), Gratis-Grenze des Sets (150 € Warenwert) und
   // DHL-Versand (4,95) aus den Shop-Metafeldern steelmonks.fakt_* (smxData.fakten, gerendert von sm-fakt);
   // wappen.py liest dieselben Metafelder (facts.py). Die Maschinenzeile trägt die drei Werte mit
   // (kp, kf, vs in Cent), damit das CS-System sieht, mit welchen Werten die Seite gerechnet hat.
-  const CALC_VERSION = 'wappen-v3';
-  const VOR = [['datei','Fertige Datei',2500,'Vektor oder gute Grafik'],['foto','Foto / Zeichnung',5000,'wir zeichnen neu'],['neu','Keine Vorlage',5000,'Neuentwurf']];
-  const ROWS = [[20,5250,7350],[25,6000,8400],[30,6750,9450],[40,8925,12495],[50,11250,15750],[60,15375,21525],[80,21525,30135],[100,28875,40425]];
+  const CALC_VERSION = 'wappen-v5';
+  const VOR = [['datei','Fertige Datei',2500,'Vektor oder gute Grafik'],['foto','Foto / Zeichnung',5000,'wir zeichnen neu'],['neu','Keine Vorlage',10000,'Neuentwurf']];
+  const ROWS = [[10,5900,8500],[15,7500,10500],[20,8500,11900],[25,9900,13500],[30,10900,15500],[35,12900,18500],[40,14500,19900],[45,16500,22900],[50,17900,25500],[55,20500,28500],[60,24900,34500],[65,26900,37900],[70,29500,40900],[75,31500,43900],[80,34500,48500],[85,37500,52500],[90,40500,56500],[95,43500,60500],[100,46500,64900]];
   const SIZE = [22.5, 45, 55, 75, 100], OPEN_CM = 100;
   const LAGEN = [[1,'1 Lage','einfarbig'],[2,'2 Lagen','2. Lage zu 50 %'],[3,'3 oder mehr','im Angebot']];
   const FK = DATA.fakten || {}, cent = (v, d) => (Number.isInteger(v) && v >= 0 ? v : d);
@@ -398,14 +399,14 @@ PAGES.wappen = function(){
     const open = p1 == null || S.lagen >= 3 || (S.lagen === 2 && p2 == null);
     if (open) return { v, open, total: null };
     const full = S.lagen === 2 ? Math.max(p1, p2) : p1, half = S.lagen === 2 ? halfUp(Math.min(p1, p2)) : 0;
-    const design = S.lagen === 2 ? DESIGN_MULTI : v[2], goods = full + half + design;
+    const design = S.lagen === 2 ? Math.max(DESIGN_MULTI, v[2]) : v[2], goods = full + half + design;
     const bolt = S.bolt ? (goods >= BOLT_FREE ? 0 : BOLT) : null, pack = S.s >= PACK_CM ? PACK : 0;
     return { v, p1, p2, full, half, design, goods, bolt, pack, open, total: c2e(goods + (bolt || 0) + pack + SHIP) };
   }
   const shield = $('#wpShield'), top = $('#wpShieldTop'); shield.style.setProperty('--m', CREST_PLATE); top.style.setProperty('--m', CREST_TOP);
   function draw(){
     const p = price();
-    $('#wpVor').innerHTML = VOR.map(x => btn('v', x[0], S.v, x[1], '+ ' + eur0(c2e(S.lagen === 2 ? DESIGN_MULTI : x[2])) + ' · ' + x[3])).join('');
+    $('#wpVor').innerHTML = VOR.map(x => btn('v', x[0], S.v, x[1], '+ ' + eur0(c2e(S.lagen === 2 ? Math.max(DESIGN_MULTI, x[2]) : x[2])) + ' · ' + x[3])).join('');
     $('#wpSize').innerHTML = SIZE.map(x => { const c = layerPrice(x, S.m); return btn('s', x, S.s, cmS(x), c == null ? 'im Angebot' : eur0(c2e(c))); }).join('');
     $('#wpMat').innerHTML = MATS.map(m => btn('m', m[0], S.m, shortMat(m[0]), PREM.includes(m[0]) ? 'Premium' : m[1], txI(m[0], 22))).join('');
     $('#wpLagen').innerHTML = LAGEN.map(x => btn('lg', x[0], S.lagen, x[1], x[2])).join('');
@@ -418,7 +419,7 @@ PAGES.wappen = function(){
       L.push(['Lage 1 · ' + cmS(S.s) + ' · ' + shortMat(mf), eur(c2e(p.full))], ['Lage 2 · ' + shortMat(mh) + ' · 50 %', eur(c2e(p.half))]);
     } else L.push([cmS(S.s) + ' · ' + shortMat(S.m) + (S.lagen === 2 ? ' + ' + shortMat(S.m2) : S.lagen >= 3 ? ' · 3+ Lagen' : ''), p.open ? 'im Angebot' : eur(c2e(p.full))]);
     if (!p.open){
-      L.push(['Design: ' + (S.lagen === 2 ? 'mehrlagig' : p.v[1]), eur(c2e(p.design))]);
+      L.push(['Design: ' + (S.lagen === 2 ? 'mehrlagig' + (p.v[0] === 'neu' ? ', Neuentwurf' : '') : p.v[1]), eur(c2e(p.design))]);
       if (S.bolt) L.push(['Unsichtbare Befestigung', p.bolt ? eur(c2e(p.bolt)) : 'kostenlos ab ' + eur0(c2e(BOLT_FREE))]);
       if (p.pack) L.push(['Verpackung ab 75 cm', eur(c2e(p.pack))]);
       L.push(['DHL-Versand', eur(c2e(SHIP))]);
