@@ -37,16 +37,16 @@ const push = (event) => { try { (window.dataLayer = window.dataLayer || []).push
 let isOpen = false, lastFocus = null, hiddenLayers = [], done = false;
 
 const loadImages = () => R.querySelectorAll('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
-// Tippt der Besucher gerade (Werkstatt, Suche, Personalisierer)? Letzte Eingabe außerhalb des Popups, und ob ein Eingabefeld den Fokus hat
+// Tippt der Besucher gerade (Werkstatt, Suche, Personalisierer)? Letzte Eingabe außerhalb des Popups, und ob ein Textfeld den Fokus hat.
+// Nur echte Textfelder zählen: Varianten (Radio), „ab 4,8 ★“ (Checkbox), Preis-Regler (Range) und Auswahllisten behalten den Fokus nach einem Klick,
+// sie hielten das Popup sonst für immer zurück
 const TYPE_PAUSE = 15000;
 let lastTyped = 0;
-const typed = (e) => { if (!R.contains(e.target)) lastTyped = Date.now(); };
+const textFeld = (el) => !!el && !R.contains(el) && (el.tagName === 'TEXTAREA' || !!el.isContentEditable ||
+  (el.tagName === 'INPUT' && /^(text|search|email|tel|url|number|password)$/.test(el.type)));
+const typed = (e) => { if (textFeld(e.target)) lastTyped = Date.now(); };
 document.addEventListener('keydown', typed, true); document.addEventListener('input', typed, true);
-const typing = () => {
-  const a = document.activeElement;
-  if (a && !R.contains(a) && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return true;
-  return Date.now() - lastTyped < TYPE_PAUSE;
-};
+const typing = () => textFeld(document.activeElement) || Date.now() - lastTyped < TYPE_PAUSE;
 // Eine Auswahlliste ist offen (Werkstatt: Farbe, Größe, Kategorie, Sortieren, Filter)?
 const listOpen = () => {
   let p = [];
