@@ -44,6 +44,9 @@
        (nur band2 und z), zeigt es die Vorgabe blass, wenn nur ein Text eingegeben ist.
      nrPflicht: 1, wenn es das Schild nur mit Hausnummer gibt: ohne eingegebene Nummer ist Q.leer wahr (die Karte behält ihr Foto).
      zeile: Nummernfeld, das eine freie zweite Zeile ist (Hausschild: „EST. 2021“), ohne Ziffernhöhe in Q.nrH.
+     erlaubt: {nr | st | txt: alnum | buchstaben | ziffern}, Zeichenregel des Felds im Personalisierer je Rolle (Spalte 38 der Zepto-Felder, vom Bau übernommen):
+       Zepto löscht im Feld alles andere ohne Hinweis (alnum: nur A bis Z ohne Umlaute, Ziffern und Leerzeichen; buchstaben: ohne Ziffern; ziffern: nur Ziffern
+       und Leerzeichen). erlaubt(d, rolle, text) gibt den Text so zurück, wie Zepto ihn stehen ließe. zeichne und felder filtern nicht selbst.
      maxJe: {st | nr: [Zeichen je Wert der Größen-Option]}, wenn der Personalisierer je Größe ein eigenes Feld mit eigener Länge hat (Emaille); maxSt und maxNr nennen dann den größten Wert.
      einzeln: die Nummer ist im Personalisierer eine Auswahl, je Stück ein Zeichen (einzelne Ziffern). felder liefert die ganze Nummer; die Stücke, wie sie
        gezeichnet sind (Schreibweise des Produkts, ohne Leerzeichen und ohne Zeichen, die es nicht anbietet), stehen in Q.zeichen (Q.teile Stück).
@@ -104,6 +107,9 @@
   W.ready=function(d){ return fontsOf(d).every(function(k){ return !!G[k]; }); };
   W.maxNr=function(d){ return d.maxNr||5; };
   W.single=function(d){ return !d.props.some(function(p){ return p.role==='nr'; }); };
+  // Zeichenregel (d.erlaubt, Dateikopf): was der Personalisierer von t in dem Feld der Rolle stehen ließe. Ohne Regel bleibt t, wie es ist
+  var REGEL={alnum:/[^A-Za-z0-9\s]/g,buchstaben:/[^A-Za-z\s]/g,ziffern:/[^0-9\s]/g};
+  W.erlaubt=function(d,rolle,t){ var x=REGEL[((d&&d.erlaubt)||{})[rolle]]; t=txt(t); return x?t.replace(x,''):t; };
   W.cased=cased;
   // Buchstabe des Monogramms: Masken gibt es für A bis Z. Ä, Ö, Ü werden A, O, U, Kleinbuchstaben groß, alles andere (Ziffer, leer) A
   function monoBuchstabe(m){ m=txt(m).charAt(0).toUpperCase(); m={'Ä':'A','Ö':'O','Ü':'U'}[m]||m; return /^[A-Z]$/.test(m)?m:'A'; }
