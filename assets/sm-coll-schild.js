@@ -34,7 +34,7 @@
    Zeichnen, Schriften, Hausfotos und Produktdaten werden erst bei der ersten Eingabe geladen; bis die Hausfotos da sind, bleibt das Produktfoto.
    Dazu: der Mönch sagt kurze Sätze (sagen), der erste fertige Entwurf wird in der Lupe „gelasert“ (Klasse sms-cut), „Idee würfeln“ füllt Beispiele ein,
    das Haus-Symbol öffnet das Probehängen (Dialog: dieselbe Szene groß mit Maßlinie, oder das ganze Haus mit dem Mönch als Maßstab).
-   Der Link jeder Karte führt mit ?schild=1 auf die Produktseite (mit Design dazu ?variant=…); den Text übergibt sessionStorage (sm_schild: s, n, o, g,
+   Der Link jeder Karte führt mit ?schild=<Kennung> auf die Produktseite (mit Design dazu ?variant=…); den Text übergibt sessionStorage (sm_schild: s, n, o, g,
    m = Art, e = eigene Größen) und, für einen neuen Tab ohne sessionStorage, localStorage (sm_schild_l, je Seite eine Kennung, im Link als schild=<Kennung>).
    sm-schild-pdp.js trägt ihn dort in den Personalisierer ein.
    Felder, die im Personalisierer nur Ziffern oder nur Buchstaben und Ziffern nehmen (Design: erlaubt), zeichnet die Karte so, wie der Personalisierer
@@ -438,7 +438,7 @@
       if(cc.dataset.p!==pv){ cc.dataset.p=pv; ordOffen=true; }
       cc.classList.toggle('sms-foto',an&&(!S||!!S.leer));
       if(!S||S.leer){
-        // Foto bleibt: als Beispielfoto beschriftet, oder mit dem, was dem Schild zum Zeichnen fehlt. Der Link trägt trotzdem schild=1,
+        // Foto bleibt: als Beispielfoto beschriftet, oder mit dem, was dem Schild zum Zeichnen fehlt. Der Link trägt trotzdem schild,
         // damit die Produktseite den Text einträgt (Produkte ohne Design: nach den Feldnamen)
         if(an&&(ph=cc.querySelector('.ph'))) ph.dataset.smsL=!S?'Beispielfoto':!st.n&&S.d.props.some(function(x){ return x.role==='nr'; })?'Braucht eine Hausnummer':!st.s?(NR?'Braucht einen Namen':'Braucht einen Text'):'Beispielfoto';
         if(pr) pr.innerHTML=P?preisHtml(P,P.z):pr.dataset.smsAlt;
