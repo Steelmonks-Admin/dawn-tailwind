@@ -412,7 +412,7 @@ PAGES.wappen = function(){
     $('#wpLagen').innerHTML = LAGEN.map(x => btn('lg', x[0], S.lagen, x[1], x[2])).join('');
     $('#wpMat2G').hidden = S.lagen !== 2;
     $('#wpMat2').innerHTML = MATS.map(m => btn('m2', m[0], S.m2, shortMat(m[0]), PREM.includes(m[0]) ? 'Premium' : m[1], txI(m[0], 22))).join('');
-    $('#wpSizeL').textContent = cmS(S.s) + ' breit';
+    $('#wpSizeL').textContent = cmS(S.s) + ' an der längsten Seite';
     const L = [];
     if (S.lagen === 2 && !p.open){
       const firstIs1 = p.p1 >= p.p2, mf = firstIs1 ? S.m : S.m2, mh = firstIs1 ? S.m2 : S.m;
