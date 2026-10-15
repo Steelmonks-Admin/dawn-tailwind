@@ -3,7 +3,12 @@
       (SMSchild.felder: Feldname wie im Produkt, Hauptzeile bei mehreren Textfeldern, Schreibweise wie auf dem Schild; Beispielzeilen werden nie eingetragen).
       Sonst über den Feldnamen: „Hausnummer“, „Hausnummer oder Text“, „Deine Hausnummer“, „Nummer“ bekommen die Nummer; „Straßenname“, „Name oder Wunschtext“,
       „Familienname oder Wunschtext“, „Straßenname oder Wunschtext“, „Wunschtext“, „Dein Nachname“, „Name - oben“ den Text; „Straßenname und Hausnummer“
-      und „Adresse“ beides. Auswahlfelder (Farbe, Befestigung, Material, Zunftzeichen Auswahl, Hausnummer Auswahl, Buchstabenauswahl) bleiben unberührt.
+      und „Adresse“ beides. Auswahlfelder (Farbe, Befestigung, Material, Zunftzeichen Auswahl, Hausnummer Auswahl) bleiben unberührt. Ausnahme Monogramm:
+      der Buchstabe der Zeichnung wird unter „Buchstabenauswahl“ gewählt (monoWaehlen), solange der Besucher dort nichts selbst gewählt hat; der Satz sagt,
+      was dort steht. Die Vorschau zeichnet, was in den Auswahlfeldern gewählt ist (Zunftzeichen, Paare zweier Lagen, Emaille-Farbe, eigener Buchstabe).
+      Zeichenregel: manche Felder nehmen nur Ziffern oder nur Buchstaben und Ziffern (Design: erlaubt, aus Zepto). Ein Wert mit anderen Zeichen wird nicht
+      eingetragen (Zepto löschte sie still, 12a würde 12), die Vorschau zeichnet nur, was das Feld nimmt, und der Satz sagt es. Ändert Zepto einen eingetragenen
+      Wert trotzdem (Regel ohne Design), nennt der Satz den neuen Wert, statt „steht schon drin“ zu sagen (pruefen).
       Zwei Regeln wie in sm-coll-schild.js: Namensschilder ohne Nummernfeld bekommen nur den Text, nicht die Nummer (nrIn). Kam der Besucher aus einer
       Kollektion mit „Straße oder Wunschtext“ (sm_schild.m = s), steht der Text bei Schildern mit Straßen- und Namenszeile in der Straßenzeile (zeile).
       Was der Besucher selbst ändert oder löscht, bleibt so, auch wenn der Personalisierer seinen Block neu aufbaut.
@@ -26,27 +31,35 @@
       Produktbild wurde zur einzelnen Ziffer, und beim Rollen deckte eine feste Vorschau (.pplrabs, oben 281 px auf dem Handy) diese Box und das Auswahlfeld zu.
       Die löst jetzt erst der Besucher mit seiner eigenen Wahl aus.
    3. Kam der Besucher aus einer Kollektion (Referrer), nennt der Knopf „Zurück zu … Kollektion“ diese Kollektion. Ändert er die Variante, behält der Link
-      schild=1 (und strasse, nr), damit ein Neuladen die Vorschau wieder zeigt.
-   Läuft nur, wenn der Link ?schild=1 oder ?strasse / ?nr trägt; sonst endet das Skript sofort.
+      schild (und strasse, nr, m), damit ein Neuladen die Vorschau wieder zeigt.
+   Läuft nur, wenn der Link ?schild=… oder ?strasse / ?nr trägt; sonst endet das Skript sofort. Die Karten der Werkstatt schreiben schild=<Kennung der Seite>:
+   unter ihr liegt der Stand auch in localStorage (sm_schild_l), denn ein neuer Tab (Mittelklick, Cmd+Klick, lange drücken) bekommt kein sessionStorage.
+   Ohne localStorage stehen Text und Nummer im Link (strasse, nr, m = Art der Werkstatt); was im Link steht, gewinnt.
+   Der Satz wird nur neu geschrieben, wenn er sich ändert, und Änderungen in der eigenen Vorschau übergeht der Beobachter des Personalisierers (sonst Endlosschleife).
    Am script-Tag: data-asset (Asset-Ordner), data-js (sm-schild.js), data-handle (Produkt), data-ver (Stand der Zeichendaten). */
 (function(){
   var me=document.currentScript, q=new URLSearchParams(location.search), st=null, t0=Date.now();
   if(!q.get('schild')&&!q.get('strasse')&&!q.get('nr')) return;
   try{ st=JSON.parse(sessionStorage.getItem('sm_schild')||'null'); }catch(e){}
+  // schild=<Kennung der Kollektionsseite>: deren Stand aus localStorage (sm-coll-schild.js, merkenL). So bekommt auch ein neuer Tab den Text, der kein sessionStorage erbt
+  try{ var lid=q.get('schild'), L=lid&&lid!=='1'?JSON.parse(localStorage.getItem('sm_schild_l')||'null'):null; if(L&&L[lid]&&L[lid].t) st=L[lid]; }catch(e){}
+  zurueck();   // auch wenn kein Text ankommt: der Knopf nennt die Kollektion, aus der der Besucher kam
   var s=(q.get('strasse')||(st&&st.s)||'').replace(/\s+/g,' ').trim().slice(0,40), n=(q.get('nr')||(st&&st.n)||'').replace(/[^0-9A-Za-z\/-]/g,'').slice(0,6);
   if(!s&&!n) return;
-  var mono=s.charAt(0).toUpperCase(), D=null, FD=null, erst='', fertig=false; if(!/[A-Z]/.test(mono)) mono='A';
+  // art: aus welcher Werkstatt der Besucher kommt (s Straße zuerst, n Nummer zuerst), aus dem Stand oder dem Link (m=)
+  var art0=q.get('m')||(st&&st.m)||'', mono=s, D=null, FD=null, erst='', fertig=false;   // mono: Text, aus dem der Zeichner den Buchstaben nimmt (Ä wird A wie auf der Karte)
   var NIE=/farbe|befestigung|material|zunftzeichen|auswahl/;   // Auswahlfelder und alles, was keine freie Eingabe ist
   var STR=/stra(ß|ss)e/i;
   // BEN: Felder (nach Namen), die der Besucher selbst angefasst hat: die trägt das Skript nie wieder ein. Der Merker steht hier und nicht am Element,
   // weil der Personalisierer seine Felder neu aufbaut. Erkannt an einer echten Eingabe (input) oder daran, dass ein Feld, in dem der Text schon stand, leer ist.
-  // EIN: Felder, die das Skript gefüllt hat (Name: Rolle nr oder st), LANG: Felder, in die der Wert nicht passt ({r, v, max}), X: Zusätze für den Satz
-  var BEN={}, EIN={}, LANG={}, X={}, zeiten=[], satz=null;
+  // EIN: Felder, die das Skript gefüllt hat (Name: Rolle nr oder st), LANG: Felder, in die der Wert nicht passt ({r, v, max} zu lang, {r, v, zei} Zeichen, die das Feld
+  // nicht nimmt), SOLL: was das Skript eingetragen hat, GEA: Felder, deren Wert der Personalisierer danach geändert hat ({r, soll, ist}), X: Zusätze für den Satz
+  var BEN={}, EIN={}, LANG={}, SOLL={}, GEA={}, X={}, zeiten=[], satz=null;
   document.addEventListener('input',function(e){ var t=e.target; if(e.isTrusted&&t&&t.name&&/(^|\s)pplr_text(\s|$)/.test(t.className||'')){ BEN[t.name]=1; sagen(); } },true);
   function nrIn(d){ var sm=d.sm||{}, l=sm.st||sm.txt||''; return !SMSchild.single(d)||(l?/hausnummer|adresse/i.test(l):d.props.some(function(p){ return p.role==='st'; })); }
   function zeile(d){
     var tf=d.props.filter(function(p){ return p.role!=='nr'; }), z=tf.filter(function(p){ return STR.test(p.prop); })[0], c={}, k;
-    if(!st||st.m!=='s'||d.haupt||tf.length<2||!z) return d;
+    if(art0!=='s'||d.haupt||tf.length<2||!z) return d;
     for(k in d) c[k]=d[k]; c.haupt=z.prop; c.offen=tf.filter(function(p){ return p!==z&&!p.vor; }).map(function(p){ return p.prop; }); return c;
   }
 
@@ -104,10 +117,26 @@
     var el=zq.shift(); zt=0; if(!el) return;
     if(el.isConnected&&!BEN[el.name]){ el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(taste()); }
     if(zq.length) zt=setTimeout(naechst,700);
+    setTimeout(pruefen,900);   // Zepto bearbeitet das Feld 300 bis 500 ms nach input und keyup (Zeichenregel, Länge)
   }
+  // Hat der Personalisierer einen eingetragenen Wert geändert (Zeichenregel, die das Design nicht kennt, Kürzung)? Groß- und Kleinschreibung und
+  // Zeilenumbrüche zählen nicht (die setzt er selbst, gedruckt wird ohnehin in der Schreibweise des Schilds). Dann sagt der Satz das, statt „steht schon drin“
+  function grob(t){ return (t||'').replace(/\s+/g,'').toUpperCase(); }
+  function pruefen(){
+    var vor=JSON.stringify(GEA);
+    [].forEach.call(document.querySelectorAll('textarea.pplr_text,input.pplr_text'),function(el){
+      var k=el.name, soll=SOLL[k];
+      if(soll==null||BEN[k]||!el.value) return;
+      if(grob(el.value)!==grob(soll)) GEA[k]={r:EIN[k]||'st',soll:soll,ist:el.value}; else delete GEA[k];
+    });
+    if(JSON.stringify(GEA)!==vor) sagen();
+  }
+  // Zeichenregel des Felds (Design: erlaubt, Rolle wie sm): was das Feld nicht nimmt, wird nicht eingetragen (wie ein zu langer Wert)
+  function regelVon(l){ return FD&&FD.rk[l]&&D&&D.erlaubt&&D.erlaubt[FD.rk[l]]?FD.rk[l]:''; }
   // nur leere Textfelder, die der Besucher nicht selbst angefasst hat: wer den Text ändert oder löscht, behält seine Eingabe, auch nach einem Umbau des Blocks.
   // smsHat am Element (kein Attribut, geht bei einem Umbau verloren): in diesem Feld stand der Text schon. Ist es jetzt leer, hat der Besucher ihn gelöscht;
-  // ein neu aufgebautes leeres Feld wird dagegen wieder gefüllt. Passt der Wert nicht in das Feld, bleibt es leer (LANG).
+  // ein neu aufgebautes leeres Feld wird dagegen wieder gefüllt. Passt der Wert nicht in das Feld, bleibt es leer (LANG), ebenso, wenn er Zeichen hat,
+  // die das Feld nicht nimmt (der Personalisierer löschte sie ohne Hinweis: aus 12a würde 12, aus 4/1 würde 41).
   // Verwirft der Personalisierer die Werte immer wieder (mehr als fünf Durchgänge in fünf Sekunden), hört das Skript auf
   function fuellen(){
     if(!fertig) return;
@@ -117,15 +146,17 @@
       if(BEN[el.name]||(el.type&&!/^(text|textarea|search|)$/.test(el.type))) return;
       var l=etikett(el.name), lb=beschrift(el); if(l==null||NIE.test(l)||(lb&&NIE.test(lb))) return;
       if(FD&&FD.w[l]==null&&lb&&FD.w[lb]!=null) l=lb;
-      var v=wert(l), r=art(l); if(!v) return;
+      var v=wert(l), r=art(l), rk=regelVon(l); if(!v) return;
       v=einzeilig(el,v);
+      if(rk&&SMSchild.erlaubt(D,rk,v)!==v){ LANG[el.name]={r:r,v:r==='nr'?n:s,zei:D.erlaubt[rk]}; return; }
       if(!passt(el,v)){ LANG[el.name]={r:r,v:r==='nr'?n:s,max:grenze(el)}; return; }
       delete LANG[el.name];
-      if(el.value){ if(el.value===v){ EIN[el.name]=r; el.smsHat=1; } return; }
+      if(el.value){ if(el.value===v){ EIN[el.name]=r; el.smsHat=1; SOLL[el.name]=v; } return; }
       if(el.smsHat){ BEN[el.name]=1; return; }
-      EIN[el.name]=r; el.smsHat=1; neu.push(el); setzen(el,v);
+      EIN[el.name]=r; el.smsHat=1; SOLL[el.name]=v; neu.push(el); setzen(el,v);
     });
     if(neu.length){ zeiten.push(jetzt); zaehlen(neu); }
+    pruefen(); monoWaehlen(); auswahlFolgen();
     sagen();
   }
 
@@ -148,9 +179,9 @@
   function vorGrenze(r){ var je=D.maxJe&&D.maxJe[r], i=gIndex(); return je&&je.length&&i>=0&&je[i]>0?je[i]:r==='nr'?D.maxNr||0:D.maxSt||0; }
   // Was das Skript eintragen wird, solange der Personalisierer seine Felder noch nicht gebaut hat (Zepto baut sie erst beim Öffnen)
   function erwartet(){
-    var e=[], k, r;
+    var e=[], k, r, rk;
     if(!FD||!D) return e;
-    for(k in FD.w) if(FD.w[k]&&!NIE.test(k)){ r=art(k); e.push({r:r,v:r==='nr'?n:s,w:FD.w[k],max:vorGrenze(r)}); }
+    for(k in FD.w) if(FD.w[k]&&!NIE.test(k)){ r=art(k); rk=regelVon(k); e.push({r:r,v:r==='nr'?n:s,w:FD.w[k],max:vorGrenze(r),zei:rk&&SMSchild.erlaubt(D,rk,FD.w[k])!==FD.w[k]?D.erlaubt[rk]:''}); }
     if(FD.str) e.push({r:'st',v:s,w:FD.str,max:vorGrenze('st')});
     return e;
   }
@@ -194,29 +225,113 @@
     if(t.closest('[name=add],button[type=submit]')&&t.closest('form[action*="/cart/add"],product-form')) KAUF=true;
   },true);
   document.addEventListener('submit',function(e){ if(e.target&&e.target.matches&&e.target.matches('form[action*="/cart/add"]')) KAUF=true; },true);
-  // Satz der Vorschau: was wirklich in den Feldern steht, vor dem Öffnen die Vorhersage. Eine Rolle zählt als zu lang, wenn kein Feld sie aufnehmen konnte
+  // Satz der Vorschau: was wirklich in den Feldern steht, vor dem Öffnen die Vorhersage. Eine Rolle zählt als zu lang (oder mit Zeichen, die das Feld nicht nimmt),
+  // wenn kein Feld sie aufnehmen konnte; als geändert, wenn der Personalisierer den eingetragenen Wert danach verändert hat (GEA).
+  // Geschrieben wird nur, wenn sich der Satz ändert: jedes Schreiben ist eine Änderung im DOM, auf die der Beobachter unten wieder fuellen() aufriefe
+  var NUR={nr:{ziffern:'nur Ziffern',alnum:'nur Buchstaben und Ziffern',buchstaben:'nur Buchstaben'},st:{ziffern:'nur Ziffern',alnum:'nur Buchstaben ohne Umlaute und Ziffern',buchstaben:'nur Buchstaben ohne Umlaute'}};
+  function warum(x){
+    var nr=x.r==='nr';
+    if(x.zei) return 'Bei diesem Schild gehen '+(nr?'in der Hausnummer ':'im Text ')+NUR[nr?'nr':'st'][x.zei]+', '+(nr?x.v:'„'+x.v+'“')+' geht hier nicht. ';
+    return (nr?'Deine Nummer '+x.v:'Dein Text „'+x.v+'“')+' ist für dieses Schild zu lang, hier passen höchstens '+x.max+' Zeichen. ';
+  }
+  var satzAlt=null;
+  function schreiben(fett,rest){
+    var k=fett+'\u0001'+rest, b;
+    if(k===satzAlt&&satz.textContent===(fett?fett+' ':'')+rest) return;
+    satzAlt=k; satz.textContent='';
+    if(fett){ b=document.createElement('b'); b.textContent=fett; satz.appendChild(b); }
+    satz.appendChild(document.createTextNode((fett?' ':'')+rest));
+  }
   function sagen(){
     if(!satz) return;
-    var blk=zblock(), wo=direkt(blk)?'unten':'im nächsten Schritt', E={}, L={}, k, t='', z;
+    var blk=zblock(), wo=direkt(blk)?'unten':'im nächsten Schritt', E={}, L={}, C={}, k, t='', z;
     if(document.querySelector('textarea.pplr_text,input.pplr_text')){
-      for(k in EIN) E[EIN[k]]=1;
+      for(k in EIN) if(!GEA[k]) E[EIN[k]]=1;
       for(k in LANG) if(!EIN[k]&&!BEN[k]&&!E[LANG[k].r]) L[LANG[k].r]=L[LANG[k].r]||LANG[k];
-    } else erwartet().forEach(function(e){ if(e.max&&zeichen(e.w.replace(/\n/g,''))>e.max) L[e.r]=L[e.r]||e; else E[e.r]=1; });
+      for(k in GEA) if(!BEN[k]) C[GEA[k].r]=C[GEA[k].r]||GEA[k];
+    } else erwartet().forEach(function(e){ if(e.zei||e.max&&zeichen(e.w.replace(/\n/g,''))>e.max) L[e.r]=L[e.r]||e; else E[e.r]=1; });
     for(k in L) if(E[k]) delete L[k];
-    if(D&&D.einzeln&&X.zeichen){ z=einzelSatz(wo); satz.textContent=''; if(z[0]){ k=document.createElement('b'); k.textContent=z[0]; satz.appendChild(k); } satz.appendChild(document.createTextNode((z[0]?' ':'')+z[1])); return; }
-    if(L.nr) t+='Deine Nummer '+L.nr.v+' ist für dieses Schild zu lang, hier passen höchstens '+L.nr.max+' Zeichen. ';
-    if(L.st) t+='Dein Text „'+L.st.v+'“ ist für dieses Schild zu lang, hier passen höchstens '+L.st.max+' Zeichen. ';
+    for(k in C) if(E[k]) delete C[k];
+    if(D&&D.einzeln&&X.zeichen){ z=einzelSatz(wo); schreiben(z[0]||'',z[1]); return; }
+    if(L.nr) t+=warum(L.nr);
+    if(L.st) t+=warum(L.st);
+    for(k in C) t+='Im Feld für '+(k==='nr'?'die Nummer':'den Text')+' steht jetzt „'+C[k].ist.replace(/\s*\n\s*/g,' ')+'“ statt „'+C[k].soll.replace(/\s*\n\s*/g,' ')+'“, dieses Schild nimmt dort nicht jedes Zeichen. Prüf es '+wo+'. ';
     z=E.st?'Dein Text':'Deine Nummer';
     if((L.nr||L.st)&&(E.st||E.nr)) t+=z+' steht '+wo+' schon drin, '+(L.nr?'die Nummer':'den Text')+' trägst Du dort selbst ein.';
     else if(L.nr&&L.st) t+='Trag beides '+wo+' selbst ein.';
     else if(L.nr) t+='Trag sie '+wo+' selbst ein.';
-    else if(L.st) t+='Trag ihn '+wo+' kürzer ein.';
-    else if(E.st||E.nr) t=z+' steht '+wo+' schon drin.';
-    else t=D&&D.einzeln?'Deine Zeichen wählst Du '+wo+' einzeln aus.':'Trag Deinen Text '+wo+' ein.';
+    else if(L.st) t+='Trag ihn '+wo+(L.st.zei?' selbst ein.':' kürzer ein.');
+    else if(E.st||E.nr) t+=z+' steht '+wo+' schon drin.';
+    else if(!C.nr&&!C.st) t=D&&D.einzeln?'Deine Zeichen wählst Du '+wo+' einzeln aus.':'Trag Deinen Text '+wo+' ein.';
+    t=t.trim();
     if(X.platz) t+=' Die Beispielzeile ersetzt Du dort durch Deinen Text.';
     if(X.offen) t+=' '+X.offen+' ist noch frei, die füllst Du dort selbst.';
-    satz.textContent=t;
+    if(MONO) t+=' '+monoSatz(wo);
+    t+=wahlSatz(wo);
+    schreiben('',t.trim());
   }
+  // Auswahlfelder des Personalisierers (Bildauswahl: verstecktes input.pplr_imgg, dazu je Wert ein span.pplr-swatch-element mit data-val und onclick chooseimage;
+  // oder ein select), auch im Fenster des Personalisierers (.pplr_crop-modal, dort stehen die Felder nach „Jetzt Personalisieren“).
+  // k: Feldname wie im Produkt, ok: welche Werte zählen (ein Feld gleichen Namens kann ein leerer Hinweis sein)
+  function feldWahl(k,ok){ var nm='properties['+k+']'; return [].filter.call(document.querySelectorAll('input.pplr_imgg,select'),function(x){ return x.name===nm&&(!ok||ok(x.value)); })[0]||null; }
+  // Monogramm (Design mit mono und sm.mono): der Buchstabe der Zeichnung (MONO.b) wird im Auswahlfeld des Personalisierers gewählt wie mit einem Klick des Besuchers,
+  // sobald das Feld gebaut ist und solange der Besucher dort nichts selbst gewählt hat (BEN); bleibt die Wahl dreimal nacheinander nicht stehen, bleibt es
+  // beim Satz. Ob es geklappt hat, steht danach im versteckten Feld, der Satz sagt, was dort gewählt ist. Wählt der Besucher selbst einen anderen Buchstaben,
+  // zeichnet die Vorschau seinen (monoJetzt)
+  var MONO=null, BUCHST=function(v){ return /^[A-Z]$/.test(v); };
+  function monoWaehlen(){
+    if(!MONO||BEN[MONO.feld]||MONO.n>=3) return;
+    var h=feldWahl(MONO.k,BUCHST), sw;
+    if(!h) return;
+    if(h.value===MONO.b){ MONO.n=0; return; }   // gewählt: baut der Personalisierer das Feld neu auf (Fenster zu und wieder auf), darf das Skript wieder wählen
+    if(h.tagName==='SELECT'){ if(![].some.call(h.options,function(o){ return o.value===MONO.b; })) return; MONO.n++; h.value=MONO.b; h.dispatchEvent(new Event('change',{bubbles:true})); }
+    else {
+      sw=[].filter.call((h.closest('.pplr-wrapper')||h.parentNode).querySelectorAll('.pplr-swatch-element[data-val]'),function(x){ return x.getAttribute('data-val')===MONO.b; })[0];
+      if(!sw) return;
+      // chooseimage klappt die Liste des Felds (img_thumb_dropdown) um: war sie zu, geht sie gleich wieder zu, sonst deckte sie die Textfelder zu
+      var dd=sw.parentNode, zu=dd&&/(^|\s)img_thumb_dropdown(\s|$)/.test(dd.className||'')&&getComputedStyle(dd).display==='none';
+      MONO.n++; sw.click();
+      if(zu){ if(window.jQuery) jQuery(dd).stop(true,true).hide(); else dd.style.display='none'; }
+    }
+    setTimeout(function(){ auswahlFolgen(); sagen(); },400);
+  }
+  // Wert im Auswahlfeld. Ist das Fenster des Personalisierers zu, gibt es das Feld nicht; er behält die Wahl aber und zeigt sie beim nächsten Öffnen wieder,
+  // deshalb gilt dann der zuletzt gesehene Wert (leer: noch nie geöffnet)
+  function monoWert(){ var h=feldWahl(MONO.k,BUCHST); if(h) MONO.zuletzt=h.value; return MONO.zuletzt||''; }
+  function monoJetzt(){ var v=MONO&&BEN[MONO.feld]&&monoWert(); return v||mono; }
+  function monoSatz(wo){
+    var v=monoWert();
+    if(!v||v===MONO.b) return 'Das '+MONO.b+' im Monogramm ist '+wo+' schon gewählt.';
+    if(BEN[MONO.feld]) return 'Im Monogramm hast Du das '+v+' gewählt.';
+    return 'Im Monogramm ist '+wo+' noch das '+v+' gewählt, wähl dort unter '+MONO.k+' das '+MONO.b+'.';
+  }
+  // Auswahlfelder, die die Zeichnung ändern (Zunftzeichen: wahl, zwei Lagen: paare, Emaille: farbe): gewählt ist, was im Personalisierer steht, sonst die Vorgabe
+  // des Designs (die des Personalisierers). Die Vorschau zeichnet neu, wenn sich die Wahl ändert (auswahlFolgen nach jedem Umbau und jedem Klick auf eine Auswahl).
+  // Bei geschlossenem Fenster gilt der zuletzt gesehene Wert (WZ), wie bei monoWert
+  var WZ={};
+  function wahlJetzt(){
+    var o={}, l=[], k;
+    if(!D) return o;
+    for(k in D.wahl||{}) l.push([k,D.wahl[k].opt]);
+    if(D.paare&&D.sm&&D.sm.paar) l.push([D.sm.paar,D.paare.reduce(function(a,p){ a[p.name]=1; return a; },{})]);
+    if(D.farbe&&D.farbe.sm) l.push([D.farbe.sm,D.farbe.wahl]);
+    l.forEach(function(x){ var h=feldWahl(x[0],function(v){ return Object.prototype.hasOwnProperty.call(x[1]||{},v); }); if(h) WZ[x[0]]=h.value; if(WZ[x[0]]) o[x[0]]=WZ[x[0]]; });
+    return o;
+  }
+  function wahlSatz(wo){
+    var t='', k, v, w=wahlJetzt();
+    for(k in (D&&D.wahl)||{}){ v=w[k]||D.wahl[k].vor; if(v) t+=' Als '+k+' ist '+v+' gewählt, ändern kannst Du es '+wo+'.'; }
+    return t;
+  }
+  var wahlAlt='';
+  function auswahlFolgen(){ var k=JSON.stringify([wahlJetzt(),monoJetzt()]); if(k!==wahlAlt&&box&&box.smsMalen&&box.parentNode) box.smsMalen(); }
+  document.addEventListener('click',function(e){
+    var t=e.target, sw=t&&t.closest&&t.closest('.pplr-swatch-element'); if(!sw) return;
+    if(e.isTrusted&&MONO&&sw.getAttribute('name')===MONO.feld) BEN[MONO.feld]=1;
+    setTimeout(function(){ auswahlFolgen(); sagen(); },300);
+  },true);
+  document.addEventListener('change',function(e){ var t=e.target; if(e.isTrusted&&MONO&&t&&t.name===MONO.feld) BEN[MONO.feld]=1; },true);
+
   // Vorschau des eigenen Schilds vor dem Block des Personalisierers. Der Personalisierer baut seinen Bereich beim Laden und beim Öffnen um
   // und hängt ihn dabei kurz an den Seitenanfang. Deshalb sitzt die Vorschau vor seinem Block (nicht darin) und wird nur gesetzt,
   // wenn der Block an seinem Platz in der Produktspalte steht; nach jedem Umbau prüft der Beobachter die Stelle erneut.
@@ -237,11 +352,12 @@
     if(box.nextElementSibling!==ziel){ ziel.parentNode.insertBefore(box,ziel); if(box.smsMalen) box.smsMalen(); }
     sagen();
   }
-  var tmr; new MutationObserver(function(){ clearTimeout(tmr); tmr=setTimeout(function(){ fuellen(); einsetzen(); },120); }).observe(document.body,{childList:true,subtree:true});
+  // Änderungen nur in der eigenen Vorschau (Satz, Zeichnung) lösen nichts aus, sonst liefe fuellen, sagen, fuellen … ohne Ende
+  var tmr; new MutationObserver(function(ms){ if(box&&ms.every(function(m){ return box.contains(m.target); })) return; clearTimeout(tmr); tmr=setTimeout(function(){ fuellen(); einsetzen(); },120); }).observe(document.body,{childList:true,subtree:true});
   setTimeout(einsetzen,3100);
 
   // Zurück-Knopf: die Kollektion, aus der der Besucher kam (Referrer derselben Seite), statt der im Theme hinterlegten. Titel aus /collections/<handle>.json
-  (function(){
+  function zurueck(){
     var m=/^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?collections\/([^\/?#]+)\/?$/.exec((function(){ try{ var u=new URL(document.referrer); return u.origin===location.origin?u.pathname:''; }catch(e){ return ''; } })());
     if(!m||m[1]==='all') return;
     fetch('/collections/'+m[1]+'.json').then(function(r){ return r.ok?r.json():null; }).then(function(j){
@@ -252,15 +368,15 @@
         if(bc){ bc.textContent=c.title; bc.setAttribute('href','/collections/'+c.handle); }
       });
     }).catch(function(){});
-  })();
+  }
 
   var m=location.pathname.match(/\/products\/([^\/?#]+)/), handle=me&&me.dataset.handle||(m?decodeURIComponent(m[1]):''), A=me?me.dataset.asset:'';
   function ohne(){ fertig=true; fuellen(); }   // kein Design oder Laden misslungen: Zuordnung nur über die Feldnamen
-  // Variante gewechselt: Dawn schreibt die Adresse neu (nur ?variant=…). schild=1 (und strasse, nr aus dem Link) kommen wieder dazu
+  // Variante gewechselt: Dawn schreibt die Adresse neu (nur ?variant=…). schild (und strasse, nr, m aus dem Link) kommen wieder dazu
   document.addEventListener('change',function(e){
     if(!e.target||!e.target.closest||!e.target.closest('variant-radios,variant-selects')) return;
     var u=new URLSearchParams(location.search), neu=false;
-    ['schild','strasse','nr'].forEach(function(k){ if(q.get(k)&&!u.get(k)){ u.set(k,q.get(k)); neu=true; } });
+    ['schild','strasse','nr','m'].forEach(function(k){ if(q.get(k)&&!u.get(k)){ u.set(k,q.get(k)); neu=true; } });
     if(neu) try{ history.replaceState(history.state,'',location.pathname+'?'+u.toString()+location.hash); }catch(x){}
   });
   if(!handle||!me||!me.dataset.js){ ohne(); return; }
@@ -290,15 +406,21 @@
     .then(function(){
       var d0=SMSchild.get(handle); if(!d0){ ohne(); return; }
       // Zuordnung des Designs: Werte je Feldname, und ob es Nummer und Text selbst belegt. nd: die Nummer, wie sie dieses Schild bekommt (Namensschilder: keine)
-      var d=D=zeile(d0), nd=nrIn(d)?n:'', w=SMSchild.felder(d,s,nd,mono), sm=d.sm||{}; FD={w:{},nr:false,tx:false};
+      var d=D=zeile(d0), nd=nrIn(d)?n:'', w=SMSchild.felder(d,s,nd,mono), sm=d.sm||{}; FD={w:{},nr:false,tx:false,rk:{}};
       Object.keys(w).forEach(function(k){ FD.w[putz(k)]=w[k]; });
       d.props.forEach(function(p){ if(sm[p.role]&&w[sm[p.role]]!=null){ if(p.role==='nr') FD.nr=true; else FD.tx=true; } });
+      // rk: Feldname -> Rolle, deren Zeichenregel (d.erlaubt) für das Feld gilt
+      d.props.forEach(function(p){ if(sm[p.role]) FD.rk[putz(sm[p.role])]=p.role; });
+      if(d.mono&&sm.mono&&w[sm.mono]) MONO={k:sm.mono,feld:'properties['+sm.mono+']',b:w[sm.mono],n:0};
+      // Gezeichnet wird, was der Personalisierer annimmt (Zeichenregel), wie auf der Karte: in einem Feld nur für Ziffern wird aus 12a die 12. Eingetragen wird
+      // so ein Wert nicht (fuellen), der Satz sagt, warum. Bei einem einzigen Textfeld steht die Nummer darin und folgt dessen Regel
+      var tr=sm.st?'st':'txt', sZ=SMSchild.erlaubt(d,tr,s), ndZ=SMSchild.erlaubt(d,SMSchild.single(d)?tr:'nr',nd);
       // Straßenzeile statt Hauptzeile: das Design kennt je Rolle nur einen Feldnamen (den der Namenszeile), deshalb geht der Text hier über den Feldnamen mit „Straße“
       if(d!==d0){ d.props.forEach(function(p){ if(p.role!=='nr'&&sm[p.role]) delete FD.w[putz(sm[p.role])]; if(p.prop===d.haupt) FD.str=s?SMSchild.cased(s,p.case):''; }); FD.tx=false; }
       fertig=true; fuellen();
       var stl=document.createElement('style'); stl.textContent=css; document.head.appendChild(stl);
       var neu=document.createElement('div'); neu.className='sms-pdp';
-      var esc=document.createElement('div'); esc.textContent=d.props.some(function(p){ return p.role!=='nr'; })?(s+' '+nd).trim():nd;   // reine Hausnummern zeigen nur die Nummer
+      var esc=document.createElement('div'); esc.textContent=d.props.some(function(p){ return p.role!=='nr'; })?(sZ+' '+ndZ).trim():ndZ;   // reine Hausnummern zeigen nur die Nummer
       neu.innerHTML='<div class="sms-pdp-lp" role="img"></div><div class="sms-pdp-u"><div class="sms-pdp-sz" aria-hidden="true"></div><p><b>Dein Schild: „'+esc.innerHTML+'“</b><br><span></span> <span></span></p></div>';
       var lp=neu.firstChild, sz=neu.querySelector('.sms-pdp-sz'), info=neu.querySelector('p span'), breit=0; satz=info.nextElementSibling;
       function zeichnen(){
@@ -308,7 +430,8 @@
         if(o<0||d.emaille) o=0;
         wo=o; if(!of&&d.hinten&&!d.emaille){ wo=d.hinten.surface||0; o=d.flaeche>0?d.flaeche:wo===2?0:2; }   // zwei Lagen ohne Oberflächen-Option: vorn Edelstahl, Wand nach der hinteren Lage (wie sm-coll-schild.js)
         if(wo===5) wo=4;   // Gold hängt an der dunklen Wand wie auf den Karten: auf der hellen sind Texte, die aus goldenen Platten geschnitten sind, kaum zu lesen
-        Q=SMSchild.zeichne(d,{text:s,nr:nd,mono:mono},gt||undefined); Z=Q.leer?null:SMSchild.szene(Q,wo);
+        var WA=wahlJetzt(), MJ=monoJetzt(); wahlAlt=JSON.stringify([WA,MJ]);
+        Q=SMSchild.zeichne(d,{text:sZ,nr:ndZ,mono:MJ,wahl:WA},gt||undefined); Z=Q.leer?null:SMSchild.szene(Q,wo);
         neu.hidden=!Z; if(!Z) return;
         svg=SMSchild.svg(Q,o);
         nenn=d.mass==='h'?Q.hoehe:Q.breite; gt=parseFloat((''+gt).replace(',','.'))||0; voll=gt>0&&nenn>=gt*.985;

@@ -35,7 +35,10 @@
    Dazu: der Mönch sagt kurze Sätze (sagen), der erste fertige Entwurf wird in der Lupe „gelasert“ (Klasse sms-cut), „Idee würfeln“ füllt Beispiele ein,
    das Haus-Symbol öffnet das Probehängen (Dialog: dieselbe Szene groß mit Maßlinie, oder das ganze Haus mit dem Mönch als Maßstab).
    Der Link jeder Karte führt mit ?schild=1 auf die Produktseite (mit Design dazu ?variant=…); den Text übergibt sessionStorage (sm_schild: s, n, o, g,
-   m = Art, e = eigene Größen), sm-schild-pdp.js trägt ihn dort in den Personalisierer ein.
+   m = Art, e = eigene Größen) und, für einen neuen Tab ohne sessionStorage, localStorage (sm_schild_l, je Seite eine Kennung, im Link als schild=<Kennung>).
+   sm-schild-pdp.js trägt ihn dort in den Personalisierer ein.
+   Felder, die im Personalisierer nur Ziffern oder nur Buchstaben und Ziffern nehmen (Design: erlaubt), zeichnet die Karte so, wie der Personalisierer
+   sie stehen ließe, und sagt es im Hinweis („Nr. nur Ziffern“); die Produktseite trägt so eine Nummer nicht ein.
    Einstieg von außen: ?strasse=…&nr=…&o=<Oberfläche>&g=<cm>&d=<Produkt>; mit d= gilt g= auch als eigene Größe dieses Produkts. */
 (function(){
   var root=document.querySelector('[data-sms]'); if(!root) return;
@@ -111,7 +114,7 @@
     if(NR||d.haupt||tf.length<2||!z) return d;
     for(k in d) c[k]=d[k]; c.haupt=z.prop; c.offen=tf.filter(function(p){ return p!==z&&!p.vor; }).map(function(p){ return p.prop; }); return c;
   }
-  function mono(){ var m=st.s.charAt(0).toUpperCase(); return /[A-Z]/.test(m)?m:'A'; }
+  function mono(){ return st.s; }   // der Zeichner nimmt den ersten Buchstaben (Ä wird A, Ziffer oder leer A), wie auf der Produktseite
   // Die Blase wechselt sofort, ihre Höhe bleibt (CSS: zwei Zeilen fest), deshalb springt beim Tippen nichts. Vorgelesen (aria-live) wird aus einem eigenen,
   // unsichtbaren Element und erst nach ms: jede neue Zeile verwirft die noch nicht vorgelesene. ms unter 0: diese Zeile gar nicht
   function sagen(t,pose,ms){
@@ -200,10 +203,17 @@
     else if(T&&!R.hin) R.hinDlg='';
     return R;
   }
+  // Zeichen aus t, die das Feld der Rolle k nicht nimmt (Zeichenregel d.erlaubt, jedes einmal)
+  function weg(d,k,t){ return Array.from(t).filter(function(c,i,l){ return SMSchild.erlaubt(d,k,c)!==c&&l.indexOf(c)===i; }); }
   function bauen(h,zw){
     var d=DES[h]; if(!d) return null;
-    var W=wahl(h,zw), nr=nrIn(d)?st.n:'', hatTx=d.props.some(function(x){ return x.role!=='nr'; }), tx=!hatTx?nr:SMSchild.single(d)?(st.s+' '+nr).trim():text();
-    var Q=SMSchild.zeichne(d,{text:st.s,nr:nr,mono:mono()},W.gt||undefined), wo=W.wand!=null?W.wand:W.o===5?4:W.o, Z=Q.leer?null:SMSchild.szene(Q,wo);
+    // Zeichenregel des Personalisierers (d.erlaubt): gezeichnet wird, was das Feld annimmt (aus 12a wird in einem Feld nur für Ziffern 12), die Karte sagt es (zei).
+    // Ein einziges Textfeld nimmt auch die Nummer auf und hat dessen Regel. Die Produktseite trägt so einen Wert nicht ein und sagt dasselbe
+    var W=wahl(h,zw), nr=nrIn(d)?st.n:'', hatTx=d.props.some(function(x){ return x.role!=='nr'; }), ein=SMSchild.single(d), tr=(d.sm||{}).st?'st':'txt';
+    var sZ=SMSchild.erlaubt(d,tr,st.s), nZ=SMSchild.erlaubt(d,ein?tr:'nr',nr), wN=weg(d,ein?tr:'nr',nr), wS=weg(d,tr,st.s), tx=!hatTx?nZ:ein?(sZ+' '+nZ).trim():(NR?nZ+' '+sZ:sZ+' '+nZ).trim();
+    var zei=wN.length?(!ein&&(d.erlaubt||{}).nr==='ziffern'?['Hausnummer hier nur aus Ziffern','Nr. nur Ziffern']:['Hausnummer hier ohne „'+wN.join(' ')+'“','Nr. ohne „'+wN.join(' ')+'“']):
+      wS.length?['Text hier ohne „'+wS.join(' ')+'“','Text ohne „'+wS.join(' ')+'“']:null;
+    var Q=SMSchild.zeichne(d,{text:sZ,nr:nZ,mono:mono()},W.gt||undefined), wo=W.wand!=null?W.wand:W.o===5?4:W.o, Z=Q.leer?null:SMSchild.szene(Q,wo);
     if(!Z) return {leer:true,d:d};
     var V=W.v, gr=cm(W.g)+' cm';   // geschütztes Leerzeichen: im Hinweis der Karte bricht die Zeile nie zwischen Zahl und cm
     var nenn=d.mass==='h'?Q.hoehe:Q.breite, voll=W.g>0&&nenn>=W.g*.985, b=Math.round(Q.breite), hh=Math.round(Q.hoehe), cap=(Q.letter||0)*Q.cm, mass, bt;
@@ -231,7 +241,7 @@
     // Ein Hinweis je Karte, der wichtigste zuerst: was nicht passt (Länge, fehlende Zeichen), dann eine Beispielzeile auf dem Schild (mit der Abweichung
     // von der Wahl im selben Satz, sonst stünde „GRUBER“ unerklärt da), dann die Abweichung allein, dann was noch fehlt, zuletzt die kleine Schrift.
     // Je Hinweis [ausgeschrieben, kurz]: die kurze Fassung (etwa 21 Zeichen) steht auf schmalen Karten in einer Zeile am oberen Bildrand. Fehlt sie, ist die erste kurz genug
-    var hin=!SMSchild.single(d)&&st.n.length>maxNr?zuLang('Nummer',maxNr):W.lang?W.lang:d.maxSt&&tl>d.maxSt?zuLang('Text',d.maxSt):
+    var hin=!SMSchild.single(d)&&st.n.length>maxNr?zuLang('Nummer',maxNr):zei?zei:W.lang?W.lang:d.maxSt&&tl>d.maxSt?zuLang('Text',d.maxSt):
       fehlt.length?['„'+fehlt.join(' ')+'“ '+(fehlt.length>1?'fehlen':'fehlt')+' in dieser Schrift','Schrift ohne „'+fehlt.join(' ')+'“']:
       bsp?['„'+bsp+'“ ist ein Beispiel'+(abK?', hier '+abK:''),'„'+bsp+'“ Beispiel'+(abK?', '+abK:'')]:
       ab?(kl?[ab[0]+', '+kl,ab[1]||ab[0]]:ab):ohne?[NR?'Name fehlt noch':'Text fehlt noch']:frei?[frei]:kl?[kl]:[];
@@ -239,9 +249,11 @@
     return {d:d,W:W,Q:Q,Z:Z,o:W.o,wo:wo,hoch:hoch,Ln:lupe(Z,hoch?LP.h:LP.n,cap),Ls:lupe(Z,ls,cap),lsw:ls.w,kl:!!kl,nurKl:!!kl&&hin[0]===kl,mass:mass,breite:b,bt:bt,cap:cap,klein:klein,ohne:ohne,frei:frei,stk:stk,hin:hin[0]||'',kurz:hin[1]||'',ab:ab?ab[0]:'',txt:tx,nurNr:!!st.s&&!hatTx,nurTx:!!st.n&&!nr,bsp:bsp?'„'+bsp+'“ ist ein Beispiel':'',
       preis:V?cent(V.price)*stk:0, vorher:V?cent(V.compare_at_price)*stk:0, je:V?cent(V.price):0, href:ziel(cards[h].querySelector('.pcard'),V)};
   }
-  // Link einer Karte zur Produktseite, solange die Werkstatt etwas zeigt: ?schild=1 sagt sm-schild-pdp.js, dass es den Text eintragen soll (auch bei Karten
-  // ohne Design, dort nach den Feldnamen), dazu die Variante, wenn die Karte eine zeigt. Ohne sessionStorage reist der Text im Link mit
-  function ziel(a,V){ return (a.dataset.smsHref||a.getAttribute('href')).split('?')[0]+'?'+(V?'variant='+V.id+'&':'')+'schild=1'+(lager?'':'&strasse='+encodeURIComponent(st.s)+'&nr='+encodeURIComponent(st.n)); }
+  // Link einer Karte zur Produktseite, solange die Werkstatt etwas zeigt: ?schild=… sagt sm-schild-pdp.js, dass es den Text eintragen soll (auch bei Karten
+  // ohne Design, dort nach den Feldnamen), dazu die Variante, wenn die Karte eine zeigt. schild trägt die Kennung dieser Seite (LID): unter ihr steht der Stand
+  // in localStorage, so findet ihn auch ein neuer Tab (Mittelklick, Cmd+Klick, lange drücken und „In neuem Tab öffnen“), der kein sessionStorage bekommt.
+  // Die Adresse selbst steht nicht im Link (sie ginge sonst mit jeder Seitenadresse an Statistik und Werbenetze); nur ohne localStorage reist sie dort mit
+  function ziel(a,V){ return (a.dataset.smsHref||a.getAttribute('href')).split('?')[0]+'?'+(V?'variant='+V.id+'&':'')+'schild='+(llager?LID:'1'+'&strasse='+encodeURIComponent(st.s)+'&nr='+encodeURIComponent(st.n)+'&m='+(NR?'n':'s')); }
   // Preis; z: Zeile unter dem Preis auf der Karte (Größe der gezeigten Variante, Mono), sonst wie bisher die Stückzahl dahinter (Probehängen)
   function preisHtml(S,z){ return (S.vorher>S.preis?'<s>'+eur(S.vorher)+'</s> ':'')+eur(S.preis)+(z?'<small class="sms-gr">'+z+'</small>':S.stk>1?' <small class="sms-je">'+S.stk+' Zeichen</small>':''); }
   // Zeile unter dem Preis einer gezeichneten Karte: die Größe der Variante, bei einzelnen Zeichen dazu die Anzahl
@@ -477,12 +489,27 @@
     sagen(t,pose,was==='tipp'?1000:0);   // beim Tippen erst nach einer Sekunde Ruhe vorlesen
   }
 
-  function merken(){
+  // Stand für die Produktseite: sessionStorage (dieser Tab, auch für die Rückkehr) und localStorage unter der Kennung dieser Seite (LKEY: {LID: Stand},
+  // für neue Tabs, siehe ziel). In localStorage nur mit Eingabe, höchstens acht Seiten und sechs Stunden; ohne Eingabe fällt der Eintrag dieser Seite weg
+  var LID=Math.random().toString(36).slice(2,10)||'x', LKEY='sm_schild_l', llager=true;
+  function merkenL(o){
     try{
-      if(aktiv()||gWahl) sessionStorage.setItem(KEY,JSON.stringify({s:st.s,n:st.n,o:st.o,g:st.g,gw:gWahl?1:0,m:NR?'n':'s',e:EIG,t:Date.now()}));
+      var L=JSON.parse(localStorage.getItem(LKEY)||'null')||{}, jetzt=Date.now();
+      if(o) L[LID]=o; else delete L[LID];
+      Object.keys(L).filter(function(x){ return !(L[x]&&jetzt-(L[x].t||0)<6*3600*1000); }).forEach(function(x){ delete L[x]; });
+      Object.keys(L).sort(function(a,b){ return L[b].t-L[a].t; }).slice(8).forEach(function(x){ delete L[x]; });
+      if(Object.keys(L).length) localStorage.setItem(LKEY,JSON.stringify(L)); else localStorage.removeItem(LKEY);
+      llager=true;
+    }catch(e){ llager=false; }
+  }
+  function merken(){
+    var o=aktiv()||gWahl?{s:st.s,n:st.n,o:st.o,g:st.g,gw:gWahl?1:0,m:NR?'n':'s',e:EIG,t:Date.now()}:null;
+    try{
+      if(o) sessionStorage.setItem(KEY,JSON.stringify(o));
       else sessionStorage.removeItem(KEY);
       lager=true;
     }catch(e){ lager=false; }
+    merkenL(aktiv()?o:null);
   }
   function lesen(){
     var n=inN.value.replace(/[^0-9A-Za-z\/-]/g,'').slice(0,6);
