@@ -9,42 +9,13 @@
   bei „schild_bei“ fragt sie zuerst nach Straße oder Wunschtext, bei „nummer_bei“ zuerst nach der Hausnummer.
   Auf diesen Seiten ist die Werkstatt das eine Bedienelement: Kategorie (statt der Reiter), Sortierung und Filter stehen als kompakte Auswahl darin,
   die Filterleiste darunter entfällt, und der Kopf zeigt keinen Tipp (der Mönch spricht nur in der Werkstatt).
-  Alle anderen Kollektionen behalten Filterleiste und Tipp, der Tipp aber ruhig: eine Zeile unter der Vertrauenszeile, ohne Mönch und Blase,
-  ohne Prozente (Sätze des Metafelds mit „%“ fallen weg) und ohne Stückzahl beim meistbestellten Produkt. Die Sortierung dort ist eine helle Auswahlliste
-  wie in der Werkstatt (Knopf mit Mono-Beschriftung, Liste aus sm-coll.js), nicht mehr das select des Browsers; das select bleibt versteckt als Quelle.
   Werkstatt-Seiten tragen am Rahmen die Klasse sms-werk (Karten halten dort am Handy eine Zeile für die Größe unter dem Preis frei).
-  Kategorien: gehen die gezeigten Gruppen nicht in „Alle“ auf (Typen mit nur einem Produkt, mehr als fünf Gruppen), kommt „Weitere“ mit dem Rest dazu.
+  Kategorien der Werkstatt: gehen die gezeigten Gruppen nicht in „Alle“ auf (Typen mit nur einem Produkt, mehr als fünf Gruppen), kommt „Weitere“ mit dem Rest dazu.
+  Alle anderen Kollektionen bleiben, wie sie waren: Filterleiste mit Reitern, select zum Sortieren, Preis-Regler „Preis bis …“, Tipp mit Mönch und Blase
+  (am Handy als Karte nach dem vierten Produkt). Eine Änderung dort gehört in ein eigenes, abgestimmtes Release.
 {%- endcomment -%}
 {{ 'sm-home.css' | asset_url | stylesheet_tag }}
 {{ 'sm-coll.css' | asset_url | stylesheet_tag }}
-{%- style -%}
-  .smh .c-notiz{position:relative;max-width:72ch;margin-top:10px;padding-left:14px;font-size:13.44px;line-height:1.5;color:var(--ink-2)}
-  .smh .c-notiz::before{content:"";position:absolute;left:0;top:.56em;width:6px;height:6px;border-radius:50%;background:var(--laser)}
-  .smh .c-notiz b,.smh .c-notiz a:not(.tlink){color:var(--ink);font-weight:600}
-  .smh .c-notiz .tlink{font-size:inherit;color:var(--ink-2)}
-  @media (max-width: 760px){.smh .c-notiz{font-size:12.8px;margin-top:8px}}
-  .smh .smc-dd{position:relative;flex:none}
-  .smh .smc-k{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px 0 16px;border-radius:999px;border:1px solid var(--line-l);background:var(--white);color:var(--ink);font:inherit;font-size:13.44px;font-weight:600;white-space:nowrap;cursor:pointer}
-  .smh .smc-k:hover,.smh .smc-k[aria-expanded="true"]{border-color:var(--ink)}
-  .smh .smc-k::after{content:"";flex:none;width:6px;height:6px;margin:-3px 0 0 2px;border-right:1.5px solid var(--ink-2);border-bottom:1.5px solid var(--ink-2);transform:rotate(45deg);transition:transform .15s}
-  .smh .smc-k[aria-expanded="true"]::after{transform:rotate(225deg);margin-top:3px}
-  .smh .smc-k-l{font-family:var(--f-mono);font-size:9.92px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
-  .smh .smc-dd-l{position:absolute;right:0;top:calc(100% + 6px);z-index:40;min-width:230px;margin:0;padding:6px;list-style:none;border-radius:14px;background:var(--white);box-shadow:0 0 0 1px var(--line-l),0 24px 48px -16px rgba(0,0,0,.35)}
-  .smh .smc-dd-l[hidden]{display:none}
-  .smh .smc-dd-l:focus{outline:0}
-  .smh .smc-dd-l li{position:relative;display:flex;align-items:center;min-height:44px;padding:0 40px 0 12px;border-radius:10px;font-size:14.4px;color:var(--ink);cursor:pointer;-webkit-user-select:none;user-select:none}
-  .smh .smc-dd-l li:hover{background:rgba(11,12,14,.05)}
-  .smh .smc-dd-l li:focus-visible{outline:2px solid var(--blau);outline-offset:-2px}
-  .smh .smc-dd-l li[aria-selected="true"]{font-weight:600;background:rgba(11,12,14,.04)}
-  .smh .smc-dd-l li[aria-selected="true"]::after{content:"";position:absolute;right:16px;top:50%;width:11px;height:6px;margin-top:-5px;border-left:2px solid var(--warn);border-bottom:2px solid var(--warn);transform:rotate(-45deg)}
-  @media (max-width: 760px){
-    .smh .fbar .smc-dd{flex:1;min-width:0}
-    .smh .smc-k{width:100%;min-height:44px}
-    .smh .smc-k-v{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left}
-    .smh .smc-dd-l{left:0;right:auto;min-width:min(260px,calc(100vw - 32px))}
-  }
-  @media (prefers-reduced-motion: reduce){.smh .smc-k::after{transition:none}}
-{%- endstyle -%}
 <script src="{{ 'sm-home.js' | asset_url }}" defer></script>
 <script src="{{ 'sm-coll.js' | asset_url }}" defer></script>
 {%- liquid
@@ -160,38 +131,26 @@
           <h1 class="display">{{ collection.title | escape }}</h1>
           {%- if smc_lead != blank -%}<p class="lead">{{ smc_lead }}</p>{%- endif -%}
           <div class="c-proof"><span><span class="stars">★</span> <b data-ts-rating>{{ section.settings.ts_note }}</b> bei Trusted Shops</span>{% if smc_sum >= 100 %}<span><b>{% render 'sm-num', n: smc_sum_r %}+</b> Bestellungen seit 2020</span>{% endif %}<span class="ship">Gratisversand ab 99 €</span><span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span></div>
-          {%- liquid
-            assign smc_tip_html = ''
-            if section.settings.tipp_zeigen and smc_werk == ''
-              assign smc_tip = collection.metafields.steelmonks.tipp.value | default: ''
-              if smc_tip != blank
-                assign smc_saetze = smc_tip | strip | replace: '. ', '.~' | split: '~'
-                for satz in smc_saetze
-                  unless satz contains '%'
-                    assign smc_tip_html = smc_tip_html | append: satz | append: ' '
-                  endunless
-                endfor
-                assign smc_tip_html = smc_tip_html | strip
-              elsif smc_sorted.size > 0
-                assign k = smc_sorted.first
-                assign ix = k | slice: 16, 4 | plus: 0
-                assign ix = 9999 | minus: ix
-                assign smc_top = collection.products[ix]
-                if smc_top.metafields.steelmonks.bestellungen.value > 99
-                  capture smc_tip_html
-                    echo 'Am häufigsten bestellt: <b>'
-                    echo smc_top.title | escape
-                    echo '</b>. <a class="tlink" href="'
-                    echo smc_top.url
-                    echo '">Ansehen</a>'
-                  endcapture
-                endif
-              endif
-            endif
-          -%}
-          {%- if smc_tip_html != blank -%}<p class="c-notiz">{{ smc_tip_html }}</p>{%- endif -%}
         </div>
-
+        {%- assign smc_tip_html = '' -%}
+        {%- if smc_werk == '' -%}
+        {%- liquid
+          assign smc_tip = collection.metafields.steelmonks.tipp.value
+          assign smc_top = nil
+          if smc_sorted.size > 0
+            assign k = smc_sorted.first
+            assign ix = k | slice: 16, 4 | plus: 0
+            assign ix = 9999 | minus: ix
+            assign smc_top = collection.products[ix]
+          endif
+        -%}
+        {%- capture smc_tip_html -%}
+          {%- if section.settings.tipp_zeigen and smc_tip != blank or section.settings.tipp_zeigen and smc_top and smc_top.metafields.steelmonks.bestellungen.value > 99 -%}
+            <img src="{{ section.settings.pixel | prepend: 'sm-' | asset_url }}" alt="" width="62" height="90" loading="lazy"><p>{%- if smc_tip != blank -%}{{ smc_tip }}{%- else -%}{%- assign tn = smc_top.metafields.steelmonks.bestellungen.value | divided_by: 100 | times: 100 -%}Hier am häufigsten bestellt: <b>{{ smc_top.title | escape }}</b>, schon über {% render 'sm-num', n: tn %}-mal. <a class="tlink" href="{{ smc_top.url }}">Ansehen</a>{%- endif -%}</p>
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- if smc_tip_html != blank -%}<div class="c-tip">{{ smc_tip_html }}</div>{%- endif -%}
+        {%- endif -%}
       </div>
       {%- if smc_werk != '' -%}
         {%- capture smc_kat_html -%}
@@ -215,15 +174,14 @@
         {%- for row in smc_tsorted limit: 5 -%}{%- assign parts = row | split: '~' -%}{%- assign c = parts[0] | minus: 10000 -%}
         <button type="button" data-tab="{{ parts[1] | escape }}" aria-pressed="false">{% if smc_pre != '' %}{{ parts[1] | remove_first: smc_pre | escape }}{% else %}{{ parts[1] | escape }}{% endif %}<small>{{ c }}</small></button>
         {%- endfor -%}
-        {%- if smc_rest > 0 -%}<button type="button" data-tab="~weitere" aria-pressed="false">Weitere<small>{{ smc_rest }}</small></button>{%- endif -%}{%- else -%}<span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span>{%- endif -%}
+        {%- if smc_tsorted.size > 5 -%}<button type="button" data-tab="~weitere" aria-pressed="false">Weitere</button>{%- endif -%}{%- else -%}<span class="count">{{ smc_cnt }} {% if smc_cnt == 1 %}Produkt{% else %}Produkte{% endif %}</span>{%- endif -%}
           </div>
-          <div class="grp">
-            <div class="smc-dd"><button class="smc-k" type="button" data-sortk aria-haspopup="listbox" aria-expanded="false" aria-controls="smcSortL-{{ section.id }}"><span class="smc-k-l">Sortieren</span><span class="smc-k-v" data-sortv>Beliebteste</span></button></div>
-            <select id="smcSort-{{ section.id }}" data-sort hidden aria-label="Sortieren">{% if collection.handle == "neuheiten" %}<option value="new" selected>Neueste zuerst</option>{% endif %}<option value="pop">Beliebteste zuerst</option><option value="rating">Beste Bewertung</option><option value="reviews">Meiste Bewertungen</option><option value="asc">Preis aufsteigend</option><option value="desc">Preis absteigend</option></select>
+          <div class="grp"><label class="sr" for="smcSort-{{ section.id }}">Sortieren</label>
+            <select id="smcSort-{{ section.id }}" data-sort>{% if collection.handle == "neuheiten" %}<option value="new" selected>Neueste zuerst</option>{% endif %}<option value="pop">Beliebteste zuerst</option><option value="rating">Beste Bewertung</option><option value="reviews">Meiste Bewertungen</option><option value="asc">Preis aufsteigend</option><option value="desc">Preis absteigend</option></select>
             <button class="btn btn-g btn-s more" type="button" data-fmore aria-expanded="false" aria-controls="smcPanel-{{ section.id }}">Filter</button></div>
         </div>
         <div class="fpanel" id="smcPanel-{{ section.id }}" hidden>
-          <label for="smcMax-{{ section.id }}" data-maxt>Alle Preise</label><input type="range" id="smcMax-{{ section.id }}" data-max min="10" max="{{ smc_maxe }}" step="5" value="{{ smc_maxe }}">
+          <label for="smcMax-{{ section.id }}">Preis bis <b class="tnum" data-maxv>{{ smc_maxe }} €</b></label><input type="range" id="smcMax-{{ section.id }}" data-max min="10" max="{{ smc_maxe }}" step="5" value="{{ smc_maxe }}">
           <label class="chip"><input type="checkbox" data-top> ab 4,8 ★</label>
           <span class="count" data-hits></span>
         </div>
@@ -242,6 +200,7 @@
             -%}
             <div class="cc" data-h="{{ p.handle }}" data-type="{{ p.type | escape }}" data-p="{{ p.price_min }}" data-r="{{ rr }}" data-n="{{ rn }}" data-o="{{ o }}" data-i="{{ forloop.index0 }}"{% if forloop.index > section.settings.erste %} hidden{% endif %}>{% render 'sm-home-card', product: p, smk_abzeichen: smc_abz %}</div>
           {%- endfor -%}
+          {%- if smc_tip_html != blank -%}<div class="c-tip c-tip-m" data-tipm>{{ smc_tip_html }}</div>{%- endif -%}
           <div class="empty-res" data-empty hidden><img src="{{ 'sm-px3_monk_shrug.webp' | asset_url }}" alt="Pixel-Art: der Mönch zuckt mit den Schultern" width="110" height="131" loading="lazy"><p><b>Keine Treffer.</b> Lockere die Filter, zum Beispiel den Preis oder „ab 4,8 ★“.</p></div>
         </div>
         <div class="more-row"{% if smc_cnt <= section.settings.erste %} hidden{% endif %} data-morerow><button class="btn btn-i" type="button" data-more>Weitere {{ smc_cnt | minus: section.settings.erste }} anzeigen {{ smc_arr }}</button></div>
